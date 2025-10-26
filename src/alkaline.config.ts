@@ -1,6 +1,6 @@
 import { Platforms } from "./Types/types";
 
-import type { Site, Author, Socials, NavEntry, Blog } from "./Types/types";
+import type { Author, Blog, NavEntry, Site, Socials } from "./Types/types";
 
 /**
  * @description This file contains the configuration for the Alkaline theme.
@@ -64,7 +64,7 @@ export const SITE: Site = {
 	title: "MyBonzo AI Blog",
 	showTitleBackground: true,
 	faviconSrc: "/apple-touch-icon.png", // in public directory
-	url: "https://mybonzo-ai-blog.pages.dev",
+	url: "https://www.mybonzoaiblog.com",
 	ogImage: "/og-image.webp", // in public directory
 	author: "Redakcja MyBonzo", // Made with ❤️ by {your-name}
 	description: "Blog o sztucznej inteligencji, narzędziach AI i technologiach przyszłości",

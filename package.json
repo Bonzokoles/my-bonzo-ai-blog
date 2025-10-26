@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
+    "@astrojs/cloudflare": "^12.6.10",
     "@astrojs/mdx": "^4.0.8",
     "@astrojs/rss": "^4.0.13",
     "@astrojs/sitemap": "^3.2.1",
     "@astrojs/tailwind": "^6.0.0",
+    "@cloudflare/workers-types": "^4.20251014.0",
     "astro": "^5.2.4",
     "astro-icon": "^1.1.5",
     "astro-robots-txt": "^1.0.0",

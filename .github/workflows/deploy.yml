@@ -38,8 +38,10 @@ jobs:
             echo "1. CLOUDFLARE_API_TOKEN - your Cloudflare API token"
             echo "2. CLOUDFLARE_ACCOUNT_ID - 7f490d58a478c6baccb0ae01ea1d87c3 (Stolarnia account)"
             echo "Built files are ready in ./dist directory"
+            echo "Configure custom domain: www.mybonzoaiblog.com"
             exit 0
           fi
           echo "🔧 Deploying to Cloudflare Pages (Stolarnia account)..."
           echo "Deploying to existing project: mybonzo-ai-blog"
+          echo "Custom domain will be: www.mybonzoaiblog.com"
           npx wrangler pages deploy ./dist --project-name=mybonzo-ai-blog
