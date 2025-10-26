@@ -4,7 +4,7 @@ import type { APIRoute } from 'astro';
 export const prerender = false;
 
 // Proxy API endpoint for individual blog post
-const WORKER_URL = 'https://www.mybonzoaiblog.com/blog-api';
+const WORKER_URL = 'https://mybonzo-blog-worker.stolarnia-ams.workers.dev';
 
 export const GET: APIRoute = async ({ params, request }) => {
   try {

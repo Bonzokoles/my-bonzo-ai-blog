@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 // Proxy API endpoint for blog operations
 // This endpoint forwards requests to our Cloudflare Worker
 
-const WORKER_URL = 'https://www.mybonzoaiblog.com/blog-api';
+const WORKER_URL = 'https://mybonzo-blog-worker.stolarnia-ams.workers.dev';
 
 export const GET: APIRoute = async ({ request }) => {
   try {

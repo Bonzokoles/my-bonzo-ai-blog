@@ -92,6 +92,9 @@ async function handleBlogAPI(request: Request, env: Env, path: string) {
       if (pathParts[2] === 'upload') {
         return await uploadBlogPost(request, env);
       }
+      if (pathParts[2] === 'upload-image') {
+        return await uploadImage(request, env);
+      }
       break;
       
     case 'PUT':
@@ -333,6 +336,67 @@ async function deleteBlogPost(postId: string, env: Env) {
   } catch (error) {
     console.error('Error deleting blog post:', error);
     return { status: 500, body: JSON.stringify({ error: 'Failed to delete blog post' }) };
+  }
+}
+
+async function uploadImage(request: Request, env: Env) {
+  try {
+    const formData = await request.formData();
+    const imageFile = formData.get('image') as File | null;
+    const postId = formData.get('postId') as string | null;
+    const imageName = formData.get('imageName') as string | null;
+    
+    if (!imageFile || !postId) {
+      return { status: 400, body: JSON.stringify({ error: 'Image file and postId are required' }) };
+    }
+    
+    // Generate image name if not provided
+    let finalImageName = imageName;
+    if (!finalImageName) {
+      const extension = imageFile.name.split('.').pop() || 'jpg';
+      const imageNumber = await getNextImageNumber(postId, env);
+      finalImageName = `${postId}-${imageNumber}.${extension}`;
+    }
+    
+    // Upload image to R2
+    const imageBuffer = await imageFile.arrayBuffer();
+    await env.R2_BUCKET.put(`blog/images/${finalImageName}`, imageBuffer, {
+      httpMetadata: {
+        contentType: imageFile.type || 'image/jpeg'
+      }
+    });
+    
+    return { 
+      status: 200, 
+      body: JSON.stringify({ 
+        success: true, 
+        imageName: finalImageName,
+        imageUrl: `https://mybonzo-blog-worker.stolarnia-ams.workers.dev/blog/images/${finalImageName}`,
+        message: `Image ${finalImageName} uploaded successfully` 
+      }) 
+    };
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    return { status: 500, body: JSON.stringify({ error: 'Failed to upload image' }) };
+  }
+}
+
+async function getNextImageNumber(postId: string, env: Env): Promise<number> {
+  try {
+    const images = await findPostImages(postId, env);
+    if (images.length === 0) return 1;
+    
+    const numbers = images
+      .map(img => {
+        const match = img.match(new RegExp(`^${postId}-(\\d+)\\.`));
+        return match ? parseInt(match[1]) : 0;
+      })
+      .filter(num => num > 0);
+    
+    return numbers.length > 0 ? Math.max(...numbers) + 1 : 1;
+  } catch (error) {
+    console.error('Error getting next image number:', error);
+    return 1;
   }
 }
 
