@@ -4,6 +4,7 @@ on:
     push:
         branches:
             - main
+            - mybonzo_zoo  # Current working branch
 
 jobs:
     build_and_deploy:
@@ -11,27 +12,25 @@ jobs:
 
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Setup Node.js
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 20
+                  cache: 'npm'
 
             - name: Install dependencies
-              run: |
-                  cd nevscod
-                  npm ci
+              run: npm ci
 
             - name: Build Astro site
-              run: |
-                  cd nevscod
-                  npm run build
+              run: npm run build
 
             - name: Deploy to Cloudflare Pages
               uses: cloudflare/pages-action@v1
               with:
                   apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-                  accountId: 7f490d58a478c6baccb0ae01ea1d87c3
+                  accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
                   projectName: mybonzo-ai-blog
-                  directory: "./nevscod/dist"
+                  directory: "./dist"
+                  gitHubToken: ${{ secrets.GITHUB_TOKEN }}
