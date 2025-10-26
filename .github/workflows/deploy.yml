@@ -36,7 +36,8 @@ jobs:
             echo "⚠️ CLOUDFLARE_API_TOKEN not set - skipping deploy"
             echo "Please add CLOUDFLARE_API_TOKEN to GitHub Secrets"
             echo "Built files are ready in ./dist directory"
-            echo "Manual deploy: npx wrangler pages deploy ./dist --project-name=my-bonzo-ai-blog"
+            echo "Manual deploy: npx wrangler pages deploy ./dist"
             exit 0
           fi
-          npx wrangler pages deploy ./dist --project-name=my-bonzo-ai-blog
+          echo "🔧 Attempting deployment with auto-detected account..."
+          npx wrangler pages deploy ./dist --project-name=my-bonzo-ai-blog --skip-caching
