@@ -1,17 +1,14 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import PageHeader from "@components/Astro/PageHeader.astro";
 import Card from "@components/Astro/Card.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+import Layout from "@layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
 
 const description =
   "Najciekawsze strony internetowe - odkryj użyteczne narzędzia, inspirujące treści i ukryte perełki sieci.";
 ---
 
-<Layout
-  title="Strony Internetowe - MyBonzo AI Blog"
-  description={description}
->
+<Layout title="Strony Internetowe - MyBonzo AI Blog" description={description}>
   <PageHeader
     heading="Strony Internetowe"
     description={description}
@@ -20,12 +17,14 @@ const description =
 
   <section class="container mx-auto px-4 py-16">
     <div class="text-center mb-16">
-      <Icon name="ri:global-line" class="w-24 h-24 mx-auto mb-6 text-theme-primary" />
-      <h2 class="text-3xl font-bold mb-6 text-theme-primary">
-        Odkryj Sieć
-      </h2>
+      <Icon
+        name="ri:global-line"
+        class="w-24 h-24 mx-auto mb-6 text-theme-primary"
+      />
+      <h2 class="text-3xl font-bold mb-6 text-theme-primary">Odkryj Sieć</h2>
       <p class="text-xl text-theme-primary opacity-80 max-w-4xl mx-auto">
-        Kolekcja najciekawszych stron internetowych - od użytecznych narzędzi po inspirujące treści.
+        Kolekcja najciekawszych stron internetowych - od użytecznych narzędzi po
+        inspirujące treści.
       </p>
     </div>
 
@@ -73,10 +72,11 @@ const description =
         Wkrótce Więcej Treści
       </h3>
       <p class="text-lg text-theme-primary opacity-80 mb-6">
-        Przygotowujemy dla Ciebie starannie wyselekcjonowane kolekcje najlepszych stron internetowych w każdej kategorii.
+        Przygotowujemy dla Ciebie starannie wyselekcjonowane kolekcje
+        najlepszych stron internetowych w każdej kategorii.
       </p>
-      <a 
-        href="/blog" 
+      <a
+        href="/blog"
         class="inline-block bg-theme-accent text-white px-8 py-4 rounded-lg font-semibold hover:opacity-90 transition-opacity shadow-lg"
       >
         Zobacz Blog →

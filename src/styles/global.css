@@ -5,8 +5,17 @@ The 'prose' section is used to style markdown content.
 
  The 'helper classes' section is used to define utility classes that can be used in the application.
 */
+
 @import "./themes.css";
 @import "./animations.css";
+
+/* Graffiti Font - Throlacon Trial */
+@font-face {
+  font-family: 'ThrolaconTrial';
+  src: url('/fronts/Throlacon Trial.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
 @tailwind base;
 @tailwind components;
@@ -50,6 +59,18 @@ The 'prose' section is used to style markdown content.
 	}
 
 	/** Typography **/
+	
+	/* Global Graffiti Headers Font */
+	h1, h2, h3, h4, h5,
+	.h1, .h2, .h3, .h4, .h5 {
+		font-family: 'ThrolaconTrial', Impact, 'Arial Black', sans-serif !important;
+		font-variant-ligatures: none;
+		text-transform: uppercase;
+		letter-spacing: 0.01em;
+		font-weight: normal !important;
+		text-shadow: 0 1px 6px #12121232, 2px 2px 0 #3331;
+	}
+	
 	h1,
 	h2,
 	h3,
@@ -300,5 +321,23 @@ The 'prose' section is used to style markdown content.
 	}
 	.disabled {
 		@apply pointer-events-none opacity-50 no-underline;
+	}
+	
+	/* Graffiti Style for "AI DLA WSZYSTKICH" */
+	.graffiti-footer {
+		font-family: 'ThrolaconTrial', Impact, 'Arial Black', sans-serif;
+		color: #ffec58; /* jaskrawy żółty */
+		font-size: 2.65rem;
+		letter-spacing: -0.03em;
+		text-shadow:
+			0 4px 24px #000,
+			4px 5px 0 #191919,
+			0 -2px 12px #fedf3280;
+		text-align: center;
+		user-select: none;
+		padding: 1rem 0 1.8rem 0;
+		text-transform: uppercase;
+		line-height: 1.2;
+		transform: skewY(-2deg) rotate(-3deg);
 	}
 }

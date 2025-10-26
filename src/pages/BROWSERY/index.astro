@@ -1,17 +1,14 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import PageHeader from "@components/Astro/PageHeader.astro";
 import Card from "@components/Astro/Card.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+import Layout from "@layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
 
 const description =
   "Najlepsze przeglądarki internetowe - porównania, recenzje i poradniki. Znajdź idealną przeglądarkę dla swoich potrzeb.";
 ---
 
-<Layout
-  title="Browsery - MyBonzo AI Blog"
-  description={description}
->
+<Layout title="Browsery - MyBonzo AI Blog" description={description}>
   <PageHeader
     heading="Browsery Internetowe"
     description={description}
@@ -20,12 +17,16 @@ const description =
 
   <section class="container mx-auto px-4 py-16">
     <div class="text-center mb-16">
-      <Icon name="ri:chrome-line" class="w-24 h-24 mx-auto mb-6 text-theme-primary" />
+      <Icon
+        name="ri:chrome-line"
+        class="w-24 h-24 mx-auto mb-6 text-theme-primary"
+      />
       <h2 class="text-3xl font-bold mb-6 text-theme-primary">
         Wszystko o Przeglądarkach
       </h2>
       <p class="text-xl text-theme-primary opacity-80 max-w-4xl mx-auto">
-        Odkryj najlepsze przeglądarki internetowe, porównaj ich funkcje i znajdź idealne rozwiązanie dla siebie.
+        Odkryj najlepsze przeglądarki internetowe, porównaj ich funkcje i znajdź
+        idealne rozwiązanie dla siebie.
       </p>
     </div>
 
@@ -73,10 +74,11 @@ const description =
         Nadchodzące Artykuły
       </h3>
       <p class="text-lg text-theme-primary opacity-80 mb-6">
-        Wkrótce znajdziesz tutaj szczegółowe recenzje, porównania wydajności i poradniki dotyczące przeglądarek internetowych.
+        Wkrótce znajdziesz tutaj szczegółowe recenzje, porównania wydajności i
+        poradniki dotyczące przeglądarek internetowych.
       </p>
-      <a 
-        href="/blog" 
+      <a
+        href="/blog"
         class="inline-block bg-theme-accent text-white px-8 py-4 rounded-lg font-semibold hover:opacity-90 transition-opacity shadow-lg"
       >
         Zobacz Blog →

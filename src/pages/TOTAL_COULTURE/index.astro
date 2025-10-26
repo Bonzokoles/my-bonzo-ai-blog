@@ -1,17 +1,14 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import PageHeader from "@components/Astro/PageHeader.astro";
 import Card from "@components/Astro/Card.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+import Layout from "@layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
 
 const description =
   "Total Culture - kultura w najszerszym wydaniu. Sztuka, muzyka, film, literatura i wszystko co kształtuje naszą cywilizację.";
 ---
 
-<Layout
-  title="Total Culture - MyBonzo AI Blog"
-  description={description}
->
+<Layout title="Total Culture - MyBonzo AI Blog" description={description}>
   <PageHeader
     heading="Total Culture"
     description={description}
@@ -20,12 +17,16 @@ const description =
 
   <section class="container mx-auto px-4 py-16">
     <div class="text-center mb-16">
-      <Icon name="ri:palette-line" class="w-24 h-24 mx-auto mb-6 text-theme-primary" />
+      <Icon
+        name="ri:palette-line"
+        class="w-24 h-24 mx-auto mb-6 text-theme-primary"
+      />
       <h2 class="text-3xl font-bold mb-6 text-theme-primary">
         Kultura bez Granic
       </h2>
       <p class="text-xl text-theme-primary opacity-80 max-w-4xl mx-auto">
-        Odkryj bogactwo ludzkiej kultury - od klasyki po współczesność, od lokalnych tradycji po globalne trendy.
+        Odkryj bogactwo ludzkiej kultury - od klasyki po współczesność, od
+        lokalnych tradycji po globalne trendy.
       </p>
     </div>
 
@@ -68,22 +69,25 @@ const description =
       />
     </div>
 
-    <div class="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 rounded-2xl p-8 text-center">
+    <div
+      class="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 rounded-2xl p-8 text-center"
+    >
       <h3 class="text-2xl font-bold mb-4 text-theme-primary">
         Kultura w Erze AI
       </h3>
       <p class="text-lg text-theme-primary opacity-80 mb-6">
-        Jak sztuczna inteligencja wpływa na sztukę, muzykę, literaturę i inne formy ekspresji kulturowej.
+        Jak sztuczna inteligencja wpływa na sztukę, muzykę, literaturę i inne
+        formy ekspresji kulturowej.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a 
-          href="/blog" 
+        <a
+          href="/blog"
           class="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-4 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all shadow-lg"
         >
           Eksploruj Kulturę →
         </a>
-        <a 
-          href="/NARZEDZIA_AI" 
+        <a
+          href="/NARZEDZIA_AI"
           class="inline-block border-2 border-pink-500 text-pink-600 px-8 py-4 rounded-lg font-semibold hover:bg-pink-500 hover:text-white transition-all"
         >
           AI w Sztuce →

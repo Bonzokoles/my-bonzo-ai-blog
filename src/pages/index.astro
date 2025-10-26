@@ -1,14 +1,13 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import PageHeader from "@components/Astro/PageHeader.astro";
-import Card from "@components/Astro/Card.astro";
 import coverImage from "@assets/alk-cover-2.webp";
-import Link from "@components/Astro/Link.astro";
+import Card from "@components/Astro/Card.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+import Layout from "@layouts/Layout.astro";
 
 import { Icon } from "astro-icon/components";
 
-import { Image } from "astro:assets";
 import Bing from "@assets/bing.jpg";
+import { Image } from "astro:assets";
 
 const description =
   "MyBonzo AI Blog - Twoje centrum wiedzy o sztucznej inteligencji. Odkryj najnowsze narzędzia AI, przeczytaj przewodniki i eksperymentuj z technologiami przyszłości. Od podstaw do zaawansowanych zastosowań biznesowych.";
@@ -37,11 +36,15 @@ const options = {
       <h2 class="text-3xl font-bold mb-12 text-theme-primary text-center">
         Poznaj MyBonzo Pro w Akcji
       </h2>
-      
-      <div class="flex flex-col lg:flex-row items-center justify-start lg:justify-between gap-8">
+
+      <div
+        class="flex flex-col lg:flex-row items-center justify-start lg:justify-between gap-8"
+      >
         <!-- Video Section - Left Side -->
         <div class="w-full lg:w-2/5 pl-0">
-          <div class="w-full h-full max-w-[420px] aspect-[9/16] flex items-center justify-center border border-gray-700 bg-neutral-900">
+          <div
+            class="w-full h-full max-w-[420px] aspect-[9/16] flex items-center justify-center border border-gray-700 bg-neutral-900"
+          >
             <video
               id="mainVideo"
               class="w-full h-full object-cover bg-gray-900"
@@ -55,55 +58,59 @@ const options = {
               Twoja przeglądarka nie obsługuje video HTML5.
             </video>
           </div>
-          <p class="mt-6 text-lg text-theme-primary opacity-80 text-center lg:text-left">
+          <p
+            class="mt-6 text-lg text-theme-primary opacity-80 text-center lg:text-left"
+          >
             Witaj w MyBonzo AI Blog! Poznaj Twojego asystenta AI
           </p>
         </div>
 
         <!-- Navigation Buttons - Right Side -->
         <div class="w-full lg:w-3/5 flex flex-col gap-6">
-          <h3 class="text-2xl font-semibold text-theme-primary mb-4 text-center lg:text-left">
+          <h3
+            class="text-2xl font-semibold text-theme-primary mb-4 text-center lg:text-left"
+          >
             Odkryj Nasze Sekcje
           </h3>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <a 
-              href="/BROWSERY" 
+            <a
+              href="/BROWSERY"
               class="w-full px-7 py-5 text-base font-medium border border-gray-500 bg-transparent transition-colors hover:border-blue-400 hover:bg-gray-900 hover:shadow focus:outline-none active:border-blue-500 rounded-none tracking-wide text-center text-theme-primary hover:text-white"
             >
               Browsery
             </a>
-            
-            <a 
-              href="/STRONY_INTERNETOWE" 
+
+            <a
+              href="/STRONY_INTERNETOWE"
               class="w-full px-7 py-5 text-base font-medium border border-gray-500 bg-transparent transition-colors hover:border-blue-400 hover:bg-gray-900 hover:shadow focus:outline-none active:border-blue-500 rounded-none tracking-wide text-center text-theme-primary hover:text-white"
             >
               Strony Internetowe
             </a>
-            
-            <a 
-              href="/NARZEDZIA_AI" 
+
+            <a
+              href="/NARZEDZIA_AI"
               class="w-full px-7 py-5 text-base font-medium border border-gray-500 bg-transparent transition-colors hover:border-blue-400 hover:bg-gray-900 hover:shadow focus:outline-none active:border-blue-500 rounded-none tracking-wide text-center text-theme-primary hover:text-white"
             >
               Narzędzia AI
             </a>
-            
-            <a 
-              href="/WIADOMOSCI_AI" 
+
+            <a
+              href="/WIADOMOSCI_AI"
               class="w-full px-7 py-5 text-base font-medium border border-gray-500 bg-transparent transition-colors hover:border-blue-400 hover:bg-gray-900 hover:shadow focus:outline-none active:border-blue-500 rounded-none tracking-wide text-center text-theme-primary hover:text-white"
             >
               Wiadomości AI
             </a>
-            
-            <a 
-              href="/HAPPY_NEWS" 
+
+            <a
+              href="/HAPPY_NEWS"
               class="w-full px-7 py-5 text-base font-medium border border-gray-500 bg-transparent transition-colors hover:border-blue-400 hover:bg-gray-900 hover:shadow focus:outline-none active:border-blue-500 rounded-none tracking-wide text-center text-theme-primary hover:text-white"
             >
               Happy News
             </a>
-            
-            <a 
-              href="/TOTAL_COULTURE" 
+
+            <a
+              href="/TOTAL_COULTURE"
               class="w-full px-7 py-5 text-base font-medium border border-gray-500 bg-transparent transition-colors hover:border-blue-400 hover:bg-gray-900 hover:shadow focus:outline-none active:border-blue-500 rounded-none tracking-wide text-center text-theme-primary hover:text-white"
             >
               Total Culture
@@ -147,14 +154,7 @@ const options = {
   </section>
 
   <section class="flex flex-col items-center justify-center mt-6 mb-48 fade-in">
-    <h2
-      class:list={[
-        "bg-theme-secondary text-theme-secondary p-5 text-center uppercase w-full mb-8 lg:w-auto ",
-        options,
-      ]}
-    >
-      AI dla Wszystkich
-    </h2>
+    <h2 class="graffiti-footer">AI DLA WSZYSTKICH</h2>
     <p
       class="text-xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-2xl lg:leading-relaxed"
     >

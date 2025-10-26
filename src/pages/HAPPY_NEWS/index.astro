@@ -1,31 +1,28 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import PageHeader from "@components/Astro/PageHeader.astro";
 import Card from "@components/Astro/Card.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+import Layout from "@layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
 
 const description =
   "Pozytywne wiadomości ze świata - inspirujące historie, dobre uczynki i optymistyczne treści na każdy dzień.";
 ---
 
-<Layout
-  title="Happy News - MyBonzo AI Blog"
-  description={description}
->
-  <PageHeader
-    heading="Happy News"
-    description={description}
-    animate={true}
-  />
+<Layout title="Happy News - MyBonzo AI Blog" description={description}>
+  <PageHeader heading="Happy News" description={description} animate={true} />
 
   <section class="container mx-auto px-4 py-16">
     <div class="text-center mb-16">
-      <Icon name="ri:emotion-happy-line" class="w-24 h-24 mx-auto mb-6 text-theme-primary" />
+      <Icon
+        name="ri:emotion-happy-line"
+        class="w-24 h-24 mx-auto mb-6 text-theme-primary"
+      />
       <h2 class="text-3xl font-bold mb-6 text-theme-primary">
         Dobre Wiadomości
       </h2>
       <p class="text-xl text-theme-primary opacity-80 max-w-4xl mx-auto">
-        Pozytywne historie ze świata technologii, nauki i społeczeństwa. Bo świat jest lepszy niż myślisz!
+        Pozytywne historie ze świata technologii, nauki i społeczeństwa. Bo
+        świat jest lepszy niż myślisz!
       </p>
     </div>
 
@@ -68,15 +65,17 @@ const description =
       />
     </div>
 
-    <div class="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-8 text-center">
+    <div
+      class="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-8 text-center"
+    >
       <h3 class="text-2xl font-bold mb-4 text-theme-primary">
         Codziennie Nowe Dobre Wieści
       </h3>
       <p class="text-lg text-theme-primary opacity-80 mb-6">
         Przychodź tutaj po dawkę optymizmu i pozytywnych wiadomości ze świata.
       </p>
-      <a 
-        href="/blog" 
+      <a
+        href="/blog"
         class="inline-block bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-8 py-4 rounded-lg font-semibold hover:from-yellow-600 hover:to-orange-600 transition-all shadow-lg"
       >
         Czytaj Więcej →
