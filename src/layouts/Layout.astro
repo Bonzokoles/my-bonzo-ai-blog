@@ -15,6 +15,7 @@ import Nav from "@components/Astro/Nav.astro";
 import Title from "@components/Astro/Title.astro";
 import BackToTop from "@components/Astro/BackToTop.astro";
 import Footer from "@components/Astro/Footer.astro";
+import DecorLines from "@components/elements/DecorLines.astro";
 
 import logo from "@assets/logo.webp";
 
@@ -83,7 +84,10 @@ const headerLogo = typeof logo === "undefined" ? null : logo; // guard against n
     {/*<ResourceLinks />*/}
   </head>
   <body class:list={[options, className]}>
-    <div class="flex flex-col min-h-screen mt-0 pt-0">
+    <!-- Technical SVG Backgrounds -->
+    <DecorLines />
+    
+    <div class="flex flex-col min-h-screen mt-0 pt-0 relative z-10">
       {
         headerLogo ? (
           <Title

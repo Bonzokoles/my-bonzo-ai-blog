@@ -41,11 +41,10 @@ const options = {
       <div class="flex flex-col lg:flex-row items-center justify-start lg:justify-between gap-8">
         <!-- Video Section - Left Side -->
         <div class="w-full lg:w-2/5 pl-0">
-          <div class="relative rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-800">
+          <div class="w-full h-full max-w-[420px] aspect-[9/16] flex items-center justify-center border border-gray-700 bg-neutral-900">
             <video
               id="mainVideo"
-              class="w-full h-auto"
-              style="max-width:350px;width:100%;margin-left:0;aspect-ratio: 9/16;"
+              class="w-full h-full object-cover bg-gray-900"
               controls
               poster="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/alk4.png"
             >
@@ -70,62 +69,44 @@ const options = {
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <a 
               href="/BROWSERY" 
-              class="group bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
+              class="w-full px-7 py-5 text-base font-medium border border-gray-500 bg-transparent transition-colors hover:border-blue-400 hover:bg-gray-900 hover:shadow focus:outline-none active:border-blue-500 rounded-none tracking-wide text-center text-theme-primary hover:text-white"
             >
-              <div class="flex items-center justify-center gap-2">
-                <Icon name="ri:chrome-line" class="w-5 h-5" />
-                Browsery
-              </div>
+              Browsery
             </a>
             
             <a 
               href="/STRONY_INTERNETOWE" 
-              class="group bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-purple-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
+              class="w-full px-7 py-5 text-base font-medium border border-gray-500 bg-transparent transition-colors hover:border-blue-400 hover:bg-gray-900 hover:shadow focus:outline-none active:border-blue-500 rounded-none tracking-wide text-center text-theme-primary hover:text-white"
             >
-              <div class="flex items-center justify-center gap-2">
-                <Icon name="ri:global-line" class="w-5 h-5" />
-                Strony Internetowe
-              </div>
+              Strony Internetowe
             </a>
             
             <a 
               href="/NARZEDZIA_AI" 
-              class="group bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
+              class="w-full px-7 py-5 text-base font-medium border border-gray-500 bg-transparent transition-colors hover:border-blue-400 hover:bg-gray-900 hover:shadow focus:outline-none active:border-blue-500 rounded-none tracking-wide text-center text-theme-primary hover:text-white"
             >
-              <div class="flex items-center justify-center gap-2">
-                <Icon name="ri:robot-line" class="w-5 h-5" />
-                Narzędzia AI
-              </div>
+              Narzędzia AI
             </a>
             
             <a 
               href="/WIADOMOSCI_AI" 
-              class="group bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
+              class="w-full px-7 py-5 text-base font-medium border border-gray-500 bg-transparent transition-colors hover:border-blue-400 hover:bg-gray-900 hover:shadow focus:outline-none active:border-blue-500 rounded-none tracking-wide text-center text-theme-primary hover:text-white"
             >
-              <div class="flex items-center justify-center gap-2">
-                <Icon name="ri:newspaper-line" class="w-5 h-5" />
-                Wiadomości AI
-              </div>
+              Wiadomości AI
             </a>
             
             <a 
               href="/HAPPY_NEWS" 
-              class="group bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-4 rounded-xl font-semibold hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
+              class="w-full px-7 py-5 text-base font-medium border border-gray-500 bg-transparent transition-colors hover:border-blue-400 hover:bg-gray-900 hover:shadow focus:outline-none active:border-blue-500 rounded-none tracking-wide text-center text-theme-primary hover:text-white"
             >
-              <div class="flex items-center justify-center gap-2">
-                <Icon name="ri:emotion-happy-line" class="w-5 h-5" />
-                Happy News
-              </div>
+              Happy News
             </a>
             
             <a 
               href="/TOTAL_COULTURE" 
-              class="group bg-gradient-to-r from-pink-500 to-rose-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-pink-600 hover:to-rose-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
+              class="w-full px-7 py-5 text-base font-medium border border-gray-500 bg-transparent transition-colors hover:border-blue-400 hover:bg-gray-900 hover:shadow focus:outline-none active:border-blue-500 rounded-none tracking-wide text-center text-theme-primary hover:text-white"
             >
-              <div class="flex items-center justify-center gap-2">
-                <Icon name="ri:palette-line" class="w-5 h-5" />
-                Total Culture
-              </div>
+              Total Culture
             </a>
           </div>
 
