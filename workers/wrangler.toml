@@ -20,12 +20,17 @@ binding = "R2_BUCKET"
 bucket_name = "mybonzo-blog-content"
 preview_bucket_name = "mybonzo-blog-content-preview"
 
+# Cloudflare Images configuration (no binding needed - uses direct API calls)
+
 # Environment Variables
 [vars]
 WORKER_ENV = "production"
+CF_ACCOUNT_ID = "7f490d58a478c6baccb0ae01ea1d87c3"
+CF_IMAGES_DELIVERY_URL = "https://imagedelivery.net/YOUR_HASH"
 
 # Secrets (set via wrangler secret put)
 # BLOG_API_TOKEN = "your-secret-token"
+# CF_IMAGES_API_TOKEN = "your-cloudflare-images-api-token"
 
 # Build configuration
 [build]

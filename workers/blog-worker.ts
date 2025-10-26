@@ -6,6 +6,9 @@
 export interface Env {
   R2_BUCKET: R2Bucket;
   BLOG_API_TOKEN: string;
+  CF_ACCOUNT_ID: string;
+  CF_IMAGES_API_TOKEN: string;
+  CF_IMAGES_DELIVERY_URL: string;
 }
 
 interface BlogPost {
@@ -95,6 +98,9 @@ async function handleBlogAPI(request: Request, env: Env, path: string) {
       if (pathParts[2] === 'upload-image') {
         return await uploadImage(request, env);
       }
+      if (pathParts[2] === 'upload-cf-image') {
+        return await uploadCloudflareImage(request, env);
+      }
       break;
       
     case 'PUT':
@@ -148,6 +154,9 @@ async function getBlogPost(postId: string, env: Env) {
     
     // Process image tags [[001-1.jpg]] -> proper image URLs
     content = await processImageTags(content, postId, env);
+    
+    // Process Cloudflare Images tags [[CF:001-1]] -> CF Images URLs
+    content = await processCloudflareImageTags(content, postId, env);
     
     // Parse frontmatter and content
     const { metadata, body } = parseFrontmatter(content);
@@ -502,4 +511,107 @@ function parseFrontmatter(content: string): { metadata: any; body: string } {
   }
   
   return { metadata, body };
+}
+
+// Cloudflare Images Upload Function
+async function uploadCloudflareImage(request: Request, env: Env) {
+  try {
+    const formData = await request.formData();
+    const imageFile = formData.get('image') as File | null;
+    const postId = formData.get('postId') as string | null;
+    const imageName = formData.get('imageName') as string | null;
+    
+    if (!imageFile || !postId) {
+      return { status: 400, body: JSON.stringify({ error: 'Image file and postId are required' }) };
+    }
+
+    // Generate image name if not provided
+    let finalImageName = imageName;
+    if (!finalImageName) {
+      const extension = imageFile.name.split('.').pop() || 'jpg';
+      const imageNumber = await getNextImageNumber(postId, env);
+      finalImageName = `${postId}-${imageNumber}.${extension}`;
+    }
+
+    // Upload to Cloudflare Images
+    const imageFormData = new FormData();
+    imageFormData.append('file', imageFile);
+    imageFormData.append('id', finalImageName); // Custom ID for the image
+    
+    const cfImagesResponse = await fetch(`https://api.cloudflare.com/client/v4/accounts/${env.CF_ACCOUNT_ID}/images/v1`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${env.CF_IMAGES_API_TOKEN}`,
+      },
+      body: imageFormData,
+    });
+
+    if (!cfImagesResponse.ok) {
+      const errorText = await cfImagesResponse.text();
+      console.error('Cloudflare Images API error:', errorText);
+      return { status: 500, body: JSON.stringify({ error: 'Failed to upload to Cloudflare Images', details: errorText }) };
+    }
+
+    const cfImagesResult = await cfImagesResponse.json() as any;
+    
+    // Also save a reference in R2 for consistency
+    const imageMetadata = {
+      cloudflareId: cfImagesResult.result.id,
+      variants: cfImagesResult.result.variants,
+      filename: cfImagesResult.result.filename,
+      uploaded: cfImagesResult.result.uploaded,
+      postId: postId,
+      originalName: imageFile.name
+    };
+    
+    await env.R2_BUCKET.put(`blog/cf-images/${finalImageName}.json`, JSON.stringify(imageMetadata, null, 2), {
+      httpMetadata: {
+        contentType: 'application/json'
+      }
+    });
+
+    return { 
+      status: 200, 
+      body: JSON.stringify({ 
+        success: true, 
+        imageName: finalImageName,
+        cloudflareId: cfImagesResult.result.id,
+        imageUrl: cfImagesResult.result.variants[0], // Main variant URL
+        variants: cfImagesResult.result.variants,
+        message: `Image ${finalImageName} uploaded to Cloudflare Images successfully` 
+      }) 
+    };
+  } catch (error) {
+    console.error('Error uploading image to Cloudflare Images:', error);
+    return { status: 500, body: JSON.stringify({ error: 'Failed to upload image to Cloudflare Images' }) };
+  }
+}
+
+// Function to get Cloudflare Image variants for processing
+async function processCloudflareImageTags(content: string, postId: string, env: Env): Promise<string> {
+  // Process CF image tags [[CF:001-1]] -> Cloudflare Images URLs
+  const cfImageRegex = /\[\[CF:([^\]]+)\]\]/g;
+  const matches = Array.from(content.matchAll(cfImageRegex));
+  
+  let processedContent = content;
+  
+  for (const match of matches) {
+    const fullMatch = match[0];
+    const imageName = match[1];
+    
+    try {
+      // Get image metadata from R2
+      const metadataObj = await env.R2_BUCKET.get(`blog/cf-images/${imageName}.json`);
+      if (metadataObj) {
+        const metadata = await metadataObj.json() as any;
+        // Return the public variant (usually the first one)
+        const imageUrl = metadata.variants?.[0] || fullMatch;
+        processedContent = processedContent.replace(fullMatch, imageUrl);
+      }
+    } catch (error) {
+      console.error('Error processing CF image tag:', error);
+    }
+  }
+  
+  return processedContent;
 }

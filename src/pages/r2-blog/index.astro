@@ -163,6 +163,13 @@ try {
           </button>
           
           <button 
+            onclick="showCFImageUpload()"
+            class="px-6 py-3 bg-orange-600/20 hover:bg-orange-600/40 text-orange-400 rounded-lg transition-colors border border-orange-500/30"
+          >
+            🖼️ CF Images
+          </button>
+          
+          <button 
             onclick="showSystemInfo()"
             class="px-6 py-3 bg-purple-600/20 hover:bg-purple-600/40 text-purple-400 rounded-lg transition-colors border border-purple-500/30"
           >
@@ -279,6 +286,83 @@ try {
         closeModal();
       }
     });
+
+    // Cloudflare Images Upload
+    function showCFImageUpload() {
+      const cfImageForm = `
+        <div class="bg-gray-800/90 p-6 rounded-lg">
+          <h3 class="text-xl font-bold mb-4 text-orange-400">🖼️ Upload do Cloudflare Images</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium mb-2">Post ID:</label>
+              <input type="text" id="cfPostId" class="w-full p-2 bg-gray-700 rounded border" placeholder="np. 001" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">Nazwa obrazu (opcjonalnie):</label>
+              <input type="text" id="cfImageName" class="w-full p-2 bg-gray-700 rounded border" placeholder="np. hero-image" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">Wybierz obraz:</label>
+              <input type="file" id="cfImageFile" accept="image/*" class="w-full p-2 bg-gray-700 rounded border" />
+            </div>
+            <div class="flex gap-3">
+              <button onclick="uploadToCFImages()" class="px-4 py-2 bg-orange-600 hover:bg-orange-700 rounded transition-colors">
+                Upload do CF Images
+              </button>
+              <button onclick="closeModal()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded transition-colors">
+                Anuluj
+              </button>
+            </div>
+            <div class="mt-4 p-3 bg-blue-900/20 rounded-lg border border-blue-500/30">
+              <p class="text-sm text-blue-300">
+                <strong>💡 Tip:</strong> Obrazy będą dostępne poprzez tag: <code class="bg-gray-800 px-1 rounded">[[CF:nazwa-obrazu]]</code>
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('modalTitle').textContent = 'Cloudflare Images Upload';
+      document.getElementById('modalContent').innerHTML = cfImageForm;
+      document.getElementById('postModal').classList.remove('hidden');
+    }
+
+    async function uploadToCFImages() {
+      const postId = document.getElementById('cfPostId').value;
+      const imageName = document.getElementById('cfImageName').value;
+      const fileInput = document.getElementById('cfImageFile');
+      
+      if (!postId || !fileInput.files[0]) {
+        alert('Podaj Post ID i wybierz plik!');
+        return;
+      }
+      
+      const formData = new FormData();
+      formData.append('image', fileInput.files[0]);
+      formData.append('postId', postId);
+      if (imageName) formData.append('imageName', imageName);
+      
+      try {
+        const response = await fetch('/api/blog/upload-cf-image', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('✅ Obraz uploaded do CF Images!\\n\\nNazwa: ' + result.imageName + '\\nURL: ' + result.imageUrl + '\\n\\nUżyj w poście: [[CF:' + result.imageName + ']]');
+          
+          closeModal();
+          loadBlogPosts(); // Refresh
+        } else {
+          alert('❌ Błąd uploadu: ' + (result.error || 'Nieznany błąd'));
+        }
+      } catch (error) {
+        console.error('CF Images upload error:', error);
+        alert('❌ Błąd uploadu do CF Images');
+      }
+    }
   </script>
 
   <style>
