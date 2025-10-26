@@ -55,7 +55,7 @@ const sortedPosts = posts?.sort(
     {!posts?.length && <p class="text-theme-primary">No posts found.</p>}
     {
       posts?.map((post: any) => (
-        <article class="mb-10" id={post.id}>
+        <article class="mb-10 border border-gray-500 bg-transparent rounded-none p-6 hover:border-blue-400 hover:bg-gray-900 transition-colors" id={post.id}>
           <a
             href={`/${post.collection || collectionName}/${post.id}`}
             class="no-underline flex flex-row items-center mb-2 group"
@@ -68,10 +68,7 @@ const sortedPosts = posts?.sort(
                   format="webp"
                   width={128}
                   height={128}
-                  class:list={[
-                    "object-cover w-full h-full border border-theme-accent group-hover:rotate-6 transition-transform duration-500 m-0",
-                    options,
-                  ]}
+                  class="object-cover w-full h-full border border-theme-accent group-hover:rotate-6 transition-transform duration-500 m-0 rounded-none"
                   loading="lazy"
                 />
               </div>
