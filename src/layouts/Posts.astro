@@ -1,15 +1,14 @@
 ---
 // Layout component that wraps around pages and blog posts, providing consistent structure and styling. you can read more about it here: https://docs.astro.build/en/guides/layouts/
 
-import { COLLECTION_NAMES_LIST } from "src/alkaline.config";
-import { SITE } from "src/alkaline.config";
-import { Image } from "astro:assets";
-import { Icon } from "astro-icon/components";
-import Pagination from "@components/Astro/Pagination.astro";
-import Layout from "@layouts/Layout.astro";
-import Tag from "@components/Astro/utils/Tag.astro";
-import Heading from "@components/Astro/Heading.astro";
 import Author from "@components/Astro/Author.astro";
+import Heading from "@components/Astro/Heading.astro";
+import Pagination from "@components/Astro/Pagination.astro";
+import Tag from "@components/Astro/utils/Tag.astro";
+import Layout from "@layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+import { COLLECTION_NAMES_LIST, SITE } from "src/alkaline.config";
 
 interface Props {
   posts: any;
@@ -55,7 +54,10 @@ const sortedPosts = posts?.sort(
     {!posts?.length && <p class="text-theme-primary">No posts found.</p>}
     {
       posts?.map((post: any) => (
-        <article class="mb-10 border border-gray-500 bg-transparent rounded-none p-6 hover:border-blue-400 hover:bg-gray-900 transition-colors" id={post.id}>
+        <article
+          class="mb-10 border border-gray-500 bg-transparent rounded-none p-6 hover:border-blue-400 hover:bg-gray-900 transition-colors"
+          id={post.id}
+        >
           <a
             href={`/${post.collection || collectionName}/${post.id}`}
             class="no-underline flex flex-row items-center mb-2 group"

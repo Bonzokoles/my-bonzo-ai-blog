@@ -1,30 +1,28 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import PageHeader from "@components/Astro/PageHeader.astro";
 import Card from "@components/Astro/Card.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+import Layout from "@layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
 
-const description = "Asystent AI MyBonzo - Twój inteligentny pomocnik w codziennych zadaniach. Odkryj możliwości zaawansowanego asystenta AI, który pomoże Ci w pracy, nauce i rozrywce.";
+const description =
+  "Asystent AI MyBonzo - Twój inteligentny pomocnik w codziennych zadaniach. Odkryj możliwości zaawansowanego asystenta AI, który pomoże Ci w pracy, nauce i rozrywce.";
 ---
 
-<Layout 
-  title="Asystent AI - MyBonzo AI Blog"
-  description={description}
->
-  <PageHeader
-    heading="Asystent AI"
-    description={description}
-    animate={true}
-  />
+<Layout title="Asystent AI - MyBonzo AI Blog" description={description}>
+  <PageHeader heading="Asystent AI" description={description} animate={true} />
 
   <section class="container mx-auto px-4 py-16">
     <div class="text-center mb-12">
       <h2 class="text-4xl font-bold mb-6 text-theme-primary">
         Twój Osobisty Asystent AI
       </h2>
-      <p class="text-xl text-theme-primary opacity-80 max-w-4xl mx-auto leading-relaxed">
-        MyBonzo Asystent AI to zaawansowany system sztucznej inteligencji, który pomoże Ci w codziennych zadaniach. 
-        Od odpowiadania na pytania po wspomaganie w podejmowaniu decyzji - Twój cyfrowy partner jest zawsze gotowy do pomocy.
+      <p
+        class="text-xl text-theme-primary opacity-80 max-w-4xl mx-auto leading-relaxed"
+      >
+        MyBonzo Asystent AI to zaawansowany system sztucznej inteligencji, który
+        pomoże Ci w codziennych zadaniach. Od odpowiadania na pytania po
+        wspomaganie w podejmowaniu decyzji - Twój cyfrowy partner jest zawsze
+        gotowy do pomocy.
       </p>
     </div>
 
@@ -36,35 +34,35 @@ const description = "Asystent AI MyBonzo - Twój inteligentny pomocnik w codzien
         shadowSize="lg"
         iconName="ri:chat-3-line"
       />
-      
+
       <Card
         title="Analiza Dokumentów"
         description="Przesyłaj dokumenty, zdjęcia i pliki. Asystent przeanalizuje zawartość i odpowie na pytania dotyczące treści."
         shadowSize="lg"
         iconName="ri:file-text-line"
       />
-      
+
       <Card
         title="Pomoc w Kodowaniu"
         description="Wsparcie programistyczne - od debugowania kodu po pisanie funkcji. Obsługa wielu języków programowania i frameworków."
         shadowSize="lg"
         iconName="ri:code-s-slash-line"
       />
-      
+
       <Card
         title="Tworzenie Treści"
         description="Generowanie artykułów, emaili, postów w mediach społecznościowych. Pomoc w pisaniu z zachowaniem Twojego stylu."
         shadowSize="lg"
         iconName="ri:edit-line"
       />
-      
+
       <Card
         title="Tłumaczenia"
         description="Profesjonalne tłumaczenia między dziesiątkami języków z zachowaniem kontekstu i niuansów językowych."
         shadowSize="lg"
         iconName="ri:translate-2"
       />
-      
+
       <Card
         title="Analiza Danych"
         description="Przetwarzanie i analiza danych, tworzenie raportów, wizualizacji i wyciąganie wniosków biznesowych."
@@ -79,8 +77,8 @@ const description = "Asystent AI MyBonzo - Twój inteligentny pomocnik w codzien
         Rozpocznij Pracę z Asystentem AI
       </h3>
       <p class="text-lg text-theme-primary opacity-80 mb-8 max-w-2xl mx-auto">
-        Gotowy na współpracę z najnowocześniejszym asystentem AI? 
-        MyBonzo Pro oferuje pełny dostęp do wszystkich funkcji.
+        Gotowy na współpracę z najnowocześniejszym asystentem AI? MyBonzo Pro
+        oferuje pełny dostęp do wszystkich funkcji.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <a
@@ -105,7 +103,7 @@ const description = "Asystent AI MyBonzo - Twój inteligentny pomocnik w codzien
       <h3 class="text-3xl font-bold mb-8 text-center text-theme-primary">
         Przykłady Zastosowań
       </h3>
-      
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div class="bg-theme-primary/5 p-8 rounded-none border border-gray-500">
           <h4 class="text-xl font-semibold mb-4 text-theme-primary">
@@ -120,7 +118,7 @@ const description = "Asystent AI MyBonzo - Twój inteligentny pomocnik w codzien
             <li>• Planowanie strategii marketingowej</li>
           </ul>
         </div>
-        
+
         <div class="bg-theme-primary/5 p-8 rounded-none border border-gray-500">
           <h4 class="text-xl font-semibold mb-4 text-theme-primary">
             <Icon name="ri:user-line" class="inline-block mr-2" />
@@ -144,19 +142,40 @@ const description = "Asystent AI MyBonzo - Twój inteligentny pomocnik w codzien
       </h3>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="p-6">
-          <Icon name="ri:shield-check-line" class="text-5xl text-theme-accent mb-4 mx-auto" />
-          <h4 class="text-lg font-semibold mb-2 text-theme-primary">Szyfrowanie End-to-End</h4>
-          <p class="text-theme-primary opacity-80">Wszystkie rozmowy są szyfrowane i chronione</p>
+          <Icon
+            name="ri:shield-check-line"
+            class="text-5xl text-theme-accent mb-4 mx-auto"
+          />
+          <h4 class="text-lg font-semibold mb-2 text-theme-primary">
+            Szyfrowanie End-to-End
+          </h4>
+          <p class="text-theme-primary opacity-80">
+            Wszystkie rozmowy są szyfrowane i chronione
+          </p>
         </div>
         <div class="p-6">
-          <Icon name="ri:user-forbid-line" class="text-5xl text-theme-accent mb-4 mx-auto" />
-          <h4 class="text-lg font-semibold mb-2 text-theme-primary">Brak Przechowywania</h4>
-          <p class="text-theme-primary opacity-80">Dane nie są przechowywane na serwerach</p>
+          <Icon
+            name="ri:user-forbid-line"
+            class="text-5xl text-theme-accent mb-4 mx-auto"
+          />
+          <h4 class="text-lg font-semibold mb-2 text-theme-primary">
+            Brak Przechowywania
+          </h4>
+          <p class="text-theme-primary opacity-80">
+            Dane nie są przechowywane na serwerach
+          </p>
         </div>
         <div class="p-6">
-          <Icon name="ri:global-line" class="text-5xl text-theme-accent mb-4 mx-auto" />
-          <h4 class="text-lg font-semibold mb-2 text-theme-primary">GDPR Compliance</h4>
-          <p class="text-theme-primary opacity-80">Pełna zgodność z regulacjami UE</p>
+          <Icon
+            name="ri:global-line"
+            class="text-5xl text-theme-accent mb-4 mx-auto"
+          />
+          <h4 class="text-lg font-semibold mb-2 text-theme-primary">
+            GDPR Compliance
+          </h4>
+          <p class="text-theme-primary opacity-80">
+            Pełna zgodność z regulacjami UE
+          </p>
         </div>
       </div>
     </section>
