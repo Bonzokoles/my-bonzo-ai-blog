@@ -1,0 +1,105 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Heading from "@components/Astro/Heading.astro";
+import Link from "@components/Astro/Link.astro";
+import BackgroundPattern from "@components/elements/BackgroundPattern.astro";
+import { getCollection } from "astro:content";
+
+// Pobierz wszystkie wpisy blog
+const posts = await getCollection("blog");
+const recentPosts = posts
+  .filter((post) => !post.data.isDraft)
+  .sort(
+    (a, b) =>
+      new Date(b.data.pubDatetime).getTime() -
+      new Date(a.data.pubDatetime).getTime()
+  )
+  .slice(0, 6);
+---
+
+<Layout
+  title="Blog"
+  description="Najnowsze artykuły o AI, poradniki i praktyczne rozwiązania dla domu"
+>
+  <BackgroundPattern />
+
+  <section class="py-16">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <Heading level={1} class="text-4xl font-bold mb-4"
+          >MyBonzo AI Blog</Heading
+        >
+        <p class="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+          Praktyczne porady, narzędzia AI i rozwiązania dla całej rodziny. Bez
+          technicznego żargonu - po prostu działa!
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {
+          recentPosts.map((post) => (
+            <article class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+              {post.data.image && (
+                <div class="aspect-video bg-gray-200 dark:bg-gray-700">
+                  <img
+                    src={post.data.image.src}
+                    alt={post.data.image.alt || post.data.title}
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+
+              <div class="p-6">
+                <div class="flex flex-wrap gap-2 mb-3">
+                  {post.data.tags?.slice(0, 2).map((tag) => (
+                    <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <Heading
+                  level={3}
+                  class="text-xl font-semibold mb-2 line-clamp-2"
+                >
+                  {post.data.title}
+                </Heading>
+
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-3">
+                  {post.data.description}
+                </p>
+
+                <div class="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
+                  <time datetime={post.data.pubDatetime}>
+                    {new Date(post.data.pubDatetime).toLocaleDateString(
+                      "pl-PL"
+                    )}
+                  </time>
+                  {post.data.isFeatured && (
+                    <span class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-xs rounded">
+                      Wyróżniony
+                    </span>
+                  )}
+                </div>
+
+                <Link
+                  href={`/blog/${post.id}`}
+                  text="Czytaj więcej →"
+                  class="text-blue-600 font-semibold hover:text-blue-700"
+                />
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="text-center mt-12">
+        <Link
+          href="/blog/1"
+          text="Zobacz wszystkie artykuły"
+          class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+        />
+      </div>
+    </div>
+  </section>
+</Layout>

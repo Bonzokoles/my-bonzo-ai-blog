@@ -1,0 +1,37 @@
+name: Deploy to Cloudflare Pages
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    build_and_deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+
+            - name: Install dependencies
+              run: |
+                  cd nevscod
+                  npm ci
+
+            - name: Build Astro site
+              run: |
+                  cd nevscod
+                  npm run build
+
+            - name: Deploy to Cloudflare Pages
+              uses: cloudflare/pages-action@v1
+              with:
+                  apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  accountId: 7f490d58a478c6baccb0ae01ea1d87c3
+                  projectName: mybonzo-ai-blog
+                  directory: "./nevscod/dist"
