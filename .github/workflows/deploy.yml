@@ -26,12 +26,17 @@ jobs:
       - name: Build Astro site
         run: npm run build
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: "7f490d58a478c6baccb0ae01ea1d87c3"
-          projectName: mybonzo-ai-blog
-          directory: "./dist"
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          wranglerVersion: "3"
+      - name: List dist directory
+        run: ls -la ./dist
+
+      - name: Deploy to Cloudflare Pages (Alternative)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "⚠️ CLOUDFLARE_API_TOKEN not set - skipping deploy"
+            echo "Please add CLOUDFLARE_API_TOKEN to GitHub Secrets"
+            echo "Built files are ready in ./dist directory"
+            exit 0
+          fi
+          npx wrangler pages deploy ./dist --project-name=my-bonzo-ai-blog --compatibility-date=2024-10-26
