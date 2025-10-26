@@ -1,0 +1,86 @@
+---
+import Layout from "@layouts/Layout.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+import Card from "@components/Astro/Card.astro";
+import { Icon } from "astro-icon/components";
+
+const description =
+  "Najlepsze przeglądarki internetowe - porównania, recenzje i poradniki. Znajdź idealną przeglądarkę dla swoich potrzeb.";
+---
+
+<Layout
+  title="Browsery - MyBonzo AI Blog"
+  description={description}
+>
+  <PageHeader
+    heading="Browsery Internetowe"
+    description={description}
+    animate={true}
+  />
+
+  <section class="container mx-auto px-4 py-16">
+    <div class="text-center mb-16">
+      <Icon name="ri:chrome-line" class="w-24 h-24 mx-auto mb-6 text-theme-primary" />
+      <h2 class="text-3xl font-bold mb-6 text-theme-primary">
+        Wszystko o Przeglądarkach
+      </h2>
+      <p class="text-xl text-theme-primary opacity-80 max-w-4xl mx-auto">
+        Odkryj najlepsze przeglądarki internetowe, porównaj ich funkcje i znajdź idealne rozwiązanie dla siebie.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+      <Card
+        title="Chrome & Chromium"
+        description="Najpopularniejsza przeglądarka świata. Szybka, bezpieczna i z ogromnym ekosystemem rozszerzeń."
+        shadowSize="lg"
+        iconName="ri:chrome-line"
+      />
+      <Card
+        title="Firefox"
+        description="Otwartoźródłowa alternatywa z naciskiem na prywatność i możliwości personalizacji."
+        shadowSize="lg"
+        iconName="ri:firefox-line"
+      />
+      <Card
+        title="Safari & Edge"
+        description="Natywne przeglądarki z optymalizacją pod systemy Apple i Microsoft."
+        shadowSize="lg"
+        iconName="ri:safari-line"
+      />
+      <Card
+        title="Brave"
+        description="Przeglądarka z wbudowanym blokerem reklam i naciskiem na prywatność użytkowników."
+        shadowSize="lg"
+        iconName="ri:shield-line"
+      />
+      <Card
+        title="Opera & Vivaldi"
+        description="Zaawansowane przeglądarki z unikalnymi funkcjami dla power userów."
+        shadowSize="lg"
+        iconName="ri:opera-line"
+      />
+      <Card
+        title="Porównania"
+        description="Szczegółowe testy wydajności, bezpieczeństwa i funkcjonalności różnych przeglądarek."
+        shadowSize="lg"
+        iconName="ri:bar-chart-line"
+      />
+    </div>
+
+    <div class="bg-theme-primary/5 rounded-2xl p-8 text-center">
+      <h3 class="text-2xl font-bold mb-4 text-theme-primary">
+        Nadchodzące Artykuły
+      </h3>
+      <p class="text-lg text-theme-primary opacity-80 mb-6">
+        Wkrótce znajdziesz tutaj szczegółowe recenzje, porównania wydajności i poradniki dotyczące przeglądarek internetowych.
+      </p>
+      <a 
+        href="/blog" 
+        class="inline-block bg-theme-accent text-white px-8 py-4 rounded-lg font-semibold hover:opacity-90 transition-opacity shadow-lg"
+      >
+        Zobacz Blog →
+      </a>
+    </div>
+  </section>
+</Layout>

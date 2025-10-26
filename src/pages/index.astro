@@ -31,41 +31,112 @@ const options = {
     animate={true}
   />
 
-  <!-- Video Section - Pionowe -->
+  <!-- Hero Section - Video + Navigation -->
   <section class="w-full py-16 bg-theme-primary/5 backdrop-blur-sm">
-    <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl font-bold mb-8 text-theme-primary">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-12 text-theme-primary text-center">
         Poznaj MyBonzo Pro w Akcji
       </h2>
-      <div class="max-w-md mx-auto lg:max-w-lg">
-        <div
-          class="relative rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-800"
-        >
-          <video
-            id="mainVideo"
-            class="w-full h-auto"
-            style="aspect-ratio: 9/16;"
-            controls
-            poster="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/alk4.png"
-          >
-            <source
-              src="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/mybonzo-avatar-welcome.mp4"
-              type="video/mp4"
-            />
-            Twoja przeglądarka nie obsługuje video HTML5.
-          </video>
+      
+      <div class="flex flex-col lg:flex-row items-center justify-start lg:justify-between gap-8">
+        <!-- Video Section - Left Side -->
+        <div class="w-full lg:w-2/5 pl-0">
+          <div class="relative rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-800">
+            <video
+              id="mainVideo"
+              class="w-full h-auto"
+              style="max-width:350px;width:100%;margin-left:0;aspect-ratio: 9/16;"
+              controls
+              poster="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/alk4.png"
+            >
+              <source
+                src="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/mybonzo-avatar-welcome.mp4"
+                type="video/mp4"
+              />
+              Twoja przeglądarka nie obsługuje video HTML5.
+            </video>
+          </div>
+          <p class="mt-6 text-lg text-theme-primary opacity-80 text-center lg:text-left">
+            Witaj w MyBonzo AI Blog! Poznaj Twojego asystenta AI
+          </p>
         </div>
-        <p class="mt-6 text-lg text-theme-primary opacity-80">
-          Witaj w MyBonzo AI Blog! Poznaj Twojego asystenta AI i odkryj świat
-          sztucznej inteligencji
-        </p>
-        <div class="mt-8">
-          <a
-            href="/pro"
-            class="inline-block bg-theme-accent text-white px-8 py-4 rounded-lg font-semibold hover:opacity-90 transition-opacity shadow-lg"
-          >
-            Sprawdź MyBonzo Pro →
-          </a>
+
+        <!-- Navigation Buttons - Right Side -->
+        <div class="w-full lg:w-3/5 flex flex-col gap-6">
+          <h3 class="text-2xl font-semibold text-theme-primary mb-4 text-center lg:text-left">
+            Odkryj Nasze Sekcje
+          </h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <a 
+              href="/BROWSERY" 
+              class="group bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
+            >
+              <div class="flex items-center justify-center gap-2">
+                <Icon name="ri:chrome-line" class="w-5 h-5" />
+                Browsery
+              </div>
+            </a>
+            
+            <a 
+              href="/STRONY_INTERNETOWE" 
+              class="group bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-purple-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
+            >
+              <div class="flex items-center justify-center gap-2">
+                <Icon name="ri:global-line" class="w-5 h-5" />
+                Strony Internetowe
+              </div>
+            </a>
+            
+            <a 
+              href="/NARZEDZIA_AI" 
+              class="group bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
+            >
+              <div class="flex items-center justify-center gap-2">
+                <Icon name="ri:robot-line" class="w-5 h-5" />
+                Narzędzia AI
+              </div>
+            </a>
+            
+            <a 
+              href="/WIADOMOSCI_AI" 
+              class="group bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
+            >
+              <div class="flex items-center justify-center gap-2">
+                <Icon name="ri:newspaper-line" class="w-5 h-5" />
+                Wiadomości AI
+              </div>
+            </a>
+            
+            <a 
+              href="/HAPPY_NEWS" 
+              class="group bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-4 rounded-xl font-semibold hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
+            >
+              <div class="flex items-center justify-center gap-2">
+                <Icon name="ri:emotion-happy-line" class="w-5 h-5" />
+                Happy News
+              </div>
+            </a>
+            
+            <a 
+              href="/TOTAL_COULTURE" 
+              class="group bg-gradient-to-r from-pink-500 to-rose-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-pink-600 hover:to-rose-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
+            >
+              <div class="flex items-center justify-center gap-2">
+                <Icon name="ri:palette-line" class="w-5 h-5" />
+                Total Culture
+              </div>
+            </a>
+          </div>
+
+          <div class="mt-6 text-center lg:text-left">
+            <a
+              href="/pro"
+              class="inline-block bg-theme-accent text-white px-8 py-4 rounded-lg font-semibold hover:opacity-90 transition-opacity shadow-lg"
+            >
+              Sprawdź MyBonzo Pro →
+            </a>
+          </div>
         </div>
       </div>
     </div>
