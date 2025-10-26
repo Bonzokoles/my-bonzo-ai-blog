@@ -41,5 +41,5 @@ jobs:
             exit 0
           fi
           echo "🔧 Deploying to Cloudflare Pages (Stolarnia account)..."
-          echo "Creating/deploying to project: mybonzo-ai-blog"
-          npx wrangler pages deploy ./dist --project-name=mybonzo-ai-blog --compatibility-date=2024-10-26 || npx wrangler pages deploy ./dist
+          echo "Deploying to existing project: mybonzo-ai-blog"
+          npx wrangler pages deploy ./dist --project-name=mybonzo-ai-blog
