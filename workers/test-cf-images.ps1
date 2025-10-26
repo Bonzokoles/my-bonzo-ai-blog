@@ -23,7 +23,8 @@ try {
     Write-Host "3. Get your delivery URL hash" -ForegroundColor White
     Write-Host "4. Update CF_IMAGES_DELIVERY_URL in wrangler.toml" -ForegroundColor White
     
-} catch {
+}
+catch {
     Write-Host "Error: $_" -ForegroundColor Red
 }
 
