@@ -29,11 +29,13 @@
 .theme-dark {
 	--color-background: #1b2838;
 	--color-gradient: #2c3e50;
-	--color-text: #f0e6d2;
-	--color-accent: #3498db;
-	--color-accent-alt: #e67e22;
+	--color-text: #ffffff;
+	/* Improved contrast - pure white text */
+	--color-accent: #4da6ff;
+	/* Brighter blue for better visibility */
+	--color-accent-alt: #ff8c42;
+	/* Brighter orange */
 	--color-shadow: #0a1721;
-	/* Darker shadow for contrast */
 	/* options */
 	--border-radius: 0.4rem;
 }
@@ -74,9 +76,12 @@
 .theme-leet {
 	--color-background: #0d0208;
 	--color-gradient: #001f00;
-	--color-text: #00ff41;
-	--color-accent: #08f7fe;
-	--color-accent-alt: #005f2c;
+	--color-text: #00ff55;
+	/* Brighter green for better readability */
+	--color-accent: #00ffff;
+	/* Brighter cyan */
+	--color-accent-alt: #00aa33;
+	/* Improved green accent */
 	--color-shadow: #003b00;
 	/* options */
 }
@@ -95,9 +100,11 @@
 .theme-old-couch {
 	--color-background: #1a110d;
 	--color-gradient: #3d2a20;
-	--color-text: #e6b785;
-	--color-accent: #ff7f00;
-	--color-accent-alt: #a85400;
+	--color-text: #f5e6d3;
+	/* Lighter, more readable text */
+	--color-accent: #ff9933;
+	/* Brighter orange for better contrast */
+	--color-accent-alt: #cc6600;
 	--color-shadow: hsla(0, 0%, 0%, 0.6);
 	/* options */
 	--border-radius: 0.25rem;

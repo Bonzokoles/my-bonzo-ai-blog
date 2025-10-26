@@ -210,22 +210,22 @@ The 'prose' section is used to style markdown content.
 
 	.prose h1,
 	.prose .h1 {
-		@apply text-4xl text-theme-secondary leading-relaxed md:text-5xl tracking-widest max-w-7xl;
+		@apply text-3xl text-theme-secondary leading-tight md:text-4xl tracking-wide font-semibold mb-6;
 	}
 
 	.prose h2,
 	.prose .h2 {
-		@apply text-4xl text-theme-accent leading-normal tracking-widest mt-8;
+		@apply text-2xl text-theme-accent leading-tight tracking-wide font-medium mt-8 mb-4;
 	}
 
 	.prose h3,
 	.prose .h3 {
-		@apply text-3xl text-theme-primary tracking-widest mt-6;
+		@apply text-xl text-theme-primary tracking-normal font-medium mt-6 mb-3;
 	}
 
 	.prose h4,
 	.prose .h4 {
-		@apply text-xl text-theme-primary tracking-widest mt-4;
+		@apply text-lg text-theme-primary tracking-normal font-medium mt-4 mb-2;
 	}
 
 	.prose h5,
