@@ -63,7 +63,7 @@ export const AUTHORS: Author[] = [
 export const SITE: Site = {
 	title: "MyBonzo AI Blog",
 	showTitleBackground: true,
-	faviconSrc: "/favicon.png", // in public directory
+	faviconSrc: "/apple-touch-icon.png", // in public directory
 	url: "https://mybonzo-ai-blog.pages.dev",
 	ogImage: "/og-image.webp", // in public directory
 	author: "Redakcja MyBonzo", // Made with ❤️ by {your-name}
