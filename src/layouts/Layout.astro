@@ -17,8 +17,6 @@ import Nav from "@components/Astro/Nav.astro";
 import Title from "@components/Astro/Title.astro";
 import DecorLines from "@components/elements/DecorLines.astro";
 
-import logo from "@assets/logo.webp";
-
 interface Props {
   title?: string;
   author?: string;
@@ -61,8 +59,8 @@ const options = {
   "rounded-theme": true,
 };
 
-// @ts-ignore
-const headerLogo = typeof logo === "undefined" ? null : logo; // guard against no logo
+// Use apple-touch-icon.png as logo from public folder
+const headerLogo = "/apple-touch-icon.png";
 ---
 
 <html lang="pl">
@@ -88,17 +86,11 @@ const headerLogo = typeof logo === "undefined" ? null : logo; // guard against n
     <DecorLines />
 
     <div class="flex flex-col min-h-screen mt-0 pt-0 relative z-10">
-      {
-        headerLogo ? (
-          <Title
-            title={title}
-            showTitleBackground={showTitleBackground}
-            logoImg={headerLogo}
-          />
-        ) : (
-          <Title title={title} showTitleBackground={showTitleBackground} />
-        )
-      }
+      <Title
+        title={title}
+        showTitleBackground={showTitleBackground}
+        logoPath={headerLogo}
+      />
       <Nav links={NAVIGATION} />
       <main class="flex-grow">
         <!-- content -->

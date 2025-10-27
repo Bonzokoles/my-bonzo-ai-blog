@@ -25,12 +25,13 @@ preview_bucket_name = "mybonzo-blog-content-preview"
 # Environment Variables
 [vars]
 WORKER_ENV = "production"
-CF_ACCOUNT_ID = "7f490d58a478c6baccb0ae01ea1d87c3"
-CF_IMAGES_DELIVERY_URL = "https://imagedelivery.net/YOUR_HASH"
+# CF_ACCOUNT_ID should be set via Cloudflare Dashboard or wrangler CLI
+# CF_IMAGES_DELIVERY_URL should be set after creating Cloudflare Images account
+# Example format: "https://imagedelivery.net/YOUR_ACCOUNT_HASH"
 
 # Secrets (set via wrangler secret put)
-# BLOG_API_TOKEN = "your-secret-token"
-# CF_IMAGES_API_TOKEN = "your-cloudflare-images-api-token"
+# BLOG_API_TOKEN - Required for blog API authentication
+# CF_IMAGES_API_TOKEN - Required for Cloudflare Images integration
 
 # Build configuration
 [build]

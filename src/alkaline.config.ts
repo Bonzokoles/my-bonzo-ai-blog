@@ -15,19 +15,11 @@ import type { Author, Blog, NavEntry, Site, Socials } from "./Types/types";
 export const socials: Socials[] = [
 	{
 		platform: "email",
-		url: "alkaline@jaredtruscott.com",
-	},
-	{
-		platform: "github",
-		url: "https://github.com/TruJared/",
+		url: "kontakt@mybonzo.com",
 	},
 	{
 		platform: "web",
-		url: "https://jaredmakes.com",
-	},
-	{
-		platform: "bluesky",
-		url: "https://bsky.app/profile/trujared.bsky.social",
+		url: "https://www.mybonzoaiblog.com",
 	},
 	{
 		platform: "rss",
@@ -35,29 +27,13 @@ export const socials: Socials[] = [
 	}
 ];
 
-// use in development to easily see all author socials at once, not useful in production, I suggest commenting this out in production
-export const allSocials: Socials[] = Platforms.map((platform) => ({
-	platform,
-	url: `https://${platform}.com`,
-	userName: `test_user_${platform}`,
-}));
-
-
 export const AUTHORS: Author[] = [
-	// assumes that the 1st author has the same socials as the site - change if needed
 	{
 		id: 1,
-		name: "Jared Truscott",
+		name: "Redakcja MyBonzo",
 		socials: socials,
-		email: 'jared@jaredmakes.com'
-	},
-	// example of a 2nd author with all socials - replace with your own author(s) or remove if not needed
-	{
-		id: 2,
-		name: "Jeff Goldblum",
-		socials: allSocials,
-		email: null
-	},
+		email: 'kontakt@mybonzo.com'
+	}
 ]
 
 export const SITE: Site = {

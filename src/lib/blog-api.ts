@@ -88,6 +88,10 @@ class BlogAPIClient {
    * Upload a new blog post
    */
   async uploadBlogPost(title: string, content: string, excerpt?: string): Promise<{ success: boolean; postId: string; message: string }> {
+    if (!this.apiToken) {
+      throw new Error('API token is required for upload operations. Please set BLOG_API_TOKEN environment variable.');
+    }
+
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
@@ -98,7 +102,7 @@ class BlogAPIClient {
     const response = await fetch(`${this.baseUrl}/api/blog/upload`, {
       method: 'POST',
       body: formData,
-      headers: this.apiToken ? { 'Authorization': `Bearer ${this.apiToken}` } : {},
+      headers: { 'Authorization': `Bearer ${this.apiToken}` },
     });
 
     if (!response.ok) {
@@ -113,6 +117,10 @@ class BlogAPIClient {
    * Update an existing blog post
    */
   async updateBlogPost(postId: string, updates: { title?: string; content?: string; excerpt?: string }): Promise<{ success: boolean; message: string }> {
+    if (!this.apiToken) {
+      throw new Error('API token is required for update operations. Please set BLOG_API_TOKEN environment variable.');
+    }
+
     return this.makeRequest(`/update/${postId}`, {
       method: 'PUT',
       body: JSON.stringify(updates),
@@ -123,6 +131,10 @@ class BlogAPIClient {
    * Delete a blog post
    */
   async deleteBlogPost(postId: string): Promise<{ success: boolean; message: string }> {
+    if (!this.apiToken) {
+      throw new Error('API token is required for delete operations. Please set BLOG_API_TOKEN environment variable.');
+    }
+
     return this.makeRequest(`/delete/${postId}`, {
       method: 'DELETE',
     });
@@ -132,9 +144,13 @@ class BlogAPIClient {
    * Upload an image for a blog post
    */
   async uploadImage(postId: string, imageFile: File, imageNumber: number = 1): Promise<{ success: boolean; imageUrl: string }> {
+    if (!this.apiToken) {
+      throw new Error('API token is required for image upload operations. Please set BLOG_API_TOKEN environment variable.');
+    }
+
     const fileExtension = imageFile.name.split('.').pop() || 'jpg';
     const imageName = `${postId}-${imageNumber}.${fileExtension}`;
-    
+
     const formData = new FormData();
     formData.append('image', imageFile, imageName);
     formData.append('postId', postId);
@@ -142,7 +158,7 @@ class BlogAPIClient {
     const response = await fetch(`${this.baseUrl}/api/blog/upload-image`, {
       method: 'POST',
       body: formData,
-      headers: this.apiToken ? { 'Authorization': `Bearer ${this.apiToken}` } : {},
+      headers: { 'Authorization': `Bearer ${this.apiToken}` },
     });
 
     if (!response.ok) {
@@ -270,11 +286,16 @@ class BlogAPIClient {
 }
 
 // Default client instance
-export const blogAPI = new BlogAPIClient(
-  // Use environment variable or fallback to development URL
-  import.meta.env?.PUBLIC_BLOG_API_URL || 'http://localhost:8787',
-  import.meta.env?.BLOG_API_TOKEN
-);
+// Note: For write operations (upload, update, delete), BLOG_API_TOKEN must be set
+const apiUrl = import.meta.env?.PUBLIC_BLOG_API_URL || 'http://localhost:8787';
+const apiToken = import.meta.env?.BLOG_API_TOKEN;
+
+// Warn if token is missing in production
+if (apiUrl.includes('mybonzo') && !apiToken) {
+  console.warn('⚠️ BLOG_API_TOKEN is not set. Write operations will fail. Please configure environment variables.');
+}
+
+export const blogAPI = new BlogAPIClient(apiUrl, apiToken);
 
 // Export the class for custom instances
 export { BlogAPIClient };

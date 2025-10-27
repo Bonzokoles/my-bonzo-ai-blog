@@ -4,36 +4,33 @@
  * Props:
  * - title: string - Main title text
  * - showTitleBackground: boolean - Enable background styling
- * - logoImg?: ImageMetadata - Optional logo image
+ * - logoPath?: string - Optional path to logo from public folder (e.g., "/apple-touch-icon.png")
+ * - forceLogoOnMobile?: boolean - Show logo on mobile devices
  * - class?: string - Additional CSS classes
  *
  * Example usage:
  * <Title
  *   title="Welcome to Our Site"
  *   showTitleBackground={true}
- *   logoImg={import("@assets/logo.png")}
+ *   logoPath="/apple-touch-icon.png"
  *   class="my-title"
  * />
  *
  * Notes:
  * - Two visual style variants
- * - Optimized logo display
+ * - Optimized logo display with circular border
  * - Responsive layout
  * - Theme-based borders
  * - Flexible width
  */
-
-import type { ImageMetadata } from "astro";
-
-import { Image } from "astro:assets";
 
 interface Props {
   // Main title text //
   title: string;
   // Controls the title's visual style and background //
   showTitleBackground: boolean;
-  // Optional path to logo image //
-  logoImg?: ImageMetadata;
+  // Optional path to logo image from public folder //
+  logoPath?: string;
   // force logo on mobile //
   forceLogoOnMobile?: boolean;
   // Optional CSS classes //
@@ -44,7 +41,7 @@ const {
   title,
   showTitleBackground,
   class: className,
-  logoImg,
+  logoPath,
   forceLogoOnMobile,
 } = Astro.props;
 
@@ -75,10 +72,10 @@ const options = {
         className,
       ]}
     >
-      {!logoImg && title}
+      {!logoPath && title}
 
       {
-        logoImg && (
+        logoPath && (
           <span class="flex items-center justify-center w-full">
             <span
               class:list={[
@@ -86,12 +83,12 @@ const options = {
                 { hidden: !forceLogoOnMobile },
               ]}
             >
-              <Image
-                src={logoImg}
-                alt="Logo"
-                width={64}
-                height={64}
-                class="w-full"
+              <img
+                src={logoPath}
+                alt="MyBonzo Logo"
+                width="64"
+                height="64"
+                class="w-full h-full object-cover"
               />
             </span>
             {title}
