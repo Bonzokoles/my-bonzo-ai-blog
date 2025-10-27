@@ -46,10 +46,12 @@ jobs:
           echo "Project: mybonzoaiblog"
           echo "Domain: mybonzoaiblog.pages.dev"
           echo "Custom domain: www.mybonzoaiblog.com"
+
+          echo "🚀 Running deployment..."
+          echo "Command: npx wrangler pages deploy ./dist --project-name=mybonzoaiblog"
           
-          echo "🚀 Running: npx wrangler pages deploy ./dist"
-          npx wrangler pages deploy ./dist --verbose
-          
+          npx wrangler pages deploy ./dist --project-name=mybonzoaiblog
+
           deployment_status=$?
           if [ $deployment_status -eq 0 ]; then
             echo ""
@@ -60,6 +62,6 @@ jobs:
           else
             echo ""
             echo "❌ Deployment failed with status: $deployment_status"
-            echo "Check logs above for details"
+            echo "📋 Check the wrangler logs above for error details"
             exit 1
           fi
