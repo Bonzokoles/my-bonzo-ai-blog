@@ -28,6 +28,33 @@ jobs:
       - name: List dist directory
         run: ls -la ./dist
 
+      - name: Debug Environment Variables
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          echo "🔍 DEBUG: Sprawdzanie zmiennych środowiskowych"
+          echo "1. Sprawdzanie czy CLOUDFLARE_API_TOKEN istnieje:"
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "❌ CLOUDFLARE_API_TOKEN jest puste"
+          else
+            echo "✅ CLOUDFLARE_API_TOKEN istnieje (długość: ${#CLOUDFLARE_API_TOKEN} znaków)"
+            echo "   Pierwsze 8 znaków: ${CLOUDFLARE_API_TOKEN:0:8}..."
+          fi
+
+          echo "2. Sprawdzanie czy CLOUDFLARE_ACCOUNT_ID istnieje:"
+          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "❌ CLOUDFLARE_ACCOUNT_ID jest puste"
+          else
+            echo "✅ CLOUDFLARE_ACCOUNT_ID istnieje: $CLOUDFLARE_ACCOUNT_ID"
+          fi
+
+          echo "3. Sprawdzanie wszystkich zmiennych środowiskowych z 'CLOUDFLARE':"
+          env | grep CLOUDFLARE || echo "Brak zmiennych CLOUDFLARE w środowisku"
+
+          echo "4. Sprawdzanie wersji wrangler:"
+          npx wrangler --version
+
       - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -39,9 +66,22 @@ jobs:
             echo "2. CLOUDFLARE_ACCOUNT_ID - your Cloudflare account ID"
             echo "Built files are ready in ./dist directory"
             echo "Configure custom domain: www.mybonzoaiblog.com"
-            exit 0
+            exit 1
           fi
+
           echo "🔧 Deploying to Cloudflare Pages..."
           echo "Deploying to project: mybonzoaiblog"
           echo "Custom domain will be: www.mybonzoaiblog.com"
+
+          # Sprawdź czy token ma prawidłowy format
+          if [[ "$CLOUDFLARE_API_TOKEN" == *" "* ]] || [[ "$CLOUDFLARE_API_TOKEN" == *$'\n'* ]]; then
+            echo "⚠️ Token zawiera spacje lub znaki nowej linii - to może być problem"
+          fi
+
+          # Usuń potencjalne białe znaki z tokena
+          export CLOUDFLARE_API_TOKEN=$(echo "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')
+          export CLOUDFLARE_ACCOUNT_ID=$(echo "$CLOUDFLARE_ACCOUNT_ID" | tr -d '[:space:]')
+
+          echo "Token po oczyszczeniu (długość: ${#CLOUDFLARE_API_TOKEN})"
+
           npx wrangler pages deploy ./dist
