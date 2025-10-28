@@ -2,41 +2,41 @@ name: Emergency Keep-Alive
 
 # Ten workflow uruchamia się bardzo często - tylko w razie potrzeby!
 on:
-  schedule:
-    # Co 5 minut przez 24/7 - używaj tylko jeśli strona ma problemy z usypianiem
-    - cron: '*/5 * * * *'
-  workflow_dispatch:
+    schedule:
+        # Co 5 minut przez 24/7 - używaj tylko jeśli strona ma problemy z usypianiem
+        - cron: "*/5 * * * *"
+    workflow_dispatch:
 
 jobs:
-  emergency-ping:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Emergency Ping
-        run: |
-          echo "🚨 EMERGENCY KEEP-ALIVE ACTIVATED"
-          echo "This runs every 5 minutes - disable when not needed!"
-          
-          # Szybki ping wszystkich głównych URL-i
-          urls=(
-            "https://mybonzoaiblog.pages.dev"
-            "https://www.mybonzoaiblog.com"  
-            "https://mybonzoaiblog.com"
-          )
-          
-          for url in "${urls[@]}"; do
-            echo "Emergency ping: $url"
-            curl -s -o /dev/null \
-              --max-time 10 \
-              --connect-timeout 5 \
-              "$url" && echo "✅ $url OK" || echo "❌ $url FAILED"
-          done
-          
-          echo "Emergency ping completed at $(date)"
+    emergency-ping:
+        runs-on: ubuntu-latest
 
-      - name: Warning Message  
-        run: |
-          echo "⚠️  WARNING: Emergency keep-alive is running every 5 minutes"
-          echo "⚠️  This consumes GitHub Actions minutes quickly"  
-          echo "⚠️  Disable this workflow when the site is stable"
-          echo "⚠️  Use regular keep-alive.yml for normal operation"
+        steps:
+            - name: Emergency Ping
+              run: |
+                  echo "🚨 EMERGENCY KEEP-ALIVE ACTIVATED"
+                  echo "This runs every 5 minutes - disable when not needed!"
+
+                  # Szybki ping wszystkich głównych URL-i
+                  urls=(
+                    "https://mybonzoaiblog.pages.dev"
+                    "https://www.mybonzoaiblog.com"  
+                    "https://mybonzoaiblog.com"
+                  )
+
+                  for url in "${urls[@]}"; do
+                    echo "Emergency ping: $url"
+                    curl -s -o /dev/null \
+                      --max-time 10 \
+                      --connect-timeout 5 \
+                      "$url" && echo "✅ $url OK" || echo "❌ $url FAILED"
+                  done
+
+                  echo "Emergency ping completed at $(date)"
+
+            - name: Warning Message
+              run: |
+                  echo "⚠️  WARNING: Emergency keep-alive is running every 5 minutes"
+                  echo "⚠️  This consumes GitHub Actions minutes quickly"  
+                  echo "⚠️  Disable this workflow when the site is stable"
+                  echo "⚠️  Use regular keep-alive.yml for normal operation"

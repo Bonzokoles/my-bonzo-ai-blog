@@ -1,21 +1,22 @@
 ---
 // Layout component that wraps around pages and blog posts, providing consistent structure and styling. you can read more about it here: https://docs.astro.build/en/guides/layouts/
 
-import { NAVIGATION, SITE } from "src/alkaline.config";
+import { SITE, NAVIGATION } from "src/alkaline.config";
 
 import { ClientRouter } from "astro:transitions";
 
 import "@styles/global.css";
 
-import DynamicMetaTags from "@components/Astro/head/DynamicMetaTags.astro";
 import GoogleFonts from "@components/Astro/head/GoogleFonts.astro";
+import DynamicMetaTags from "@components/Astro/head/DynamicMetaTags.astro";
 import SocialMeta from "@components/Astro/head/SocialMeta.astro";
 // import ResourceLinks from "@components/Astro/head/ResourceLinks.astro";
-import BackToTop from "@components/Astro/BackToTop.astro";
-import Footer from "@components/Astro/Footer.astro";
 import Nav from "@components/Astro/Nav.astro";
 import Title from "@components/Astro/Title.astro";
-import DecorLines from "@components/elements/DecorLines.astro";
+import BackToTop from "@components/Astro/BackToTop.astro";
+import Footer from "@components/Astro/Footer.astro";
+
+import logo from "@assets/logo.webp";
 
 interface Props {
   title?: string;
@@ -59,11 +60,11 @@ const options = {
   "rounded-theme": true,
 };
 
-// Use apple-touch-icon.png as logo from public folder
-const headerLogo = "/apple-touch-icon.png";
+// @ts-ignore
+const headerLogo = typeof logo === "undefined" ? null : logo; // guard against no logo
 ---
 
-<html lang="pl">
+<html lang="en">
   <head>
     <DynamicMetaTags metaTags={metaTags} />
     <GoogleFonts fonts={fonts} />
@@ -82,15 +83,18 @@ const headerLogo = "/apple-touch-icon.png";
     {/*<ResourceLinks />*/}
   </head>
   <body class:list={[options, className]}>
-    <!-- Technical SVG Backgrounds -->
-    <DecorLines />
-
-    <div class="flex flex-col min-h-screen mt-0 pt-0 relative z-10">
-      <Title
-        title={title}
-        showTitleBackground={showTitleBackground}
-        logoPath={headerLogo}
-      />
+    <div class="flex flex-col min-h-screen mt-0 pt-0">
+      {
+        headerLogo ? (
+          <Title
+            title={title}
+            showTitleBackground={showTitleBackground}
+            logoImg={headerLogo}
+          />
+        ) : (
+          <Title title={title} showTitleBackground={showTitleBackground} />
+        )
+      }
       <Nav links={NAVIGATION} />
       <main class="flex-grow">
         <!-- content -->
