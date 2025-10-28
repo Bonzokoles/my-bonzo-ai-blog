@@ -39,16 +39,6 @@
     }
   ],
 
-  // Durable Objects for real-time features
-  "durable_objects": {
-    "bindings": [
-      {
-        "name": "CHAT_ROOM",
-        "class_name": "ChatRoom"
-      }
-    ]
-  },
-
   // Queue dla zadań w tle
   // ⚠️ UWAGA: consumers są automatycznie zarządzane przez Cloudflare
   "queues": {
