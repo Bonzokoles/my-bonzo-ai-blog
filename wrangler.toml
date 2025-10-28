@@ -1,5 +1,6 @@
 name = "mybonzoaiblog"
 compatibility_date = "2024-10-28"
+compatibility_flags = ["nodejs_compat"]
 
 # KV Namespaces - only existing ones
 kv_namespaces = [
