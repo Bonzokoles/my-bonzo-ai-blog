@@ -1,0 +1,75 @@
+---
+import Layout from "@layouts/Layout.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+---
+
+<Layout title="Newsletter | MyBonzo AI Blog">
+  <PageHeader heading="Subscribe to our Newsletter" />
+
+  <div class="container mx-auto px-4">
+    <div class="max-w-xl mx-auto">
+      <p class="text-center text-lg mb-8">Get the latest AI news, tools, and tutorials delivered to your inbox every week.</p>
+
+      <form id="newsletter-form" class="flex gap-2">
+        <input
+          type="email"
+          id="email-input"
+          placeholder="Enter your email..."
+          required
+          class="flex-1 p-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+          type="submit"
+          id="submit-button"
+          class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          Subscribe
+        </button>
+      </form>
+
+      <div id="form-status" class="mt-4 text-center"></div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("newsletter-form") as HTMLFormElement;
+    const emailInput = document.getElementById("email-input") as HTMLInputElement;
+    const submitButton = document.getElementById("submit-button") as HTMLButtonElement;
+    const formStatus = document.getElementById("form-status") as HTMLElement;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = emailInput.value;
+      if (!email) return;
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Subscribing...";
+
+      try {
+        const response = await fetch("/api/newsletter/subscribe", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          formStatus.innerHTML = `<p class="text-green-500">Thank you for subscribing!</p>`;
+          emailInput.value = "";
+        } else {
+          formStatus.innerHTML = `<p class="text-red-500">Error: ${data.error}</p>`;
+        }
+      } catch (error) {
+        console.error("Subscription error:", error);
+        formStatus.innerHTML = `<p class="text-red-500">Could not subscribe. Please try again later.</p>`;
+      }
+
+      submitButton.disabled = false;
+      submitButton.textContent = "Subscribe";
+    });
+  </script>
+</Layout>

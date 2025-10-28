@@ -1,0 +1,111 @@
+---
+import Layout from "@layouts/Layout.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+---
+
+<Layout title="Search | MyBonzo AI Blog">
+  <PageHeader heading="Search Articles" />
+
+  <div class="container mx-auto px-4">
+    <div class="mb-8">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Search for articles..."
+        class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+
+    <div id="search-results" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Search results will be loaded here -->
+    </div>
+  </div>
+
+  <script>
+    async function initSearch() {
+      const searchInput = document.getElementById("search-input") as HTMLInputElement;
+      const searchResults = document.getElementById("search-results") as HTMLElement;
+
+      try {
+        const response = await fetch(
+          "https://mybonzo-blog-worker.stolarnia-ams.workers.dev/api/blog/index"
+        );
+        const data = await response.json();
+        const posts = data.posts;
+
+        function renderResults(query: string) {
+          const filteredPosts = posts.filter((post) => {
+            const title = post.title.toLowerCase();
+            const excerpt = post.excerpt.toLowerCase();
+            const q = query.toLowerCase();
+            return title.includes(q) || excerpt.includes(q);
+          });
+
+          if (filteredPosts.length === 0) {
+            searchResults.innerHTML = `<p class="text-center col-span-full text-theme-primary">No results found for "${query}".</p>`;
+            return;
+          }
+
+          searchResults.innerHTML = filteredPosts
+            .map((post) => {
+              const date = new Date(post.date).toLocaleDateString("pl-PL");
+              const tags = post.tags ? post.tags.split(/[\s,]+/).slice(0, 2) : [];
+
+              return `
+                <article class="border border-gray-500 bg-transparent rounded-none overflow-hidden hover:border-blue-400 hover:bg-gray-900 hover:shadow transition-colors">
+                  <div class="p-6">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                      ${tags
+                        .map(
+                          (tag) => `
+                        <span class="px-2 py-1 bg-blue-600 text-white text-xs rounded-none font-semibold tracking-wide uppercase">
+                          ${tag}
+                        </span>
+                      `
+                        )
+                        .join("")}
+                    </div>
+                    
+                    <div class="flex mt-12 mb-10 md:mt-24 md:mb-12 text-xl font-semibold mb-2 line-clamp-2 text-theme-primary">
+                      <h3 class="tracking-widest text-xl font-medium capitalize leading-relaxed mx-auto bg-theme-accent text-theme-secondary p-4 inline-block rounded-theme">
+                        ${post.title}
+                      </h3>
+                    </div>
+                    
+                    <p class="text-theme-primary opacity-80 text-sm mb-3 line-clamp-3">
+                      ${post.excerpt}
+                    </p>
+                    
+                    <div class="flex justify-between items-center text-sm text-theme-primary opacity-70 mb-4">
+                      <time datetime="${post.date}">
+                        ${date}
+                      </time>
+                    </div>
+                    
+                    <a href="/blog/${post.id}" class="inline-block text-theme-accent font-semibold hover:text-theme-accent-alt transition-colors">
+                      Czytaj więcej →
+                    </a>
+                  </div>
+                </article>
+              `;
+            })
+            .join("");
+        }
+
+        searchInput.addEventListener("input", (e) => {
+          const query = (e.target as HTMLInputElement).value;
+          renderResults(query);
+        });
+
+        renderResults("");
+
+      } catch (error) {
+        console.error("Error loading blog posts:", error);
+        searchResults.innerHTML =
+          '<p class="text-center col-span-full text-theme-primary">Could not load articles. Please try again later.</p>';
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", initSearch);
+  </script>
+</Layout>

@@ -87,8 +87,9 @@ export function createExports(manifest: SSRManifest) {
           });
         }
 
-        // Handle AI API routes
         const url = new URL(request.url);
+
+        // Handle AI API routes
         if (url.pathname.startsWith('/api/ai/')) {
           return handleAIRequest(request, env);
         }
@@ -98,21 +99,23 @@ export function createExports(manifest: SSRManifest) {
           return handleMediaRequest(request, env);
         }
 
+        // Handle newsletter subscription
+        if (url.pathname.startsWith('/api/newsletter/')) {
+          return handleNewsletterRequest(request, env);
+        }
+
         // Default Astro handling
-        return handle(manifest, app, request, env, ctx);
+        return app.render(request, { locals: {} });
       },
 
       // Queue consumer dla przetwarzania obrazów
-      async queue(batch: MessageBatch, env: Env): Promise<void> {
+      async queue(batch: MessageBatch<unknown>, env: Env): Promise<void> {
         for (const message of batch.messages) {
           console.log(`Processing: ${JSON.stringify(message.body)}`);
           // Tutaj można dodać logikę przetwarzania
         }
       }
-    } satisfies ExportedHandler<Env>,
-    
-    ChatRoom,
-    ImageProcessor,
+    } satisfies ExportedHandler<Env>
   };
 }
 
@@ -121,20 +124,20 @@ async function handleAIRequest(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
   
   if (url.pathname === '/api/ai/generate-text') {
-    const { prompt } = await request.json();
+    const body = await request.json() as { prompt: string };
     
     const response = await env.AI.run('@cf/meta/llama-2-7b-chat-int8', {
-      messages: [{ role: 'user', content: prompt }]
+      messages: [{ role: 'user', content: body.prompt }]
     });
     
     return Response.json(response);
   }
   
   if (url.pathname === '/api/ai/generate-image') {
-    const { prompt } = await request.json();
+    const body = await request.json() as { prompt: string };
     
     const response = await env.AI.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', {
-      prompt: prompt
+      prompt: body.prompt
     });
     
     return new Response(response, {
@@ -170,6 +173,30 @@ async function handleMediaRequest(request: Request, env: Env): Promise<Response>
   return new Response('Not found', { status: 404 });
 }
 
+// Newsletter Request Handler
+async function handleNewsletterRequest(request: Request, env: Env): Promise<Response> {
+  const url = new URL(request.url);
+
+  if (url.pathname === '/api/newsletter/subscribe' && request.method === 'POST') {
+    try {
+      const body = await request.json() as { email: string };
+
+      if (!body.email || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(body.email)) {
+        return Response.json({ error: 'Invalid email address' }, { status: 400 });
+      }
+
+      await env.NEWSLETTER_SUBSCRIPTIONS.put(body.email, new Date().toISOString());
+
+      return Response.json({ success: true });
+    } catch (error) {
+      console.error('Subscription error:', error);
+      return Response.json({ error: 'Could not subscribe. Please try again later.' }, { status: 500 });
+    }
+  }
+
+  return new Response('Not found', { status: 404 });
+}
+
 // TypeScript types dla środowiska
 interface Env {
   AI: Ai;
@@ -178,6 +205,7 @@ interface Env {
   MEDIA_BUCKET: R2Bucket;
   IMAGE_QUEUE: Queue;
   CHAT_ROOM: DurableObjectNamespace;
+  NEWSLETTER_SUBSCRIPTIONS: KVNamespace;
   CLOUDFLARE_API_TOKEN: string;
   CLOUDFLARE_ACCOUNT_ID: string;
 }
