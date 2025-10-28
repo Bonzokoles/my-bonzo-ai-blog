@@ -1,163 +1,279 @@
-# Konfiguracja Cloudflare dla domeny www.mybonzoaiblog.com
+# 🚀 Cloudflare Deployment Setup - Instrukcja krok po kroku
 
-## 🌐 Wymagane ustawienia DNS w Cloudflare Dashboard
+## 📋 Wymagania wstępne
 
-### 1. **DNS Records**
-```
-Type    Name                Value                           Proxy   TTL
-A       mybonzoaiblog.com   192.0.2.1                      ✅      Auto
-AAAA    mybonzoaiblog.com   100::                          ✅      Auto  
-CNAME   www                 mybonzoaiblog.com              ✅      Auto
-```
+1. ✅ Płatny plan Cloudflare (masz na: stolarnia.ams@gmail.com)
+2. ✅ Cloudflare API Token z uprawnieniami:
+   - Account → Cloudflare Pages → Edit
+   - Account → Workers KV Storage → Edit
+   - Account → R2 Storage → Edit
+   - Account → Queues → Edit
+   - Account → Workers Scripts → Edit
 
-### 2. **Cloudflare Pages Configuration**
-- Project Name: `mybonzo-ai-blog`
-- Custom Domain: `www.mybonzoaiblog.com`
-- Production Branch: `main`
-- Build Command: `npm run build`
-- Build Output Directory: `dist`
+---
 
-### 3. **SSL/TLS Settings**
-- SSL/TLS encryption mode: **Full (strict)**
-- Always Use HTTPS: **Enabled**
-- HTTP Strict Transport Security (HSTS): **Enabled**
-- Minimum TLS Version: **1.2**
+## 🔑 Krok 1: Uzyskaj Cloudflare API Token
 
-### 4. **Page Rules (Optional)**
-```
-URL Pattern: mybonzoaiblog.com/*
-Settings:
-- Always Use HTTPS: On
-- Forwarding URL: 301 Redirect to https://www.mybonzoaiblog.com/$1
-```
+1. Przejdź do: https://dash.cloudflare.com/profile/api-tokens
+2. Kliknij **"Create Token"**
+3. Wybierz **"Create Custom Token"**
+4. Skonfiguruj uprawnienia:
+   ```
+   Permissions:
+   - Account → Cloudflare Pages → Edit
+   - Account → Workers KV Storage → Edit
+   - Account → R2 Storage → Edit
+   - Account → Queues → Edit
+   - Account → Workers Scripts → Edit
+   - Account → Durable Objects → Edit
+   - Zone → Zone → Read (opcjonalne, dla domain)
+   ```
+5. Kliknij **"Continue to summary"** → **"Create Token"**
+6. **SKOPIUJ TOKEN** (nie będzie ponownie widoczny!)
 
-### 5. **R2 Bucket Configuration**
-```
-Bucket Name: mybonzo-blog-content
-Public Access: Enabled for blog content
-Custom Domain: blog-cdn.mybonzoaiblog.com (optional)
-```
+---
 
-### 6. **Workers Routes**
-```
-Route: blog-api.mybonzoaiblog.com/*
-Worker: mybonzo-blog-worker
+## 🛠️ Krok 2: Ustaw zmienne środowiskowe
 
-Route: www.mybonzoaiblog.com/blog-api/*  
-Worker: mybonzo-blog-worker
+### Windows CMD:
+```cmd
+set CLOUDFLARE_API_TOKEN=<TWÓJ_TOKEN_TUTAJ>
+set CLOUDFLARE_ACCOUNT_ID=7f490d58a478c6baccb0ae01ea1d87c3
 ```
 
-## 🔧 Kroki konfiguracji
+### Windows PowerShell:
+```powershell
+$env:CLOUDFLARE_API_TOKEN="<TWÓJ_TOKEN_TUTAJ>"
+$env:CLOUDFLARE_ACCOUNT_ID="7f490d58a478c6baccb0ae01ea1d87c3"
+```
 
-### Krok 1: Dodaj domenę do Cloudflare
-1. Zaloguj się do Cloudflare Dashboard
-2. Kliknij "Add a Site"
-3. Wprowadź `mybonzoaiblog.com`
-4. Wybierz plan (Free wystarczy na start)
-5. Zaktualizuj nameservery u dostawcy domeny
-
-### Krok 2: Skonfiguruj DNS
+### Git Bash / Linux / macOS:
 ```bash
-# Dodaj rekordy DNS w Cloudflare Dashboard:
-A     mybonzoaiblog.com     192.0.2.1      (Proxied)
-AAAA  mybonzoaiblog.com     100::          (Proxied)  
-CNAME www                   mybonzoaiblog.com (Proxied)
+export CLOUDFLARE_API_TOKEN="<TWÓJ_TOKEN_TUTAJ>"
+export CLOUDFLARE_ACCOUNT_ID="7f490d58a478c6baccb0ae01ea1d87c3"
 ```
 
-### Krok 3: Połącz z Cloudflare Pages
-1. Idź do Cloudflare Dashboard > Pages
-2. Znajdź projekt `mybonzo-ai-blog`
-3. Kliknij "Custom domains" 
-4. Dodaj `www.mybonzoaiblog.com`
+---
 
-### Krok 4: Deploy Workers
-```bash
-cd workers
-npx wrangler deploy --env production
-```
+## 📦 Krok 3: Utwórz zasoby Cloudflare i zapisz ID
 
-### Krok 5: Skonfiguruj R2
-```bash
-# Utwórz bucket
-npx wrangler r2 bucket create mybonzo-blog-content
-
-# Ustaw public access
-npx wrangler r2 bucket cors mybonzo-blog-content --file cors-config.json
-```
-
-## 📋 Checklist weryfikacji
-
-- [ ] Domena wskazuje na Cloudflare nameservery
-- [ ] DNS propagacja zakończona (sprawdź: dig www.mybonzoaiblog.com)
-- [ ] SSL certyfikat wygenerowany i aktywny
-- [ ] Redirect z apex domain (mybonzoaiblog.com) na www
-- [ ] Cloudflare Pages deployment działa
-- [ ] Workers odpowiadają na /blog-api/* endpointach
-- [ ] R2 bucket accessible i skonfigurowany
-
-## 🚀 Testy po konfiguracji
+### 3.1 KV Namespaces (4 komendy)
 
 ```bash
-# Test głównej strony
-curl -I https://www.mybonzoaiblog.com
-
-# Test blog API
-curl https://www.mybonzoaiblog.com/blog-api/health
-
-# Test redirecta apex -> www
-curl -I https://mybonzoaiblog.com
-
-# Test SSL
-openssl s_client -connect www.mybonzoaiblog.com:443 -servername www.mybonzoaiblog.com
+npx wrangler kv:namespace create "SESSION"
+```
+**Wynik będzie wyglądał tak:**
+```
+✅ Success! Created KV namespace SESSION
+ ID: abc123xyz456def789ghi012  ← SKOPIUJ TO!
 ```
 
-## ⚙️ Environment Variables
+➡️ **SKOPIUJ ID** i wklej w `wrangler.jsonc` linia 26: `"id": "abc123xyz456def789ghi012"`
 
-### GitHub Secrets (dla CI/CD)
-```
-CLOUDFLARE_API_TOKEN=your_token_here
-CLOUDFLARE_ACCOUNT_ID=7f490d58a478c6baccb0ae01ea1d87c3
-```
+---
 
-### Worker Environment Variables
-```
-WORKER_ENV=production
-BLOG_API_TOKEN=your_secret_token (via wrangler secret put)
-```
-
-## 🔍 Troubleshooting
-
-### Problem: DNS nie rozwiązuje się
 ```bash
-# Sprawdź propagację DNS
-dig www.mybonzoaiblog.com
-nslookup www.mybonzoaiblog.com 8.8.8.8
+npx wrangler kv:namespace create "SESSION" --preview
 ```
+➡️ **SKOPIUJ ID** i wklej w `wrangler.jsonc` linia 27: `"preview_id": "..."`
 
-### Problem: SSL certificate error  
-- Sprawdź czy domena jest "proxied" (🧡 cloud icon)
-- Poczekaj 15-30 minut na generację certyfikatu
-- Universal SSL musi być enabled
+---
 
-### Problem: Pages deployment fails
-- Sprawdź czy custom domain jest poprawnie dodana
-- Verify build command i output directory
-- Check GitHub Actions logs
-
-### Problem: Workers nie odpowiadają
 ```bash
-# Deploy workers ponownie
-cd workers
-npx wrangler deploy --env production
+npx wrangler kv:namespace create "CACHE"
+```
+➡️ **SKOPIUJ ID** i wklej w `wrangler.jsonc` linia 31: `"id": "..."`
 
-# Sprawdź route configuration
-npx wrangler route list
+---
+
+```bash
+npx wrangler kv:namespace create "CACHE" --preview
+```
+➡️ **SKOPIUJ ID** i wklej w `wrangler.jsonc` linia 32: `"preview_id": "..."`
+
+---
+
+### 3.2 R2 Bucket
+
+```bash
+npx wrangler r2 bucket create mybonzo-media
+```
+**Wynik:**
+```
+✅ Created bucket 'mybonzo-media'
+```
+✅ **Nic nie kopiuj** - nazwa bucketa już jest w `wrangler.jsonc`
+
+---
+
+```bash
+npx wrangler r2 bucket create mybonzo-media-preview
+```
+✅ **Nic nie kopiuj** - nazwa bucketa już jest w `wrangler.jsonc`
+
+---
+
+### 3.3 Queue
+
+```bash
+npx wrangler queues create image-processing-queue
+```
+**Wynik:**
+```
+✅ Created queue 'image-processing-queue'
+```
+✅ **Nic nie kopiuj** - nazwa queue już jest w `wrangler.jsonc`
+
+---
+
+## ✏️ Krok 4: Edytuj wrangler.jsonc
+
+Otwórz `wrangler.jsonc` i **ZAMIEŃ 4 placeholdery**:
+
+```jsonc
+"kv_namespaces": [
+  {
+    "binding": "SESSION",
+    "id": "<WKLEJ_SESSION_ID>",  // 👈 TUTAJ wklej pierwsze ID
+    "preview_id": "<WKLEJ_SESSION_PREVIEW_ID>"  // 👈 TUTAJ wklej drugie ID
+  },
+  {
+    "binding": "CACHE",
+    "id": "<WKLEJ_CACHE_ID>",  // 👈 TUTAJ wklej trzecie ID
+    "preview_id": "<WKLEJ_CACHE_PREVIEW_ID>"  // 👈 TUTAJ wklej czwarte ID
+  }
+]
 ```
 
-## 📞 Support
+**Zapisz plik!**
 
-W przypadku problemów:
-1. Sprawdź Cloudflare Status Page
-2. Przejrzyj logs w Cloudflare Dashboard
-3. Użyj Cloudflare Community Forum
-4. Contact support (na płatnych planach)
+---
+
+## 🔐 Krok 5: Dodaj GitHub Secrets
+
+1. Przejdź do: https://github.com/<TWÓJ_USERNAME>/mybonzoAIblog/settings/secrets/actions
+2. Kliknij **"New repository secret"**
+3. Dodaj dwa secrety:
+
+**Secret 1:**
+```
+Name: CLOUDFLARE_API_TOKEN
+Value: <WKLEJ_SWÓJ_TOKEN>
+```
+
+**Secret 2:**
+```
+Name: CLOUDFLARE_ACCOUNT_ID
+Value: 7f490d58a478c6baccb0ae01ea1d87c3
+```
+
+---
+
+## 🧪 Krok 6: Test lokalny
+
+```bash
+# 1. Build projektu
+npm run build
+
+# 2. Test lokalny deployment
+npx wrangler pages deploy ./dist --project-name=mybonzoaiblog
+```
+
+**Oczekiwany wynik:**
+```
+✨ Compiled Worker successfully
+✨ Uploading...
+✨ Deployment complete!
+🌐 https://mybonzoaiblog.pages.dev
+```
+
+---
+
+## 🚀 Krok 7: Deployment przez GitHub Actions
+
+```bash
+git add wrangler.jsonc CLOUDFLARE_SETUP.md
+git commit -m "feat: Configure Cloudflare deployment with all resources"
+git push origin main
+```
+
+Deployment automatycznie wystartuje przez GitHub Actions!
+
+Monitor: https://github.com/<TWÓJ_USERNAME>/mybonzoAIblog/actions
+
+---
+
+## ✅ Weryfikacja po deploymencie
+
+1. **Strona główna**: https://mybonzoaiblog.pages.dev
+2. **AI Chat API**: https://mybonzoaiblog.pages.dev/api/ai/generate-text
+3. **AI Image API**: https://mybonzoaiblog.pages.dev/api/ai/generate-image
+4. **Media Upload**: https://mybonzoaiblog.pages.dev/api/media/upload
+5. **Cloudflare Dashboard**: https://dash.cloudflare.com/7f490d58a478c6baccb0ae01ea1d87c3/pages
+
+---
+
+## 🆘 Troubleshooting
+
+### Problem: "Error: Authentication error"
+**Rozwiązanie**: Sprawdź czy `CLOUDFLARE_API_TOKEN` jest poprawnie ustawiony
+
+```bash
+# Test tokena:
+npx wrangler whoami
+```
+
+---
+
+### Problem: "Error: KV namespace not found"
+**Rozwiązanie**: Sprawdź czy ID w `wrangler.jsonc` są dokładnie takie same jak zwrócone przez komendy
+
+```bash
+# Lista wszystkich KV namespaces:
+npx wrangler kv:namespace list
+```
+
+---
+
+### Problem: "Error: Durable Object migration required"
+**Rozwiązanie**: Sekcja `migrations` już jest dodana w `wrangler.jsonc` - jeśli dalej błąd, uruchom:
+
+```bash
+npx wrangler deploy
+```
+
+---
+
+### Problem: "Queue not found"
+**Rozwiązanie**: Lista wszystkich queues:
+
+```bash
+npx wrangler queues list
+```
+
+---
+
+## 📊 Koszty (płatny plan)
+
+- **Durable Objects**: ~$0.15/million requests + $0.20/GB RAM
+- **R2 Storage**: $0.015/GB storage + $0.36/million Class A ops
+- **KV Storage**: $0.50/GB storage + $0.50/million reads
+- **AI Workers**: Currently in beta - pricing TBD
+- **Pages**: Included in Workers Paid plan ($5/month minimum)
+
+**Szacowany koszt miesięczny dla małego/średniego ruchu: $5-15**
+
+---
+
+## 🎉 Gotowe!
+
+Twoja aplikacja MyBonzo AI Blog będzie dostępna globalnie przez Cloudflare CDN z pełną integracją:
+
+✅ Astro SSR
+✅ AI Workers (Llama 2, Stable Diffusion)
+✅ Real-time Chat (Durable Objects)
+✅ Image Processing (R2 + Queue)
+✅ Session Management (KV)
+✅ Global CDN
+
+**Enjoy! 🚀**
