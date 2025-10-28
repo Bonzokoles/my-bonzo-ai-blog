@@ -4,5 +4,66 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
-  "pages_build_output_dir": "./dist"
+  "pages_build_output_dir": "./dist",
+  
+  // AI Workers Bindings
+  "ai": {
+    "binding": "AI"
+  },
+  
+  // KV Storage dla sesji i cache
+  "kv_namespaces": [
+    {
+      "binding": "SESSION",
+      "id": "your-kv-namespace-id",
+      "preview_id": "your-preview-kv-namespace-id"
+    },
+    {
+      "binding": "CACHE",
+      "id": "your-cache-kv-namespace-id", 
+      "preview_id": "your-cache-preview-kv-namespace-id"
+    }
+  ],
+  
+  // R2 dla plików multimedialnych
+  "r2_buckets": [
+    {
+      "binding": "MEDIA_BUCKET",
+      "bucket_name": "mybonzo-media",
+      "preview_bucket_name": "mybonzo-media-preview"
+    }
+  ],
+  
+  // Queue dla zadań w tle
+  "queues": {
+    "producers": [
+      {
+        "binding": "IMAGE_QUEUE",
+        "queue": "image-processing-queue"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "image-processing-queue",
+        "max_batch_size": 10,
+        "max_batch_timeout": 30
+      }
+    ]
+  },
+  
+  // Durable Objects dla real-time funkcji
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "CHAT_ROOM",
+        "class_name": "ChatRoom"
+      }
+    ]
+  },
+  
+  // Environment variables
+  "vars": {
+    "ENVIRONMENT": "production",
+    "API_VERSION": "v1"
+  }
 }

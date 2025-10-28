@@ -1,32 +1,30 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import Heading from "@components/Astro/Heading.astro";
 import Link from "@components/Astro/Link.astro";
 import BackgroundPattern from "@components/elements/BackgroundPattern.astro";
+import Layout from "@layouts/Layout.astro";
+
+// Prerender statycznej strony dla lepszej wydajności
+export const prerender = true;
 ---
 
 <Layout title="O nas" description="Kim jesteśmy - zespół MyBonzo AI Blog">
   <BackgroundPattern />
   <section class="py-16">
     <div class="max-w-4xl mx-auto px-4">
-      <Heading level={1} class="text-4xl font-bold mb-6">O nas</Heading>
+      <h1 class="text-4xl font-bold mb-6">O nas</h1>
       <div class="prose prose-lg dark:prose-invert max-w-none">
         <p class="text-lg text-gray-700 dark:text-gray-300 mb-6">
           Jesteśmy zespołem MyBonzo - polską platformą AI dla domu i rodziny.
         </p>
 
-        <Heading level={2} class="text-2xl font-semibold mt-8 mb-4"
-          >Nasza misja</Heading
-        >
+        <h2 class="text-2xl font-semibold mt-8 mb-4">Nasza misja</h2>
         <p class="text-gray-700 dark:text-gray-300 mb-4">
           Tworzymy proste, domowe rozwiązania AI dla Polaków. Wierzymy, że
           sztuczna inteligencja powinna być dostępna dla każdego - bez
           skomplikowanych instrukcji i technicznego żargonu.
         </p>
 
-        <Heading level={2} class="text-2xl font-semibold mt-8 mb-4"
-          >Co robimy</Heading
-        >
+        <h2 class="text-2xl font-semibold mt-8 mb-4">Co robimy</h2>
         <ul
           class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-6"
         >

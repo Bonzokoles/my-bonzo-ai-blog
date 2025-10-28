@@ -1,4 +1,3 @@
-import { Platforms } from "./Types/types";
 
 import type { Author, Blog, NavEntry, Site, Socials } from "./Types/types";
 
@@ -101,6 +100,14 @@ export const NAVIGATION: NavEntry[] = [
 	{
 		href: "/system",
 		text: "System",
+	},
+	{
+		href: "/system/ai-chat",
+		text: "AI Chat",
+	},
+	{
+		href: "/system/media",
+		text: "Media",
 	},
 	{
 		href: "/o-nas",

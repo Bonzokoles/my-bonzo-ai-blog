@@ -1,0 +1,385 @@
+---
+// AI Chat Component - interakcja z Cloudflare AI
+interface Props {
+  placeholder?: string;
+  maxLength?: number;
+  model?: string;
+  showModel?: boolean;
+}
+
+const {
+  placeholder = "Zadaj pytanie AI...",
+  maxLength = 500,
+  model = "@cf/meta/llama-2-7b-chat-int8",
+  showModel = false,
+} = Astro.props;
+---
+
+<div
+  class="ai-chat-container max-w-2xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg"
+>
+  <div class="chat-header mb-4">
+    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+      🤖 Asystent AI MyBonzo
+    </h3>
+    {
+      showModel && (
+        <p class="text-sm text-gray-600 dark:text-gray-400">Model: {model}</p>
+      )
+    }
+  </div>
+
+  <div
+    class="chat-messages mb-4 max-h-96 overflow-y-auto bg-gray-50 dark:bg-gray-700 rounded-lg p-4"
+  >
+    <div id="messages-container">
+      <div class="message ai-message">
+        <div
+          class="message-content bg-blue-100 dark:bg-blue-900 p-3 rounded-lg"
+        >
+          <p class="text-gray-800 dark:text-gray-200">
+            Cześć! Jestem asystentem AI MyBonzo. Mogę odpowiedzieć na pytania o
+            sztuczną inteligencję, pomóc z problemami technicznymi lub po prostu
+            porozmawiać. Jak mogę Ci pomóc?
+          </p>
+        </div>
+        <span class="timestamp text-xs text-gray-500 mt-1 block"> Teraz </span>
+      </div>
+    </div>
+  </div>
+
+  <form id="chat-form" class="chat-input-form">
+    <div class="flex gap-2">
+      <div class="flex-1">
+        <textarea
+          id="chat-input"
+          placeholder={placeholder}
+          maxlength={maxLength}
+          rows="3"
+          class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg
+                 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200
+                 focus:outline-none focus:ring-2 focus:ring-blue-500
+                 resize-none"
+        ></textarea>
+        <div class="flex justify-between mt-1">
+          <span id="char-count" class="text-xs text-gray-500"
+            >0/{maxLength}</span
+          >
+          <span id="status" class="text-xs text-gray-500"></span>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <button
+          type="submit"
+          id="send-button"
+          class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg
+                 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500
+                 disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          📤 Wyślij
+        </button>
+        <button
+          type="button"
+          id="clear-button"
+          class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg
+                 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+        >
+          🗑️ Wyczyść
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Loading indicator -->
+  <div id="loading" class="hidden flex items-center justify-center p-4">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600">
+    </div>
+    <span class="ml-2 text-gray-600 dark:text-gray-400">AI myśli...</span>
+  </div>
+</div>
+
+<style>
+  .ai-chat-container {
+    border: 1px solid #e5e7eb;
+  }
+
+  .dark .ai-chat-container {
+    border-color: #374151;
+  }
+
+  .message {
+    margin-bottom: 1rem;
+  }
+
+  .message:last-child {
+    margin-bottom: 0;
+  }
+
+  .user-message .message-content {
+    margin-left: auto;
+    max-width: 80%;
+  }
+
+  .ai-message .message-content {
+    margin-right: auto;
+    max-width: 80%;
+  }
+
+  .typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .typing-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #9ca3af;
+    animation: typing 1.4s infinite;
+  }
+
+  .typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes typing {
+    0%,
+    60%,
+    100% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(-10px);
+    }
+  }
+</style>
+
+<script>
+  // AI Chat functionality
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("chat-form") as HTMLFormElement;
+    const input = document.getElementById("chat-input") as HTMLTextAreaElement;
+    const sendButton = document.getElementById(
+      "send-button"
+    ) as HTMLButtonElement;
+    const clearButton = document.getElementById(
+      "clear-button"
+    ) as HTMLButtonElement;
+    const messagesContainer = document.getElementById(
+      "messages-container"
+    ) as HTMLElement;
+    const loading = document.getElementById("loading") as HTMLElement;
+    const charCount = document.getElementById("char-count") as HTMLElement;
+    const status = document.getElementById("status") as HTMLElement;
+
+    let isProcessing = false;
+
+    // Character counter
+    input.addEventListener("input", function () {
+      const length = input.value.length;
+      const maxLength = parseInt(input.getAttribute("maxlength") || "500");
+      charCount.textContent = `${length}/${maxLength}`;
+
+      if (length > maxLength * 0.9) {
+        charCount.classList.add("text-red-500");
+      } else {
+        charCount.classList.remove("text-red-500");
+      }
+    });
+
+    // Auto-resize textarea
+    input.addEventListener("input", function () {
+      this.style.height = "auto";
+      this.style.height = this.scrollHeight + "px";
+    });
+
+    // Send message
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      if (isProcessing) return;
+
+      const message = input.value.trim();
+      if (!message) return;
+
+      // Add user message
+      addMessage(message, "user");
+
+      // Clear input
+      input.value = "";
+      input.style.height = "auto";
+      charCount.textContent = "0/500";
+
+      // Show loading
+      setProcessing(true);
+
+      try {
+        // Add typing indicator
+        addTypingIndicator();
+
+        const response = await fetch("/api/ai/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt: message,
+            model: "{model}",
+          }),
+        });
+
+        const data = await response.json();
+
+        // Remove typing indicator
+        removeTypingIndicator();
+
+        if (data.success) {
+          addMessage(data.response, "ai", data.cached);
+          updateStatus(
+            data.cached ? "Odpowiedź z cache" : `Model: ${data.model}`
+          );
+        } else {
+          addMessage(
+            `Przepraszam, wystąpił błąd: ${data.error}. Spróbuj ponownie później.`,
+            "ai",
+            false,
+            true
+          );
+          updateStatus("Błąd API");
+        }
+      } catch (error) {
+        console.error("Chat error:", error);
+        removeTypingIndicator();
+        addMessage(
+          "Przepraszam, nie mogę teraz odpowiedzieć. Sprawdź połączenie internetowe i spróbuj ponownie.",
+          "ai",
+          false,
+          true
+        );
+        updateStatus("Błąd połączenia");
+      }
+
+      setProcessing(false);
+    });
+
+    // Clear chat
+    clearButton.addEventListener("click", function () {
+      messagesContainer.innerHTML = `
+        <div class="message ai-message">
+          <div class="message-content bg-blue-100 dark:bg-blue-900 p-3 rounded-lg">
+            <p class="text-gray-800 dark:text-gray-200">
+              Cześć! Jestem asystentem AI MyBonzo. Jak mogę Ci pomóc?
+            </p>
+          </div>
+          <span class="timestamp text-xs text-gray-500 mt-1 block">
+            Teraz
+          </span>
+        </div>
+      `;
+      updateStatus("");
+    });
+
+    // Enter to send (Shift+Enter for new line)
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        form.dispatchEvent(new Event("submit"));
+      }
+    });
+
+    // Helper functions
+    function addMessage(
+      content: string,
+      sender: "user" | "ai",
+      cached = false,
+      isError = false
+    ) {
+      const messageDiv = document.createElement("div");
+      messageDiv.className = `message ${sender}-message`;
+
+      const bgClass =
+        sender === "user"
+          ? "bg-green-100 dark:bg-green-900"
+          : isError
+            ? "bg-red-100 dark:bg-red-900"
+            : "bg-blue-100 dark:bg-blue-900";
+
+      const timestamp = new Date().toLocaleTimeString("pl-PL", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      messageDiv.innerHTML = `
+        <div class="message-content ${bgClass} p-3 rounded-lg">
+          <p class="text-gray-800 dark:text-gray-200">${escapeHtml(content)}</p>
+          ${cached ? '<span class="text-xs text-gray-500">📦 Z cache</span>' : ""}
+        </div>
+        <span class="timestamp text-xs text-gray-500 mt-1 block">
+          ${timestamp}
+        </span>
+      `;
+
+      messagesContainer.appendChild(messageDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function addTypingIndicator() {
+      const typingDiv = document.createElement("div");
+      typingDiv.id = "typing-indicator";
+      typingDiv.className = "message ai-message";
+      typingDiv.innerHTML = `
+        <div class="message-content bg-blue-100 dark:bg-blue-900 p-3 rounded-lg">
+          <div class="typing-indicator">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+          </div>
+        </div>
+      `;
+
+      messagesContainer.appendChild(typingDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const typingIndicator = document.getElementById("typing-indicator");
+      if (typingIndicator) {
+        typingIndicator.remove();
+      }
+    }
+
+    function setProcessing(processing: boolean) {
+      isProcessing = processing;
+      sendButton.disabled = processing;
+      input.disabled = processing;
+
+      if (processing) {
+        loading.classList.remove("hidden");
+        sendButton.textContent = "⏳ Czekaj...";
+      } else {
+        loading.classList.add("hidden");
+        sendButton.textContent = "📤 Wyślij";
+      }
+    }
+
+    function updateStatus(message: string) {
+      status.textContent = message;
+      if (message) {
+        setTimeout(() => {
+          status.textContent = "";
+        }, 3000);
+      }
+    }
+
+    function escapeHtml(text: string): string {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  });
+</script>
