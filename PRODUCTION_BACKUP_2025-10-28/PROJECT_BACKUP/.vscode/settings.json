@@ -1,0 +1,74 @@
+{
+    // Astro Development Settings
+    "astro.enable-ts-plugin": true,
+    "astro.typescript.allowArbitraryAttributes": false,
+    "astro.trace.server": "verbose",
+    
+    // TypeScript Configuration
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.suggest.autoImports": true,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    
+    // Tailwind CSS IntelliSense
+    "tailwindCSS.includeLanguages": {
+        "astro": "html"
+    },
+    "tailwindCSS.files.exclude": [
+        "**/.git/**",
+        "**/node_modules/**",
+        "**/.next/**",
+        "**/.nuxt/**",
+        "**/.vuepress/**",
+        "**/dist/**",
+        "**/build/**"
+    ],
+    
+    // File Associations for Astro and MDX
+    "files.associations": {
+        "*.astro": "astro",
+        "*.mdx": "mdx"
+    },
+    
+    // Emmet for Astro
+    "emmet.includeLanguages": {
+        "astro": "html"
+    },
+    
+    // Formatting and Code Quality
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit",
+        "source.organizeImports": "explicit"
+    },
+    
+    // MCP Integration Settings
+    "github.copilot.enable": {
+        "*": true,
+        "astro": true,
+        "typescript": true,
+        "javascript": true
+    },
+    
+    // File Explorer
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "*.astro": "${capture}.astro.ts,${capture}.d.ts",
+        "package.json": "package-lock.json,yarn.lock,pnpm-lock.yaml"
+    },
+    
+    // Alkaline Project Specific
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/dist": true,
+        "**/.astro": true,
+        "**/alkaline-main": false
+    },
+    
+    // Auto-save for rapid development
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    
+    // IntelliSense for Astro Components
+    "typescript.suggest.paths": true,
+    "typescript.preferences.includePackageJsonAutoImports": "on"
+}

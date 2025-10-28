@@ -1,0 +1,383 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const title = "R2 Blog System - MyBonzo AI";
+
+// Get blog posts from our API
+let blogPosts = [];
+let error = null;
+
+try {
+  const response = await fetch(`${Astro.site?.origin || 'http://localhost:4321'}/api/blog/index`);
+  if (response.ok) {
+    const blogIndex = await response.json();
+    blogPosts = blogIndex.posts || [];
+  } else {
+    error = 'Failed to load blog posts';
+  }
+} catch (e) {
+  error = `Error loading posts: ${e instanceof Error ? e.message : 'Unknown error'}`;
+  console.error('Blog page error:', e);
+}
+---
+
+<Layout title={title}>
+  <main class="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
+    <!-- Header -->
+    <div class="relative py-20 px-4">
+      <div class="max-w-6xl mx-auto text-center">
+        <h1 class="graffiti-footer text-5xl md:text-7xl mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+          R2 BLOG SYSTEM
+        </h1>
+        <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+          Zaawansowany system blogowy z automatyczną numeracją postów i przetwarzaniem obrazów
+        </p>
+      </div>
+    </div>
+
+    <!-- Blog Posts Section -->
+    <div class="max-w-6xl mx-auto px-4 pb-20">
+      {error ? (
+        <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-6 text-center">
+          <h2 class="text-2xl font-bold text-red-400 mb-2">Błąd ładowania postów</h2>
+          <p class="text-red-300">{error}</p>
+          <button 
+            onclick="window.location.reload()" 
+            class="mt-4 px-6 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+          >
+            Spróbuj ponownie
+          </button>
+        </div>
+      ) : blogPosts.length === 0 ? (
+        <div class="text-center py-12">
+          <h2 class="text-3xl font-bold text-gray-400 mb-4">Brak postów</h2>
+          <p class="text-gray-500">Nie znaleziono żadnych postów w systemie R2.</p>
+          <button 
+            onclick="refreshBlog()" 
+            class="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+          >
+            Odśwież indeks blogów
+          </button>
+        </div>
+      ) : (
+        <div>
+          <!-- Blog Stats -->
+          <div class="bg-gray-800/50 rounded-lg p-6 mb-8 text-center">
+            <h2 class="text-2xl font-bold mb-4">Statystyki Blogów</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-blue-900/30 rounded-lg p-4">
+                <div class="text-3xl font-bold text-blue-400">{blogPosts.length}</div>
+                <div class="text-sm text-gray-400">Łącznie postów</div>
+              </div>
+              <div class="bg-green-900/30 rounded-lg p-4">
+                <div class="text-3xl font-bold text-green-400">{blogPosts.filter(p => p.images?.length > 0).length}</div>
+                <div class="text-sm text-gray-400">Posty z obrazami</div>
+              </div>
+              <div class="bg-purple-900/30 rounded-lg p-4">
+                <div class="text-3xl font-bold text-purple-400">{blogPosts.reduce((acc, p) => acc + (p.images?.length || 0), 0)}</div>
+                <div class="text-sm text-gray-400">Łącznie obrazów</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Blog Posts Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {blogPosts.map((post) => (
+              <article class="bg-gray-800/50 rounded-lg border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 group">
+                <div class="p-6">
+                  <!-- Post ID Badge -->
+                  <div class="flex justify-between items-start mb-4">
+                    <span class="bg-blue-600/20 text-blue-400 text-xs font-mono px-2 py-1 rounded-md">
+                      #{post.id || post.fileName?.replace('.md', '')}
+                    </span>
+                    {post.images && post.images.length > 0 && (
+                      <span class="bg-green-600/20 text-green-400 text-xs px-2 py-1 rounded-md">
+                        {post.images.length} obrazów
+                      </span>
+                    )}
+                  </div>
+
+                  <!-- Title -->
+                  <h3 class="text-xl font-bold mb-3 group-hover:text-blue-400 transition-colors line-clamp-2">
+                    {post.title}
+                  </h3>
+
+                  <!-- Excerpt -->
+                  {post.excerpt && (
+                    <p class="text-gray-400 text-sm mb-4 line-clamp-3">
+                      {post.excerpt}
+                    </p>
+                  )}
+
+                  <!-- Date -->
+                  <div class="text-xs text-gray-500 mb-4">
+                    {new Date(post.date).toLocaleDateString('pl-PL', {
+                      year: 'numeric',
+                      month: 'long', 
+                      day: 'numeric'
+                    })}
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="flex gap-2">
+                    <button 
+                      onclick={`viewPost('${post.id || post.fileName?.replace('.md', '')}')`}
+                      class="flex-1 px-4 py-2 bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 rounded-lg transition-colors text-sm"
+                    >
+                      Wyświetl
+                    </button>
+                    {post.images && post.images.length > 0 && (
+                      <button 
+                        onclick={`showImages('${post.id || post.fileName?.replace('.md', '')}', ${JSON.stringify(post.images).replace(/"/g, '&quot;')})`}
+                        class="px-4 py-2 bg-green-600/20 hover:bg-green-600/40 text-green-400 rounded-lg transition-colors text-sm"
+                      >
+                        Obrazy
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+
+    <!-- Blog Management Panel -->
+    <div class="max-w-4xl mx-auto px-4 pb-20">
+      <div class="bg-gray-800/30 rounded-lg border border-gray-700/30 p-6">
+        <h2 class="text-2xl font-bold mb-6">Zarządzanie Blogiem</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button 
+            onclick="refreshBlog()"
+            class="px-6 py-3 bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 rounded-lg transition-colors border border-blue-500/30"
+          >
+            🔄 Odśwież Indeks
+          </button>
+          
+          <button 
+            onclick="uploadPost()"
+            class="px-6 py-3 bg-green-600/20 hover:bg-green-600/40 text-green-400 rounded-lg transition-colors border border-green-500/30"
+          >
+            ➕ Dodaj Post
+          </button>
+          
+          <button 
+            onclick="showCFImageUpload()"
+            class="px-6 py-3 bg-orange-600/20 hover:bg-orange-600/40 text-orange-400 rounded-lg transition-colors border border-orange-500/30"
+          >
+            🖼️ CF Images
+          </button>
+          
+          <button 
+            onclick="showSystemInfo()"
+            class="px-6 py-3 bg-purple-600/20 hover:bg-purple-600/40 text-purple-400 rounded-lg transition-colors border border-purple-500/30"
+          >
+            ℹ️ Info Systemu
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for post content -->
+    <div id="postModal" class="hidden fixed inset-0 bg-black/80 p-4 z-50" style="display: none; align-items: center; justify-content: center;">
+      <div class="bg-gray-900 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+          <h3 id="modalTitle" class="text-xl font-bold"></h3>
+          <button onclick="closeModal()" class="text-gray-400 hover:text-white text-2xl">×</button>
+        </div>
+        <div id="modalContent" class="p-6 prose prose-invert max-w-none"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Blog management functions
+    async function refreshBlog() {
+      try {
+        const response = await fetch('/api/blog/index?refresh=true');
+        if (response.ok) {
+          window.location.reload();
+        } else {
+          alert('Błąd odświeżania indeksu blogów');
+        }
+      } catch (error) {
+        console.error('Refresh error:', error);
+        alert('Błąd połączenia z API');
+      }
+    }
+
+    async function viewPost(postId) {
+      try {
+        const response = await fetch(`/api/blog/${postId}`);
+        if (response.ok) {
+          const post = await response.json();
+          document.getElementById('modalTitle').textContent = post.title;
+          
+          // Simple markdown to HTML conversion
+          let content = post.content || 'Brak treści';
+          content = content.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+          content = content.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+          content = content.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+          content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+          content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
+          content = content.replace(/\n/g, '<br>');
+          
+          document.getElementById('modalContent').innerHTML = content;
+          document.getElementById('postModal').classList.remove('hidden');
+        } else {
+          alert('Nie udało się załadować posta');
+        }
+      } catch (error) {
+        console.error('View post error:', error);
+        alert('Błąd ładowania posta');
+      }
+    }
+
+    function showImages(postId, images) {
+      const imageList = images.map(img => 
+        `<div class="mb-4">
+          <img src="https://blog-api.mybonzo-ai-blog.pages.dev/blog/images/${img}" 
+               alt="${img}" 
+               class="max-w-full rounded-lg border border-gray-600">
+          <p class="text-sm text-gray-400 mt-2">${img}</p>
+        </div>`
+      ).join('');
+
+      document.getElementById('modalTitle').textContent = `Obrazy dla posta #${postId}`;
+      document.getElementById('modalContent').innerHTML = imageList;
+      document.getElementById('postModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('postModal');
+      modal.classList.add('hidden');
+      modal.style.display = 'none';
+    }
+
+    function uploadPost() {
+      alert('Funkcja dodawania postów będzie dostępna wkrótce');
+    }
+
+    function showSystemInfo() {
+      const info = `
+        <div class="space-y-4">
+          <h3 class="text-lg font-bold">System R2 Blog</h3>
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div><strong>Endpoint API:</strong> /api/blog/</div>
+            <div><strong>Worker URL:</strong> blog-api.mybonzo-ai-blog.pages.dev</div>
+            <div><strong>Format postów:</strong> 001.md, 002.md, ...</div>
+            <div><strong>Format obrazów:</strong> [[001-1.jpg]], [[001-2.png]]</div>
+            <div><strong>Automatyczna numeracja:</strong> Tak</div>
+            <div><strong>Cache API:</strong> 5-10 minut</div>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('modalTitle').textContent = 'Informacje o Systemie';
+      document.getElementById('modalContent').innerHTML = info;
+      document.getElementById('postModal').classList.remove('hidden');
+    }
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    // Cloudflare Images Upload
+    function showCFImageUpload() {
+      const cfImageForm = `
+        <div class="bg-gray-800/90 p-6 rounded-lg">
+          <h3 class="text-xl font-bold mb-4 text-orange-400">🖼️ Upload do Cloudflare Images</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium mb-2">Post ID:</label>
+              <input type="text" id="cfPostId" class="w-full p-2 bg-gray-700 rounded border" placeholder="np. 001" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">Nazwa obrazu (opcjonalnie):</label>
+              <input type="text" id="cfImageName" class="w-full p-2 bg-gray-700 rounded border" placeholder="np. hero-image" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">Wybierz obraz:</label>
+              <input type="file" id="cfImageFile" accept="image/*" class="w-full p-2 bg-gray-700 rounded border" />
+            </div>
+            <div class="flex gap-3">
+              <button onclick="uploadToCFImages()" class="px-4 py-2 bg-orange-600 hover:bg-orange-700 rounded transition-colors">
+                Upload do CF Images
+              </button>
+              <button onclick="closeModal()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded transition-colors">
+                Anuluj
+              </button>
+            </div>
+            <div class="mt-4 p-3 bg-blue-900/20 rounded-lg border border-blue-500/30">
+              <p class="text-sm text-blue-300">
+                <strong>💡 Tip:</strong> Obrazy będą dostępne poprzez tag: <code class="bg-gray-800 px-1 rounded">[[CF:nazwa-obrazu]]</code>
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('modalTitle').textContent = 'Cloudflare Images Upload';
+      document.getElementById('modalContent').innerHTML = cfImageForm;
+      document.getElementById('postModal').classList.remove('hidden');
+    }
+
+    async function uploadToCFImages() {
+      const postId = document.getElementById('cfPostId').value;
+      const imageName = document.getElementById('cfImageName').value;
+      const fileInput = document.getElementById('cfImageFile');
+      
+      if (!postId || !fileInput.files[0]) {
+        alert('Podaj Post ID i wybierz plik!');
+        return;
+      }
+      
+      const formData = new FormData();
+      formData.append('image', fileInput.files[0]);
+      formData.append('postId', postId);
+      if (imageName) formData.append('imageName', imageName);
+      
+      try {
+        const response = await fetch('/api/blog/upload-cf-image', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('✅ Obraz uploaded do CF Images!\\n\\nNazwa: ' + result.imageName + '\\nURL: ' + result.imageUrl + '\\n\\nUżyj w poście: [[CF:' + result.imageName + ']]');
+          
+          closeModal();
+          loadBlogPosts(); // Refresh
+        } else {
+          alert('❌ Błąd uploadu: ' + (result.error || 'Nieznany błąd'));
+        }
+      } catch (error) {
+        console.error('CF Images upload error:', error);
+        alert('❌ Błąd uploadu do CF Images');
+      }
+    }
+  </script>
+
+  <style>
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
+</Layout>

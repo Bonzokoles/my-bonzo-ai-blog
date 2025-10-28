@@ -1,0 +1,49 @@
+{
+    "astro-alkaline-generator.main": {
+        "description": "Główny generator stron Alkaline z wideo hero",
+        "body": [
+            "Generuj kompletny, zgodny z szablonem Alkaline kod Astro dla strony z importami: Layout, Heading, Link, BackgroundPattern (jako pierwsze dziecko Layout).",
+            "",
+            "Twórz stronę główną zawierającą hero z wideo z Cloudflare R2, polskie napisy i opisy, cztery przyciski linkujące do osobnych podstron: AI Tools, Eksperymenty, Poradniki, System w osobnych folderach, oraz przycisk do strony MyBonzo Pro.",
+            "",
+            "Używaj komponentów Link wszędzie zamiast zwykłych <a>.",
+            "Włącz BackgroundPattern dla tła, responsywność i ARIA dla dostępności.",
+            "",
+            "Korzystaj z narzędzi MCP, w szczególności MCP Astro i MCP Docfork do analizy poprawności kodu, podpowiadania najnowszych rozwiązań i wspierania spójności z najlepszymi praktykami Astro.",
+            "",
+            "Wykrywaj i raportuj błędy, proponuj poprawki lub optymalizacje, zwracaj uwagę na wydajność i bezpieczeństwo.",
+            "",
+            "Kod powinien być zgodny z typami TypeScript i wykorzystaniem Tailwind CSS zgodnie z Alkaline.",
+            "Zachowuj logikę i strukturę Alkaline, nie dziel sekcji w niepotrzebny sposób, twórz funkcjonalny i estetyczny frontend.",
+            "",
+            "Daj propozycję pliku alkaline.config.ts z polskim menu i favicon dopasowanym do projektu."
+        ]
+    },
+    "astro-alkaline-generator.component": {
+        "description": "Uniwersalny generator komponentów i stron Astro",
+        "body": [
+            "Proszę wygeneruj kompletny i poprawny kod strony lub komponentu Astro, przestrzegając najlepszych praktyk.",
+            "",
+            "Importuj i używaj Layout, komponentów kontentowych (Heading, Link), a także BackgroundPattern dla tła jeśli jest dostępny.",
+            "",
+            "Zadbaj o semantyczną strukturę HTML, dostępność (ARIA), responsywność i zgodność z TailwindCSS zgodnie z projektem.",
+            "",
+            "Do linków i nawigacji używaj komponentu Link, a do nagłówków komponentu Heading z odpowiednim poziomem.",
+            "",
+            "Odtwarzaj wideo lub grafiki z linków zewnętrznych (np. Cloudflare R2).",
+            "",
+            "Podczas generowania kodu korzystaj z narzędzi MCP Astro i MCP Docfork do analizowania i walidacji kodu pod kątem standardów Astro:",
+            "",
+            "- sprawdzaj poprawność składni i struktur",
+            "- proponuj wizualne/logiczne optymalizacje",
+            "- podpowiadaj kompatybilność z ostatnimi wersjami Astro", 
+            "- kontroluj czy jest spójność stylów z Tailwind CSS",
+            "",
+            "Upewnij się, że tworzony projekt ma modularną strukturę, rozbicie na pojedyncze strony i podstrony w odrębnych folderach dla łatwej rozbudowy.",
+            "",
+            "W razie błędów lub braków w kodzie, auto-generuj sugestie poprawek i możliwe rozwiązania bazując na MCP.",
+            "",
+            "Zachowuj zgodność z TypeScript i projektową konfiguracją Astro."
+        ]
+    }
+}

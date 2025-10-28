@@ -1,0 +1,20 @@
+{
+  "name": "zenon-dashboard-api",
+  "version": "1.0.0",
+  "description": "ZENON AI Agent Dashboard API Worker",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging",
+    "deploy:production": "wrangler deploy --env production"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240806.0",
+    "typescript": "^5.2.2",
+    "wrangler": "^3.57.0"
+  },
+  "dependencies": {
+    "@cloudflare/kv-asset-handler": "^0.3.0"
+  }
+}

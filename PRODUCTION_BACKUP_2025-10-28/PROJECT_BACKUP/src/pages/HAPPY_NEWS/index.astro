@@ -1,0 +1,85 @@
+---
+import Card from "@components/Astro/Card.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+import Layout from "@layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const description =
+  "Pozytywne wiadomości ze świata - inspirujące historie, dobre uczynki i optymistyczne treści na każdy dzień.";
+---
+
+<Layout title="Happy News - MyBonzo AI Blog" description={description}>
+  <PageHeader heading="Happy News" description={description} animate={true} />
+
+  <section class="container mx-auto px-4 py-16">
+    <div class="text-center mb-16">
+      <Icon
+        name="ri:emotion-happy-line"
+        class="w-24 h-24 mx-auto mb-6 text-theme-primary"
+      />
+      <h2 class="text-3xl font-bold mb-6 text-theme-primary">
+        Dobre Wiadomości
+      </h2>
+      <p class="text-xl text-theme-primary opacity-80 max-w-4xl mx-auto">
+        Pozytywne historie ze świata technologii, nauki i społeczeństwa. Bo
+        świat jest lepszy niż myślisz!
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+      <Card
+        title="Technologia dla Dobra"
+        description="Jak nowoczesne technologie pomagają rozwiązywać problemy świata i poprawiać życie ludzi."
+        shadowSize="lg"
+        iconName="ri:heart-line"
+      />
+      <Card
+        title="Środowisko & Ekologia"
+        description="Pozytywne zmiany klimatyczne, odnawialne źródła energii i ochrona przyrody."
+        shadowSize="lg"
+        iconName="ri:leaf-line"
+      />
+      <Card
+        title="Nauka & Odkrycia"
+        description="Fascynujące odkrycia naukowe które polepszają nasze zrozumienie świata."
+        shadowSize="lg"
+        iconName="ri:flask-line"
+      />
+      <Card
+        title="Społeczność"
+        description="Inspirujące historie ludzi którzy zmieniają świat na lepsze w swoich społecznościach."
+        shadowSize="lg"
+        iconName="ri:team-line"
+      />
+      <Card
+        title="Zdrowie & Medycyna"
+        description="Przełomy medyczne, nowe terapie i pozytywne trendy w opiece zdrowotnej."
+        shadowSize="lg"
+        iconName="ri:health-book-line"
+      />
+      <Card
+        title="Edukacja & Rozwój"
+        description="Innowacyjne metody nauki i pozytywne zmiany w systemach edukacyjnych."
+        shadowSize="lg"
+        iconName="ri:graduation-cap-line"
+      />
+    </div>
+
+    <div
+      class="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-8 text-center"
+    >
+      <h3 class="text-2xl font-bold mb-4 text-theme-primary">
+        Codziennie Nowe Dobre Wieści
+      </h3>
+      <p class="text-lg text-theme-primary opacity-80 mb-6">
+        Przychodź tutaj po dawkę optymizmu i pozytywnych wiadomości ze świata.
+      </p>
+      <a
+        href="/blog"
+        class="inline-block bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-8 py-4 rounded-lg font-semibold hover:from-yellow-600 hover:to-orange-600 transition-all shadow-lg"
+      >
+        Czytaj Więcej →
+      </a>
+    </div>
+  </section>
+</Layout>

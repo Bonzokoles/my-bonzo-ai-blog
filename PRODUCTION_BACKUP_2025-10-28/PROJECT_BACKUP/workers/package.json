@@ -1,0 +1,17 @@
+{
+  "name": "mybonzo-blog-worker",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker for MyBonzo R2 Blog System",
+  "main": "blog-worker.ts",
+  "scripts": {
+    "build": "tsc",
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "test": "wrangler dev --local"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20251014.0",
+    "typescript": "^5.0.0",
+    "wrangler": "^4.45.0"
+  }
+}

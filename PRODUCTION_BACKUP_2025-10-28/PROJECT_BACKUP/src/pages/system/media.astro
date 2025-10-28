@@ -1,0 +1,724 @@
+---
+// Media Manager Page - zarządzanie plikami multimedialnymi
+import Layout from "../../layouts/Layout.astro";
+import MediaUpload from "../../components/Astro/MediaUpload.astro";
+import PageHeader from "../../components/Astro/PageHeader.astro";
+
+const title = "Zarządzanie Mediami";
+const description =
+  "Upload i zarządzanie plikami multimedialnymi w Cloudflare R2";
+---
+
+<Layout title={title} description={description}>
+  <PageHeader title={title} description={description} />
+
+  <main class="container mx-auto px-4 py-8 space-y-8">
+    <!-- Upload Section -->
+    <section id="upload-section">
+      <MediaUpload
+        accept="image/*,video/*,audio/*"
+        maxSize={50}
+        multiple={true}
+        showPreview={true}
+      />
+    </section>
+
+    <!-- Media Gallery Section -->
+    <section id="gallery-section" class="max-w-6xl mx-auto">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+            🖼️ Galeria Mediów
+          </h2>
+          <div class="flex gap-3">
+            <button
+              id="refresh-gallery"
+              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg
+                     transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              🔄 Odśwież
+            </button>
+            <select
+              id="filter-type"
+              class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+                     bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300
+                     focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">Wszystkie</option>
+              <option value="image">Obrazy</option>
+              <option value="video">Wideo</option>
+              <option value="audio">Audio</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Gallery Filters -->
+        <div class="mb-6 flex flex-wrap gap-3">
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Szukaj plików..."
+            class="flex-1 min-w-48 px-4 py-2 border border-gray-300 dark:border-gray-600
+                   rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300
+                   focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            id="sort-name"
+            class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg
+                   transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            📝 Nazwa
+          </button>
+          <button
+            id="sort-date"
+            class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg
+                   transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            📅 Data
+          </button>
+          <button
+            id="sort-size"
+            class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg
+                   transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            📊 Rozmiar
+          </button>
+        </div>
+
+        <!-- Loading indicator -->
+        <div id="gallery-loading" class="text-center py-8">
+          <div
+            class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"
+          >
+          </div>
+          <p class="text-gray-600 dark:text-gray-400">Ładowanie galerii...</p>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div id="gallery-grid" class="grid-container hidden"></div>
+
+        <!-- Empty state -->
+        <div id="gallery-empty" class="empty-state hidden">
+          <div class="text-6xl mb-4">📁</div>
+          <h3
+            class="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-2"
+          >
+            Brak plików
+          </h3>
+          <p class="text-gray-500 dark:text-gray-500">
+            Prześlij pierwsze pliki używając formularza powyżej
+          </p>
+        </div>
+
+        <!-- Pagination -->
+        <div id="pagination" class="pagination-container hidden">
+          <button
+            id="prev-page"
+            class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg
+                   transition-colors disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+          >
+            ← Poprzednia
+          </button>
+          <span
+            id="page-info"
+            class="px-4 py-2 text-gray-600 dark:text-gray-400 font-medium"
+          >
+            Strona 1 z 1
+          </span>
+          <button
+            id="next-page"
+            class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg
+                   transition-colors disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+          >
+            Następna →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section id="stats-section" class="max-w-4xl mx-auto">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+          📊 Statystyki
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="stat-item bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+            <div
+              class="text-2xl font-bold text-blue-600 dark:text-blue-400"
+              id="total-files"
+            >
+              -
+            </div>
+            <div class="text-sm text-gray-600 dark:text-gray-400">
+              Wszystkich plików
+            </div>
+          </div>
+          <div
+            class="stat-item bg-green-50 dark:bg-green-900/20 p-4 rounded-lg"
+          >
+            <div
+              class="text-2xl font-bold text-green-600 dark:text-green-400"
+              id="total-size"
+            >
+              -
+            </div>
+            <div class="text-sm text-gray-600 dark:text-gray-400">
+              Całkowity rozmiar
+            </div>
+          </div>
+          <div
+            class="stat-item bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg"
+          >
+            <div
+              class="text-2xl font-bold text-purple-600 dark:text-purple-400"
+              id="image-count"
+            >
+              -
+            </div>
+            <div class="text-sm text-gray-600 dark:text-gray-400">Obrazy</div>
+          </div>
+          <div
+            class="stat-item bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg"
+          >
+            <div
+              class="text-2xl font-bold text-orange-600 dark:text-orange-400"
+              id="video-count"
+            >
+              -
+            </div>
+            <div class="text-sm text-gray-600 dark:text-gray-400">Wideo</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Elements
+    const galleryGrid = document.getElementById("gallery-grid");
+    const galleryLoading = document.getElementById("gallery-loading");
+    const galleryEmpty = document.getElementById("gallery-empty");
+    const refreshButton = document.getElementById("refresh-gallery");
+    const filterType = document.getElementById("filter-type");
+    const searchInput = document.getElementById("search-input");
+    const sortButtons = {
+      name: document.getElementById("sort-name"),
+      date: document.getElementById("sort-date"),
+      size: document.getElementById("sort-size"),
+    };
+    const pagination = document.getElementById("pagination");
+    const prevPageBtn = document.getElementById("prev-page");
+    const nextPageBtn = document.getElementById("next-page");
+    const pageInfo = document.getElementById("page-info");
+
+    // State
+    let allFiles = [];
+    let filteredFiles = [];
+    let currentPage = 1;
+    const itemsPerPage = 12;
+    let currentSort = { field: "date", direction: "desc" };
+    let currentFilter = "all";
+    let currentSearch = "";
+
+    // Initialize
+    loadGallery();
+
+    // Event listeners
+    refreshButton.addEventListener("click", loadGallery);
+    filterType.addEventListener("change", handleFilterChange);
+    searchInput.addEventListener("input", debounce(handleSearchChange, 300));
+
+    Object.entries(sortButtons).forEach(([field, button]) => {
+      button.addEventListener("click", () => handleSortChange(field));
+    });
+
+    prevPageBtn.addEventListener("click", () => changePage(currentPage - 1));
+    nextPageBtn.addEventListener("click", () => changePage(currentPage + 1));
+
+    // Functions
+    async function loadGallery() {
+      showLoading();
+
+      try {
+        const response = await fetch("/api/media/list");
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+          allFiles = data.files || [];
+          applyFiltersAndSort();
+          updateStatistics();
+        } else {
+          throw new Error(data.error || "Błąd podczas ładowania galerii");
+        }
+      } catch (error) {
+        console.error("Gallery load error:", error);
+        showError("Błąd podczas ładowania galerii: " + error.message);
+      }
+    }
+
+    function showLoading() {
+      galleryLoading.classList.remove("hidden");
+      galleryGrid.classList.add("hidden");
+      galleryEmpty.classList.add("hidden");
+      pagination.classList.add("hidden");
+    }
+
+    function showGallery() {
+      galleryLoading.classList.add("hidden");
+      galleryGrid.classList.remove("hidden");
+      galleryEmpty.classList.add("hidden");
+    }
+
+    function showEmpty() {
+      galleryLoading.classList.add("hidden");
+      galleryGrid.classList.add("hidden");
+      galleryEmpty.classList.remove("hidden");
+      pagination.classList.add("hidden");
+    }
+
+    function showError(message) {
+      galleryLoading.classList.add("hidden");
+      galleryGrid.classList.add("hidden");
+      galleryEmpty.classList.remove("hidden");
+
+      const emptyDiv = document.getElementById("gallery-empty");
+      emptyDiv.innerHTML = `
+        <div class="text-6xl mb-4">⚠️</div>
+        <h3 class="text-xl font-semibold text-red-600 dark:text-red-400 mb-2">
+          Błąd
+        </h3>
+        <p class="text-gray-500 dark:text-gray-500">
+          ${message}
+        </p>
+      `;
+    }
+
+    function handleFilterChange() {
+      currentFilter = filterType.value;
+      currentPage = 1;
+      applyFiltersAndSort();
+    }
+
+    function handleSearchChange() {
+      currentSearch = searchInput.value.toLowerCase().trim();
+      currentPage = 1;
+      applyFiltersAndSort();
+    }
+
+    function handleSortChange(field) {
+      if (currentSort.field === field) {
+        currentSort.direction =
+          currentSort.direction === "asc" ? "desc" : "asc";
+      } else {
+        currentSort.field = field;
+        currentSort.direction = field === "date" ? "desc" : "asc";
+      }
+
+      updateSortButtons();
+      applyFiltersAndSort();
+    }
+
+    function updateSortButtons() {
+      Object.entries(sortButtons).forEach(([field, button]) => {
+        if (field === currentSort.field) {
+          const arrow = currentSort.direction === "asc" ? "↑" : "↓";
+          button.classList.remove("bg-gray-500", "hover:bg-gray-600");
+          button.classList.add("bg-blue-600", "hover:bg-blue-700");
+
+          const icon = button.textContent.substring(0, 2);
+          button.textContent = `${icon} ${field === "name" ? "Nazwa" : field === "date" ? "Data" : "Rozmiar"} ${arrow}`;
+        } else {
+          button.classList.remove("bg-blue-600", "hover:bg-blue-700");
+          button.classList.add("bg-gray-500", "hover:bg-gray-600");
+
+          const names = {
+            name: "📝 Nazwa",
+            date: "📅 Data",
+            size: "📊 Rozmiar",
+          };
+          button.textContent = names[field];
+        }
+      });
+    }
+
+    function applyFiltersAndSort() {
+      // Filter
+      filteredFiles = allFiles.filter((file) => {
+        // Type filter
+        if (currentFilter !== "all" && !file.type.startsWith(currentFilter)) {
+          return false;
+        }
+
+        // Search filter
+        if (currentSearch && !file.name.toLowerCase().includes(currentSearch)) {
+          return false;
+        }
+
+        return true;
+      });
+
+      // Sort
+      filteredFiles.sort((a, b) => {
+        let aVal, bVal;
+
+        switch (currentSort.field) {
+          case "name":
+            aVal = a.name.toLowerCase();
+            bVal = b.name.toLowerCase();
+            break;
+          case "date":
+            aVal = new Date(a.lastModified || a.uploaded);
+            bVal = new Date(b.lastModified || b.uploaded);
+            break;
+          case "size":
+            aVal = a.size;
+            bVal = b.size;
+            break;
+          default:
+            return 0;
+        }
+
+        if (aVal < bVal) return currentSort.direction === "asc" ? -1 : 1;
+        if (aVal > bVal) return currentSort.direction === "asc" ? 1 : -1;
+        return 0;
+      });
+
+      renderGallery();
+      updatePagination();
+    }
+
+    function renderGallery() {
+      if (filteredFiles.length === 0) {
+        showEmpty();
+        return;
+      }
+
+      showGallery();
+
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const pageFiles = filteredFiles.slice(startIndex, endIndex);
+
+      galleryGrid.innerHTML = "";
+
+      pageFiles.forEach((file) => {
+        const item = createGalleryItem(file);
+        galleryGrid.appendChild(item);
+      });
+    }
+
+    function createGalleryItem(file) {
+      const div = document.createElement("div");
+      div.className =
+        "gallery-item bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-600";
+
+      const fileType = getFileType(file.type);
+      let previewContent = "";
+
+      if (fileType === "image") {
+        previewContent = `
+          <img src="${file.url}" alt="${file.name}" 
+               class="w-full h-48 object-cover cursor-pointer hover:opacity-75 transition-opacity"
+               onclick="openPreview('${file.url}', 'image', '${file.name}')" />
+        `;
+      } else if (fileType === "video") {
+        previewContent = `
+          <video class="w-full h-48 object-cover cursor-pointer" 
+                 onclick="openPreview('${file.url}', 'video', '${file.name}')"
+                 poster="">
+            <source src="${file.url}" type="${file.type}">
+          </video>
+        `;
+      } else if (fileType === "audio") {
+        previewContent = `
+          <div class="w-full h-48 flex items-center justify-center bg-gray-100 dark:bg-gray-600 cursor-pointer"
+               onclick="openPreview('${file.url}', 'audio', '${file.name}')">
+            <div class="text-center">
+              <div class="text-4xl mb-2">🎵</div>
+              <div class="text-sm text-gray-600 dark:text-gray-400">${file.name}</div>
+            </div>
+          </div>
+        `;
+      } else {
+        previewContent = `
+          <div class="w-full h-48 flex items-center justify-center bg-gray-100 dark:bg-gray-600">
+            <div class="text-center">
+              <div class="text-4xl mb-2">📄</div>
+              <div class="text-sm text-gray-600 dark:text-gray-400">${file.name}</div>
+            </div>
+          </div>
+        `;
+      }
+
+      div.innerHTML = `
+        ${previewContent}
+        <div class="p-4">
+          <h3 class="font-semibold text-gray-800 dark:text-gray-200 truncate mb-2" title="${file.name}">
+            ${file.name}
+          </h3>
+          <div class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+            <div>Rozmiar: ${formatFileSize(file.size)}</div>
+            <div>Typ: ${file.type}</div>
+            ${file.uploaded ? `<div>Przesłano: ${formatDate(file.uploaded)}</div>` : ""}
+          </div>
+          <div class="flex gap-2">
+            <button onclick="copyToClipboard('${file.url}')"
+                    class="flex-1 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded text-sm
+                           transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+              📋 Kopiuj URL
+            </button>
+            <button onclick="deleteFile('${file.key || file.name}')"
+                    class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-sm
+                           transition-colors focus:outline-none focus:ring-2 focus:ring-red-500">
+              🗑️
+            </button>
+          </div>
+        </div>
+      `;
+
+      return div;
+    }
+
+    function updatePagination() {
+      const totalPages = Math.ceil(filteredFiles.length / itemsPerPage);
+
+      if (totalPages <= 1) {
+        pagination.classList.add("hidden");
+        return;
+      }
+
+      pagination.classList.remove("hidden");
+      pageInfo.textContent = `Strona ${currentPage} z ${totalPages}`;
+
+      prevPageBtn.disabled = currentPage === 1;
+      nextPageBtn.disabled = currentPage === totalPages;
+    }
+
+    function changePage(newPage) {
+      const totalPages = Math.ceil(filteredFiles.length / itemsPerPage);
+
+      if (newPage >= 1 && newPage <= totalPages) {
+        currentPage = newPage;
+        renderGallery();
+        updatePagination();
+      }
+    }
+
+    function updateStatistics() {
+      const stats = {
+        totalFiles: allFiles.length,
+        totalSize: allFiles.reduce((sum, file) => sum + (file.size || 0), 0),
+        imageCount: allFiles.filter((file) => file.type.startsWith("image"))
+          .length,
+        videoCount: allFiles.filter((file) => file.type.startsWith("video"))
+          .length,
+      };
+
+      document.getElementById("total-files").textContent = stats.totalFiles;
+      document.getElementById("total-size").textContent = formatFileSize(
+        stats.totalSize
+      );
+      document.getElementById("image-count").textContent = stats.imageCount;
+      document.getElementById("video-count").textContent = stats.videoCount;
+    }
+
+    function getFileType(mimeType) {
+      if (mimeType.startsWith("image/")) return "image";
+      if (mimeType.startsWith("video/")) return "video";
+      if (mimeType.startsWith("audio/")) return "audio";
+      return "other";
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes === 0) return "0 B";
+
+      const k = 1024;
+      const sizes = ["B", "KB", "MB", "GB"];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    }
+
+    function formatDate(dateString) {
+      return new Date(dateString).toLocaleString("pl-PL");
+    }
+
+    function debounce(func, delay) {
+      let timeoutId;
+      return function (...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+
+    // Global functions
+    window.copyToClipboard = function (text) {
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          alert("URL skopiowany do schowka!");
+        })
+        .catch(() => {
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textArea);
+          alert("URL skopiowany do schowka!");
+        });
+    };
+
+    window.deleteFile = async function (fileKey) {
+      if (!confirm("Czy na pewno chcesz usunąć ten plik?")) {
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/media/delete", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ key: fileKey }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert("Plik został usunięty");
+          loadGallery(); // Reload gallery
+        } else {
+          throw new Error(data.error || "Błąd podczas usuwania pliku");
+        }
+      } catch (error) {
+        console.error("Delete error:", error);
+        alert("Błąd podczas usuwania pliku: " + error.message);
+      }
+    };
+
+    window.openPreview = function (url, type, name) {
+      // Create modal for preview
+      const modal = document.createElement("div");
+      modal.className =
+        "fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75";
+
+      let content = "";
+      if (type === "image") {
+        content = `<img src="${url}" alt="${name}" class="max-w-full max-h-full object-contain">`;
+      } else if (type === "video") {
+        content = `<video controls class="max-w-full max-h-full" autoplay><source src="${url}" type="video/mp4"></video>`;
+      } else if (type === "audio") {
+        content = `
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-8 max-w-md">
+            <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">${name}</h3>
+            <audio controls class="w-full" autoplay>
+              <source src="${url}">
+            </audio>
+          </div>
+        `;
+      }
+
+      modal.innerHTML = `
+        <div class="relative">
+          ${content}
+          <button onclick="this.closest('.fixed').remove()"
+                  class="absolute -top-4 -right-4 w-8 h-8 bg-red-500 hover:bg-red-600 text-white 
+                         rounded-full flex items-center justify-center text-lg font-bold
+                         transition-colors focus:outline-none focus:ring-2 focus:ring-red-500">
+            ×
+          </button>
+        </div>
+      `;
+
+      // Close on background click
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
+
+      document.body.appendChild(modal);
+    };
+
+    // Initialize sort buttons display
+    updateSortButtons();
+  });
+</script>
+
+<style>
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .grid-container {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .grid-container {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .grid-container {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .grid-container.hidden {
+    display: none;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .empty-state.hidden {
+    display: none;
+  }
+
+  .pagination-container {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .pagination-container.hidden {
+    display: none;
+  }
+
+  .gallery-item {
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s;
+  }
+
+  .gallery-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .stat-item {
+    transition: transform 0.2s;
+  }
+
+  .stat-item:hover {
+    transform: scale(1.05);
+  }
+</style>

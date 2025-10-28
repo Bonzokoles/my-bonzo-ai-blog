@@ -1,0 +1,44 @@
+# Cloudflare Worker configuration for MyBonzo Blog System
+name = "mybonzo-blog-worker"
+main = "blog-worker.ts"
+compatibility_date = "2024-10-26"
+compatibility_flags = ["nodejs_compat"]
+
+[env.production]
+name = "mybonzo-blog-worker"
+routes = [
+  { pattern = "blog-api.mybonzoaiblog.com/*", zone_name = "mybonzoaiblog.com" },
+  { pattern = "www.mybonzoaiblog.com/blog-api/*", zone_name = "mybonzoaiblog.com" }
+]
+
+[env.development]
+name = "mybonzo-blog-worker-dev"
+
+# R2 Bucket Binding
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "mybonzo-blog-content"
+preview_bucket_name = "mybonzo-blog-content-preview"
+
+# Cloudflare Images configuration (no binding needed - uses direct API calls)
+
+# Environment Variables
+[vars]
+WORKER_ENV = "production"
+# CF_ACCOUNT_ID should be set via Cloudflare Dashboard or wrangler CLI
+# CF_IMAGES_DELIVERY_URL should be set after creating Cloudflare Images account
+# Example format: "https://imagedelivery.net/YOUR_ACCOUNT_HASH"
+
+# Secrets (set via wrangler secret put)
+# BLOG_API_TOKEN - Required for blog API authentication
+# CF_IMAGES_API_TOKEN - Required for Cloudflare Images integration
+
+# Build configuration
+[build]
+command = "npm run build"
+
+# Development configuration
+[dev]
+ip = "0.0.0.0"
+port = 8787
+local_protocol = "http"

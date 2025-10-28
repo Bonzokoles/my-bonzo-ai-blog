@@ -1,0 +1,251 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Heading from "@components/Astro/Heading.astro";
+import Link from "@components/Astro/Link.astro";
+---
+
+<Layout
+  title="O nas"
+  description="Poznaj MyBonzo AI Blog - Twoją bramę do świata sztucznej inteligencji bez żargonu technicznego"
+>
+  <!-- Hero Section -->
+  <section
+    class="py-16 bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800"
+  >
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <Heading level={1} class="text-5xl font-bold mb-6">
+        O MyBonzo AI Blog
+      </Heading>
+      <p class="text-xl text-gray-800 dark:text-gray-300 mb-8">
+        AI dla każdego - bez technicznych komplikacji
+      </p>
+    </div>
+  </section>
+
+  <!-- Mission Section -->
+  <section class="py-16 bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="prose dark:prose-invert max-w-none">
+        <Heading level={2} class="text-4xl font-bold mb-8">
+          Nasza misja
+        </Heading>
+
+        <p class="text-lg text-gray-800 dark:text-gray-300 mb-6">
+          Wierzymy, że sztuczna inteligencja powinna być dostępna dla każdego -
+          nie tylko dla programistów i techników. Dlatego stworzyliśmy MyBonzo
+          AI Blog, miejsce gdzie technologia spotyka się z codziennym życiem, a
+          skomplikowane pojęcia stają się proste i zrozumiałe.
+        </p>
+
+        <p class="text-lg text-gray-800 dark:text-gray-300 mb-12">
+          Naszym celem jest pokazanie, że AI może być Twoim sprzymierzeńcem w
+          codziennych sprawach - od prowadzenia domu, przez naukę z dziećmi, aż
+          po proste zadania zawodowe. Bez żargonu, bez skomplikowanych
+          instrukcji. Po prostu narzędzia, które działają.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          <div class="bg-blue-50 dark:bg-gray-800 p-6 rounded-xl">
+            <div class="text-4xl mb-4">🎯</div>
+            <Heading level={3} class="text-2xl font-bold mb-4">Prostota</Heading
+            >
+            <p class="text-gray-800 dark:text-gray-300">
+              Bez technicznego żargonu, bez skomplikowanych terminów. Piszemy
+              tak, jakbyśmy rozmawiali z przyjacielem przez telefon.
+            </p>
+          </div>
+
+          <div class="bg-green-50 dark:bg-gray-800 p-6 rounded-xl">
+            <div class="text-4xl mb-4">✅</div>
+            <Heading level={3} class="text-2xl font-bold mb-4"
+              >Praktyczność</Heading
+            >
+            <p class="text-gray-800 dark:text-gray-300">
+              Tylko sprawdzone rozwiązania, które rzeczywiście działają.
+              Testujemy wszystko, zanim polecimy Tobie.
+            </p>
+          </div>
+
+          <div class="bg-purple-50 dark:bg-gray-800 p-6 rounded-xl">
+            <div class="text-4xl mb-4">🤖</div>
+            <Heading level={3} class="text-2xl font-bold mb-4"
+              >AI z pasją</Heading
+            >
+            <p class="text-gray-800 dark:text-gray-300">
+              Zawsze dbamy o Twoją prywatność. Nasze poradniki uwzględniają
+              najlepsze praktyki bezpieczeństwa.
+            </p>
+          </div>
+
+          <div class="bg-yellow-50 dark:bg-gray-800 p-6 rounded-xl">
+            <div class="text-4xl mb-4">🇵🇱</div>
+            <Heading level={3} class="text-2xl font-bold mb-4">Polskość</Heading
+            >
+            <p class="text-gray-800 dark:text-gray-300">
+              Treści dostosowane do polskich realiów, polskiego języka i
+              polskiej specyfiki. Bo nie wszystko, co działa za granicą, działa
+              u nas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- For Whom Section -->
+  <section class="py-16 bg-gray-50 dark:bg-gray-800">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Heading level={2} class="text-4xl font-bold text-center mb-12">
+        Dla kogo tworzymy?
+      </Heading>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-gray-100 dark:bg-gray-900 p-6 rounded-xl shadow-md">
+          <div class="text-5xl mb-4">👨‍👩‍👧‍👦</div>
+          <Heading level={3} class="text-xl font-bold mb-3"
+            >Dla rodziców</Heading
+          >
+          <p class="text-gray-700 dark:text-gray-400">
+            Którzy chcą pomóc dzieciom w nauce i rozwijać ich cyfrowe
+            kompetencje w bezpieczny sposób. Pokazujemy, jak AI może wspierać
+            edukację domową.
+          </p>
+        </div>
+
+        <div class="bg-gray-100 dark:bg-gray-900 p-6 rounded-xl shadow-md">
+          <div class="text-5xl mb-4">🏠</div>
+          <Heading level={3} class="text-xl font-bold mb-3"
+            >Dla gospodarzy domowych</Heading
+          >
+          <p class="text-gray-700 dark:text-gray-400">
+            Którzy szukają sposobów na ułatwienie sobie codziennych obowiązków i
+            lepszą organizację. AI może być Twoim asystentem w domu.
+          </p>
+        </div>
+
+        <div class="bg-gray-100 dark:bg-gray-900 p-6 rounded-xl shadow-md">
+          <div class="text-5xl mb-4">💼</div>
+          <Heading level={3} class="text-xl font-bold mb-3"
+            >Dla pracujących</Heading
+          >
+          <p class="text-gray-700 dark:text-gray-400">
+            Którzy potrzebują prostej pomocy w codziennych zadaniach zawodowych,
+            bez skomplikowanych systemów. Pomagamy automatyzować rutynę.
+          </p>
+        </div>
+
+        <div class="bg-gray-100 dark:bg-gray-900 p-6 rounded-xl shadow-md">
+          <div class="text-5xl mb-4">🎓</div>
+          <Heading level={3} class="text-xl font-bold mb-3"
+            >Dla ciekawskich</Heading
+          >
+          <p class="text-gray-700 dark:text-gray-400">
+            Którzy chcą zrozumieć, jak działa AI i jak mogą z tego skorzystać w
+            swoim życiu. Edukujemy bez pretensjonalnego języka.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team/Story Section -->
+  <section class="py-16 bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Heading level={2} class="text-4xl font-bold mb-8">
+        Nasza historia
+      </Heading>
+
+      <div class="prose dark:prose-invert max-w-none">
+        <p class="text-lg text-gray-800 dark:text-gray-300 mb-6">
+          MyBonzo AI Blog powstał z prostej obserwacji: większość materiałów o
+          sztucznej inteligencji jest pisana językiem technicznym,
+          niezrozumiałym dla zwykłych ludzi. Tymczasem AI może pomóc każdemu -
+          niezależnie od tego, czy jesteś programistą, czy po prostu rodzicem
+          szukającym pomocy w organizacji dnia.
+        </p>
+
+        <p class="text-lg text-gray-800 dark:text-gray-300 mb-6">
+          Zaczęliśmy od testowania różnych narzędzi AI w naszych własnych
+          domach. Sprawdzaliśmy, co naprawdę działa, a co to tylko pusty
+          marketing. Dzieliliśmy się odkryciami ze znajomymi, którzy zachęcali
+          nas do tworzenia treści dostępnych dla wszystkich.
+        </p>
+
+        <p class="text-lg text-gray-800 dark:text-gray-300 mb-8">
+          Dziś MyBonzo AI Blog to miejsce, gdzie technologia spotyka się z
+          życiem. Piszemy o tym, co sprawdzone, co bezpieczne i co naprawdę może
+          ułatwić codzienne sprawy. Bez barier, bez żargonu - po prostu
+          praktyczne wskazówki dla każdego.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MyBonzo Pro CTA -->
+  <section
+    class="py-16 bg-gradient-to-r from-indigo-600 to-purple-700 text-white"
+  >
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-8">
+        <Heading level={2} class="text-4xl font-bold mb-6">
+          MyBonzo Pro - Dla wymagających
+        </Heading>
+        <p class="text-xl mb-8 max-w-2xl mx-auto">
+          Jeśli potrzebujesz więcej zaawansowanych funkcji, sprawdź naszą
+          platformę MyBonzo Pro. To profesjonalne narzędzie AI dla użytkowników,
+          którzy chcą wykorzystać pełny potencjał sztucznej inteligencji.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="bg-white/10 backdrop-blur p-6 rounded-lg text-center">
+          <div class="text-4xl mb-3">🤖</div>
+          <p class="font-semibold mb-2">AI Workers</p>
+          <p class="text-sm opacity-90">Wyspecjalizowane asystenty AI</p>
+        </div>
+        <div class="bg-white/10 backdrop-blur p-6 rounded-lg text-center">
+          <div class="text-4xl mb-3">📊</div>
+          <p class="font-semibold mb-2">Analytics</p>
+          <p class="text-sm opacity-90">Zaawansowana analiza danych</p>
+        </div>
+        <div class="bg-white/10 backdrop-blur p-6 rounded-lg text-center">
+          <div class="text-4xl mb-3">🔗</div>
+          <p class="font-semibold mb-2">Integracje</p>
+          <p class="text-sm opacity-90">Połączenia z zewnętrznymi systemami</p>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <Link
+          href="https://www.mybonzo.com"
+          target="_blank"
+          class="inline-block bg-white text-indigo-600 px-10 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors shadow-xl hover:shadow-2xl"
+        >
+          Odkryj MyBonzo Pro →
+        </Link>
+        <p class="text-sm mt-4 opacity-80">
+          Wersja profesjonalna z dodatkowymi narzędziami i funkcjami
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact CTA -->
+  <section class="py-16 bg-gray-50 dark:bg-gray-800">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <Heading level={2} class="text-3xl font-bold mb-6">
+        Masz pytania lub sugestie?
+      </Heading>
+      <p class="text-lg text-gray-800 dark:text-gray-300 mb-8">
+        Chętnie wysłuchamy Twoich pomysłów na nowe tematy lub odpowiemy na
+        pytania.
+      </p>
+      <Link
+        href="/kontakt"
+        class="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+      >
+        Skontaktuj się z nami
+      </Link>
+    </div>
+  </section>
+</Layout>
