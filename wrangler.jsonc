@@ -5,26 +5,26 @@
     "nodejs_compat"
   ],
   "pages_build_output_dir": "./dist",
-  
+
   // AI Workers Bindings
   "ai": {
     "binding": "AI"
   },
-  
+
   // KV Storage dla sesji i cache
   "kv_namespaces": [
     {
       "binding": "SESSION",
-      "id": "your-kv-namespace-id",
-      "preview_id": "your-preview-kv-namespace-id"
+      "id": "77d84c01758a4064be011acc35b2c344",
+      "preview_id": "183215eb52fa4ef8a7fc312a76e6b688"
     },
     {
       "binding": "CACHE",
-      "id": "your-cache-kv-namespace-id", 
-      "preview_id": "your-cache-preview-kv-namespace-id"
+      "id": "cce469bb54d142ebbbce4287e450daec",
+      "preview_id": "139be3a08d7940eea1de297b0ac22e59"
     }
   ],
-  
+
   // R2 dla plików multimedialnych
   "r2_buckets": [
     {
@@ -33,34 +33,18 @@
       "preview_bucket_name": "mybonzo-media-preview"
     }
   ],
-  
+
   // Queue dla zadań w tle
+  // ⚠️ UWAGA: consumers są automatycznie zarządzane przez Cloudflare
   "queues": {
     "producers": [
       {
         "binding": "IMAGE_QUEUE",
         "queue": "image-processing-queue"
       }
-    ],
-    "consumers": [
-      {
-        "queue": "image-processing-queue",
-        "max_batch_size": 10,
-        "max_batch_timeout": 30
-      }
     ]
   },
-  
-  // Durable Objects dla real-time funkcji
-  "durable_objects": {
-    "bindings": [
-      {
-        "name": "CHAT_ROOM",
-        "class_name": "ChatRoom"
-      }
-    ]
-  },
-  
+
   // Environment variables
   "vars": {
     "ENVIRONMENT": "production",
