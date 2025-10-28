@@ -117,6 +117,14 @@ export const NAVIGATION: NavEntry[] = [
 		href: "/pro",
 		text: "MyBonzo Pro",
 	},
+	{
+		href: "/search",
+		text: "Search",
+	},
+	{
+		href: "/newsletter",
+		text: "Newsletter",
+	},
 ];
 
 export const BLOG: Blog = {

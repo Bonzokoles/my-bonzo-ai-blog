@@ -30,116 +30,25 @@ const options = {
     animate={true}
   />
 
-  <!-- Hero Section - Video + Navigation -->
+  <!-- Hero Section - Interactive Typing Animation -->
   <section class="w-full py-16 bg-theme-primary/5 backdrop-blur-sm">
-    <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-bold mb-12 text-theme-primary text-center">
-        Poznaj MyBonzo Pro w Akcji
-      </h2>
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-4xl lg:text-6xl font-bold mb-4 text-theme-primary typing-animation">Poznaj MyBonzo Pro w Akcji</h2>
+      <p class="text-lg text-theme-primary opacity-80 mb-12">Witaj w MyBonzo AI Blog! Poznaj Twojego asystenta AI</p>
 
-      <div
-        class="flex flex-col lg:flex-row items-center justify-start lg:justify-between gap-8"
-      >
-        <!-- Video Section - Left Side -->
-        <div class="w-full lg:w-2/5 pl-0">
-          <div
-            class="w-full h-full max-w-[420px] aspect-[9/16] flex items-center justify-center border border-gray-700 bg-neutral-900"
-          >
-            <video
-              id="mainVideo"
-              class="w-full h-full object-cover bg-gray-900"
-              controls
-              poster="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/alk4.png"
-            >
-              <source
-                src="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/mybonzo-avatar-welcome.mp4"
-                type="video/mp4"
-              />
-              Twoja przeglądarka nie obsługuje video HTML5.
-            </video>
-          </div>
-          <p
-            class="mt-6 text-lg text-theme-primary opacity-80 text-center lg:text-left"
-          >
-            Witaj w MyBonzo AI Blog! Poznaj Twojego asystenta AI
-          </p>
-        </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        <a href="/BROWSERY" class="hero-button">Browsery</a>
+        <a href="/STRONY_INTERNETOWE" class="hero-button">Strony Internetowe</a>
+        <a href="/NARZEDZIA_AI" class="hero-button">Narzędzia AI</a>
+        <a href="/WIADOMOSCI_AI" class="hero-button">Wiadomości AI</a>
+        <a href="/HAPPY_NEWS" class="hero-button">Happy News</a>
+        <a href="/TOTAL_COULTURE" class="hero-button">Total Culture</a>
+        <a href="/ASYSTENT_AI" class="hero-button">Asystent AI</a>
+        <a href="/GENERATOR_GRAFIKI" class="hero-button">Generator Grafiki</a>
+      </div>
 
-        <!-- Navigation Buttons - Right Side -->
-        <div class="w-full lg:w-3/5 flex flex-col gap-6">
-          <h3
-            class="text-2xl font-semibold text-theme-primary mb-4 text-center lg:text-left"
-          >
-            Odkryj Nasze Sekcje
-          </h3>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <a
-              href="/BROWSERY"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Browsery
-            </a>
-
-            <a
-              href="/STRONY_INTERNETOWE"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Strony Internetowe
-            </a>
-
-            <a
-              href="/NARZEDZIA_AI"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Narzędzia AI
-            </a>
-
-            <a
-              href="/WIADOMOSCI_AI"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Wiadomości AI
-            </a>
-
-            <a
-              href="/HAPPY_NEWS"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Happy News
-            </a>
-
-            <a
-              href="/TOTAL_COULTURE"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Total Culture
-            </a>
-
-            <a
-              href="/ASYSTENT_AI"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Asystent AI
-            </a>
-
-            <a
-              href="/GENERATOR_GRAFIKI"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Generator Grafiki
-            </a>
-          </div>
-
-          <div class="mt-6 text-center lg:text-left">
-            <a
-              href="/pro"
-              class="inline-block bg-theme-accent text-white px-8 py-4 rounded-none font-semibold hover:opacity-90 transition-opacity shadow-lg border border-gray-500"
-            >
-              Sprawdź MyBonzo Pro →
-            </a>
-          </div>
-        </div>
+      <div class="mt-12">
+        <a href="/pro" class="pro-button">Sprawdź MyBonzo Pro →</a>
       </div>
     </div>
   </section>
@@ -219,6 +128,9 @@ const options = {
           technicznego żargonu - po prostu działa!
         </p>
       </div>
+
+      <!-- Featured Article -->
+      <div id="featured-post" class="mb-12"></div>
 
       <div
         class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
@@ -302,6 +214,70 @@ const options = {
   .build-in {
     animation-delay: 0.75s;
   }
+
+  .typing-animation {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 0.15em solid orange;
+    animation:
+      typing 3.5s steps(40, end),
+      blink-caret 0.75s step-end infinite;
+  }
+
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  @keyframes blink-caret {
+    from,
+    to {
+      border-color: transparent;
+    }
+    50% {
+      border-color: orange;
+    }
+  }
+
+  .hero-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--color-accent);
+    background-color: transparent;
+    color: var(--color-text);
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+
+  .hero-button:hover {
+    background-color: var(--color-accent);
+    color: var(--color-background);
+  }
+
+  .pro-button {
+    display: inline-block;
+    background-color: var(--color-accent);
+    color: white;
+    padding: 1rem 2rem;
+    font-weight: 600;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #4a5568;
+  }
+
+  .pro-button:hover {
+    opacity: 0.9;
+  }
+
+  .featured-post {
+    border-width: 2px;
+    border-color: var(--color-accent);
+  }
 </style>
 
 <script>
@@ -313,19 +289,62 @@ const options = {
       );
       const data = await response.json();
 
+      const featuredPostContainer = document.getElementById("featured-post");
       const grid = document.getElementById("blog-posts-grid");
-      if (!grid) return;
+      if (!grid || !featuredPostContainer) return;
 
-      // Show only first 6 posts
-      const posts = data.posts.slice(0, 6);
+      // Get the first post as the featured post
+      const [featuredPost, ...posts] = data.posts;
 
+      // Render the featured post
+      if (featuredPost) {
+        const featuredDate = new Date(featuredPost.date).toLocaleDateString("pl-PL");
+        const featuredTags = featuredPost.tags ? featuredPost.tags.split(/[\s,]+/).slice(0, 2) : [];
+
+        featuredPostContainer.innerHTML = `
+          <article class="featured-post border border-gray-500 bg-transparent rounded-none overflow-hidden hover:border-blue-400 hover:bg-gray-900 hover:shadow transition-colors">
+            <div class="p-6">
+              <div class="flex flex-wrap gap-2 mb-3">
+                ${featuredTags
+                  .map(
+                    (tag) => `
+                  <span class="px-2 py-1 bg-blue-600 text-white text-xs rounded-none font-semibold tracking-wide uppercase">
+                    ${tag}
+                  </span>
+                `
+                  )
+                  .join("")}
+              </div>
+              
+              <div class="flex mt-12 mb-10 md:mt-24 md:mb-12 text-2xl font-semibold mb-2 line-clamp-2 text-theme-primary">
+                <h3 class="tracking-widest text-2xl font-medium capitalize leading-relaxed mx-auto bg-theme-accent text-theme-secondary p-4 inline-block rounded-theme">
+                  ${featuredPost.title}
+                </h3>
+              </div>
+              
+              <p class="text-theme-primary opacity-80 text-lg mb-3 line-clamp-3">
+                ${featuredPost.excerpt}
+              </p>
+              
+              <div class="flex justify-between items-center text-sm text-theme-primary opacity-70 mb-4">
+                <time datetime="${featuredPost.date}">
+                  ${featuredDate}
+                </time>
+              </div>
+              
+              <a href="/blog/${featuredPost.id}" class="inline-block text-theme-accent font-semibold hover:text-theme-accent-alt transition-colors">
+                Czytaj więcej →
+              </a>
+            </div>
+          </article>
+        `;
+      }
+
+      // Render the rest of the posts
       grid.innerHTML = posts
         .map((post) => {
-          // Format date
           const date = new Date(post.date);
           const formattedDate = date.toLocaleDateString("pl-PL");
-
-          // Get tags (split by space or comma)
           const tags = post.tags ? post.tags.split(/[\s,]+/).slice(0, 2) : [];
 
           return `

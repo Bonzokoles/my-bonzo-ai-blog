@@ -178,6 +178,46 @@ const {
     const status = document.getElementById("status") as HTMLElement;
 
     let isProcessing = false;
+    let socket: WebSocket | null = null;
+
+    function connect() {
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const wsUrl = `${protocol}//${window.location.host}/websocket`;
+      
+      socket = new WebSocket(wsUrl);
+
+      socket.addEventListener("open", () => {
+        updateStatus("Połączono z AI.");
+      });
+
+      socket.addEventListener("message", (event) => {
+        const message = JSON.parse(event.data);
+        if (message.type === "ai_response") {
+          removeTypingIndicator();
+          addMessage(message.data.response, "ai");
+          setProcessing(false);
+        }
+      });
+
+      socket.addEventListener("close", () => {
+        updateStatus("Rozłączono. Próbuję połączyć ponownie...");
+        setTimeout(connect, 5000);
+      });
+
+      socket.addEventListener("error", (error) => {
+        console.error("WebSocket error:", error);
+        addMessage(
+          "Błąd połączenia z serwerem WebSocket.",
+          "ai",
+          false,
+          true
+        );
+        updateStatus("Błąd WebSocket");
+        setProcessing(false);
+      });
+    }
+
+    connect();
 
     // Character counter
     input.addEventListener("input", function () {
@@ -199,10 +239,12 @@ const {
     });
 
     // Send message
-    form.addEventListener("submit", async function (e) {
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      if (isProcessing) return;
+      if (isProcessing || !socket || socket.readyState !== WebSocket.OPEN) {
+        return;
+      }
 
       const message = input.value.trim();
       if (!message) return;
@@ -217,54 +259,14 @@ const {
 
       // Show loading
       setProcessing(true);
+      addTypingIndicator();
 
-      try {
-        // Add typing indicator
-        addTypingIndicator();
-
-        const response = await fetch("/api/ai/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            prompt: message,
-            model: "{model}",
-          }),
-        });
-
-        const data = await response.json();
-
-        // Remove typing indicator
-        removeTypingIndicator();
-
-        if (data.success) {
-          addMessage(data.response, "ai", data.cached);
-          updateStatus(
-            data.cached ? "Odpowiedź z cache" : `Model: ${data.model}`
-          );
-        } else {
-          addMessage(
-            `Przepraszam, wystąpił błąd: ${data.error}. Spróbuj ponownie później.`,
-            "ai",
-            false,
-            true
-          );
-          updateStatus("Błąd API");
-        }
-      } catch (error) {
-        console.error("Chat error:", error);
-        removeTypingIndicator();
-        addMessage(
-          "Przepraszam, nie mogę teraz odpowiedzieć. Sprawdź połączenie internetowe i spróbuj ponownie.",
-          "ai",
-          false,
-          true
-        );
-        updateStatus("Błąd połączenia");
-      }
-
-      setProcessing(false);
+      socket.send(
+        JSON.stringify({
+          type: "ai_request",
+          content: message,
+        })
+      );
     });
 
     // Clear chat
@@ -306,8 +308,8 @@ const {
         sender === "user"
           ? "bg-green-100 dark:bg-green-900"
           : isError
-            ? "bg-red-100 dark:bg-red-900"
-            : "bg-blue-100 dark:bg-blue-900";
+          ? "bg-red-100 dark:bg-red-900"
+          : "bg-blue-100 dark:bg-blue-900";
 
       const timestamp = new Date().toLocaleTimeString("pl-PL", {
         hour: "2-digit",

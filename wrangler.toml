@@ -1,0 +1,38 @@
+name = "mybonzoaiblog"
+compatibility_date = "2024-10-28"
+
+# KV Namespaces
+kv_namespaces = [
+  { binding = "SESSION", id = "session_storage", preview_id = "session_preview" },
+  { binding = "CACHE", id = "cache_storage", preview_id = "cache_preview" },
+  { binding = "NEWSLETTER_SUBSCRIPTIONS", id = "newsletter_storage", preview_id = "newsletter_preview" }
+]
+
+# R2 Buckets
+r2_buckets = [
+  { binding = "MEDIA_BUCKET", bucket_name = "mybonzo-media", preview_bucket_name = "mybonzo-media-preview" }
+]
+
+# Queues
+queues = [
+  { binding = "IMAGE_QUEUE", queue_name = "image-processing" }
+]
+
+# AI binding
+ai = { binding = "AI" }
+
+# Durable Objects
+[durable_objects]
+bindings = [
+  { name = "CHAT_ROOM", class_name = "ChatRoom" }
+]
+
+# Migrations for Durable Objects
+[[migrations]]
+tag = "v1"
+new_classes = ["ChatRoom"]
+
+# Environment variables (dla local dev)
+[vars]
+CLOUDFLARE_API_TOKEN = "dev_token"
+CLOUDFLARE_ACCOUNT_ID = "dev_account"
