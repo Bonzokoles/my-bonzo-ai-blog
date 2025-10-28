@@ -3,15 +3,6 @@
 // Główny handler export  
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-        // Logging do queue
-        if (env.IMAGE_QUEUE) {
-          await env.IMAGE_QUEUE.send({
-            url: request.url,
-            timestamp: Date.now(),
-            userAgent: request.headers.get('User-Agent')
-          });
-        }
-
         const url = new URL(request.url);
 
         // Handle AI API routes
@@ -76,21 +67,10 @@ async function handleMediaRequest(request: Request, env: Env): Promise<Response>
   const url = new URL(request.url);
   
   if (url.pathname === '/api/media/upload' && request.method === 'POST') {
-    const formData = await request.formData();
-    const file = formData.get('file') as File;
-    
-    if (!file) {
-      return Response.json({ error: 'No file provided' }, { status: 400 });
-    }
-    
-    // Upload do R2
-    const key = `uploads/${Date.now()}-${file.name}`;
-    await env.MEDIA_BUCKET.put(key, file.stream());
-    
+    // Media upload temporarily disabled - R2 bucket not configured
     return Response.json({
-      success: true,
-      url: `https://media.mybonzoaiblog.com/${key}`
-    });
+      error: 'Media upload temporarily disabled'
+    }, { status: 503 });
   }
   
   return new Response('Not found', { status: 404 });
@@ -108,7 +88,7 @@ async function handleNewsletterRequest(request: Request, env: Env): Promise<Resp
         return Response.json({ error: 'Invalid email address' }, { status: 400 });
       }
 
-      await env.NEWSLETTER_SUBSCRIPTIONS.put(body.email, new Date().toISOString());
+      await env.CACHE.put(`newsletter:${body.email}`, new Date().toISOString());
 
       return Response.json({ success: true });
     } catch (error) {
@@ -125,9 +105,6 @@ interface Env {
   AI: Ai;
   SESSION: KVNamespace;
   CACHE: KVNamespace;
-  MEDIA_BUCKET: R2Bucket;
-  IMAGE_QUEUE: Queue;
-  NEWSLETTER_SUBSCRIPTIONS: KVNamespace;
   CLOUDFLARE_API_TOKEN: string;
   CLOUDFLARE_ACCOUNT_ID: string;
 }
