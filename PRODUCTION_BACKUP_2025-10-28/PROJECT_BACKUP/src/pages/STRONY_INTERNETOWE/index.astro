@@ -1,0 +1,86 @@
+---
+import Card from "@components/Astro/Card.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+import Layout from "@layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const description =
+  "Najciekawsze strony internetowe - odkryj użyteczne narzędzia, inspirujące treści i ukryte perełki sieci.";
+---
+
+<Layout title="Strony Internetowe - MyBonzo AI Blog" description={description}>
+  <PageHeader
+    heading="Strony Internetowe"
+    description={description}
+    animate={true}
+  />
+
+  <section class="container mx-auto px-4 py-16">
+    <div class="text-center mb-16">
+      <Icon
+        name="ri:global-line"
+        class="w-24 h-24 mx-auto mb-6 text-theme-primary"
+      />
+      <h2 class="text-3xl font-bold mb-6 text-theme-primary">Odkryj Sieć</h2>
+      <p class="text-xl text-theme-primary opacity-80 max-w-4xl mx-auto">
+        Kolekcja najciekawszych stron internetowych - od użytecznych narzędzi po
+        inspirujące treści.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+      <Card
+        title="Narzędzia Online"
+        description="Praktyczne aplikacje webowe które ułatwią Ci pracę - edytory, konwertery, generatory."
+        shadowSize="lg"
+        iconName="ri:tools-line"
+      />
+      <Card
+        title="Nauka & Edukacja"
+        description="Platformy edukacyjne, kursy online i źródła wiedzy dostępne za darmo w internecie."
+        shadowSize="lg"
+        iconName="ri:book-open-line"
+      />
+      <Card
+        title="Kreatywność"
+        description="Strony dla twórców - banki zdjęć, narzędzia graficzne, inspiracje designerskie."
+        shadowSize="lg"
+        iconName="ri:palette-line"
+      />
+      <Card
+        title="Produktywność"
+        description="Aplikacje i serwisy które pomogą Ci lepiej organizować pracę i zarządzać czasem."
+        shadowSize="lg"
+        iconName="ri:timer-line"
+      />
+      <Card
+        title="Rozrywka"
+        description="Ciekawe strony rozrywkowe, gry przeglądarkowe i treści które umilą Ci czas."
+        shadowSize="lg"
+        iconName="ri:gamepad-line"
+      />
+      <Card
+        title="Społeczności"
+        description="Platformy społecznościowe, fora dyskusyjne i miejsca gdzie możesz poznać nowych ludzi."
+        shadowSize="lg"
+        iconName="ri:team-line"
+      />
+    </div>
+
+    <div class="bg-theme-primary/5 rounded-2xl p-8 text-center">
+      <h3 class="text-2xl font-bold mb-4 text-theme-primary">
+        Wkrótce Więcej Treści
+      </h3>
+      <p class="text-lg text-theme-primary opacity-80 mb-6">
+        Przygotowujemy dla Ciebie starannie wyselekcjonowane kolekcje
+        najlepszych stron internetowych w każdej kategorii.
+      </p>
+      <a
+        href="/blog"
+        class="inline-block bg-theme-accent text-white px-8 py-4 rounded-lg font-semibold hover:opacity-90 transition-opacity shadow-lg"
+      >
+        Zobacz Blog →
+      </a>
+    </div>
+  </section>
+</Layout>

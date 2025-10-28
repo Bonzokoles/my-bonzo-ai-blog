@@ -1,20 +1,20 @@
 ---
 // Layout component that wraps around pages and blog posts, providing consistent structure and styling. you can read more about it here: https://docs.astro.build/en/guides/layouts/
 
-import { SITE, NAVIGATION } from "src/alkaline.config";
+import { NAVIGATION, SITE } from "src/alkaline.config";
 
 import { ClientRouter } from "astro:transitions";
 
 import "@styles/global.css";
 
-import GoogleFonts from "@components/Astro/head/GoogleFonts.astro";
 import DynamicMetaTags from "@components/Astro/head/DynamicMetaTags.astro";
+import GoogleFonts from "@components/Astro/head/GoogleFonts.astro";
 import SocialMeta from "@components/Astro/head/SocialMeta.astro";
 // import ResourceLinks from "@components/Astro/head/ResourceLinks.astro";
-import Nav from "@components/Astro/Nav.astro";
-import Title from "@components/Astro/Title.astro";
 import BackToTop from "@components/Astro/BackToTop.astro";
 import Footer from "@components/Astro/Footer.astro";
+import Nav from "@components/Astro/Nav.astro";
+import Title from "@components/Astro/Title.astro";
 
 import logo from "@assets/logo.webp";
 
