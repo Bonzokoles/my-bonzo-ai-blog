@@ -1,153 +1,153 @@
 name: Advanced Site Monitoring
 
 on:
-  schedule:
-    # Pełny monitoring co godzinę w dzień
-    - cron: '0 6-22 * * *'
-    # Podstawowy monitoring co 2 godziny w nocy  
-    - cron: '0 */2 * * *'
-  workflow_dispatch:
+    schedule:
+        # Pełny monitoring co godzinę w dzień
+        - cron: "0 6-22 * * *"
+        # Podstawowy monitoring co 2 godziny w nocy
+        - cron: "0 */2 * * *"
+    workflow_dispatch:
 
 jobs:
-  comprehensive-monitoring:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Health Check with Retry Logic
-        run: |
-          echo "🔍 Starting comprehensive health check..."
-          
-          # Funkcja do sprawdzania URL z retry
-          check_url() {
-            local url=$1
-            local max_retries=3
-            local retry_delay=5
-            
-            for ((i=1; i<=max_retries; i++)); do
-              echo "Attempt $i/$max_retries for $url"
-              
-              response=$(curl -s -o /dev/null -w "%{http_code};%{time_total}" \
-                --max-time 30 \
-                --user-agent "GitHub-Actions-KeepAlive/1.0" \
-                "$url" 2>/dev/null || echo "000;0")
-              
-              http_code=$(echo $response | cut -d';' -f1)
-              time_total=$(echo $response | cut -d';' -f2)
-              
-              if [ "$http_code" -ge 200 ] && [ "$http_code" -lt 400 ]; then
-                echo "✅ SUCCESS: $url (${http_code}) - Response time: ${time_total}s"
-                return 0
-              else
-                echo "❌ FAILED: $url (${http_code})"
-                if [ $i -lt $max_retries ]; then
-                  echo "⏳ Retrying in ${retry_delay} seconds..."
-                  sleep $retry_delay
-                fi
-              fi
-            done
-            
-            echo "🚨 FINAL FAILURE: $url failed all $max_retries attempts"
-            return 1
-          }
-          
-          # Lista głównych URL-i
-          main_urls=(
-            "https://mybonzoaiblog.pages.dev"
-            "https://www.mybonzoaiblog.com"
-            "https://mybonzoaiblog.com"
-          )
-          
-          success_count=0
-          total_count=${#main_urls[@]}
-          
-          for url in "${main_urls[@]}"; do
-            if check_url "$url"; then
-              ((success_count++))
-            fi
-            sleep 3
-          done
-          
-          echo "📊 Health Check Summary: $success_count/$total_count URLs healthy"
+    comprehensive-monitoring:
+        runs-on: ubuntu-latest
 
-      - name: Performance Testing
-        run: |
-          echo "🚀 Running performance tests..."
-          
-          main_url="https://mybonzoaiblog.pages.dev"
-          
-          # Test czasu ładowania
-          echo "Testing load times..."
-          for i in {1..3}; do
-            echo "Load test $i/3:"
-            curl -s -o /dev/null -w "Time: %{time_total}s | Size: %{size_download} bytes | Speed: %{speed_download} bytes/s\n" \
-              --max-time 45 "$main_url" || echo "Load test $i failed"
-            sleep 2
-          done
+        steps:
+            - name: Health Check with Retry Logic
+              run: |
+                  echo "🔍 Starting comprehensive health check..."
 
-      - name: Simulate User Activity
-        run: |
-          echo "👤 Simulating realistic user activity..."
-          
-          base_url="https://mybonzoaiblog.pages.dev"
-          
-          # Symuluj typowe ścieżki użytkownika
-          user_paths=(
-            "/"
-            "/blog"
-            "/about" 
-            "/portfolio"
-            "/contact"
-            "/projects"
-            "/api/health"
-          )
-          
-          echo "Simulating user journey..."
-          for path in "${user_paths[@]}"; do
-            full_url="${base_url}${path}"
-            echo "Visiting: $full_url"
-            
-            # Symuluj prawdziwe zachowanie przeglądarki
-            curl -s -o /dev/null \
-              --max-time 20 \
-              --user-agent "Mozilla/5.0 (GitHub Actions Keep-Alive Bot)" \
-              --header "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" \
-              --header "Accept-Language: pl-PL,pl;q=0.8,en;q=0.6" \
-              --header "Accept-Encoding: gzip, deflate" \
-              --header "Connection: keep-alive" \
-              --header "Upgrade-Insecure-Requests: 1" \
-              "$full_url" || echo "Failed to visit $full_url"
-            
-            # Realistyczna pauza między stronami
-            sleep $(shuf -i 2-8 -n 1)
-          done
+                  # Funkcja do sprawdzania URL z retry
+                  check_url() {
+                    local url=$1
+                    local max_retries=3
+                    local retry_delay=5
+                    
+                    for ((i=1; i<=max_retries; i++)); do
+                      echo "Attempt $i/$max_retries for $url"
+                      
+                      response=$(curl -s -o /dev/null -w "%{http_code};%{time_total}" \
+                        --max-time 30 \
+                        --user-agent "GitHub-Actions-KeepAlive/1.0" \
+                        "$url" 2>/dev/null || echo "000;0")
+                      
+                      http_code=$(echo $response | cut -d';' -f1)
+                      time_total=$(echo $response | cut -d';' -f2)
+                      
+                      if [ "$http_code" -ge 200 ] && [ "$http_code" -lt 400 ]; then
+                        echo "✅ SUCCESS: $url (${http_code}) - Response time: ${time_total}s"
+                        return 0
+                      else
+                        echo "❌ FAILED: $url (${http_code})"
+                        if [ $i -lt $max_retries ]; then
+                          echo "⏳ Retrying in ${retry_delay} seconds..."
+                          sleep $retry_delay
+                        fi
+                      fi
+                    done
+                    
+                    echo "🚨 FINAL FAILURE: $url failed all $max_retries attempts"
+                    return 1
+                  }
 
-      - name: CDN Cache Warming
-        run: |
-          echo "🔥 Warming up CDN cache..."
-          
-          # Różne endpointy do cache warming
-          cache_urls=(
-            "https://mybonzoaiblog.pages.dev/"
-            "https://mybonzoaiblog.pages.dev/blog"
-            "https://mybonzoaiblog.pages.dev/assets/style.css"
-            "https://mybonzoaiblog.pages.dev/assets/main.js"
-          )
-          
-          for url in "${cache_urls[@]}"; do
-            echo "Warming cache for: $url"
-            curl -s -o /dev/null \
-              --max-time 15 \
-              --header "Cache-Control: no-cache" \
-              "$url" || echo "Cache warming failed for $url"
-            sleep 1
-          done
+                  # Lista głównych URL-i
+                  main_urls=(
+                    "https://mybonzoaiblog.pages.dev"
+                    "https://www.mybonzoaiblog.com"
+                    "https://mybonzoaiblog.com"
+                  )
 
-      - name: Generate Activity Report
-        run: |
-          echo "📋 Activity Report Generated"
-          echo "=========================="
-          echo "Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
-          echo "Job: Advanced Site Monitoring"
-          echo "Status: Completed"
-          echo "Next run: According to cron schedule"
-          echo "=========================="
+                  success_count=0
+                  total_count=${#main_urls[@]}
+
+                  for url in "${main_urls[@]}"; do
+                    if check_url "$url"; then
+                      ((success_count++))
+                    fi
+                    sleep 3
+                  done
+
+                  echo "📊 Health Check Summary: $success_count/$total_count URLs healthy"
+
+            - name: Performance Testing
+              run: |
+                  echo "🚀 Running performance tests..."
+
+                  main_url="https://mybonzoaiblog.pages.dev"
+
+                  # Test czasu ładowania
+                  echo "Testing load times..."
+                  for i in {1..3}; do
+                    echo "Load test $i/3:"
+                    curl -s -o /dev/null -w "Time: %{time_total}s | Size: %{size_download} bytes | Speed: %{speed_download} bytes/s\n" \
+                      --max-time 45 "$main_url" || echo "Load test $i failed"
+                    sleep 2
+                  done
+
+            - name: Simulate User Activity
+              run: |
+                  echo "👤 Simulating realistic user activity..."
+
+                  base_url="https://mybonzoaiblog.pages.dev"
+
+                  # Symuluj typowe ścieżki użytkownika
+                  user_paths=(
+                    "/"
+                    "/blog"
+                    "/about" 
+                    "/portfolio"
+                    "/contact"
+                    "/projects"
+                    "/api/health"
+                  )
+
+                  echo "Simulating user journey..."
+                  for path in "${user_paths[@]}"; do
+                    full_url="${base_url}${path}"
+                    echo "Visiting: $full_url"
+                    
+                    # Symuluj prawdziwe zachowanie przeglądarki
+                    curl -s -o /dev/null \
+                      --max-time 20 \
+                      --user-agent "Mozilla/5.0 (GitHub Actions Keep-Alive Bot)" \
+                      --header "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" \
+                      --header "Accept-Language: pl-PL,pl;q=0.8,en;q=0.6" \
+                      --header "Accept-Encoding: gzip, deflate" \
+                      --header "Connection: keep-alive" \
+                      --header "Upgrade-Insecure-Requests: 1" \
+                      "$full_url" || echo "Failed to visit $full_url"
+                    
+                    # Realistyczna pauza między stronami
+                    sleep $(shuf -i 2-8 -n 1)
+                  done
+
+            - name: CDN Cache Warming
+              run: |
+                  echo "🔥 Warming up CDN cache..."
+
+                  # Różne endpointy do cache warming
+                  cache_urls=(
+                    "https://mybonzoaiblog.pages.dev/"
+                    "https://mybonzoaiblog.pages.dev/blog"
+                    "https://mybonzoaiblog.pages.dev/assets/style.css"
+                    "https://mybonzoaiblog.pages.dev/assets/main.js"
+                  )
+
+                  for url in "${cache_urls[@]}"; do
+                    echo "Warming cache for: $url"
+                    curl -s -o /dev/null \
+                      --max-time 15 \
+                      --header "Cache-Control: no-cache" \
+                      "$url" || echo "Cache warming failed for $url"
+                    sleep 1
+                  done
+
+            - name: Generate Activity Report
+              run: |
+                  echo "📋 Activity Report Generated"
+                  echo "=========================="
+                  echo "Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+                  echo "Job: Advanced Site Monitoring"
+                  echo "Status: Completed"
+                  echo "Next run: According to cron schedule"
+                  echo "=========================="

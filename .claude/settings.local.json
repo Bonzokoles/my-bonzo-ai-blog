@@ -4,7 +4,8 @@
       "Bash(mv:*)",
       "Bash(set CLOUDFLARE_API_TOKEN=Bp7MhvjGfUaxPoCz4DF8Psenw55emI_T8RAGBjuR:*)",
       "Bash(set:*)",
-      "Bash(npx wrangler:*)"
+      "Bash(npx wrangler:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []
