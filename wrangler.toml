@@ -21,16 +21,15 @@ queues = [
 # AI binding
 ai = { binding = "AI" }
 
-# Durable Objects
-[durable_objects]
-bindings = [
-  { name = "CHAT_ROOM", class_name = "ChatRoom" }
-]
+# Durable Objects - disabled for now (complex setup required)
+# [durable_objects]
+# bindings = [
+#   { name = "CHAT_ROOM", class_name = "ChatRoom" }
+# ]
 
-# Migrations for Durable Objects
-[[migrations]]
-tag = "v1"
-new_classes = ["ChatRoom"]
+# [[migrations]]
+# tag = "v1"
+# new_classes = ["ChatRoom"]
 
 # Environment variables (dla local dev)
 [vars]

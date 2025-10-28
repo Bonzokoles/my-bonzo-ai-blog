@@ -1,82 +1,8 @@
-import type { SSRManifest } from 'astro';
-import { App } from 'astro/app';
-import { DurableObject } from 'cloudflare:workers';
+// Simplified worker without Durable Objects for easier deployment
 
-// Durable Object dla real-time chat/AI
-export class ChatRoom extends DurableObject<Env> {
-  constructor(ctx: DurableObjectState, env: Env) {
-    super(ctx, env);
-  }
-
-  async fetch(request: Request): Promise<Response> {
-    const url = new URL(request.url);
-    
-    if (url.pathname === "/websocket") {
-      return this.handleWebSocket(request);
-    }
-    
-    return new Response("Not found", { status: 404 });
-  }
-
-  private async handleWebSocket(request: Request): Promise<Response> {
-    const webSocketPair = new WebSocketPair();
-    const [client, server] = Object.values(webSocketPair);
-
-    server.accept();
-    
-    server.addEventListener('message', async (event) => {
-      const message = JSON.parse(event.data as string);
-      
-      if (message.type === 'ai_request') {
-        // Wykorzystaj AI Workers do przetwarzania
-        const aiResponse = await this.env.AI.run('@cf/meta/llama-2-7b-chat-int8', {
-          messages: [{ role: 'user', content: message.content }]
-        });
-        
-        server.send(JSON.stringify({
-          type: 'ai_response',
-          data: aiResponse
-        }));
-      }
-    });
-
-    return new Response(null, {
-      status: 101,
-      webSocket: client,
-    });
-  }
-}
-
-// Image Processor dla optymalizacji obrazów
-export class ImageProcessor extends DurableObject<Env> {
-  constructor(ctx: DurableObjectState, env: Env) {
-    super(ctx, env);
-  }
-
-  async processImage(imageData: ArrayBuffer, options: any): Promise<ArrayBuffer> {
-    // Wykorzystaj Cloudflare Images API
-    const formData = new FormData();
-    formData.append('file', new Blob([imageData]));
-    
-    const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${this.env.CLOUDFLARE_ACCOUNT_ID}/images/v1`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.env.CLOUDFLARE_API_TOKEN}`,
-      },
-      body: formData
-    });
-    
-    return response.arrayBuffer();
-  }
-}
-
-// Główny export funkcji
-export function createExports(manifest: SSRManifest) {
-  const app = new App(manifest);
-  
-  return {
-    default: {
-      async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+// Główny handler export  
+export default {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
         // Logging do queue
         if (env.IMAGE_QUEUE) {
           await env.IMAGE_QUEUE.send({
@@ -103,20 +29,18 @@ export function createExports(manifest: SSRManifest) {
           return handleNewsletterRequest(request, env);
         }
 
-        // Default Astro handling
-        return app.render(request, { locals: {} });
-      },
+        // Default response
+        return new Response('Not found', { status: 404 });
+  },
 
-      // Queue consumer dla przetwarzania obrazów
-      async queue(batch: MessageBatch<unknown>, env: Env): Promise<void> {
-        for (const message of batch.messages) {
-          console.log(`Processing: ${JSON.stringify(message.body)}`);
-          // Tutaj można dodać logikę przetwarzania
-        }
-      }
-    } satisfies ExportedHandler<Env>
-  };
-}
+  // Queue consumer dla przetwarzania obrazów
+  async queue(batch: MessageBatch<unknown>, env: Env): Promise<void> {
+    for (const message of batch.messages) {
+      console.log(`Processing: ${JSON.stringify(message.body)}`);
+      // Tutaj można dodać logikę przetwarzania
+    }
+  }
+} satisfies ExportedHandler<Env>;
 
 // AI Request Handler
 async function handleAIRequest(request: Request, env: Env): Promise<Response> {
@@ -203,7 +127,6 @@ interface Env {
   CACHE: KVNamespace;
   MEDIA_BUCKET: R2Bucket;
   IMAGE_QUEUE: Queue;
-  CHAT_ROOM: DurableObjectNamespace;
   NEWSLETTER_SUBSCRIPTIONS: KVNamespace;
   CLOUDFLARE_API_TOKEN: string;
   CLOUDFLARE_ACCOUNT_ID: string;
