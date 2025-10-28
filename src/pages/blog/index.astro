@@ -1,5 +1,4 @@
 ---
-import Heading from "@components/Astro/Heading.astro";
 import Link from "@components/Astro/Link.astro";
 import BackgroundPattern from "@components/elements/BackgroundPattern.astro";
 import Layout from "@layouts/Layout.astro";
@@ -26,9 +25,7 @@ const recentPosts = posts
   <section class="py-16">
     <div class="max-w-6xl mx-auto px-4">
       <div class="text-center mb-12">
-        <Heading level={1} class="text-4xl font-bold mb-4"
-          >MyBonzo AI Blog</Heading
-        >
+        <h1 class="text-4xl font-bold mb-4">MyBonzo AI Blog</h1>
         <p class="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
           Praktyczne porady, narzędzia AI i rozwiązania dla całej rodziny. Bez
           technicznego żargonu - po prostu działa!
@@ -58,12 +55,9 @@ const recentPosts = posts
                   ))}
                 </div>
 
-                <Heading
-                  level={3}
-                  class="text-xl font-semibold mb-2 line-clamp-2 text-theme-primary"
-                >
+                <h3 class="text-xl font-semibold mb-2 line-clamp-2 text-theme-primary">
                   {post.data.title}
-                </Heading>
+                </h3>
 
                 <p class="text-theme-primary opacity-80 text-sm mb-3 line-clamp-3">
                   {post.data.description}
