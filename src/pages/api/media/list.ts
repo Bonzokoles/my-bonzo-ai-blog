@@ -68,7 +68,7 @@ export const GET: APIRoute = async ({ locals }) => {
         // Video
         'mp4': 'video/mp4',
         'webm': 'video/webm',
-        'ogg': 'video/ogg',
+        'ogv': 'video/ogg',
         'avi': 'video/avi',
         'mov': 'video/quicktime',
         'wmv': 'video/x-ms-wmv',
