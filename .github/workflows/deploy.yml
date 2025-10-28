@@ -144,8 +144,7 @@ jobs:
           echo ""
           echo "🌐 Deploying to production..."
           npx wrangler pages deploy ./dist \
-            --project-name=mybonzoaiblog \
-            --compatibility-date=2024-10-28
+            --project-name=mybonzoaiblog
 
           deployment_status=$?
 
