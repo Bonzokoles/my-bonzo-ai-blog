@@ -176,44 +176,6 @@ jobs:
             exit 1
           fi
 
-      - name: Create KV Namespaces (if needed)
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          echo "🔧 Checking KV namespaces..."
-
-          # Sprawdź czy istnieją wymagane KV namespaces
-          existing_kvs=$(npx wrangler kv:namespace list 2>/dev/null || echo "[]")
-
-          if ! echo "$existing_kvs" | grep -q "SESSION"; then
-            echo "📝 Creating SESSION KV namespace..."
-            npx wrangler kv:namespace create "SESSION"
-          fi
-
-          if ! echo "$existing_kvs" | grep -q "CACHE"; then
-            echo "📝 Creating CACHE KV namespace..."  
-            npx wrangler kv:namespace create "CACHE"
-          fi
-
-          echo "✅ KV namespaces ready"
-
-      - name: Create R2 Buckets (if needed)
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          echo "🪣 Checking R2 buckets..."
-
-          existing_buckets=$(npx wrangler r2 bucket list 2>/dev/null || echo "[]")
-
-          if ! echo "$existing_buckets" | grep -q "mybonzo-media"; then
-            echo "🪣 Creating mybonzo-media R2 bucket..."
-            npx wrangler r2 bucket create mybonzo-media
-          fi
-
-          echo "✅ R2 buckets ready"
-
       - name: Post-deployment health check
         run: |
           echo "� Running post-deployment health checks..."
