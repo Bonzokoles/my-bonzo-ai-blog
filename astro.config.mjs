@@ -17,6 +17,9 @@ export default defineConfig({
 	site: SITE.url,
 	output: "server",
 	adapter: cloudflare(),
+	image: {
+		service: { entrypoint: "astro/assets/services/sharp", config: {} }
+	},
 	markdown: {
 		shikiConfig: SITE.shikiConfig,
 	},
