@@ -1,26 +1,28 @@
 ---
 // AI Chat page
-import Layout from "@layouts/Layout.astro";
-import PageHeader from "@components/Astro/PageHeader.astro";
 import AIChat from "@components/Astro/AIChat.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+import Layout from "@layouts/Layout.astro";
 ---
 
 <Layout title="AI Chat | MyBonzo AI Blog">
-  <PageHeader 
+  <PageHeader
     heading="🤖 Asystent AI MyBonzo"
     description="Porozmawiaj z naszym asystentem AI. Zadaj pytania o sztuczną inteligencję, narzędzia AI lub poproś o pomoc z problemami technicznymi."
   />
 
   <div class="container mx-auto px-4 pb-16">
     <div class="max-w-4xl mx-auto">
-      <AIChat 
+      <AIChat
         placeholder="Zadaj pytanie o AI, narzędzia, technologie..."
         maxLength={1000}
         model="@cf/meta/llama-2-7b-chat-int8"
         showModel={true}
       />
-      
-      <div class="mt-8 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+
+      <div
+        class="mt-8 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800"
+      >
         <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-3">
           💡 Przykładowe pytania:
         </h3>
@@ -32,10 +34,11 @@ import AIChat from "@components/Astro/AIChat.astro";
           <li>• "Jakie są najnowsze trendy w sztucznej inteligencji?"</li>
         </ul>
       </div>
-      
+
       <div class="mt-6 text-center">
         <p class="text-sm text-gray-600 dark:text-gray-400">
-          Asystent AI jest zasilany przez <strong>Cloudflare Workers AI</strong> i model <strong>Llama 2</strong>
+          Asystent AI jest zasilany przez <strong>Cloudflare Workers AI</strong>
+          i model <strong>Llama 2</strong>
         </p>
       </div>
     </div>
