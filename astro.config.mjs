@@ -18,21 +18,7 @@ export default defineConfig({
 	output: "server",
 	adapter: cloudflare({
 		// Konfiguracja sesji z KV
-		sessionKVBindingName: "SESSION",
-		
-		// Custom Worker entry point dla AI funkcji
-		workerEntryPoint: {
-			path: "src/worker.ts",
-			namedExports: ["ChatRoom", "ImageProcessor"]
-		},
-		
-		// Routes dla funkcji serwerowych
-		routes: {
-			extend: {
-				include: ["/api/*", "/ai/*", "/media/*"],
-				exclude: ["/assets/*"]
-			}
-		}
+		sessionKVBindingName: "SESSION"
 	}),
 	
 	// Optymalizacje obrazów 
