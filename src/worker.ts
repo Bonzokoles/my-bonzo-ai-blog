@@ -1,4 +1,3 @@
-import { handle } from '@astrojs/cloudflare/handler';
 import type { SSRManifest } from 'astro';
 import { App } from 'astro/app';
 import { DurableObject } from 'cloudflare:workers';
