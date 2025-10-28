@@ -24,14 +24,7 @@ export default {
         return new Response('Not found', { status: 404 });
   },
 
-  // Queue consumer dla przetwarzania obrazów
-  async queue(batch: MessageBatch<unknown>, env: Env): Promise<void> {
-    for (const message of batch.messages) {
-      console.log(`Processing: ${JSON.stringify(message.body)}`);
-      // Tutaj można dodać logikę przetwarzania
-    }
-  }
-} satisfies ExportedHandler<Env>;
+};
 
 // AI Request Handler
 async function handleAIRequest(request: Request, env: Env): Promise<Response> {
@@ -44,7 +37,9 @@ async function handleAIRequest(request: Request, env: Env): Promise<Response> {
       messages: [{ role: 'user', content: body.prompt }]
     });
     
-    return Response.json(response);
+    return new Response(JSON.stringify(response), {
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
   
   if (url.pathname === '/api/ai/generate-image') {
@@ -68,9 +63,12 @@ async function handleMediaRequest(request: Request, env: Env): Promise<Response>
   
   if (url.pathname === '/api/media/upload' && request.method === 'POST') {
     // Media upload temporarily disabled - R2 bucket not configured
-    return Response.json({
+    return new Response(JSON.stringify({
       error: 'Media upload temporarily disabled'
-    }, { status: 503 });
+    }), { 
+      status: 503,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
   
   return new Response('Not found', { status: 404 });
@@ -85,15 +83,23 @@ async function handleNewsletterRequest(request: Request, env: Env): Promise<Resp
       const body = await request.json() as { email: string };
 
       if (!body.email || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(body.email)) {
-        return Response.json({ error: 'Invalid email address' }, { status: 400 });
+        return new Response(JSON.stringify({ error: 'Invalid email address' }), { 
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        });
       }
 
       await env.CACHE.put(`newsletter:${body.email}`, new Date().toISOString());
 
-      return Response.json({ success: true });
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { 'Content-Type': 'application/json' }
+      });
     } catch (error) {
       console.error('Subscription error:', error);
-      return Response.json({ error: 'Could not subscribe. Please try again later.' }, { status: 500 });
+      return new Response(JSON.stringify({ error: 'Could not subscribe. Please try again later.' }), { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
   }
 
