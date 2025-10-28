@@ -21,7 +21,4 @@ ai = { binding = "AI" }
 # tag = "v1"
 # new_classes = ["ChatRoom"]
 
-# Environment variables (dla local dev)
-[vars]
-CLOUDFLARE_API_TOKEN = "dev_token"
-CLOUDFLARE_ACCOUNT_ID = "dev_account"
+# Environment variables removed - will be set by CI/CD
