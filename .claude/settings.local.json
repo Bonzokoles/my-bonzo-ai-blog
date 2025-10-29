@@ -5,7 +5,9 @@
       "Bash(set CLOUDFLARE_API_TOKEN=Bp7MhvjGfUaxPoCz4DF8Psenw55emI_T8RAGBjuR:*)",
       "Bash(set:*)",
       "Bash(npx wrangler:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npx astro check:*)",
+      "Bash(npm run dev:*)"
     ],
     "deny": [],
     "ask": []

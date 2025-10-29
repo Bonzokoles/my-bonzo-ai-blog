@@ -2,16 +2,20 @@
 /* Component for rendering consistent page headings with optional background.
  *
  * Props:
- * - text: string - Heading text content
+ * - text?: string - Heading text content (or use slot)
+ * - level?: 1-6 - Heading level (h1-h6), defaults to 1
  * - showHeadingBackground?: boolean - Enable background styling
  * - class?: string - Additional CSS classes
  *
  * Example usage:
  * <Heading
  *   text="Our Services"
+ *   level={2}
  *   showHeadingBackground={true}
  *   class="my-heading"
  * />
+ * OR
+ * <Heading level={3}>Our Services</Heading>
  *
  * Notes:
  * - Centers text with responsive margins
@@ -23,14 +27,17 @@
 
 interface Props {
 	// Text content of the heading //
-	text: string;
+	text?: string;
+	// Heading level (h1-h6) //
+	level?: 1 | 2 | 3 | 4 | 5 | 6;
 	// Controls whether heading has background styling //
 	showHeadingBackground?: boolean;
 	// Optional CSS classes //
 	class?: string | undefined;
 }
 
-const { text, showHeadingBackground = true, class: className } = Astro.props;
+const { text, level = 1, showHeadingBackground = true, class: className } = Astro.props;
+const Tag = `h${level}` as any;
 ---
 
 <div
@@ -39,7 +46,7 @@ const { text, showHeadingBackground = true, class: className } = Astro.props;
 		className,
 	]}
 >
-	<p
+	<Tag
 		class:list={[
 			" tracking-widest text-4xl font-medium capitalize leading-relaxed mx-auto",
 			{
@@ -50,6 +57,6 @@ const { text, showHeadingBackground = true, class: className } = Astro.props;
 			{ "rounded-theme": true },
 		]}
 	>
-		{text}
-	</p>
+		{text || <slot />}
+	</Tag>
 </div>

@@ -11,6 +11,22 @@ kv_namespaces = [
 # AI binding
 ai = { binding = "AI" }
 
+# R2 Buckets - Media storage
+# Note: Create these buckets in Cloudflare dashboard before deployment
+# wrangler r2 bucket create mybonzo-media
+# wrangler r2 bucket create mybonzo-media-preview
+[[r2_buckets]]
+binding = "MEDIA_BUCKET"
+bucket_name = "mybonzo-media"
+preview_bucket_name = "mybonzo-media-preview"
+
+# Queues - Image processing (optional, uncomment when needed)
+# Note: Create queue before deployment
+# wrangler queues create image-processing
+# [[queues.producers]]
+# binding = "IMAGE_QUEUE"
+# queue = "image-processing"
+
 # Durable Objects - disabled for now (complex setup required)
 # [durable_objects]
 # bindings = [
