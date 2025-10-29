@@ -248,11 +248,11 @@ jobs:
             echo "⚠️ No health checks passed - this may indicate a deployment issue"
             echo "🔍 Please check the deployment logs and Cloudflare dashboard"
           fi
-          
+
           echo ""
           echo "🎉 Deployment pipeline completed! Main site is accessible."
           echo "📝 Note: Health checks are informational only and do not affect deployment success"
-          
+
           # Always exit 0 - health checks are informational, deployment already succeeded
           exit 0
 

@@ -1,0 +1,1103 @@
+---
+// AI Image Generator - Text to Image with Cloudflare Workers AI
+import Layout from "@layouts/Layout.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+
+const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tekstowych. Stable Diffusion XL, Dreamshaper i inne modele AI.";
+---
+
+<Layout title="Generator Grafiki AI - MyBonzo" description={description}>
+  <PageHeader
+    heading="🎨 Generator Grafiki AI"
+    description={description}
+    animate={true}
+  />
+
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Settings Sidebar -->
+        <div class="lg:col-span-1 space-y-6">
+          <!-- Model Selection -->
+          <div class="settings-card">
+            <h3 class="settings-title">🤖 Model AI</h3>
+            <select id="modelSelect" class="settings-select">
+              <option value="@cf/stabilityai/stable-diffusion-xl-base-1.0">Stable Diffusion XL</option>
+              <option value="@cf/bytedance/stable-diffusion-xl-lightning">SDXL Lightning (Szybki)</option>
+              <option value="@cf/lykon/dreamshaper-8-lcm">Dreamshaper 8</option>
+            </select>
+            <p class="setting-hint">Wybierz model generujący</p>
+          </div>
+
+          <!-- Style Presets -->
+          <div class="settings-card">
+            <h3 class="settings-title">🎭 Styl</h3>
+            <div class="style-grid">
+              <button class="style-btn active" data-style="">
+                <span class="style-icon">✨</span>
+                <span class="style-name">Domyślny</span>
+              </button>
+              <button class="style-btn" data-style="photorealistic, detailed, 8k, professional photography">
+                <span class="style-icon">📸</span>
+                <span class="style-name">Fotorealistyczny</span>
+              </button>
+              <button class="style-btn" data-style="digital art, trending on artstation, highly detailed">
+                <span class="style-icon">🎨</span>
+                <span class="style-name">Digital Art</span>
+              </button>
+              <button class="style-btn" data-style="anime style, manga, vibrant colors">
+                <span class="style-icon">🎌</span>
+                <span class="style-name">Anime</span>
+              </button>
+              <button class="style-btn" data-style="oil painting, classical art, masterpiece">
+                <span class="style-icon">🖼️</span>
+                <span class="style-name">Malarstwo</span>
+              </button>
+              <button class="style-btn" data-style="3d render, octane render, unreal engine">
+                <span class="style-icon">🎮</span>
+                <span class="style-name">3D Render</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Advanced Settings -->
+          <div class="settings-card">
+            <h3 class="settings-title">⚙️ Ustawienia</h3>
+
+            <div class="setting-item">
+              <label for="numSteps" class="setting-label">
+                Kroki: <span id="stepsValue">20</span>
+              </label>
+              <input
+                type="range"
+                id="numSteps"
+                min="1"
+                max="50"
+                step="1"
+                value="20"
+                class="setting-slider"
+              />
+              <p class="setting-hint">Więcej = lepsza jakość, wolniejsze</p>
+            </div>
+
+            <div class="setting-item">
+              <label for="guidance" class="setting-label">
+                Guidance: <span id="guidanceValue">7.5</span>
+              </label>
+              <input
+                type="range"
+                id="guidance"
+                min="1"
+                max="20"
+                step="0.5"
+                value="7.5"
+                class="setting-slider"
+              />
+              <p class="setting-hint">Wyższe = bliżej promptu</p>
+            </div>
+          </div>
+
+          <!-- Quick Prompts -->
+          <div class="settings-card">
+            <h3 class="settings-title">💡 Przykłady</h3>
+            <div class="quick-prompts">
+              <button class="quick-prompt-btn" data-prompt="a majestic lion in golden sunset light">
+                🦁 Majestatyczny lew
+              </button>
+              <button class="quick-prompt-btn" data-prompt="futuristic cityscape with flying cars at night">
+                🌃 Futurystyczne miasto
+              </button>
+              <button class="quick-prompt-btn" data-prompt="mystical forest with glowing mushrooms">
+                🍄 Magiczny las
+              </button>
+              <button class="quick-prompt-btn" data-prompt="astronaut floating in colorful nebula">
+                🚀 Astronauta w nebuli
+              </button>
+              <button class="quick-prompt-btn" data-prompt="steampunk mechanical dragon">
+                🐉 Mechaniczny smok
+              </button>
+              <button class="quick-prompt-btn" data-prompt="underwater city with coral architecture">
+                🌊 Podwodne miasto
+              </button>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="settings-card">
+            <h3 class="settings-title">📊 Statystyki</h3>
+            <div class="stats">
+              <div class="stat-item">
+                <span class="stat-label">Wygenerowane:</span>
+                <span id="generatedCount" class="stat-value">0</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Rate limit:</span>
+                <span id="rateLimitStatus" class="stat-value">5/5</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Cache hit:</span>
+                <span id="cacheRate" class="stat-value">0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Area -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Prompt Input -->
+          <div class="prompt-card">
+            <h3 class="prompt-title">✍️ Opisz obraz</h3>
+            <form id="generateForm">
+              <textarea
+                id="promptInput"
+                placeholder="Opisz obraz który chcesz wygenerować... np. 'majestatyczny zamek na wzgórzu o zachodzie słońca'"
+                rows="4"
+                maxlength="500"
+                class="prompt-textarea"
+              ></textarea>
+              <div class="prompt-footer">
+                <div class="flex items-center gap-4">
+                  <span id="promptCounter" class="char-counter">0/500</span>
+                  <span id="currentStyle" class="current-style-badge">Styl: Domyślny</span>
+                </div>
+                <button type="submit" id="generateBtn" class="generate-button">
+                  <span id="generateBtnText">🎨 Generuj Obraz</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Generation Progress -->
+          <div id="progressArea" class="progress-card hidden">
+            <div class="progress-content">
+              <div class="progress-icon">⏳</div>
+              <h3 class="progress-title">Generowanie obrazu...</h3>
+              <p id="progressMessage" class="progress-message">Przygotowywanie...</p>
+              <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Generated Image Display -->
+          <div id="resultArea" class="result-card hidden">
+            <div class="result-header">
+              <h3 class="result-title">🖼️ Wygenerowany Obraz</h3>
+              <div class="result-actions">
+                <button id="downloadBtn" class="action-icon-btn" title="Pobierz">
+                  💾
+                </button>
+                <button id="shareBtn" class="action-icon-btn" title="Udostępnij">
+                  📤
+                </button>
+                <button id="newImageBtn" class="action-icon-btn" title="Nowy obraz">
+                  ➕
+                </button>
+              </div>
+            </div>
+            <div class="result-image-container">
+              <img id="generatedImage" alt="Generated image" class="result-image" />
+              <div id="imageBadge" class="image-badge hidden">📦 Z cache</div>
+            </div>
+            <div class="result-info">
+              <p id="resultPrompt" class="result-prompt"></p>
+              <div class="result-meta">
+                <span id="resultModel" class="meta-badge"></span>
+                <span id="resultTime" class="meta-badge"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gallery -->
+          <div class="gallery-card">
+            <div class="gallery-header">
+              <h3 class="gallery-title">🖼️ Historia Generacji</h3>
+              <button id="clearGalleryBtn" class="clear-gallery-btn">
+                🗑️ Wyczyść
+              </button>
+            </div>
+            <div id="galleryGrid" class="gallery-grid">
+              <div class="gallery-empty">
+                <p>Wygenerowane obrazy pojawią się tutaj</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tips -->
+          <div class="tips-card">
+            <h3 class="tips-title">💡 Wskazówki</h3>
+            <ul class="tips-list">
+              <li>Używaj szczegółowych opisów dla lepszych rezultatów</li>
+              <li>Dodaj style artystyczne: "oil painting", "digital art", "photorealistic"</li>
+              <li>Określ oświetlenie: "golden hour", "dramatic lighting", "soft light"</li>
+              <li>Dodaj jakość: "8k", "highly detailed", "masterpiece"</li>
+              <li>Unikaj negatywów - opisuj co chcesz, nie czego nie chcesz</li>
+              <li>Limit: 5 generacji na 5 minut</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* Settings Card */
+  .settings-card {
+    background: transparent;
+    border: 2px solid #6b7280;
+    padding: 1.25rem;
+  }
+
+  .settings-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text, #1f2937);
+    margin-bottom: 1rem;
+  }
+
+  .settings-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #6b7280;
+    background: transparent;
+    color: var(--color-text, #1f2937);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .settings-select:hover,
+  .settings-select:focus {
+    border-color: var(--color-accent, #2563eb);
+    outline: none;
+  }
+
+  /* Style Grid */
+  .style-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .style-btn {
+    padding: 0.75rem 0.5rem;
+    border: 2px solid #6b7280;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+
+  .style-btn:hover {
+    border-color: var(--color-accent, #2563eb);
+    transform: translateY(-2px);
+  }
+
+  .style-btn.active {
+    background: var(--color-accent, #2563eb);
+    color: white;
+    border-color: var(--color-accent, #2563eb);
+  }
+
+  .style-icon {
+    display: block;
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .style-name {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  /* Setting Items */
+  .setting-item {
+    margin-bottom: 1rem;
+  }
+
+  .setting-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .setting-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text, #1f2937);
+    margin-bottom: 0.5rem;
+  }
+
+  .setting-slider {
+    width: 100%;
+    height: 4px;
+    background: #d1d5db;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .setting-slider::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--color-accent, #2563eb);
+    cursor: pointer;
+  }
+
+  .setting-hint {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+  }
+
+  /* Quick Prompts */
+  .quick-prompts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .quick-prompt-btn {
+    padding: 0.75rem;
+    border: 2px solid #6b7280;
+    background: transparent;
+    color: var(--color-text, #1f2937);
+    font-size: 0.875rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .quick-prompt-btn:hover {
+    border-color: var(--color-accent, #2563eb);
+    transform: translateX(4px);
+  }
+
+  /* Stats */
+  .stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    border: 1px solid #e5e7eb;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  .stat-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-accent, #2563eb);
+  }
+
+  /* Prompt Card */
+  .prompt-card {
+    background: transparent;
+    border: 2px solid #6b7280;
+    padding: 1.5rem;
+  }
+
+  .prompt-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text, #1f2937);
+    margin-bottom: 1rem;
+  }
+
+  .prompt-textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #6b7280;
+    background: white;
+    color: var(--color-text, #1f2937);
+    font-size: 0.875rem;
+    resize: vertical;
+    min-height: 100px;
+    transition: all 0.3s ease;
+  }
+
+  .prompt-textarea:focus {
+    outline: none;
+    border-color: var(--color-accent, #2563eb);
+  }
+
+  .prompt-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+
+  .char-counter {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+
+  .current-style-badge {
+    font-size: 0.75rem;
+    color: var(--color-accent, #2563eb);
+    font-weight: 600;
+  }
+
+  .generate-button {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--color-accent, #2563eb);
+    background: var(--color-accent, #2563eb);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .generate-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+
+  .generate-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Progress Card */
+  .progress-card {
+    background: transparent;
+    border: 2px solid var(--color-accent, #2563eb);
+    padding: 2rem;
+  }
+
+  .progress-content {
+    text-align: center;
+  }
+
+  .progress-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .progress-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text, #1f2937);
+    margin-bottom: 0.5rem;
+  }
+
+  .progress-message {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+  }
+
+  .progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: var(--color-accent, #2563eb);
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  /* Result Card */
+  .result-card {
+    background: transparent;
+    border: 2px solid #6b7280;
+    padding: 1.5rem;
+  }
+
+  .result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .result-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text, #1f2937);
+  }
+
+  .result-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .action-icon-btn {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #6b7280;
+    background: transparent;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .action-icon-btn:hover {
+    border-color: var(--color-accent, #2563eb);
+    transform: scale(1.1);
+  }
+
+  .result-image-container {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+
+  .result-image {
+    width: 100%;
+    height: auto;
+    border: 2px solid #6b7280;
+    display: block;
+  }
+
+  .image-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .result-info {
+    padding: 1rem;
+    border: 2px solid #6b7280;
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  .result-prompt {
+    font-size: 0.875rem;
+    color: var(--color-text, #1f2937);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .result-meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .meta-badge {
+    padding: 0.25rem 0.75rem;
+    border: 1px solid #d1d5db;
+    background: white;
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+
+  /* Gallery */
+  .gallery-card {
+    background: transparent;
+    border: 2px solid #6b7280;
+    padding: 1.5rem;
+  }
+
+  .gallery-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .gallery-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text, #1f2937);
+  }
+
+  .clear-gallery-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid #6b7280;
+    background: transparent;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .clear-gallery-btn:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .gallery-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #9ca3af;
+    font-style: italic;
+  }
+
+  .gallery-item {
+    position: relative;
+    aspect-ratio: 1;
+    border: 2px solid #6b7280;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .gallery-item:hover {
+    border-color: var(--color-accent, #2563eb);
+    transform: scale(1.05);
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Tips Card */
+  .tips-card {
+    background: rgba(37, 99, 235, 0.05);
+    border: 2px solid var(--color-accent, #2563eb);
+    padding: 1.5rem;
+  }
+
+  .tips-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-accent, #2563eb);
+    margin-bottom: 1rem;
+  }
+
+  .tips-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tips-list li {
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-text, #1f2937);
+  }
+
+  .tips-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent, #2563eb);
+    font-weight: 600;
+  }
+
+  /* Utility */
+  .hidden {
+    display: none !important;
+  }
+
+  /* Dark Mode */
+  @media (prefers-color-scheme: dark) {
+    .settings-card,
+    .prompt-card,
+    .progress-card,
+    .result-card,
+    .gallery-card,
+    .tips-card {
+      border-color: #4b5563;
+    }
+
+    .settings-title,
+    .prompt-title,
+    .progress-title,
+    .result-title,
+    .gallery-title,
+    .tips-title,
+    .setting-label,
+    .result-prompt,
+    .tips-list li {
+      color: #f3f4f6;
+    }
+
+    .settings-select,
+    .style-btn,
+    .quick-prompt-btn,
+    .prompt-textarea,
+    .action-icon-btn,
+    .result-image,
+    .clear-gallery-btn,
+    .gallery-item {
+      border-color: #4b5563;
+      color: #f3f4f6;
+      background: #1f2937;
+    }
+
+    .result-info {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .meta-badge {
+      background: #1f2937;
+      border-color: #374151;
+    }
+
+    .stat-item {
+      border-color: #374151;
+    }
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 1024px) {
+    .style-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .style-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
+<script>
+  // AI Image Generator functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    // DOM Elements
+    const modelSelect = document.getElementById('modelSelect') as HTMLSelectElement;
+    const styleButtons = document.querySelectorAll('.style-btn');
+    const numStepsSlider = document.getElementById('numSteps') as HTMLInputElement;
+    const guidanceSlider = document.getElementById('guidance') as HTMLInputElement;
+    const stepsValue = document.getElementById('stepsValue') as HTMLElement;
+    const guidanceValue = document.getElementById('guidanceValue') as HTMLElement;
+
+    const generateForm = document.getElementById('generateForm') as HTMLFormElement;
+    const promptInput = document.getElementById('promptInput') as HTMLTextAreaElement;
+    const promptCounter = document.getElementById('promptCounter') as HTMLElement;
+    const currentStyleBadge = document.getElementById('currentStyle') as HTMLElement;
+    const generateBtn = document.getElementById('generateBtn') as HTMLButtonElement;
+    const generateBtnText = document.getElementById('generateBtnText') as HTMLElement;
+
+    const progressArea = document.getElementById('progressArea') as HTMLElement;
+    const progressMessage = document.getElementById('progressMessage') as HTMLElement;
+    const progressBar = document.getElementById('progressBar') as HTMLElement;
+
+    const resultArea = document.getElementById('resultArea') as HTMLElement;
+    const generatedImage = document.getElementById('generatedImage') as HTMLImageElement;
+    const imageBadge = document.getElementById('imageBadge') as HTMLElement;
+    const resultPrompt = document.getElementById('resultPrompt') as HTMLElement;
+    const resultModel = document.getElementById('resultModel') as HTMLElement;
+    const resultTime = document.getElementById('resultTime') as HTMLElement;
+
+    const downloadBtn = document.getElementById('downloadBtn') as HTMLButtonElement;
+    const shareBtn = document.getElementById('shareBtn') as HTMLButtonElement;
+    const newImageBtn = document.getElementById('newImageBtn') as HTMLButtonElement;
+
+    const galleryGrid = document.getElementById('galleryGrid') as HTMLElement;
+    const clearGalleryBtn = document.getElementById('clearGalleryBtn') as HTMLButtonElement;
+
+    const generatedCount = document.getElementById('generatedCount') as HTMLElement;
+    const rateLimitStatus = document.getElementById('rateLimitStatus') as HTMLElement;
+    const cacheRate = document.getElementById('cacheRate') as HTMLElement;
+
+    const quickPromptButtons = document.querySelectorAll('.quick-prompt-btn');
+
+    // State
+    let currentStyle = '';
+    let currentImageUrl = '';
+    let stats = {
+      generated: parseInt(localStorage.getItem('img-generated') || '0'),
+      cacheHits: 0,
+      totalRequests: 0,
+      rateLimit: 5
+    };
+
+    // Initialize
+    init();
+
+    function init() {
+      loadGallery();
+      updateStats();
+      promptInput.focus();
+    }
+
+    // Event Listeners
+    numStepsSlider.addEventListener('input', () => {
+      stepsValue.textContent = numStepsSlider.value;
+    });
+
+    guidanceSlider.addEventListener('input', () => {
+      guidanceValue.textContent = guidanceSlider.value;
+    });
+
+    styleButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        styleButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentStyle = btn.getAttribute('data-style') || '';
+        const styleName = btn.querySelector('.style-name')?.textContent || 'Domyślny';
+        currentStyleBadge.textContent = `Styl: ${styleName}`;
+      });
+    });
+
+    promptInput.addEventListener('input', updatePromptCounter);
+
+    quickPromptButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const prompt = btn.getAttribute('data-prompt');
+        if (prompt) {
+          promptInput.value = prompt;
+          updatePromptCounter();
+          promptInput.focus();
+        }
+      });
+    });
+
+    generateForm.addEventListener('submit', handleGenerate);
+
+    downloadBtn.addEventListener('click', downloadImage);
+    shareBtn.addEventListener('click', shareImage);
+    newImageBtn.addEventListener('click', () => {
+      resultArea.classList.add('hidden');
+      promptInput.focus();
+    });
+
+    clearGalleryBtn.addEventListener('click', () => {
+      if (confirm('Wyczyścić całą galerię?')) {
+        localStorage.removeItem('img-gallery');
+        loadGallery();
+      }
+    });
+
+    // Functions
+    function updatePromptCounter() {
+      const length = promptInput.value.length;
+      promptCounter.textContent = `${length}/500`;
+      if (length > 450) {
+        promptCounter.style.color = '#ef4444';
+      } else {
+        promptCounter.style.color = '';
+      }
+    }
+
+    async function handleGenerate(e: Event) {
+      e.preventDefault();
+
+      const prompt = promptInput.value.trim();
+      if (!prompt) {
+        alert('Wpisz opis obrazu');
+        return;
+      }
+
+      // Build full prompt with style
+      const fullPrompt = currentStyle ? `${prompt}, ${currentStyle}` : prompt;
+
+      // Show progress
+      progressArea.classList.remove('hidden');
+      resultArea.classList.add('hidden');
+      generateBtn.disabled = true;
+      generateBtnText.textContent = '⏳ Generowanie...';
+
+      const startTime = Date.now();
+      let progress = 0;
+      const progressInterval = setInterval(() => {
+        progress += 5;
+        if (progress <= 90) {
+          progressBar.style.width = `${progress}%`;
+          progressMessage.textContent = `Generowanie... ${progress}%`;
+        }
+      }, 500);
+
+      try {
+        stats.totalRequests++;
+        stats.rateLimit--;
+        updateStats();
+
+        const response = await fetch('/api/ai/generate-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: fullPrompt,
+            model: modelSelect.value,
+            num_steps: parseInt(numStepsSlider.value),
+            guidance: parseFloat(guidanceSlider.value)
+          })
+        });
+
+        clearInterval(progressInterval);
+        progressBar.style.width = '100%';
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || `HTTP ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        const imageUrl = URL.createObjectURL(blob);
+        const cached = response.headers.get('X-Cache') === 'HIT';
+
+        if (cached) stats.cacheHits++;
+
+        // Display image
+        generatedImage.src = imageUrl;
+        currentImageUrl = imageUrl;
+        resultPrompt.textContent = fullPrompt;
+        resultModel.textContent = modelSelect.options[modelSelect.selectedIndex].text;
+        resultTime.textContent = `${((Date.now() - startTime) / 1000).toFixed(1)}s`;
+
+        if (cached) {
+          imageBadge.classList.remove('hidden');
+        } else {
+          imageBadge.classList.add('hidden');
+        }
+
+        progressArea.classList.add('hidden');
+        resultArea.classList.remove('hidden');
+
+        // Save to gallery
+        saveToGallery(imageUrl, fullPrompt);
+
+        // Update stats
+        stats.generated++;
+        localStorage.setItem('img-generated', stats.generated.toString());
+        updateStats();
+
+      } catch (error) {
+        clearInterval(progressInterval);
+        console.error('Generation error:', error);
+        progressArea.classList.add('hidden');
+        alert(`Błąd generowania: ${error instanceof Error ? error.message : 'Nieznany błąd'}`);
+      } finally {
+        generateBtn.disabled = false;
+        generateBtnText.textContent = '🎨 Generuj Obraz';
+
+        // Reset rate limit after 5 minutes
+        setTimeout(() => {
+          stats.rateLimit = Math.min(stats.rateLimit + 1, 5);
+          updateStats();
+        }, 300000);
+      }
+    }
+
+    function updateStats() {
+      generatedCount.textContent = stats.generated.toString();
+      rateLimitStatus.textContent = `${stats.rateLimit}/5`;
+      const rate = stats.totalRequests > 0
+        ? Math.round((stats.cacheHits / stats.totalRequests) * 100)
+        : 0;
+      cacheRate.textContent = `${rate}%`;
+    }
+
+    function saveToGallery(imageUrl: string, prompt: string) {
+      try {
+        const gallery = JSON.parse(localStorage.getItem('img-gallery') || '[]');
+        gallery.unshift({
+          url: imageUrl,
+          prompt: prompt,
+          timestamp: Date.now()
+        });
+
+        // Keep last 20
+        if (gallery.length > 20) gallery.length = 20;
+
+        localStorage.setItem('img-gallery', JSON.stringify(gallery));
+        loadGallery();
+      } catch (e) {
+        console.error('Error saving to gallery:', e);
+      }
+    }
+
+    function loadGallery() {
+      try {
+        const gallery = JSON.parse(localStorage.getItem('img-gallery') || '[]');
+
+        if (gallery.length === 0) {
+          galleryGrid.innerHTML = '<div class="gallery-empty"><p>Wygenerowane obrazy pojawią się tutaj</p></div>';
+          return;
+        }
+
+        galleryGrid.innerHTML = gallery.map((item: any, index: number) => `
+          <div class="gallery-item" data-index="${index}">
+            <img src="${item.url}" alt="${item.prompt}" />
+          </div>
+        `).join('');
+
+        // Add click handlers
+        document.querySelectorAll('.gallery-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const index = parseInt(item.getAttribute('data-index') || '0');
+            const image = gallery[index];
+            generatedImage.src = image.url;
+            currentImageUrl = image.url;
+            resultPrompt.textContent = image.prompt;
+            resultArea.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        });
+
+      } catch (e) {
+        console.error('Error loading gallery:', e);
+      }
+    }
+
+    function downloadImage() {
+      if (!currentImageUrl) return;
+
+      const a = document.createElement('a');
+      a.href = currentImageUrl;
+      a.download = `ai-image-${Date.now()}.png`;
+      a.click();
+    }
+
+    async function shareImage() {
+      if (!currentImageUrl) return;
+
+      try {
+        const response = await fetch(currentImageUrl);
+        const blob = await response.blob();
+        const file = new File([blob], 'ai-image.png', { type: 'image/png' });
+
+        if (navigator.share) {
+          await navigator.share({
+            files: [file],
+            title: 'Obraz wygenerowany AI',
+            text: resultPrompt.textContent || 'Obraz stworzony przez MyBonzo AI Generator'
+          });
+        } else {
+          // Fallback - copy image URL
+          await navigator.clipboard.writeText(window.location.href);
+          alert('Link skopiowany do schowka!');
+        }
+      } catch (error) {
+        console.error('Share error:', error);
+        alert('Nie udało się udostępnić obrazu');
+      }
+    }
+  });
+</script>

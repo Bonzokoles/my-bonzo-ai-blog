@@ -178,46 +178,13 @@ const {
     const status = document.getElementById("status") as HTMLElement;
 
     let isProcessing = false;
-    let socket: WebSocket | null = null;
+    let conversationHistory: Array<{role: string; content: string}> = [];
 
-    function connect() {
-      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const wsUrl = `${protocol}//${window.location.host}/websocket`;
-      
-      socket = new WebSocket(wsUrl);
+    // Set initial status
+    updateStatus("Gotowy do rozmowy ✓");
 
-      socket.addEventListener("open", () => {
-        updateStatus("Połączono z AI.");
-      });
-
-      socket.addEventListener("message", (event) => {
-        const message = JSON.parse(event.data);
-        if (message.type === "ai_response") {
-          removeTypingIndicator();
-          addMessage(message.data.response, "ai");
-          setProcessing(false);
-        }
-      });
-
-      socket.addEventListener("close", () => {
-        updateStatus("Rozłączono. Próbuję połączyć ponownie...");
-        setTimeout(connect, 5000);
-      });
-
-      socket.addEventListener("error", (error) => {
-        console.error("WebSocket error:", error);
-        addMessage(
-          "Błąd połączenia z serwerem WebSocket.",
-          "ai",
-          false,
-          true
-        );
-        updateStatus("Błąd WebSocket");
-        setProcessing(false);
-      });
-    }
-
-    connect();
+    // Autofocus on input
+    input.focus();
 
     // Character counter
     input.addEventListener("input", function () {
@@ -239,17 +206,20 @@ const {
     });
 
     // Send message
-    form.addEventListener("submit", function (e) {
+    form.addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      if (isProcessing || !socket || socket.readyState !== WebSocket.OPEN) {
+      if (isProcessing) {
         return;
       }
 
       const message = input.value.trim();
       if (!message) return;
 
-      // Add user message
+      // Add to conversation history
+      conversationHistory.push({ role: "user", content: message });
+
+      // Add user message to UI
       addMessage(message, "user");
 
       // Clear input
@@ -261,16 +231,56 @@ const {
       setProcessing(true);
       addTypingIndicator();
 
-      socket.send(
-        JSON.stringify({
-          type: "ai_request",
-          content: message,
-        })
-      );
+      try {
+        // Call AI API
+        const response = await fetch("/api/ai/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt: message,
+            history: conversationHistory.slice(-6), // Send last 6 messages for context
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        removeTypingIndicator();
+
+        if (data.success && data.response) {
+          // Add AI response to history
+          conversationHistory.push({ role: "assistant", content: data.response });
+
+          // Render response with markdown support
+          addMessage(data.response, "ai", data.cached);
+        } else {
+          throw new Error(data.error || "Unknown error");
+        }
+      } catch (error) {
+        console.error("AI request error:", error);
+        removeTypingIndicator();
+        addMessage(
+          `Przepraszam, wystąpił błąd: ${error instanceof Error ? error.message : "Nieznany błąd"}. Spróbuj ponownie.`,
+          "ai",
+          false,
+          true
+        );
+      } finally {
+        setProcessing(false);
+      }
     });
 
     // Clear chat
     clearButton.addEventListener("click", function () {
+      // Reset conversation history
+      conversationHistory = [];
+
+      // Reset UI
       messagesContainer.innerHTML = `
         <div class="message ai-message">
           <div class="message-content bg-blue-100 dark:bg-blue-900 p-3 rounded-lg">
@@ -283,7 +293,8 @@ const {
           </span>
         </div>
       `;
-      updateStatus("");
+      updateStatus("Rozmowa zresetowana ✓");
+      input.focus();
     });
 
     // Enter to send (Shift+Enter for new line)
@@ -316,10 +327,27 @@ const {
         minute: "2-digit",
       });
 
+      // Render markdown for AI messages, escape for user messages
+      const renderedContent = sender === "ai" && !isError
+        ? renderMarkdown(content)
+        : escapeHtml(content);
+
+      // Add copy button for AI messages
+      const copyButton = sender === "ai" && !isError
+        ? `<button
+             class="copy-btn text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 mt-2 px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+             onclick="copyToClipboard(this, '${escapeHtml(content).replace(/'/g, "\\'")}')">
+             📋 Kopiuj
+           </button>`
+        : "";
+
       messageDiv.innerHTML = `
         <div class="message-content ${bgClass} p-3 rounded-lg">
-          <p class="text-gray-800 dark:text-gray-200">${escapeHtml(content)}</p>
-          ${cached ? '<span class="text-xs text-gray-500">📦 Z cache</span>' : ""}
+          <div class="text-gray-800 dark:text-gray-200 prose prose-sm dark:prose-invert max-w-none">
+            ${renderedContent}
+          </div>
+          ${cached ? '<span class="text-xs text-gray-500 block mt-2">📦 Z cache</span>' : ""}
+          ${copyButton}
         </div>
         <span class="timestamp text-xs text-gray-500 mt-1 block">
           ${timestamp}
@@ -329,6 +357,45 @@ const {
       messagesContainer.appendChild(messageDiv);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
+
+    function renderMarkdown(text: string): string {
+      // Simple markdown rendering
+      let html = escapeHtml(text);
+
+      // Code blocks ```code```
+      html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre class="bg-gray-800 dark:bg-gray-900 text-white p-3 rounded-lg overflow-x-auto my-2"><code>$2</code></pre>');
+
+      // Inline code `code`
+      html = html.replace(/`([^`]+)`/g, '<code class="bg-gray-200 dark:bg-gray-700 px-1 rounded text-sm">$1</code>');
+
+      // Bold **text**
+      html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+      // Italic *text*
+      html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+      // Links [text](url)
+      html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 dark:text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">$1</a>');
+
+      // Line breaks
+      html = html.replace(/\n/g, '<br>');
+
+      return html;
+    }
+
+    // Global function for copy button
+    (window as any).copyToClipboard = function(button: HTMLButtonElement, text: string) {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = button.textContent;
+        button.textContent = "✅ Skopiowano!";
+        setTimeout(() => {
+          button.textContent = originalText;
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+        button.textContent = "❌ Błąd";
+      });
+    };
 
     function addTypingIndicator() {
       const typingDiv = document.createElement("div");

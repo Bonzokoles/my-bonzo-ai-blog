@@ -1,0 +1,1237 @@
+---
+// Advanced AI Assistant with multiple models and modes
+import Layout from "@layouts/Layout.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+
+const description = "Zaawansowany asystent AI z wieloma modelami, trybami działania i zaawansowanymi funkcjami. Powered by Cloudflare Workers AI.";
+---
+
+<Layout title="Zaawansowany Asystent AI - MyBonzo" description={description}>
+  <PageHeader
+    heading="🤖 Zaawansowany Asystent AI"
+    description={description}
+    animate={true}
+  />
+
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Sidebar - Settings & Models -->
+        <div class="lg:col-span-1 space-y-6">
+          <!-- Model Selection -->
+          <div class="settings-card">
+            <h3 class="settings-title">🎯 Model AI</h3>
+            <select id="modelSelect" class="settings-select">
+              <option value="@cf/meta/llama-2-7b-chat-int8">Llama 2 7B (Szybki)</option>
+              <option value="@cf/mistral/mistral-7b-instruct-v0.1">Mistral 7B (Zalecany)</option>
+              <option value="@cf/meta/llama-3-8b-instruct">Llama 3 8B (Nowy)</option>
+              <option value="@cf/meta/llama-3.1-8b-instruct">Llama 3.1 8B (Najnowszy)</option>
+              <option value="@hf/thebloke/neural-chat-7b-v3-1-awq">Neural Chat 7B</option>
+            </select>
+          </div>
+
+          <!-- Mode Selection -->
+          <div class="settings-card">
+            <h3 class="settings-title">⚙️ Tryb Pracy</h3>
+            <div class="mode-buttons">
+              <button class="mode-btn active" data-mode="chat">
+                💬 Chat
+              </button>
+              <button class="mode-btn" data-mode="code">
+                💻 Kod
+              </button>
+              <button class="mode-btn" data-mode="creative">
+                ✨ Kreatywny
+              </button>
+              <button class="mode-btn" data-mode="analysis">
+                📊 Analiza
+              </button>
+            </div>
+          </div>
+
+          <!-- Advanced Settings -->
+          <div class="settings-card">
+            <h3 class="settings-title">🎛️ Ustawienia</h3>
+
+            <div class="setting-item">
+              <label for="temperature" class="setting-label">
+                Temperatura: <span id="tempValue">0.7</span>
+              </label>
+              <input
+                type="range"
+                id="temperature"
+                min="0"
+                max="1"
+                step="0.1"
+                value="0.7"
+                class="setting-slider"
+              />
+              <p class="setting-hint">Wyższe = bardziej kreatywne</p>
+            </div>
+
+            <div class="setting-item">
+              <label for="maxTokens" class="setting-label">
+                Max Tokenów: <span id="tokensValue">1024</span>
+              </label>
+              <input
+                type="range"
+                id="maxTokens"
+                min="256"
+                max="2048"
+                step="256"
+                value="1024"
+                class="setting-slider"
+              />
+              <p class="setting-hint">Długość odpowiedzi</p>
+            </div>
+
+            <div class="setting-item">
+              <label class="flex items-center gap-2">
+                <input type="checkbox" id="saveHistory" checked class="setting-checkbox" />
+                <span class="setting-label">Zapisuj historię</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="settings-card">
+            <h3 class="settings-title">🔧 Akcje</h3>
+            <div class="action-buttons">
+              <button id="exportBtn" class="action-btn">
+                💾 Eksportuj
+              </button>
+              <button id="clearHistoryBtn" class="action-btn">
+                🗑️ Wyczyść historię
+              </button>
+              <button id="resetBtn" class="action-btn">
+                🔄 Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="settings-card">
+            <h3 class="settings-title">📊 Statystyki</h3>
+            <div class="stats">
+              <div class="stat-item">
+                <span class="stat-label">Wiadomości:</span>
+                <span id="msgCount" class="stat-value">0</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Sesje:</span>
+                <span id="sessionCount" class="stat-value">0</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Cache hit:</span>
+                <span id="cacheHit" class="stat-value">0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="lg:col-span-3 space-y-6">
+          <!-- Prompt Templates -->
+          <div class="prompt-templates-card">
+            <h3 class="templates-title">💡 Przykładowe Prompty</h3>
+            <div id="promptTemplates" class="prompt-grid">
+              <!-- Templates will be loaded by JavaScript based on mode -->
+            </div>
+          </div>
+
+          <!-- Chat Container -->
+          <div class="chat-container">
+            <div class="chat-header">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="chat-title">Konwersacja</h3>
+                  <p id="modelInfo" class="chat-subtitle">Llama 2 7B • Tryb: Chat</p>
+                </div>
+                <div class="flex gap-2">
+                  <button id="newChatBtn" class="header-btn" title="Nowa konwersacja">
+                    ➕
+                  </button>
+                  <button id="saveChatBtn" class="header-btn" title="Zapisz konwersację">
+                    💾
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div id="messagesContainer" class="messages-area">
+              <div class="message ai-message">
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                  <div class="message-header">
+                    <span class="message-sender">Asystent AI</span>
+                    <span class="message-time">Teraz</span>
+                  </div>
+                  <div class="message-text">
+                    <p>Witaj! Jestem zaawansowanym asystentem AI MyBonzo.</p>
+                    <p>Wybierz tryb pracy z lewej strony lub skorzystaj z gotowych przykładów powyżej.</p>
+                    <p><strong>Możesości:</strong></p>
+                    <ul>
+                      <li>💬 Rozmowa na różne tematy</li>
+                      <li>💻 Pomoc w programowaniu</li>
+                      <li>✨ Kreatywne pisanie</li>
+                      <li>📊 Analiza danych i tekstów</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="chat-input-area">
+              <form id="chatForm" class="input-form">
+                <div class="input-container">
+                  <textarea
+                    id="messageInput"
+                    placeholder="Wpisz wiadomość... (Shift+Enter dla nowej linii)"
+                    rows="3"
+                    maxlength="2000"
+                    class="message-textarea"
+                  ></textarea>
+                  <div class="input-footer">
+                    <div class="flex items-center gap-4">
+                      <span id="charCounter" class="char-counter">0/2000</span>
+                      <span id="statusIndicator" class="status-indicator">Gotowy</span>
+                    </div>
+                    <button type="submit" id="sendBtn" class="send-button">
+                      <span id="sendBtnText">📤 Wyślij</span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* Settings Panel */
+  .settings-card {
+    background: transparent;
+    border: 2px solid #6b7280;
+    padding: 1.25rem;
+  }
+
+  .settings-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text, #1f2937);
+    margin-bottom: 1rem;
+  }
+
+  .settings-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #6b7280;
+    background: transparent;
+    color: var(--color-text, #1f2937);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .settings-select:hover,
+  .settings-select:focus {
+    border-color: var(--color-accent, #2563eb);
+    outline: none;
+  }
+
+  /* Mode Buttons */
+  .mode-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .mode-btn {
+    padding: 0.75rem;
+    border: 2px solid #6b7280;
+    background: transparent;
+    color: var(--color-text, #1f2937);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .mode-btn:hover {
+    border-color: var(--color-accent, #2563eb);
+    transform: translateY(-2px);
+  }
+
+  .mode-btn.active {
+    background: var(--color-accent, #2563eb);
+    color: white;
+    border-color: var(--color-accent, #2563eb);
+  }
+
+  /* Settings Items */
+  .setting-item {
+    margin-bottom: 1rem;
+  }
+
+  .setting-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .setting-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text, #1f2937);
+    margin-bottom: 0.5rem;
+  }
+
+  .setting-slider {
+    width: 100%;
+    height: 4px;
+    background: #d1d5db;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .setting-slider::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--color-accent, #2563eb);
+    cursor: pointer;
+  }
+
+  .setting-hint {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+  }
+
+  .setting-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+
+  /* Action Buttons */
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .action-btn {
+    padding: 0.75rem;
+    border: 2px solid #6b7280;
+    background: transparent;
+    color: var(--color-text, #1f2937);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .action-btn:hover {
+    border-color: var(--color-accent, #2563eb);
+    transform: translateX(4px);
+  }
+
+  /* Stats */
+  .stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    border: 1px solid #e5e7eb;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  .stat-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-accent, #2563eb);
+  }
+
+  /* Prompt Templates */
+  .prompt-templates-card {
+    background: transparent;
+    border: 2px solid #6b7280;
+    padding: 1.25rem;
+  }
+
+  .templates-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text, #1f2937);
+    margin-bottom: 1rem;
+  }
+
+  .prompt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .prompt-card {
+    padding: 1rem;
+    border: 2px solid #6b7280;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .prompt-card:hover {
+    border-color: var(--color-accent, #2563eb);
+    transform: translateY(-2px);
+  }
+
+  .prompt-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .prompt-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text, #1f2937);
+    margin-bottom: 0.25rem;
+  }
+
+  .prompt-desc {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+
+  /* Chat Container */
+  .chat-container {
+    background: transparent;
+    border: 2px solid #6b7280;
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+  }
+
+  .chat-header {
+    padding: 1.25rem;
+    border-bottom: 2px solid #6b7280;
+  }
+
+  .chat-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text, #1f2937);
+  }
+
+  .chat-subtitle {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+  }
+
+  .header-btn {
+    padding: 0.5rem 0.75rem;
+    border: 2px solid #6b7280;
+    background: transparent;
+    font-size: 1.125rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .header-btn:hover {
+    border-color: var(--color-accent, #2563eb);
+    transform: scale(1.1);
+  }
+
+  /* Messages Area */
+  .messages-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  .message {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .message:last-child {
+    margin-bottom: 0;
+  }
+
+  .user-message {
+    flex-direction: row-reverse;
+  }
+
+  .message-avatar {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .message-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .message-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .message-sender {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text, #1f2937);
+  }
+
+  .message-time {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+
+  .message-text {
+    padding: 1rem;
+    border: 2px solid #6b7280;
+    background: white;
+    line-height: 1.6;
+  }
+
+  .user-message .message-text {
+    background: rgba(37, 99, 235, 0.05);
+  }
+
+  .message-text p {
+    margin-bottom: 0.75rem;
+  }
+
+  .message-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .message-text ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .message-text li {
+    margin-bottom: 0.25rem;
+  }
+
+  .message-text code {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 0.125rem 0.375rem;
+    font-family: monospace;
+    font-size: 0.875rem;
+  }
+
+  .message-text pre {
+    background: #1f2937;
+    color: #f3f4f6;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0.75rem 0;
+  }
+
+  .message-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .message-action-btn {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #d1d5db;
+    background: transparent;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .message-action-btn:hover {
+    border-color: var(--color-accent, #2563eb);
+    color: var(--color-accent, #2563eb);
+  }
+
+  /* Typing Indicator */
+  .typing-indicator {
+    display: flex;
+    gap: 0.25rem;
+    padding: 1rem;
+  }
+
+  .typing-dot {
+    width: 8px;
+    height: 8px;
+    background: #6b7280;
+    animation: typing 1.4s infinite;
+  }
+
+  .typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes typing {
+    0%, 60%, 100% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(-8px);
+    }
+  }
+
+  /* Input Area */
+  .chat-input-area {
+    border-top: 2px solid #6b7280;
+    padding: 1.25rem;
+  }
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .message-textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #6b7280;
+    background: white;
+    color: var(--color-text, #1f2937);
+    font-size: 0.875rem;
+    resize: vertical;
+    min-height: 80px;
+    transition: all 0.3s ease;
+  }
+
+  .message-textarea:focus {
+    outline: none;
+    border-color: var(--color-accent, #2563eb);
+  }
+
+  .input-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .char-counter {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+
+  .status-indicator {
+    font-size: 0.75rem;
+    color: #10b981;
+    font-weight: 500;
+  }
+
+  .send-button {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--color-accent, #2563eb);
+    background: var(--color-accent, #2563eb);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .send-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+
+  .send-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Dark Mode */
+  @media (prefers-color-scheme: dark) {
+    .settings-card,
+    .prompt-templates-card,
+    .chat-container {
+      border-color: #4b5563;
+    }
+
+    .settings-title,
+    .templates-title,
+    .chat-title,
+    .setting-label,
+    .message-sender,
+    .prompt-title {
+      color: #f3f4f6;
+    }
+
+    .settings-select,
+    .mode-btn,
+    .action-btn,
+    .header-btn,
+    .message-text,
+    .message-textarea {
+      border-color: #4b5563;
+      color: #f3f4f6;
+      background: #1f2937;
+    }
+
+    .messages-area {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .stat-item {
+      border-color: #374151;
+    }
+  }
+
+  /* Scrollbar */
+  .messages-area::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .messages-area::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .messages-area::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .messages-area::-webkit-scrollbar-thumb {
+      background: #4b5563;
+    }
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 1024px) {
+    .chat-container {
+      height: 500px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .prompt-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .chat-container {
+      height: 400px;
+    }
+  }
+</style>
+
+<script>
+  // Advanced AI Assistant functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    // DOM Elements
+    const modelSelect = document.getElementById('modelSelect') as HTMLSelectElement;
+    const modeButtons = document.querySelectorAll('.mode-btn');
+    const temperatureSlider = document.getElementById('temperature') as HTMLInputElement;
+    const maxTokensSlider = document.getElementById('maxTokens') as HTMLInputElement;
+    const tempValue = document.getElementById('tempValue') as HTMLElement;
+    const tokensValue = document.getElementById('tokensValue') as HTMLElement;
+    const saveHistoryCheck = document.getElementById('saveHistory') as HTMLInputElement;
+
+    const exportBtn = document.getElementById('exportBtn') as HTMLButtonElement;
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn') as HTMLButtonElement;
+    const resetBtn = document.getElementById('resetBtn') as HTMLButtonElement;
+    const newChatBtn = document.getElementById('newChatBtn') as HTMLButtonElement;
+    const saveChatBtn = document.getElementById('saveChatBtn') as HTMLButtonElement;
+
+    const messagesContainer = document.getElementById('messagesContainer') as HTMLElement;
+    const chatForm = document.getElementById('chatForm') as HTMLFormElement;
+    const messageInput = document.getElementById('messageInput') as HTMLTextAreaElement;
+    const sendBtn = document.getElementById('sendBtn') as HTMLButtonElement;
+    const sendBtnText = document.getElementById('sendBtnText') as HTMLElement;
+    const charCounter = document.getElementById('charCounter') as HTMLElement;
+    const statusIndicator = document.getElementById('statusIndicator') as HTMLElement;
+    const modelInfo = document.getElementById('modelInfo') as HTMLElement;
+    const promptTemplates = document.getElementById('promptTemplates') as HTMLElement;
+
+    const msgCount = document.getElementById('msgCount') as HTMLElement;
+    const sessionCount = document.getElementById('sessionCount') as HTMLElement;
+    const cacheHit = document.getElementById('cacheHit') as HTMLElement;
+
+    // State
+    let currentMode = 'chat';
+    let conversationHistory: Array<{role: string; content: string}> = [];
+    let isProcessing = false;
+    let stats = {
+      messages: 0,
+      sessions: parseInt(localStorage.getItem('ai-sessions') || '0'),
+      cacheHits: 0,
+      totalRequests: 0
+    };
+
+    // Prompt templates by mode
+    const templates: Record<string, Array<{icon: string; title: string; desc: string; prompt: string}>> = {
+      chat: [
+        {icon: '💬', title: 'Podstawowa rozmowa', desc: 'Swobodny chat', prompt: 'Opowiedz mi coś ciekawego o sztucznej inteligencji'},
+        {icon: '🎓', title: 'Wyjaśnij temat', desc: 'Edukacja', prompt: 'Wyjaśnij jak działa machine learning prostymi słowami'},
+        {icon: '🔍', title: 'Badania', desc: 'Wyszukiwanie info', prompt: 'Jakie są najnowsze trendy w AI w 2024 roku?'},
+        {icon: '💡', title: 'Pomysły', desc: 'Burza mózgów', prompt: 'Podaj mi 5 innowacyjnych zastosowań AI w edukacji'},
+      ],
+      code: [
+        {icon: '💻', title: 'Napisz kod', desc: 'Generowanie kodu', prompt: 'Napisz funkcję w Python do sortowania listy liczb algorytmem quicksort'},
+        {icon: '🐛', title: 'Debugowanie', desc: 'Znajdź błędy', prompt: 'Zoptymalizuj ten kod Python:\n```python\ndef find_duplicates(arr):\n    result = []\n    for i in range(len(arr)):\n        for j in range(i+1, len(arr)):\n            if arr[i] == arr[j]:\n                result.append(arr[i])\n    return result\n```'},
+        {icon: '📚', title: 'Dokumentacja', desc: 'Dodaj komentarze', prompt: 'Wygeneruj docstring dla tej funkcji Python'},
+        {icon: '🔄', title: 'Refaktoryzacja', desc: 'Popraw kod', prompt: 'Zrefaktoryzuj ten kod aby był bardziej czytelny i wydajny'},
+      ],
+      creative: [
+        {icon: '✍️', title: 'Opowiadanie', desc: 'Napisz historię', prompt: 'Napisz krótką historię sci-fi o AI która odkrywa świadomość'},
+        {icon: '🎨', title: 'Opis obrazu', desc: 'Prompt do DALL-E', prompt: 'Stwórz szczegółowy prompt do wygenerowania futurystycznego miasta'},
+        {icon: '📝', title: 'Artykuł', desc: 'Blog post', prompt: 'Napisz artykuł na blog o przyszłości sztucznej inteligencji'},
+        {icon: '🎭', title: 'Kreatywne pisanie', desc: 'Poezja', prompt: 'Napisz wiersz o technologii i człowieczeństwie'},
+      ],
+      analysis: [
+        {icon: '📊', title: 'Analiza danych', desc: 'Statystyki', prompt: 'Przeanalizuj te dane i wyciągnij wnioski:\nSprzedaż Q1: 100k, Q2: 150k, Q3: 120k, Q4: 180k'},
+        {icon: '📈', title: 'Trendy', desc: 'Przewidywania', prompt: 'Na podstawie tych danych przewidz trend na następny kwartał'},
+        {icon: '🔬', title: 'Badanie tekstu', desc: 'NLP analiza', prompt: 'Przeanalizuj sentyment i kluczowe tematy w tym tekście'},
+        {icon: '⚖️', title: 'Porównanie', desc: 'Pros & Cons', prompt: 'Porównaj zalety i wady używania LLaMA vs GPT dla aplikacji biznesowych'},
+      ]
+    };
+
+    // Initialize
+    init();
+
+    function init() {
+      loadSettings();
+      updateStats();
+      updateModelInfo();
+      loadPromptTemplates();
+
+      // Increment session count
+      stats.sessions++;
+      localStorage.setItem('ai-sessions', stats.sessions.toString());
+      updateStats();
+    }
+
+    // Load settings from localStorage
+    function loadSettings() {
+      const saved = localStorage.getItem('ai-assistant-settings');
+      if (saved) {
+        try {
+          const settings = JSON.parse(saved);
+          if (settings.model) modelSelect.value = settings.model;
+          if (settings.temperature) {
+            temperatureSlider.value = settings.temperature;
+            tempValue.textContent = settings.temperature;
+          }
+          if (settings.maxTokens) {
+            maxTokensSlider.value = settings.maxTokens;
+            tokensValue.textContent = settings.maxTokens;
+          }
+          if (typeof settings.saveHistory === 'boolean') {
+            saveHistoryCheck.checked = settings.saveHistory;
+          }
+        } catch (e) {
+          console.error('Error loading settings:', e);
+        }
+      }
+    }
+
+    // Save settings to localStorage
+    function saveSettings() {
+      const settings = {
+        model: modelSelect.value,
+        temperature: temperatureSlider.value,
+        maxTokens: maxTokensSlider.value,
+        saveHistory: saveHistoryCheck.checked
+      };
+      localStorage.setItem('ai-assistant-settings', JSON.stringify(settings));
+    }
+
+    // Update stats display
+    function updateStats() {
+      msgCount.textContent = stats.messages.toString();
+      sessionCount.textContent = stats.sessions.toString();
+      const cacheRate = stats.totalRequests > 0
+        ? Math.round((stats.cacheHits / stats.totalRequests) * 100)
+        : 0;
+      cacheHit.textContent = `${cacheRate}%`;
+    }
+
+    // Update model info
+    function updateModelInfo() {
+      const modelName = modelSelect.options[modelSelect.selectedIndex].text;
+      const modeName = currentMode.charAt(0).toUpperCase() + currentMode.slice(1);
+      modelInfo.textContent = `${modelName} • Tryb: ${modeName}`;
+    }
+
+    // Load prompt templates
+    function loadPromptTemplates() {
+      const modeTemplates = templates[currentMode];
+      promptTemplates.innerHTML = modeTemplates.map(t => `
+        <div class="prompt-card" data-prompt="${escapeHtml(t.prompt)}">
+          <div class="prompt-icon">${t.icon}</div>
+          <div class="prompt-title">${t.title}</div>
+          <div class="prompt-desc">${t.desc}</div>
+        </div>
+      `).join('');
+
+      // Add click handlers
+      document.querySelectorAll('.prompt-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const prompt = card.getAttribute('data-prompt');
+          if (prompt) {
+            messageInput.value = prompt;
+            updateCharCounter();
+            messageInput.focus();
+          }
+        });
+      });
+    }
+
+    // Event Listeners
+    modelSelect.addEventListener('change', () => {
+      saveSettings();
+      updateModelInfo();
+    });
+
+    modeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modeButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMode = btn.getAttribute('data-mode') || 'chat';
+        updateModelInfo();
+        loadPromptTemplates();
+      });
+    });
+
+    temperatureSlider.addEventListener('input', () => {
+      tempValue.textContent = temperatureSlider.value;
+      saveSettings();
+    });
+
+    maxTokensSlider.addEventListener('input', () => {
+      tokensValue.textContent = maxTokensSlider.value;
+      saveSettings();
+    });
+
+    saveHistoryCheck.addEventListener('change', saveSettings);
+
+    messageInput.addEventListener('input', updateCharCounter);
+
+    messageInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        chatForm.dispatchEvent(new Event('submit'));
+      }
+    });
+
+    chatForm.addEventListener('submit', handleSubmit);
+
+    newChatBtn.addEventListener('click', () => {
+      if (confirm('Rozpocząć nową konwersację? Obecna historia zostanie utracona.')) {
+        conversationHistory = [];
+        messagesContainer.innerHTML = '<div class="message ai-message"><div class="message-avatar">🤖</div><div class="message-content"><div class="message-header"><span class="message-sender">Asystent AI</span><span class="message-time">Teraz</span></div><div class="message-text"><p>Nowa konwersacja rozpoczęta. Jak mogę pomóc?</p></div></div></div>';
+        updateStatus('Nowa konwersacja', 'success');
+      }
+    });
+
+    saveChatBtn.addEventListener('click', exportConversation);
+    exportBtn.addEventListener('click', exportConversation);
+
+    clearHistoryBtn.addEventListener('click', () => {
+      if (confirm('Czy na pewno chcesz wyczyścić całą zapisaną historię?')) {
+        localStorage.removeItem('ai-assistant-history');
+        updateStatus('Historia wyczyszczona', 'success');
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      if (confirm('Zresetować wszystkie ustawienia do domyślnych?')) {
+        localStorage.removeItem('ai-assistant-settings');
+        localStorage.removeItem('ai-sessions');
+        location.reload();
+      }
+    });
+
+    // Functions
+    function updateCharCounter() {
+      const length = messageInput.value.length;
+      charCounter.textContent = `${length}/2000`;
+      if (length > 1800) {
+        charCounter.style.color = '#ef4444';
+      } else {
+        charCounter.style.color = '';
+      }
+    }
+
+    async function handleSubmit(e: Event) {
+      e.preventDefault();
+
+      if (isProcessing) return;
+
+      const message = messageInput.value.trim();
+      if (!message) return;
+
+      // Add user message
+      addMessage(message, 'user');
+      conversationHistory.push({ role: 'user', content: message });
+
+      // Clear input
+      messageInput.value = '';
+      updateCharCounter();
+
+      // Show processing
+      setProcessing(true);
+      addTypingIndicator();
+
+      try {
+        // Prepare request
+        const requestBody = {
+          prompt: message,
+          history: conversationHistory.slice(-6),
+          model: modelSelect.value,
+          temperature: parseFloat(temperatureSlider.value),
+          max_tokens: parseInt(maxTokensSlider.value)
+        };
+
+        stats.totalRequests++;
+
+        // Call API
+        const response = await fetch('/api/ai/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        removeTypingIndicator();
+
+        if (data.success && data.response) {
+          // Add AI response
+          conversationHistory.push({ role: 'assistant', content: data.response });
+          addMessage(data.response, 'ai', data.cached);
+
+          // Update stats
+          stats.messages++;
+          if (data.cached) stats.cacheHits++;
+          updateStats();
+
+          // Save history if enabled
+          if (saveHistoryCheck.checked) {
+            saveHistory();
+          }
+
+          updateStatus('Odpowiedź otrzymana', 'success');
+        } else {
+          throw new Error(data.error || 'Błąd odpowiedzi');
+        }
+
+      } catch (error) {
+        console.error('AI Error:', error);
+        removeTypingIndicator();
+        addMessage(
+          `Przepraszam, wystąpił błąd: ${error instanceof Error ? error.message : 'Nieznany błąd'}`,
+          'ai',
+          false,
+          true
+        );
+        updateStatus('Błąd połączenia', 'error');
+      } finally {
+        setProcessing(false);
+      }
+    }
+
+    function addMessage(content: string, sender: 'user' | 'ai', cached = false, isError = false) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${sender}-message`;
+
+      const avatar = sender === 'user' ? '👤' : '🤖';
+      const senderName = sender === 'user' ? 'Ty' : 'Asystent AI';
+      const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+
+      const renderedContent = sender === 'ai' && !isError
+        ? renderMarkdown(content)
+        : escapeHtml(content);
+
+      const actionButtons = sender === 'ai' && !isError ? `
+        <div class="message-actions">
+          <button class="message-action-btn" onclick="copyMessage(this, '${escapeHtml(content).replace(/'/g, "\\'")}')">📋 Kopiuj</button>
+          <button class="message-action-btn" onclick="regenerateMessage(this)">🔄 Regeneruj</button>
+        </div>
+      ` : '';
+
+      messageDiv.innerHTML = `
+        <div class="message-avatar">${avatar}</div>
+        <div class="message-content">
+          <div class="message-header">
+            <span class="message-sender">${senderName}</span>
+            <span class="message-time">${time}${cached ? ' • 📦 Cache' : ''}</span>
+          </div>
+          <div class="message-text">
+            ${renderedContent}
+          </div>
+          ${actionButtons}
+        </div>
+      `;
+
+      messagesContainer.appendChild(messageDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function addTypingIndicator() {
+      const typingDiv = document.createElement('div');
+      typingDiv.id = 'typing-indicator';
+      typingDiv.className = 'message ai-message';
+      typingDiv.innerHTML = `
+        <div class="message-avatar">🤖</div>
+        <div class="message-content">
+          <div class="message-text">
+            <div class="typing-indicator">
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+            </div>
+          </div>
+        </div>
+      `;
+      messagesContainer.appendChild(typingDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const indicator = document.getElementById('typing-indicator');
+      if (indicator) indicator.remove();
+    }
+
+    function setProcessing(processing: boolean) {
+      isProcessing = processing;
+      sendBtn.disabled = processing;
+      messageInput.disabled = processing;
+
+      if (processing) {
+        sendBtnText.textContent = '⏳ Wysyłanie...';
+        updateStatus('Przetwarzanie...', 'processing');
+      } else {
+        sendBtnText.textContent = '📤 Wyślij';
+        updateStatus('Gotowy', 'success');
+      }
+    }
+
+    function updateStatus(message: string, type: 'success' | 'error' | 'processing' = 'success') {
+      statusIndicator.textContent = message;
+      statusIndicator.style.color = type === 'error' ? '#ef4444' : type === 'processing' ? '#f59e0b' : '#10b981';
+    }
+
+    function renderMarkdown(text: string): string {
+      let html = escapeHtml(text);
+
+      // Code blocks
+      html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+
+      // Inline code
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+      // Bold
+      html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+      // Italic
+      html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+      // Links
+      html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+
+      // Lists
+      html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+      html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+
+      // Paragraphs
+      html = html.replace(/\n\n/g, '</p><p>');
+      if (!html.startsWith('<')) html = '<p>' + html + '</p>';
+
+      return html;
+    }
+
+    function saveHistory() {
+      try {
+        localStorage.setItem('ai-assistant-history', JSON.stringify(conversationHistory));
+      } catch (e) {
+        console.error('Error saving history:', e);
+      }
+    }
+
+    function exportConversation() {
+      const text = conversationHistory.map(msg =>
+        `${msg.role === 'user' ? 'Ty' : 'AI'}: ${msg.content}`
+      ).join('\n\n');
+
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `konwersacja-ai-${new Date().toISOString().slice(0, 10)}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      updateStatus('Konwersacja wyeksportowana', 'success');
+    }
+
+    function escapeHtml(text: string): string {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Global functions for message actions
+    (window as any).copyMessage = function(btn: HTMLButtonElement, text: string) {
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✅ Skopiowano';
+        setTimeout(() => btn.textContent = original, 2000);
+      });
+    };
+
+    (window as any).regenerateMessage = function(btn: HTMLButtonElement) {
+      if (conversationHistory.length >= 2) {
+        // Remove last AI response
+        conversationHistory.pop();
+
+        // Get last user message
+        const lastUserMsg = conversationHistory[conversationHistory.length - 1];
+
+        // Remove last two messages from UI
+        const messages = messagesContainer.querySelectorAll('.message');
+        if (messages.length >= 2) {
+          messages[messages.length - 1].remove();
+          messages[messages.length - 2].remove();
+        }
+
+        // Re-add user message and send again
+        messageInput.value = lastUserMsg.content;
+        chatForm.dispatchEvent(new Event('submit'));
+      }
+    };
+  });
+</script>

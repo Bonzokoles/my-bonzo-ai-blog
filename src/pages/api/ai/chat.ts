@@ -1,44 +1,140 @@
 import type { APIRoute } from 'astro';
 
-export const POST: APIRoute = async ({ request, locals }) => {
+// Simple in-memory rate limiter
+const rateLimiter = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT = 10; // requests per window
+const RATE_WINDOW = 60000; // 1 minute
+
+function checkRateLimit(identifier: string): boolean {
+  const now = Date.now();
+  const record = rateLimiter.get(identifier);
+
+  if (!record || now > record.resetTime) {
+    rateLimiter.set(identifier, { count: 1, resetTime: now + RATE_WINDOW });
+    return true;
+  }
+
+  if (record.count >= RATE_LIMIT) {
+    return false;
+  }
+
+  record.count++;
+  return true;
+}
+
+export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
   try {
-    const { prompt, model = '@cf/meta/llama-2-7b-chat-int8' } = await request.json();
+    const body = await request.json() as {
+      prompt: string;
+      history?: Array<{role: string; content: string}>;
+      model?: string;
+      temperature?: number;
+      max_tokens?: number;
+    };
     
-    if (!prompt) {
+    const {
+      prompt,
+      history = [],
+      model = '@cf/meta/llama-2-7b-chat-int8',
+      temperature = 0.7,
+      max_tokens = 1024
+    } = body;
+
+    // Validation
+    if (!prompt || typeof prompt !== 'string') {
       return new Response(
-        JSON.stringify({ error: 'Prompt is required' }),
+        JSON.stringify({ error: 'Valid prompt is required' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // Dostęp do Cloudflare AI przez runtime
-    const { env } = locals.runtime;
-    
-    const aiResponse = await env.AI.run(model, {
-      messages: [
+    if (prompt.length > 2000) {
+      return new Response(
+        JSON.stringify({ error: 'Prompt too long (max 2000 characters)' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Rate limiting
+    const clientId = clientAddress || 'unknown';
+    if (!checkRateLimit(clientId)) {
+      return new Response(
+        JSON.stringify({
+          error: 'Rate limit exceeded. Please wait a moment.',
+          retryAfter: 60
+        }),
         {
-          role: 'system',
-          content: 'Jesteś pomocnym asystentem AI na polskim blogu o sztucznej inteligencji. Odpowiadaj po polsku.'
-        },
-        {
-          role: 'user',
-          content: prompt
+          status: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            'Retry-After': '60'
+          }
         }
-      ],
-      max_tokens: 512,
-      temperature: 0.7
+      );
+    }
+
+    // Dostęp do Cloudflare AI przez runtime
+    const { env } = (locals as any).runtime;
+
+    // Check cache first
+    const cacheKey = `ai:${Buffer.from(prompt).toString('base64').slice(0, 100)}`;
+    const cached = await env.CACHE.get(cacheKey);
+
+    if (cached) {
+      const cachedData = JSON.parse(cached);
+      return new Response(
+        JSON.stringify({
+          success: true,
+          response: cachedData.response,
+          model: 'cached',
+          cached: true
+        }),
+        {
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    // Build messages with conversation history
+    const messages = [
+      {
+        role: 'system',
+        content: `Jesteś pomocnym i przyjaznym asystentem AI na polskim blogu MyBonzo o sztucznej inteligencji.
+
+Twoje zadania:
+- Odpowiadaj zawsze po polsku, jasno i zwięźle
+- Używaj formatowania markdown (np. **pogrubienie**, *kursywa*, \`kod\`, listy)
+- Jeśli pytanie dotyczy AI/ML/technologii - udzielaj szczegółowych odpowiedzi
+- Bądź pomocny, ale przyznawaj się do ograniczeń
+- W odpowiedziach uwzględniaj kontekst poprzednich wiadomości`
+      },
+      ...history.slice(-6), // Include last 6 messages for context
+      {
+        role: 'user',
+        content: prompt
+      }
+    ];
+
+    const aiResponse = await env.AI.run(model, {
+      messages,
+      max_tokens: Math.min(max_tokens, 2048), // Cap at 2048 for safety
+      temperature: Math.max(0, Math.min(temperature, 1)) // Clamp between 0 and 1
     });
 
-    // Cache odpowiedzi w KV
-    const cacheKey = `ai:${Buffer.from(prompt).toString('base64')}`;
-    await env.CACHE.put(cacheKey, JSON.stringify(aiResponse), {
-      expirationTtl: 3600 // 1 godzina
+    const responseText = aiResponse.response || aiResponse;
+
+    // Cache the response (store only the text response)
+    await env.CACHE.put(cacheKey, JSON.stringify({
+      response: responseText,
+      timestamp: Date.now()
+    }), {
+      expirationTtl: 3600 // 1 hour
     });
 
     return new Response(
       JSON.stringify({
         success: true,
-        response: aiResponse.response,
+        response: responseText,
         model: model,
         cached: false
       }),
@@ -49,13 +145,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   } catch (error) {
     console.error('AI API Error:', error);
-    
+
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Failed to generate AI response',
         details: error instanceof Error ? error.message : 'Unknown error'
       }),
-      { 
+      {
         status: 500,
         headers: { 'Content-Type': 'application/json' }
       }
@@ -64,7 +160,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 };
 
 export const GET: APIRoute = async ({ url, locals }) => {
-  const { env } = locals.runtime;
+  const { env } = (locals as any).runtime;
   const prompt = url.searchParams.get('prompt');
   
   // Health check endpoint - return status if no prompt
