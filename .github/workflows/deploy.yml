@@ -178,26 +178,68 @@ jobs:
 
       - name: Post-deployment health check
         run: |
-          echo "� Running post-deployment health checks..."
-
+          echo "🔍 Starting comprehensive health check..."
+          
           # Wait for deployment propagation
           sleep 30
-
-          # Check main site
-          if curl -f -s "https://mybonzoaiblog.pages.dev" > /dev/null; then
-            echo "✅ Main site responsive"
-          else
-            echo "⚠️ Main site check failed"
+          
+          # Initialize counters
+          success_count=0
+          total_checks=3
+          
+          # Function to test endpoint with retries
+          test_endpoint() {
+            local url=$1
+            local name=$2
+            local max_attempts=3
+            
+            for attempt in $(seq 1 $max_attempts); do
+              echo "Attempt $attempt/$max_attempts for $url"
+              if curl -f -s --connect-timeout 10 --max-time 30 "$url" > /dev/null 2>&1; then
+                echo "✅ SUCCESS: $url (200) - Response time: $(curl -f -s -w '%{time_total}s' --connect-timeout 10 --max-time 30 "$url" -o /dev/null 2>/dev/null || echo 'N/A')"
+                return 0
+              else
+                echo "⚠️ ATTEMPT $attempt FAILED: $url"
+                if [ $attempt -lt $max_attempts ]; then
+                  sleep 5
+                fi
+              fi
+            done
+            echo "❌ FAILED: $name after $max_attempts attempts"
+            return 1
+          }
+          
+          # Test main site
+          if test_endpoint "https://mybonzoaiblog.pages.dev" "Main site"; then
+            ((success_count++))
           fi
-
-          # Check AI API endpoint
-          if curl -f -s "https://mybonzoaiblog.pages.dev/api/ai/chat" > /dev/null; then
-            echo "✅ AI API endpoint accessible"
-          else
-            echo "⚠️ AI API endpoint check failed"
+          
+          # Test AI API health endpoint
+          if test_endpoint "https://mybonzoaiblog.pages.dev/api/ai/chat" "AI API health"; then
+            ((success_count++))
           fi
-
-          echo "🎉 Deployment pipeline completed!"
+          
+          # Test blog API
+          if test_endpoint "https://mybonzoaiblog.pages.dev/api/blog/index" "Blog API"; then
+            ((success_count++))
+          fi
+          
+          # Summary
+          echo ""
+          echo "📊 Health Check Summary:"
+          echo "✅ Passed: $success_count/$total_checks"
+          
+          if [ $success_count -eq $total_checks ]; then
+            echo "🎉 All health checks passed! Deployment pipeline completed successfully!"
+            exit 0
+          elif [ $success_count -gt 0 ]; then
+            echo "⚠️ Partial success - some endpoints may need time to fully propagate"
+            echo "🎉 Deployment pipeline completed with warnings"
+            exit 0
+          else
+            echo "❌ Health check failed - please investigate deployment"
+            exit 1
+          fi
 
   # Job 3: Preview deployment dla PR
   deploy_preview:
