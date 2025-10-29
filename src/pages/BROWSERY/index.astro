@@ -5,12 +5,98 @@ import Layout from "@layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
 
 const description =
-  "Najlepsze przeglądarki internetowe - porównania, recenzje i poradniki. Znajdź idealną przeglądarkę dla swoich potrzeb.";
+  "Odkryj innowacyjne i niche przeglądarki internetowe - od Arc Browser przez AI-powered Comet aż po minimalistyczne LibreWolf. Znajdź idealną przeglądarkę dla swoich unikalnych potrzeb.";
+
+// Przeglądarki z pliku MD
+const browsers = [
+  {
+    name: "Arc Browser",
+    url: "https://arc.net",
+    description: "Przełomowa przeglądarka od The Browser Company (przejęta przez Atlassian za 610 mln USD) działająca jako 'system operacyjny dla sieci'. Oferuje boczny pasek z aplikacjami, pełną personalizację kolorów i innowacyjne zarządzanie przestrzeniami roboczymi.",
+    features: ["Boczny pasek aplikacji", "Personalizacja kolorów", "Split View", "Automatyczne archiwizowanie", "Obsługa rozszerzeń Chrome"],
+    platforms: "macOS, Windows, iOS, Android",
+    category: "Innowacyjna",
+    iconName: "ri:space-ship-line"
+  },
+  {
+    name: "Comet Browser",
+    url: "https://perplexity.ai/comet", 
+    description: "Rewolucyjna przeglądarka AI od zespołu Perplexity wprowadzająca 'agentic browsing' - AI, które może nawigować po sieci za Ciebie. Wbudowany asystent łączy się z kalendarzem, e-mailem i automatycznie wykonuje zadania.",
+    features: ["Agentic browsing", "Integracja z kalendarzem/e-mailem", "Automatyczne wypełnianie formularzy", "AI za darmo", "Interakcja z zakładkami"],
+    platforms: "Lista oczekujących",
+    category: "AI-Powered",
+    iconName: "ri:robot-line"
+  },
+  {
+    name: "LibreWolf",
+    url: "https://librewolf.net",
+    description: "Niezależna kompilacja Firefox zaprojektowana z myślą o maksymalnej prywatności. Całkowicie pozbawiona telemetrii, reklam i zbierania danych. Nigdy 'nie dzwoni do domu' i używa silnika Gecko zamiast Chromium.",
+    features: ["Zero telemetrii", "Wbudowany uBlock Origin", "DuckDuckGo domyślnie", "Silnik Gecko", "Maksymalna prywatność"],
+    platforms: "Windows, macOS, Linux",
+    category: "Prywatność",
+    iconName: "ri:shield-check-line"
+  },
+  {
+    name: "Maxthon Browser",
+    url: "https://maxthon.com",
+    description: "Przeglądarka z Singapuru oferująca unikalne funkcje synchronizacji w chmurze oraz podwójny silnik renderowania (Webkit + Trident). Wyróżnia się zaawansowanymi narzędziami produktywności.",
+    features: ["Synchronizacja w chmurze", "Podwójny silnik", "Maxnote", "Passkeeper", "Wbudowany VPN", "Web Sniffer"],
+    platforms: "Windows, macOS, Linux, Android, iOS",
+    category: "Produktywność",
+    iconName: "ri:cloud-line"
+  },
+  {
+    name: "Colibri Browser", 
+    url: "https://colibri-browser.en.lo4d.com",
+    description: "Radykalnie minimalistyczna przeglądarka rezygnująca z zakładek na rzecz single-taskingu. Ultra-lekka i błyskawiczna dzięki eliminacji zbędnych funkcji i niskiego zużycia zasobów.",
+    features: ["Brak zakładek", "Single-tasking", "Ultra-lekka", "Tryb prywatności", "Minimalny interfejs"],
+    platforms: "Windows",
+    category: "Minimalizm",
+    iconName: "ri:focus-line"
+  },
+  {
+    name: "Vivaldi",
+    url: "https://vivaldi.com", 
+    description: "Przeglądarka dla power userów i fanów personalizacji. Oferuje rozbudowane opcje dostosowania interfejsu, wbudowany klient poczty i kalendarza oraz unikatowy panel boczny Web Panels.",
+    features: ["Rozbudowana personalizacja", "Gesty myszy", "Web Panels", "Klient poczty", "Oddzielne profile"],
+    platforms: "Windows, macOS, Linux, Android, iOS",
+    category: "Power Users",
+    iconName: "ri:settings-3-line"
+  }
+];
+
+const nicheBrowsers = [
+  {
+    name: "Opera Air",
+    description: "Przeglądarka dbająca o mindfulness z przypomnieniami o przerwach, ćwiczeniami oddechowymi i binauralnym 'Boosts' dla koncentracji.",
+    target: "Osoby pracujące długo przy komputerze, artyści, studenci"
+  },
+  {
+    name: "SigmaOS", 
+    description: "Workspace'owa przeglądarka nastawiona na produktywność z zakładkami jako listą zadań i podziałem na workspaces.",
+    target: "Projekt managerzy, researcherzy, osoby z wieloma projektami"
+  },
+  {
+    name: "Zen Browser",
+    description: "Open source przeglądarka dla 'spokojnego internetu' z organizowaniem kart w Workspaces i Split View.",
+    target: "Artyści, osoby z ADHD, nauczyciele szukający minimalizmu"
+  },
+  {
+    name: "Ladybird Browser",
+    description: "Projekt całkowicie od zera, niezależny od Chrome/Firefox/Safari. Wysokie bezpieczeństwo, pełna open source (Alpha 2026).",
+    target: "Programiści, entuzjaści open source, eksperymentatorzy"
+  },
+  {
+    name: "Nyxt",
+    description: "Przeglądarka dla programistów z obsługą poleceń jak w Emacs/Vim, skrótami klawiaturowymi i automatyzacją workflow.",
+    target: "Programiści, DevOps, fani klawiatury i automatyzacji"
+  }
+];
 ---
 
-<Layout title="Browsery - MyBonzo AI Blog" description={description}>
+<Layout title="Innowacyjne Przeglądarki - MyBonzo AI Blog" description={description}>
   <PageHeader
-    heading="Browsery Internetowe"
+    heading="🌐 Innowacyjne Przeglądarki Internetowe"
     description={description}
     animate={true}
   />
@@ -18,71 +104,120 @@ const description =
   <section class="container mx-auto px-4 py-16">
     <div class="text-center mb-16">
       <Icon
-        name="ri:chrome-line"
+        name="ri:rocket-line"
         class="w-24 h-24 mx-auto mb-6 text-theme-primary"
       />
       <h2 class="text-3xl font-bold mb-6 text-theme-primary">
-        Wszystko o Przeglądarkach
+        Odkryj Przeglądarki Przyszłości
       </h2>
       <p class="text-xl text-theme-primary opacity-80 max-w-4xl mx-auto">
-        Odkryj najlepsze przeglądarki internetowe, porównaj ich funkcje i znajdź
-        idealne rozwiązanie dla siebie.
+        Od AI-powered browsingu po maksymalną prywatność - przeglądarki wykraczające poza Chrome, Firefox i Safari.
       </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-      <Card
-        title="Chrome & Chromium"
-        description="Najpopularniejsza przeglądarka świata. Szybka, bezpieczna i z ogromnym ekosystemem rozszerzeń."
-        shadowSize="lg"
-        iconName="ri:chrome-line"
-      />
-      <Card
-        title="Firefox"
-        description="Otwartoźródłowa alternatywa z naciskiem na prywatność i możliwości personalizacji."
-        shadowSize="lg"
-        iconName="ri:firefox-line"
-      />
-      <Card
-        title="Safari & Edge"
-        description="Natywne przeglądarki z optymalizacją pod systemy Apple i Microsoft."
-        shadowSize="lg"
-        iconName="ri:safari-line"
-      />
-      <Card
-        title="Brave"
-        description="Przeglądarka z wbudowanym blokerem reklam i naciskiem na prywatność użytkowników."
-        shadowSize="lg"
-        iconName="ri:shield-line"
-      />
-      <Card
-        title="Opera & Vivaldi"
-        description="Zaawansowane przeglądarki z unikalnymi funkcjami dla power userów."
-        shadowSize="lg"
-        iconName="ri:opera-line"
-      />
-      <Card
-        title="Porównania"
-        description="Szczegółowe testy wydajności, bezpieczeństwa i funkcjonalności różnych przeglądarek."
-        shadowSize="lg"
-        iconName="ri:bar-chart-line"
-      />
+    <!-- Główne przeglądarki -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+      {browsers.map((browser) => (
+        <div class="bg-theme-primary/5 backdrop-blur-sm rounded-2xl p-8 border border-theme-primary/20 hover:border-theme-primary/40 transition-all duration-300 hover:shadow-xl">
+          <div class="flex items-start justify-between mb-6">
+            <div class="flex items-center gap-4">
+              <Icon name={browser.iconName} class="w-12 h-12 text-theme-accent" />
+              <div>
+                <h3 class="text-2xl font-bold text-theme-primary">{browser.name}</h3>
+                <span class="inline-block px-3 py-1 bg-theme-accent/20 text-theme-accent text-sm font-medium rounded-full mt-2">
+                  {browser.category}
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <p class="text-theme-primary opacity-80 mb-6 leading-relaxed">
+            {browser.description}
+          </p>
+          
+          <div class="mb-6">
+            <h4 class="font-semibold text-theme-primary mb-3">Kluczowe funkcje:</h4>
+            <div class="flex flex-wrap gap-2">
+              {browser.features.map((feature) => (
+                <span class="px-3 py-1 bg-theme-primary/10 text-theme-primary text-sm rounded-lg">
+                  {feature}
+                </span>
+              ))}
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-theme-primary opacity-60 mb-2">Platformy:</p>
+              <p class="text-sm font-medium text-theme-primary">{browser.platforms}</p>
+            </div>
+            <a 
+              href={browser.url} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 bg-theme-accent text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity shadow-lg hover:shadow-xl"
+            >
+              <Icon name="ri:external-link-line" class="w-4 h-4" />
+              Odwiedź stronę
+            </a>
+          </div>
+        </div>
+      ))}
     </div>
 
+    <!-- Niche przeglądarki -->
+    <div class="bg-gradient-to-r from-theme-primary/5 to-theme-accent/5 rounded-2xl p-8 mb-16">
+      <div class="text-center mb-12">
+        <Icon name="ri:search-eye-line" class="w-16 h-16 mx-auto mb-4 text-theme-accent" />
+        <h3 class="text-2xl font-bold mb-4 text-theme-primary">
+          Przeglądarki Niche i Eksperymentalne
+        </h3>
+        <p class="text-lg text-theme-primary opacity-80 max-w-3xl mx-auto">
+          Odkryj specjalistyczne przeglądarki dla konkretnych potrzeb - od mindfulness po programowanie
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {nicheBrowsers.map((browser) => (
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-theme-primary/10 hover:border-theme-primary/30 transition-all duration-300">
+            <h4 class="text-lg font-bold text-theme-primary mb-3">{browser.name}</h4>
+            <p class="text-theme-primary opacity-80 text-sm mb-4 leading-relaxed">
+              {browser.description}
+            </p>
+            <div class="pt-4 border-t border-theme-primary/10">
+              <p class="text-xs font-medium text-theme-accent uppercase tracking-wide mb-1">Dla kogo:</p>
+              <p class="text-sm text-theme-primary opacity-70">{browser.target}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Call to action -->
     <div class="bg-theme-primary/5 rounded-2xl p-8 text-center">
+      <Icon name="ri:lightbulb-line" class="w-16 h-16 mx-auto mb-6 text-theme-accent" />
       <h3 class="text-2xl font-bold mb-4 text-theme-primary">
-        Nadchodzące Artykuły
+        Szukasz Więcej Narzędzi?
       </h3>
-      <p class="text-lg text-theme-primary opacity-80 mb-6">
-        Wkrótce znajdziesz tutaj szczegółowe recenzje, porównania wydajności i
-        poradniki dotyczące przeglądarek internetowych.
+      <p class="text-lg text-theme-primary opacity-80 mb-6 max-w-2xl mx-auto">
+        Odkryj nasze kolekcje narzędzi AI, generatorów grafiki i innych innowacyjnych rozwiązań technologicznych.
       </p>
-      <a
-        href="/blog"
-        class="inline-block bg-theme-accent text-white px-8 py-4 rounded-lg font-semibold hover:opacity-90 transition-opacity shadow-lg"
-      >
-        Zobacz Blog →
-      </a>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/NARZEDZIA_AI"
+          class="inline-flex items-center gap-2 bg-theme-accent text-white px-8 py-4 rounded-lg font-semibold hover:opacity-90 transition-opacity shadow-lg"
+        >
+          <Icon name="ri:robot-line" class="w-5 h-5" />
+          Narzędzia AI
+        </a>
+        <a
+          href="/blog"
+          class="inline-flex items-center gap-2 bg-theme-primary/10 text-theme-primary px-8 py-4 rounded-lg font-semibold hover:bg-theme-primary/20 transition-colors border border-theme-primary/20"
+        >
+          <Icon name="ri:article-line" class="w-5 h-5" />
+          Zobacz Blog
+        </a>
+      </div>
     </div>
   </section>
 </Layout>
