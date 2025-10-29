@@ -67,10 +67,16 @@ export const GET: APIRoute = async ({ url, locals }) => {
   const { env } = locals.runtime;
   const prompt = url.searchParams.get('prompt');
   
+  // Health check endpoint - return status if no prompt
   if (!prompt) {
     return new Response(
-      JSON.stringify({ error: 'Prompt parameter is required' }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({ 
+        status: 'healthy',
+        service: 'AI Chat API',
+        endpoints: ['POST /api/ai/chat', 'GET /api/ai/chat?prompt=...'],
+        models: ['@cf/meta/llama-2-7b-chat-int8']
+      }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   }
 
