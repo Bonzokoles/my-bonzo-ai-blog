@@ -28,7 +28,7 @@ interface BlogIndex {
 }
 
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(request: Request, env: Env, _ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
     const path = url.pathname;
 
@@ -447,11 +447,11 @@ async function serveFromR2(path: string, env: Env) {
   }
 }
 
-async function processImageTags(content: string, postId: string, env: Env): Promise<string> {
+async function processImageTags(content: string, postId: string, _env: Env): Promise<string> {
   // Replace [[001-1.jpg]] tags with proper image URLs
   const imageTagRegex = /\[\[([^\]]+\.(jpg|jpeg|png|webp|gif))\]\]/gi;
-  
-  return content.replace(imageTagRegex, (match, imageName) => {
+
+  return content.replace(imageTagRegex, (_match, imageName) => {
     // Ensure image name matches post ID pattern
     if (!imageName.startsWith(postId)) {
       imageName = `${postId}-${imageName}`;
@@ -588,7 +588,7 @@ async function uploadCloudflareImage(request: Request, env: Env) {
 }
 
 // Function to get Cloudflare Image variants for processing
-async function processCloudflareImageTags(content: string, postId: string, env: Env): Promise<string> {
+async function processCloudflareImageTags(content: string, _postId: string, env: Env): Promise<string> {
   // Process CF image tags [[CF:001-1]] -> Cloudflare Images URLs
   const cfImageRegex = /\[\[CF:([^\]]+)\]\]/g;
   const matches = Array.from(content.matchAll(cfImageRegex));

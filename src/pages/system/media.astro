@@ -214,14 +214,36 @@ const description =
     const nextPageBtn = document.getElementById("next-page");
     const pageInfo = document.getElementById("page-info");
 
+    // Types
+    interface MediaFile {
+      key: string;
+      size: number;
+      uploaded: string;
+      url: string;
+      metadata?: any;
+    }
+
+    interface ApiResponse {
+      success: boolean;
+      files?: MediaFile[];
+      error?: string;
+    }
+
     // State
-    let allFiles = [];
-    let filteredFiles = [];
+    let allFiles: MediaFile[] = [];
+    let filteredFiles: MediaFile[] = [];
     let currentPage = 1;
     const itemsPerPage = 12;
     let currentSort = { field: "date", direction: "desc" };
     let currentFilter = "all";
     let currentSearch = "";
+
+    // Check if all elements exist
+    if (!galleryGrid || !galleryLoading || !galleryEmpty || !refreshButton ||
+        !filterType || !searchInput || !pagination || !prevPageBtn || !nextPageBtn || !pageInfo) {
+      console.error("Required DOM elements not found");
+      return;
+    }
 
     // Initialize
     loadGallery();
@@ -232,7 +254,9 @@ const description =
     searchInput.addEventListener("input", debounce(handleSearchChange, 300));
 
     Object.entries(sortButtons).forEach(([field, button]) => {
-      button.addEventListener("click", () => handleSortChange(field));
+      if (button) {
+        button.addEventListener("click", () => handleSortChange(field));
+      }
     });
 
     prevPageBtn.addEventListener("click", () => changePage(currentPage - 1));
@@ -248,7 +272,7 @@ const description =
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
 
-        const data = await response.json();
+        const data = await response.json() as ApiResponse;
 
         if (data.success) {
           allFiles = data.files || [];

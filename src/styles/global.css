@@ -12,7 +12,7 @@ The 'prose' section is used to style markdown content.
 /* Graffiti Font - Throlacon Trial */
 @font-face {
   font-family: 'ThrolaconTrial';
-  src: url('/fronts/Throlacon Trial.ttf') format('truetype');
+  src: url('/fonts/Throlacon Trial.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

@@ -30,25 +30,109 @@ const options = {
     animate={true}
   />
 
-  <!-- Hero Section - Interactive Typing Animation -->
-  <section class="w-full py-16 bg-theme-primary/5 backdrop-blur-sm">
-    <div class="container mx-auto px-4 text-center">
-      <h2 class="text-4xl lg:text-6xl font-bold mb-4 text-theme-primary typing-animation">Poznaj MyBonzo Pro w Akcji</h2>
-      <p class="text-lg text-theme-primary opacity-80 mb-12">Witaj w MyBonzo AI Blog! Poznaj Twojego asystenta AI</p>
+  <!-- Hero Section - Video + Navigation -->
+  <section class="w-full py-12 bg-theme-primary/5 backdrop-blur-sm">
+    <div class="container mx-auto px-4">
+      <div
+        class="flex flex-col lg:flex-row items-center justify-start lg:justify-between gap-8"
+      >
+        <!-- Video Section - Left Side -->
+        <div class="w-full lg:w-2/5 pl-0">
+          <div
+            class="w-full h-full max-w-[420px] aspect-[9/16] flex items-center justify-center border border-gray-700 bg-neutral-900 mx-auto lg:mx-0"
+          >
+            <video
+              id="mainVideo"
+              class="w-full h-full object-cover bg-gray-900"
+              controls
+              poster="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/alk4.png"
+            >
+              <source
+                src="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/mybonzo-avatar-welcome.mp4"
+                type="video/mp4"
+              />
+              Twoja przeglądarka nie obsługuje video HTML5.
+            </video>
+          </div>
+          <p
+            class="mt-6 text-lg text-theme-primary opacity-80 text-center lg:text-left"
+          >
+            Witaj w MyBonzo AI Blog! Poznaj Twojego asystenta AI
+          </p>
+        </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-        <a href="/BROWSERY" class="hero-button">Browsery</a>
-        <a href="/STRONY_INTERNETOWE" class="hero-button">Strony Internetowe</a>
-        <a href="/NARZEDZIA_AI" class="hero-button">Narzędzia AI</a>
-        <a href="/WIADOMOSCI_AI" class="hero-button">Wiadomości AI</a>
-        <a href="/HAPPY_NEWS" class="hero-button">Happy News</a>
-        <a href="/TOTAL_COULTURE" class="hero-button">Total Culture</a>
-        <a href="/ASYSTENT_AI" class="hero-button">Asystent AI</a>
-        <a href="/GENERATOR_GRAFIKI" class="hero-button">Generator Grafiki</a>
-      </div>
+        <!-- Navigation Buttons - Right Side -->
+        <div class="w-full lg:w-3/5 flex flex-col gap-6">
+          <h3
+            class="text-2xl font-semibold text-theme-primary mb-4 text-center lg:text-left"
+          >
+            Odkryj Nasze Sekcje
+          </h3>
 
-      <div class="mt-12">
-        <a href="/pro" class="pro-button">Sprawdź MyBonzo Pro →</a>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <a
+              href="/BROWSERY"
+              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
+            >
+              Browsery
+            </a>
+
+            <a
+              href="/STRONY_INTERNETOWE"
+              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
+            >
+              Strony Internetowe
+            </a>
+
+            <a
+              href="/NARZEDZIA_AI"
+              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
+            >
+              Narzędzia AI
+            </a>
+
+            <a
+              href="/WIADOMOSCI_AI"
+              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
+            >
+              Wiadomości AI
+            </a>
+
+            <a
+              href="/HAPPY_NEWS"
+              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
+            >
+              Happy News
+            </a>
+
+            <a
+              href="/TOTAL_COULTURE"
+              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
+            >
+              Total Culture
+            </a>
+
+            <a
+              href="/ASYSTENT_AI"
+              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
+            >
+              Asystent AI
+            </a>
+
+            <a
+              href="/GENERATOR_GRAFIKI"
+              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
+            >
+              Generator Grafiki
+            </a>
+          </div>
+
+          <div class="mt-8 text-center lg:text-left">
+            <a href="/pro" class="inline-block bg-theme-accent text-white px-6 py-3 rounded-none font-semibold hover:opacity-90 transition-opacity border border-gray-500">
+              Sprawdź MyBonzo Pro →
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -284,9 +368,7 @@ const options = {
   // Load blog posts from R2 API
   async function loadBlogPosts() {
     try {
-      const response = await fetch(
-        "https://mybonzo-blog-worker.stolarnia-ams.workers.dev/api/blog/index"
-      );
+      const response = await fetch("/api/blog/index");
       const data = await response.json();
 
       const featuredPostContainer = document.getElementById("featured-post");
