@@ -1,0 +1,114 @@
+{
+  "categories": [
+    {
+      "name": "🔍 Alternatywne Wyszukiwarki",
+      "bookmarks": [
+        {
+          "title": "Marginalia Search",
+          "url": "https://search.marginalia.nu",
+          "description": "Stary web, tekstowe strony, bez reklam"
+        },
+        {
+          "title": "Wiby",
+          "url": "https://wiby.me",
+          "description": "Retro - strony z lat 90"
+        },
+        {
+          "title": "Old'aVista",
+          "url": "https://oldavista.com",
+          "description": "Archiwa starych stron"
+        },
+        {
+          "title": "Stract",
+          "url": "https://stract.com",
+          "description": "Wyszukiwarka z filtrami Optics"
+        },
+        {
+          "title": "Mojeek",
+          "url": "https://mojeek.com",
+          "description": "Niezależna, prywatna wyszukiwarka"
+        }
+      ]
+    },
+    {
+      "name": "🎬 Bazy Filmowe",
+      "bookmarks": [
+        {
+          "title": "Letterboxd",
+          "url": "https://letterboxd.com",
+          "description": "Społecznościowy dziennik filmowy"
+        },
+        {
+          "title": "TMDb",
+          "url": "https://themoviedb.org",
+          "description": "Otwarta baza danych filmów"
+        },
+        {
+          "title": "JustWatch",
+          "url": "https://justwatch.com",
+          "description": "Gdzie streamować filmy"
+        },
+        {
+          "title": "AllMovie",
+          "url": "https://allmovie.com",
+          "description": "Klasyczna baza filmowa"
+        }
+      ]
+    },
+    {
+      "name": "💼 Business Intelligence",
+      "bookmarks": [
+        {
+          "title": "AlphaSense",
+          "url": "https://alpha-sense.com",
+          "description": "AI research dla firm"
+        },
+        {
+          "title": "PitchBook",
+          "url": "https://pitchbook.com",
+          "description": "Analiza rynków prywatnych"
+        },
+        {
+          "title": "CB Insights",
+          "url": "https://cbinsights.com",
+          "description": "Analiza rynku tech"
+        },
+        {
+          "title": "Crunchbase",
+          "url": "https://crunchbase.com",
+          "description": "Dane o finansowaniu startupów"
+        }
+      ]
+    },
+    {
+      "name": "🤖 HuggingFace Spaces",
+      "bookmarks": [
+        {
+          "title": "Miragic Speed-Painting",
+          "url": "https://huggingface.co/spaces/Miragic-AI/Miragic-Speed-Painting",
+          "description": "AI generowanie video - speed painting"
+        },
+        {
+          "title": "Granite 4.0 WebGPU",
+          "url": "https://huggingface.co/spaces/ibm-granite/Granite-4.0-WebGPU",
+          "description": "IBM Granite LLM w przeglądarce"
+        },
+        {
+          "title": "Hunyuan3D 2.1",
+          "url": "https://huggingface.co/spaces/tencent/Hunyuan3D-2.1",
+          "description": "Generowanie 3D - Tencent"
+        },
+        {
+          "title": "AgentFlow Project",
+          "url": "https://agentflow.stanford.edu",
+          "description": "Framework agentów AI"
+        },
+        {
+          "title": "AgentFlow Paper",
+          "url": "https://huggingface.co/papers/2510.05592",
+          "description": "Paper badawczy na HF"
+        }
+      ]
+    }
+  ]
+}
