@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZENON AI - Speech Recognition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #001a33 50%, #0a0a0a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #e0e0e0;
+            font-family: 'Roboto Mono', monospace;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(0, 26, 51, 0.8) 0%, rgba(0, 10, 21, 0.9) 100%);
+            border: 2px solid #0080ff;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(0, 128, 255, 0.3);
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 42px;
+            color: #0080ff;
+            text-shadow: 0 0 20px rgba(0, 128, 255, 0.8);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #00FFFF;
+            font-size: 16px;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        
+        .status {
+            background: rgba(0, 128, 255, 0.1);
+            border: 1px solid #0080ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #00FFFF;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #0080ff 0%, #0060cc 100%);
+            border: 2px solid #00FFFF;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 128, 255, 0.5);
+        }
+        
+        button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #00FFFF 0%, #0080ff 100%);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .recording {
+            background: linear-gradient(135deg, #ff0080 0%, #cc0060 100%);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .output {
+            background: rgba(0, 10, 21, 0.6);
+            border: 2px solid #0080ff;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 150px;
+            color: #e0e0e0;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+        
+        .output.empty {
+            color: #666;
+            font-style: italic;
+        }
+        
+        .languages {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .lang-btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            background: rgba(0, 128, 255, 0.2);
+        }
+        
+        .lang-btn.active {
+            background: linear-gradient(135deg, #0080ff 0%, #0060cc 100%);
+            border-color: #00FFFF;
+        }
+        
+        .info {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid #00FFFF;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .info h3 {
+            color: #00FFFF;
+            margin-bottom: 10px;
+            font-family: 'Orbitron', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 ZENON AI</h1>
+        <p class="subtitle">Rozpoznawanie mowy w przeglądarce • Powered by Whisper</p>
+        
+        <div class="status" id="status">
+            Inicjalizacja modelu AI...
+        </div>
+        
+        <div class="languages">
+            <button class="lang-btn active" data-lang="pl" onclick="setLanguage('pl')">🇵🇱 Polski</button>
+            <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">🇬🇧 English</button>
+            <button class="lang-btn" data-lang="de" onclick="setLanguage('de')">🇩🇪 Deutsch</button>
+            <button class="lang-btn" data-lang="es" onclick="setLanguage('es')">🇪🇸 Español</button>
+            <button class="lang-btn" data-lang="fr" onclick="setLanguage('fr')">🇫🇷 Français</button>
+        </div>
+        
+        <div class="controls">
+            <button id="recordBtn" onclick="toggleRecording()" disabled>
+                🎤 Rozpocznij nagrywanie
+            </button>
+            <button id="clearBtn" onclick="clearOutput()">
+                🗑️ Wyczyść
+            </button>
+        </div>
+        
+        <div class="output empty" id="output">
+            Naciśnij przycisk nagrywania i zacznij mówić...
+        </div>
+        
+        <div class="info">
+            <h3>ℹ️ Informacje</h3>
+            <p><strong>Model:</strong> Whisper Base (OpenAI) - wersja ONNX dla przeglądarki</p>
+            <p><strong>Języki:</strong> Polski, Angielski, Niemiecki, Hiszpański, Francuski i inne</p>
+            <p><strong>Prywatność:</strong> Działa lokalnie - żadne dane nie są wysyłane na serwer</p>
+            <p><strong>Rozmiar:</strong> ~74 MB (pobierany raz i cachowany)</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.0';
+
+        let transcriber = null;
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+        let selectedLanguage = 'pl';
+
+        const statusEl = document.getElementById('status');
+        const outputEl = document.getElementById('output');
+        const recordBtn = document.getElementById('recordBtn');
+
+        async function initModel() {
+            try {
+                statusEl.innerHTML = '⏳ Ładowanie modelu Whisper... (pierwsze uruchomienie ~1 min)';
+                
+                transcriber = await pipeline(
+                    'automatic-speech-recognition',
+                    'onnx-community/whisper-base'
+                );
+                
+                statusEl.innerHTML = '✅ Model załadowany! Gotowy do rozpoznawania mowy.';
+                recordBtn.disabled = false;
+                
+            } catch (error) {
+                console.error('Błąd:', error);
+                statusEl.innerHTML = '❌ Błąd ładowania: ' + error.message;
+            }
+        }
+
+        window.setLanguage = function(lang) {
+            selectedLanguage = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+        }
+
+        window.toggleRecording = async function() {
+            if (!isRecording) {
+                await startRecording();
+            } else {
+                await stopRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    await transcribeAudio(audioBlob);
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+                recordBtn.textContent = '⏹️ Zatrzymaj nagrywanie';
+                recordBtn.classList.add('recording');
+                statusEl.innerHTML = '🔴 Nagrywanie... Mów teraz!';
+                
+            } catch (error) {
+                statusEl.innerHTML = '❌ Błąd mikrofonu: ' + error.message;
+            }
+        }
+
+        async function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                isRecording = false;
+                recordBtn.textContent = '🎤 Rozpocznij nagrywanie';
+                recordBtn.classList.remove('recording');
+                statusEl.innerHTML = '⏳ Przetwarzanie...';
+            }
+        }
+
+        async function transcribeAudio(audioBlob) {
+            try {
+                statusEl.innerHTML = '🧠 Rozpoznawanie mowy...';
+                
+                const result = await transcriber(audioBlob, {
+                    language: selectedLanguage,
+                    task: 'transcribe'
+                });
+                
+                const transcription = result.text || result;
+                
+                if (outputEl.classList.contains('empty')) {
+                    outputEl.classList.remove('empty');
+                    outputEl.innerHTML = '';
+                }
+                
+                const timestamp = new Date().toLocaleTimeString('pl-PL');
+                outputEl.innerHTML += `<div style="margin-bottom: 15px;">
+                    <strong style="color: #00FFFF;">[${timestamp}]</strong><br>
+                    ${transcription}
+                </div>`;
+                
+                statusEl.innerHTML = '✅ Gotowe! Możesz nagrać kolejne.';
+                
+            } catch (error) {
+                statusEl.innerHTML = '❌ Błąd: ' + error.message;
+            }
+        }
+
+        window.clearOutput = function() {
+            outputEl.innerHTML = 'Naciśnij przycisk nagrywania i zacznij mówić...';
+            outputEl.classList.add('empty');
+        }
+
+        window.addEventListener('load', initModel);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZENON Browser - Home</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #001a33 50%, #0a0a0a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #e0e0e0;
+            font-family: 'Roboto Mono', monospace;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Grid overlay effect */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 128, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 128, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease;
+        }
+        
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 64px;
+            color: #0080ff;
+            text-shadow: 
+                0 0 20px rgba(0, 128, 255, 0.8),
+                0 0 40px rgba(0, 128, 255, 0.4);
+            margin-bottom: 15px;
+            letter-spacing: 4px;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        .header p {
+            color: #00FFFF;
+            font-size: 18px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.02); }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Search Bar */
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto 60px;
+            animation: fadeIn 1s ease 0.3s backwards;
+        }
+        
+        .search-wrapper {
+            position: relative;
+            background: linear-gradient(135deg, rgba(0, 26, 51, 0.8) 0%, rgba(0, 10, 21, 0.9) 100%);
+            border: 2px solid #0080ff;
+            border-radius: 50px;
+            padding: 8px;
+            box-shadow: 
+                0 0 30px rgba(0, 128, 255, 0.3),
+                inset 0 0 20px rgba(0, 128, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .search-wrapper:hover,
+        .search-wrapper:focus-within {
+            border-color: #00FFFF;
+            box-shadow: 
+                0 0 40px rgba(0, 255, 255, 0.5),
+                inset 0 0 30px rgba(0, 255, 255, 0.15);
+        }
+        
+        .search-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 18px 60px 18px 30px;
+            font-size: 18px;
+            color: #e0e0e0;
+            font-family: 'Roboto Mono', monospace;
+        }
+        
+        .search-input::placeholder {
+            color: #666;
+        }
+        
+        .search-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #0080ff;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 128, 255, 0.5);
+        }
+        
+        .search-btn:hover {
+            background: #00FFFF;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
+            transform: translateY(-50%) scale(1.05);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Quick Access Grid */
+        .quick-access {
+            margin-bottom: 60px;
+            animation: fadeIn 1s ease 0.5s backwards;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            color: #0080ff;
+            text-align: center;
+            margin-bottom: 35px;
+            text-shadow: 0 0 15px rgba(0, 128, 255, 0.6);
+            letter-spacing: 2px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, rgba(0, 26, 51, 0.7) 0%, rgba(0, 10, 21, 0.8) 100%);
+            border: 2px solid #0080ff;
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 128, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .card:hover::before {
+            opacity: 1;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: #00FFFF;
+            box-shadow: 
+                0 15px 40px rgba(0, 128, 255, 0.4),
+                0 0 30px rgba(0, 255, 255, 0.3);
+        }
+        
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover .card-icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+        
+        .card h3 {
+            color: #00FFFF;
+            font-size: 22px;
+            margin-bottom: 12px;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+        
+        .card p {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* MCP Tools Section */
+        .mcp-tools {
+            margin-bottom: 60px;
+            animation: fadeIn 1s ease 0.7s backwards;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .tool-btn {
+            background: linear-gradient(135deg, rgba(0, 51, 102, 0.6) 0%, rgba(0, 26, 51, 0.8) 100%);
+            border: 2px solid #0080ff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Roboto Mono', monospace;
+            color: #e0e0e0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .tool-btn:hover {
+            background: linear-gradient(135deg, rgba(0, 102, 204, 0.6) 0%, rgba(0, 51, 102, 0.8) 100%);
+            border-color: #00FFFF;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+            transform: translateY(-3px);
+        }
+        
+        .tool-icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        /* Recent Sites */
+        .recent-sites {
+            margin-bottom: 60px;
+            animation: fadeIn 1s ease 0.9s backwards;
+        }
+        
+        .sites-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .site-chip {
+            background: rgba(0, 128, 255, 0.15);
+            border: 1px solid #0080ff;
+            border-radius: 25px;
+            padding: 10px 20px;
+            color: #00FFFF;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .site-chip:hover {
+            background: rgba(0, 255, 255, 0.2);
+            border-color: #00FFFF;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease 1.1s backwards;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, rgba(0, 26, 51, 0.5) 0%, rgba(0, 10, 21, 0.7) 100%);
+            border: 1px solid #0080ff;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 36px;
+            color: #0080ff;
+            text-shadow: 0 0 15px rgba(0, 128, 255, 0.6);
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            color: #888;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-size: 13px;
+            border-top: 1px solid rgba(0, 128, 255, 0.2);
+            animation: fadeIn 1s ease 1.3s backwards;
+        }
+        
+        .footer a {
+            color: #0080ff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer a:hover {
+            color: #00FFFF;
+        }
+        
+        /* Time Widget */
+        .time-widget {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, rgba(0, 26, 51, 0.8) 0%, rgba(0, 10, 21, 0.9) 100%);
+            border: 2px solid #0080ff;
+            border-radius: 15px;
+            padding: 20px 30px;
+            box-shadow: 0 0 25px rgba(0, 128, 255, 0.3);
+            text-align: center;
+            z-index: 100;
+        }
+        
+        .current-time {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 48px;
+            color: #0080ff;
+            text-shadow: 0 0 20px rgba(0, 128, 255, 0.8);
+            letter-spacing: 2px;
+        }
+        
+        .current-date {
+            color: #00FFFF;
+            font-size: 16px;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Time Widget -->
+    <div class="time-widget">
+        <div class="current-time" id="time">00:00:00</div>
+        <div class="current-date" id="date">Loading...</div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>ZENON</h1>
+            <p>Advanced AI-Powered Browser Experience</p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-wrapper">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    placeholder="Search the web or enter URL..."
+                    id="searchInput"
+                    onkeypress="handleSearch(event)"
+                />
+                <button class="search-btn" onclick="performSearch()">GO</button>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="bookmarksCount">247</div>
+                <div class="stat-label">Bookmarks</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="historyCount">1,893</div>
+                <div class="stat-label">Sites Visited</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="sessionsCount">42</div>
+                <div class="stat-label">Active Sessions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="mcpToolsCount">18</div>
+                <div class="stat-label">MCP Tools</div>
+            </div>
+        </div>
+
+        <!-- Quick Access -->
+        <section class="quick-access">
+            <h2 class="section-title">⚡ Quick Access</h2>
+            <div class="grid">
+                <div class="card" onclick="navigate('ai-demo.html')">
+                    <div class="card-icon">🎤</div>
+                    <h3>ZENON AI Demo</h3>
+                    <p>Speech recognition with Polish support</p>
+                </div>
+                <div class="card" onclick="navigate('https://chat.openai.com')">
+                    <div class="card-icon">🤖</div>
+                    <h3>ChatGPT</h3>
+                    <p>AI assistant for conversations and tasks</p>
+                </div>
+                <div class="card" onclick="navigate('https://github.com')">
+                    <div class="card-icon">💻</div>
+                    <h3>GitHub</h3>
+                    <p>Code repositories and collaboration</p>
+                </div>
+                <div class="card" onclick="navigate('https://claude.ai')">
+                    <div class="card-icon">🧠</div>
+                    <h3>Claude AI</h3>
+                    <p>Advanced AI by Anthropic</p>
+                </div>
+                <div class="card" onclick="navigate('https://perplexity.ai')">
+                    <div class="card-icon">🔍</div>
+                    <h3>Perplexity</h3>
+                    <p>AI-powered search engine</p>
+                </div>
+                <div class="card" onclick="navigate('https://huggingface.co')">
+                    <div class="card-icon">🤗</div>
+                    <h3>Hugging Face</h3>
+                    <p>ML models and datasets</p>
+                </div>
+                <div class="card" onclick="navigate('https://midjourney.com')">
+                    <div class="card-icon">🎨</div>
+                    <h3>Midjourney</h3>
+                    <p>AI image generation</p>
+                </div>
+                <div class="card" onclick="navigate('https://v0.dev')">
+                    <div class="card-icon">⚡</div>
+                    <h3>v0.dev</h3>
+                    <p>AI-powered UI generation</p>
+                </div>
+                <div class="card" onclick="navigate('https://stackoverflow.com')">
+                    <div class="card-icon">📚</div>
+                    <h3>Stack Overflow</h3>
+                    <p>Developer Q&A community</p>
+                </div>
+                <div class="card" onclick="launchNebula()">
+                    <div class="card-icon">🌌</div>
+                    <h3>Nebula Browser</h3>
+                    <p>AI-powered developer browser with Google models</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alternative Search Engines -->
+        <section class="quick-access">
+            <h2 class="section-title">🔍 Alternative Search Engines</h2>
+            <div class="grid">
+                <div class="card" onclick="navigate('https://duckduckgo.com')">
+                    <div class="card-icon">🦆</div>
+                    <h3>DuckDuckGo</h3>
+                    <p>Privacy-focused search, no tracking</p>
+                </div>
+                <div class="card" onclick="navigate('https://www.yahoo.com')">
+                    <div class="card-icon">🟣</div>
+                    <h3>Yahoo</h3>
+                    <p>Classic search portal with news</p>
+                </div>
+                <div class="card" onclick="navigate('https://search.brave.com')">
+                    <div class="card-icon">🦁</div>
+                    <h3>Brave Search</h3>
+                    <p>Independent, privacy-first search</p>
+                </div>
+                <div class="card" onclick="navigate('https://www.ecosia.org')">
+                    <div class="card-icon">🌳</div>
+                    <h3>Ecosia</h3>
+                    <p>Plant trees with your searches</p>
+                </div>
+                <div class="card" onclick="navigate('https://www.startpage.com')">
+                    <div class="card-icon">🔐</div>
+                    <h3>Startpage</h3>
+                    <p>Google results without tracking</p>
+                </div>
+                <div class="card" onclick="navigate('https://www.qwant.com')">
+                    <div class="card-icon">🇫🇷</div>
+                    <h3>Qwant</h3>
+                    <p>European private search engine</p>
+                </div>
+                <div class="card" onclick="navigate('https://you.com')">
+                    <div class="card-icon">💬</div>
+                    <h3>You.com</h3>
+                    <p>AI-powered search assistant</p>
+                </div>
+                <div class="card" onclick="navigate('https://kagi.com')">
+                    <div class="card-icon">🔎</div>
+                    <h3>Kagi</h3>
+                    <p>Premium ad-free search</p>
+                </div>
+                <div class="card" onclick="navigate('https://search.marginalia.nu')">
+                    <div class="card-icon">📖</div>
+                    <h3>Marginalia</h3>
+                    <p>Old web, text-heavy sites</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Privacy Browsers -->
+        <section class="quick-access">
+            <h2 class="section-title">🛡️ Privacy Browsers</h2>
+            <div class="grid">
+                <div class="card" onclick="navigate('https://brave.com')">
+                    <div class="card-icon">🦁</div>
+                    <h3>Brave Browser</h3>
+                    <p>Chromium-based, blocks ads & trackers</p>
+                </div>
+                <div class="card" onclick="navigate('https://www.torproject.org')">
+                    <div class="card-icon">🧅</div>
+                    <h3>Tor Browser</h3>
+                    <p>Maximum anonymity via onion routing</p>
+                </div>
+                <div class="card" onclick="navigate('https://librewolf.net')">
+                    <div class="card-icon">🦊</div>
+                    <h3>LibreWolf</h3>
+                    <p>Firefox fork, no telemetry</p>
+                </div>
+                <div class="card" onclick="navigate('https://mullvad.net/browser')">
+                    <div class="card-icon">🔒</div>
+                    <h3>Mullvad Browser</h3>
+                    <p>Tor collaboration, VPN-ready</p>
+                </div>
+                <div class="card" onclick="navigate('https://www.waterfox.net')">
+                    <div class="card-icon">🌊</div>
+                    <h3>Waterfox</h3>
+                    <p>Privacy-focused Firefox alternative</p>
+                </div>
+                <div class="card" onclick="navigate('https://vivaldi.com')">
+                    <div class="card-icon">🎵</div>
+                    <h3>Vivaldi</h3>
+                    <p>Highly customizable, privacy-first</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MCP Tools -->
+        <section class="mcp-tools">
+            <h2 class="section-title">🔧 MCP Tools Integration</h2>
+            <div class="tools-grid">
+                <button class="tool-btn" onclick="executeMCPTool('filesystem')">
+                    <span class="tool-icon">📁</span>
+                    Filesystem
+                </button>
+                <button class="tool-btn" onclick="executeMCPTool('web-search')">
+                    <span class="tool-icon">🌐</span>
+                    Web Search
+                </button>
+                <button class="tool-btn" onclick="executeMCPTool('github')">
+                    <span class="tool-icon">🐙</span>
+                    GitHub API
+                </button>
+                <button class="tool-btn" onclick="executeMCPTool('commander')">
+                    <span class="tool-icon">⌨️</span>
+                    Commander
+                </button>
+                <button class="tool-btn" onclick="executeMCPTool('docker')">
+                    <span class="tool-icon">🐳</span>
+                    Docker
+                </button>
+                <button class="tool-btn" onclick="executeMCPTool('brave-search')">
+                    <span class="tool-icon">🦁</span>
+                    Brave Search
+                </button>
+                <button class="tool-btn" onclick="executeMCPTool('chroma')">
+                    <span class="tool-icon">💾</span>
+                    Chroma DB
+                </button>
+                <button class="tool-btn" onclick="executeMCPTool('perplexity')">
+                    <span class="tool-icon">🔮</span>
+                    Perplexity
+                </button>
+                <button class="tool-btn" onclick="executeMCPTool('diagrams')">
+                    <span class="tool-icon">📊</span>
+                    Diagrams
+                </button>
+                <button class="tool-btn" onclick="executeMCPTool('cloudflare')">
+                    <span class="tool-icon">☁️</span>
+                    Cloudflare
+                </button>
+                <button class="tool-btn" onclick="executeMCPTool('huggingface')">
+                    <span class="tool-icon">🤗</span>
+                    HuggingFace
+                </button>
+                <button class="tool-btn" onclick="executeMCPTool('invideo')">
+                    <span class="tool-icon">🎬</span>
+                    InVideo
+                </button>
+            </div>
+        </section>
+
+        <!-- Free AI Tools Section -->
+        <section class="mcp-tools">
+            <h2 class="section-title">🎉 Free AI Tools 2025</h2>
+            <div class="tools-grid">
+                <button class="tool-btn" onclick="navigate('https://chat.openai.com')">
+                    <span class="tool-icon">🤖</span>
+                    ChatGPT
+                </button>
+                <button class="tool-btn" onclick="navigate('https://claude.ai')">
+                    <span class="tool-icon">🧠</span>
+                    Claude AI
+                </button>
+                <button class="tool-btn" onclick="navigate('https://gemini.google.com')">
+                    <span class="tool-icon">✨</span>
+                    Google Gemini
+                </button>
+                <button class="tool-btn" onclick="navigate('https://copilot.microsoft.com')">
+                    <span class="tool-icon">🚀</span>
+                    MS Copilot
+                </button>
+                <button class="tool-btn" onclick="navigate('https://perplexity.ai')">
+                    <span class="tool-icon">🔍</span>
+                    Perplexity
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co')">
+                    <span class="tool-icon">🤗</span>
+                    HuggingFace
+                </button>
+                <button class="tool-btn" onclick="navigate('https://ideogram.ai')">
+                    <span class="tool-icon">🎨</span>
+                    Ideogram
+                </button>
+                <button class="tool-btn" onclick="navigate('https://playground.ai')">
+                    <span class="tool-icon">🎮</span>
+                    Playground AI
+                </button>
+                <button class="tool-btn" onclick="navigate('https://runway.ml')">
+                    <span class="tool-icon">🎬</span>
+                    Runway ML
+                </button>
+                <button class="tool-btn" onclick="navigate('https://deepai.org')">
+                    <span class="tool-icon">🧠</span>
+                    DeepAI
+                </button>
+                <button class="tool-btn" onclick="navigate('https://www.craiyon.com')">
+                    <span class="tool-icon">🖍️</span>
+                    Craiyon
+                </button>
+                <button class="tool-btn" onclick="navigate('https://lexica.art')">
+                    <span class="tool-icon">🇺</span>
+                    Lexica
+                </button>
+                <button class="tool-btn" onclick="navigate('https://tome.app')">
+                    <span class="tool-icon">📖</span>
+                    Tome
+                </button>
+                <button class="tool-btn" onclick="navigate('https://gamma.app')">
+                    <span class="tool-icon">📊</span>
+                    Gamma
+                </button>
+                <button class="tool-btn" onclick="navigate('https://beautiful.ai')">
+                    <span class="tool-icon">📰</span>
+                    Beautiful.ai
+                </button>
+                <button class="tool-btn" onclick="navigate('https://www.notion.so/product/ai')">
+                    <span class="tool-icon">🗒️</span>
+                    Notion AI
+                </button>
+                <button class="tool-btn" onclick="navigate('https://www.jasper.ai')">
+                    <span class="tool-icon">✍️</span>
+                    Jasper
+                </button>
+                <button class="tool-btn" onclick="navigate('https://quillbot.com')">
+                    <span class="tool-icon">🦅</span>
+                    QuillBot
+                </button>
+                <button class="tool-btn" onclick="navigate('https://www.copy.ai')">
+                    <span class="tool-icon">📝</span>
+                    Copy.ai
+                </button>
+                <button class="tool-btn" onclick="navigate('https://www.synthesia.io')">
+                    <span class="tool-icon">🎥</span>
+                    Synthesia
+                </button>
+                <button class="tool-btn" onclick="navigate('https://elevenlabs.io')">
+                    <span class="tool-icon">🎤</span>
+                    ElevenLabs
+                </button>
+                <button class="tool-btn" onclick="navigate('https://murf.ai')">
+                    <span class="tool-icon">🔊</span>
+                    Murf AI
+                </button>
+                <button class="tool-btn" onclick="navigate('https://www.remove.bg')">
+                    <span class="tool-icon">✂️</span>
+                    Remove.bg
+                </button>
+                <button class="tool-btn" onclick="navigate('https://cleanup.pictures')">
+                    <span class="tool-icon">🧽</span>
+                    Cleanup
+                </button>
+                <button class="tool-btn" onclick="navigate('https://photor.io')">
+                    <span class="tool-icon">📸</span>
+                    Photor
+                </button>
+                <button class="tool-btn" onclick="navigate('https://www.canva.com/ai-image-generator')">
+                    <span class="tool-icon">🎭</span>
+                    Canva AI
+                </button>
+                <button class="tool-btn" onclick="navigate('https://www.photoroom.com')">
+                    <span class="tool-icon">🕳️</span>
+                    PhotoRoom
+                </button>
+                <button class="tool-btn" onclick="navigate('https://www.autodraw.com')">
+                    <span class="tool-icon">✏️</span>
+                    AutoDraw
+                </button>
+                <button class="tool-btn" onclick="navigate('https://scribblediffusion.com')">
+                    <span class="tool-icon">🖌️</span>
+                    Scribble
+                </button>
+                <button class="tool-btn" onclick="navigate('https://pfpmaker.com')">
+                    <span class="tool-icon">👤</span>
+                    PFP Maker
+                </button>
+                <button class="tool-btn" onclick="navigate('https://www.otter.ai')">
+                    <span class="tool-icon">🦦</span>
+                    Otter.ai
+                </button>
+                <button class="tool-btn" onclick="navigate('https://fireflies.ai')">
+                    <span class="tool-icon">📣</span>
+                    Fireflies
+                </button>
+                <button class="tool-btn" onclick="navigate('https://www.tldv.io')">
+                    <span class="tool-icon">📹</span>
+                    tl;dv
+                </button>
+                <button class="tool-btn" onclick="navigate('https://www.rewind.ai')">
+                    <span class="tool-icon">⏪</span>
+                    Rewind
+                </button>
+                <button class="tool-btn" onclick="navigate('https://mem.ai')">
+                    <span class="tool-icon">🧠</span>
+                    Mem
+                </button>
+                <button class="tool-btn" onclick="navigate('https://www.summarize.tech')">
+                    <span class="tool-icon">📊</span>
+                    Summarize
+                </button>
+            </div>
+        </section>
+
+        <!-- Hugging Face Spaces -->
+        <section class="mcp-tools">
+            <h2 class="section-title">🤗 Hugging Face Spaces</h2>
+            <div class="tools-grid">
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/black-forest-labs/FLUX.1-schnell')">
+                    <span class="tool-icon">🎨</span>
+                    FLUX Image Gen
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/stabilityai/stable-diffusion')">
+                    <span class="tool-icon">🖼️</span>
+                    Stable Diffusion
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/Xenova/whisper-webgpu')">
+                    <span class="tool-icon">🎤</span>
+                    Whisper WebGPU
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/huggingface/open-llm-leaderboard')">
+                    <span class="tool-icon">🏆</span>
+                    LLM Leaderboard
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/hysts/ControlNet')">
+                    <span class="tool-icon">🏛️</span>
+                    ControlNet
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/facebook/MusicGen')">
+                    <span class="tool-icon">🎵</span>
+                    MusicGen
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/Salesforce/BLIP')">
+                    <span class="tool-icon">📸</span>
+                    BLIP Captioning
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/akhaliq/AnimeGANv2')">
+                    <span class="tool-icon">👾</span>
+                    AnimeGAN
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/lmsys/chatbot-arena-leaderboard')">
+                    <span class="tool-icon">🤼</span>
+                    Chatbot Arena
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/XingangPan/DragGAN')">
+                    <span class="tool-icon">🖌️</span>
+                    DragGAN
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/abidlabs/Real-Time-Whisper')">
+                    <span class="tool-icon">🎙️</span>
+                    Realtime ASR
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/Xenova/text-to-speech')">
+                    <span class="tool-icon">🔊</span>
+                    Text-to-Speech
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/microsoft/Promptist')">
+                    <span class="tool-icon">✨</span>
+                    Promptist
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/OpenGVLab/InternVL')">
+                    <span class="tool-icon">👁️</span>
+                    InternVL
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/mrfakename/E2-F5-TTS')">
+                    <span class="tool-icon">🎧</span>
+                    F5-TTS
+                </button>
+                <button class="tool-btn" onclick="navigate('https://huggingface.co/spaces/CVPR/CVPR2025')">
+                    <span class="tool-icon">📚</span>
+                    CVPR Papers
+                </button>
+            </div>
+        </section>
+
+        <!-- Recent Sites -->
+        <section class="recent-sites">
+            <h2 class="section-title">🕐 Recently Visited</h2>
+            <div class="sites-list">
+                <div class="site-chip" onclick="navigate('https://github.com/trending')">
+                    <span>🔥</span> GitHub Trending
+                </div>
+                <div class="site-chip" onclick="navigate('https://news.ycombinator.com')">
+                    <span>📰</span> Hacker News
+                </div>
+                <div class="site-chip" onclick="navigate('https://reddit.com/r/programming')">
+                    <span>💬</span> r/programming
+                </div>
+                <div class="site-chip" onclick="navigate('https://dev.to')">
+                    <span>✍️</span> DEV Community
+                </div>
+                <div class="site-chip" onclick="navigate('https://producthunt.com')">
+                    <span>🚀</span> Product Hunt
+                </div>
+                <div class="site-chip" onclick="navigate('https://arxiv.org')">
+                    <span>📄</span> arXiv
+                </div>
+                <div class="site-chip" onclick="navigate('https://papers.with.code')">
+                    <span>📊</span> Papers with Code
+                </div>
+                <div class="site-chip" onclick="navigate('https://www.ranker.com')">
+                    <span>📊</span> Ranker
+                </div>
+                <div class="site-chip" onclick="navigate('https://openai.com/blog')">
+                    <span>🤖</span> OpenAI Blog
+                </div>
+                <div class="site-chip" onclick="navigate('https://www.anthropic.com/news')">
+                    <span>🧠</span> Anthropic News
+                </div>
+                <div class="site-chip" onclick="navigate('https://huggingface.co/blog')">
+                    <span>🤗</span> HuggingFace Blog
+                </div>
+                <div class="site-chip" onclick="navigate('https://aiweekly.co')">
+                    <span>📬</span> AI Weekly
+                </div>
+                <div class="site-chip" onclick="navigate('https://github.com/trending/python')">
+                    <span>🐍</span> Python Trending
+                </div>
+                <div class="site-chip" onclick="navigate('https://stackoverflow.blog')">
+                    <span>📚</span> Stack Overflow Blog
+                </div>
+                <div class="site-chip" onclick="navigate('https://twitter.com')">
+                    <span>🐦</span> Twitter
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>ZENON Browser v1.0.0 | Powered by Electron & MCP | 
+            <a href="#settings">Settings</a> | 
+            <a href="#privacy">Privacy</a> | 
+            <a href="#about">About</a>
+        </p>
+    </div>
+
+    <script>
+        // Time Widget Update
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('pl-PL', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
+            const dateString = now.toLocaleDateString('pl-PL', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            document.getElementById('time').textContent = timeString;
+            document.getElementById('date').textContent = dateString;
+        }
+        
+        // Update time every second
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Search Functionality
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        }
+
+        function performSearch() {
+            const input = document.getElementById('searchInput');
+            const query = input.value.trim();
+            
+            if (!query) return;
+            
+            // Check if input is URL
+            if (query.match(/^https?:\/\//i) || query.includes('.')) {
+                const url = query.startsWith('http') ? query : 'https://' + query;
+                navigate(url);
+            } else {
+                // Use search engine
+                const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                navigate(searchUrl);
+            }
+        }
+
+        // Navigation Function
+        function navigate(url) {
+            console.log('Navigating to:', url);
+            // Open in new tab/window
+            window.open(url, '_blank');
+        }
+
+        // Launch Nebula Browser
+        async function launchNebula() {
+            console.log('Launching Nebula Browser...');
+            
+            try {
+                const result = await window.electronAPI.launchNebula();
+                alert('✅ ' + result);
+            } catch (error) {
+                console.error('Failed to launch Nebula:', error);
+                alert('❌ Failed to launch Nebula Browser:\n' + error);
+            }
+        }
+
+        // MCP Tool Execution
+        function executeMCPTool(toolName) {
+            console.log('Executing MCP Tool:', toolName);
+            // This will be integrated with MCP bridge
+            alert(`MCP Tool: ${toolName} - Integration coming soon!`);
+        }
+
+        // Load stats from localStorage (mock data for now)
+        function loadStats() {
+            // These would be real stats from browser storage
+            const stats = {
+                bookmarks: localStorage.getItem('bookmarksCount') || 247,
+                history: localStorage.getItem('historyCount') || 1893,
+                sessions: localStorage.getItem('sessionsCount') || 42,
+                mcpTools: 18
+            };
+            
+            document.getElementById('bookmarksCount').textContent = stats.bookmarks;
+            document.getElementById('historyCount').textContent = stats.history.toLocaleString();
+            document.getElementById('sessionsCount').textContent = stats.sessions;
+            document.getElementById('mcpToolsCount').textContent = stats.mcpTools;
+        }
+        
+        loadStats();
+
+        // Focus search input on load
+        window.addEventListener('load', () => {
+            document.getElementById('searchInput').focus();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + K to focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+        });
+    </script>
+</body>
+</html>
