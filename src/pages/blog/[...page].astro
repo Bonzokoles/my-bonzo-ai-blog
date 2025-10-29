@@ -2,11 +2,10 @@
 // for more information about collections in Astro, see:
 // https://docs.astro.build/en/guides/content-collections/
 
-import { SITE } from "../../alkaline.config";
+import Posts from "@layouts/Posts.astro";
 import type { PaginateFunction } from "astro";
 import { getCollection } from "astro:content";
-import Posts from "@layouts/Posts.astro";
-import Pagination from "@components/Astro/Pagination.astro";
+import { SITE } from "../../alkaline.config";
 
 export const prerender = true;
 

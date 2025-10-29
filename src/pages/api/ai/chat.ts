@@ -253,7 +253,7 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     } else if (cfAccountId && cfApiToken) {
       const endpoint = `https://api.cloudflare.com/client/v4/accounts/${encodeURIComponent(
         cfAccountId
-      )}/ai/run/${encodeURIComponent(selectedModel)}`;
+      )}/ai/run/${selectedModel}`;
 
       const resp = await fetch(endpoint, {
         method: 'POST',
@@ -392,7 +392,7 @@ export const GET: APIRoute = async ({ url, locals }) => {
 
       const endpoint = `https://api.cloudflare.com/client/v4/accounts/${encodeURIComponent(
         accountId
-      )}/ai/run/${encodeURIComponent(model)}`;
+      )}/ai/run/${model}`;
       const resp = await fetch(endpoint, {
         method: 'POST',
         headers: {
