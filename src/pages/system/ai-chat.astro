@@ -1,61 +1,132 @@
 ---
-// AI Chat page
-import AIChat from "@components/Astro/AIChat.astro";
-import PageHeader from "@components/Astro/PageHeader.astro";
-import Layout from "@layouts/Layout.astro";
+import AIChat from '@components/Astro/AIChat.astro';
+import PageHeader from '@components/Astro/PageHeader.astro';
+import Layout from '@layouts/Layout.astro';
+import { CHAT_MODELS } from '@/config/ai-chat-models';
 ---
 
 <Layout title="AI Chat | MyBonzo AI Blog">
   <PageHeader
-    heading="🤖 Asystent AI MyBonzo"
-    description="Porozmawiaj z naszym asystentem AI. Zadaj pytania o sztuczną inteligencję, narzędzia AI lub poproś o pomoc z problemami technicznymi."
+    heading="Asystent AI MyBonzo"
+    description="Rozmawiaj z naszym agentem AI zasilanym przez Cloudflare Workers AI. Zadawaj pytania o automatyzacje, narzedzia sztucznej inteligencji i rozwiazania biznesowe w jezzyku polskim."
   />
 
-  <div class="container mx-auto px-4 pb-16">
-    <div class="max-w-4xl mx-auto">
-      <AIChat
-        placeholder="Zadaj pytanie o AI, narzędzia, technologie..."
-        maxLength={1000}
-        model="@cf/meta/llama-2-7b-chat-int8"
-        showModel={true}
-      />
+  <div class="ai-chat-page-shell">
+    <AIChat maxLength={900} />
 
-      <div
-        class="mt-8 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800"
-      >
-        <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-3">
-          💡 Przykładowe pytania:
-        </h3>
-        <ul class="space-y-2 text-blue-700 dark:text-blue-300">
-          <li>• "Jakie są najlepsze narzędzia AI do tworzenia treści?"</li>
-          <li>• "Jak działa ChatGPT i czym różni się od innych modeli?"</li>
-          <li>• "Pomóż mi wybrać narzędzie AI do mojego biznesu"</li>
-          <li>• "Wyjaśnij czym jest machine learning prostymi słowami"</li>
-          <li>• "Jakie są najnowsze trendy w sztucznej inteligencji?"</li>
-        </ul>
-      </div>
+    <section class="ai-chat-info-card">
+      <h3>Przykladowe pytania</h3>
+      <ul>
+        <li>Jakie narzedzia AI polecacie do tworzenia tresci marketingowych?</li>
+        <li>Wyjasnij prostymi slowami, czym jest uczenie maszynowe.</li>
+        <li>Pomoz mi dobrac model AI do analizy danych finansowych.</li>
+        <li>Jak zautomatyzowac obsluge klienta w malej firmie?</li>
+        <li>Jakie sa najnowsze trendy w sztucznej inteligencji?</li>
+      </ul>
+    </section>
 
-      <div class="mt-6 text-center space-y-4">
-        <p class="text-sm text-gray-600 dark:text-gray-400">
-          Asystent AI jest zasilany przez <strong>Cloudflare Workers AI</strong>
-          i model <strong>Llama 2</strong>
-        </p>
+    <section class="ai-chat-info-card">
+      <h3>Dostepne modele Cloudflare</h3>
+      <p>
+        Wybierz model, ktory najlepiej pasuje do twojej rozmowy. Domyslnie aktywna jest Gemma 3 12B IT,
+        ale w kazdej chwili mozesz przelaczyc sie na inny wariant.
+      </p>
+      <ul>
+        {
+          CHAT_MODELS.map((model) => (
+            <li>
+              <strong>{model.label}</strong>
+              <span>{model.description}</span>
+              {
+                model.usageHint && (
+                  <em>{model.usageHint}</em>
+                )
+              }
+            </li>
+          ))
+        }
+      </ul>
+    </section>
 
-        <div class="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border-2 border-blue-500/50">
-          <p class="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">
-            🚀 Potrzebujesz więcej możliwości?
-          </p>
-          <a
-            href="/system/advanced-ai-assistant"
-            class="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors shadow-lg"
-          >
-            Wypróbuj Zaawansowanego Asystenta AI →
-          </a>
-          <p class="text-xs text-gray-600 dark:text-gray-400 mt-2">
-            5 modeli AI • 4 tryby pracy • Zaawansowane ustawienia • Eksport konwersacji
-          </p>
-        </div>
-      </div>
-    </div>
+    <section class="ai-chat-info-card">
+      <h3>Wskazowki uzytkowe</h3>
+      <ul>
+        <li>Piszesz po polsku? Model automatycznie odpowiada w tym samym jezyku.</li>
+        <li>Potrzebujesz analizy krok po kroku? Wyprobuj Qwen QWQ 32B.</li>
+        <li>Chcesz szybkiej odpowiedzi? Lekki Phi-2 odpowiada niemal natychmiast.</li>
+        <li>Stawiasz na naturalna rozmowe? Wybierz OpenChat 3.5.</li>
+        <li>Kazda rozmowa jest tymczasowa i kasowana po odswiezeniu strony.</li>
+      </ul>
+    </section>
   </div>
 </Layout>
+
+<style>
+  .ai-chat-page-shell {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .ai-chat-info-card {
+    border-radius: 1.5rem;
+    padding: 2rem;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 35%, transparent);
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--color-background) 88%, transparent) 0%, rgba(0, 0, 0, 0.05) 100%);
+    box-shadow: 0 25px 50px rgba(8, 10, 18, 0.12);
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .ai-chat-info-card h3 {
+    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+    margin: 0;
+    color: var(--color-accent);
+  }
+
+  .ai-chat-info-card p {
+    margin: 0;
+    color: color-mix(in srgb, var(--color-text) 80%, var(--color-background) 20%);
+    line-height: 1.65;
+  }
+
+  .ai-chat-info-card ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: 0.65rem;
+    color: color-mix(in srgb, var(--color-text) 85%, var(--color-background) 15%);
+    line-height: 1.6;
+  }
+
+  .ai-chat-info-card li {
+    position: relative;
+  }
+
+  .ai-chat-info-card li strong {
+    display: block;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--color-accent) 85%, var(--color-background) 15%);
+  }
+
+  .ai-chat-info-card li span {
+    display: block;
+    margin-top: 0.25rem;
+  }
+
+  .ai-chat-info-card li em {
+    display: block;
+    margin-top: 0.25rem;
+    font-style: normal;
+    color: color-mix(in srgb, var(--color-accent) 75%, var(--color-background) 25%);
+  }
+
+  @media (max-width: 640px) {
+    .ai-chat-info-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
