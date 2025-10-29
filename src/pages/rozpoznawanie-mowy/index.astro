@@ -1,0 +1,492 @@
+---
+import Layout from "@layouts/Layout.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+
+const description =
+  "Rozpoznawanie mowy w przeglądarce z wykorzystaniem Whisper AI. Transkrypcja audio na tekst w czasie rzeczywistym, obsługa wielu języków, całkowicie darmowe.";
+---
+
+<Layout title="Rozpoznawanie Mowy AI - MyBonzo AI Blog" description={description}>
+  <PageHeader
+    heading="🎤 Rozpoznawanie Mowy AI"
+    description={description}
+    animate={true}
+  />
+
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+      <!-- Main Speech Recognition Card -->
+      <div class="speech-card">
+        <div class="card-header">
+          <h2 class="card-title">ZENON AI Speech Recognition</h2>
+          <p class="card-subtitle">
+            Powered by Whisper • Działa lokalnie w przeglądarce
+          </p>
+        </div>
+
+        <!-- Status -->
+        <div class="status-section">
+          <div id="status" class="status-message">
+            Inicjalizacja modelu AI...
+          </div>
+        </div>
+
+        <!-- Language Selection -->
+        <div class="languages-section">
+          <h3 class="section-label">Wybierz Język</h3>
+          <div class="language-buttons">
+            <button class="lang-btn active" data-lang="pl">
+              🇵🇱 Polski
+            </button>
+            <button class="lang-btn" data-lang="en">
+              🇬🇧 English
+            </button>
+            <button class="lang-btn" data-lang="de">
+              🇩🇪 Deutsch
+            </button>
+            <button class="lang-btn" data-lang="es">
+              🇪🇸 Español
+            </button>
+            <button class="lang-btn" data-lang="fr">
+              🇫🇷 Français
+            </button>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-section">
+          <button id="recordBtn" class="btn btn-record" disabled>
+            🎤 Rozpocznij Nagrywanie
+          </button>
+          <button id="clearBtn" class="btn btn-clear">
+            🗑️ Wyczyść
+          </button>
+        </div>
+
+        <!-- Output -->
+        <div class="output-section">
+          <h3 class="section-label">Transkrypcja</h3>
+          <div id="output" class="output-content empty">
+            Naciśnij przycisk nagrywania i zacznij mówić...
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="info-section">
+          <h3 class="info-title">ℹ️ Informacje</h3>
+          <div class="info-content">
+            <p><strong>Model:</strong> Whisper Base (OpenAI) - wersja ONNX</p>
+            <p><strong>Języki:</strong> Polski, Angielski, Niemiecki, Hiszpański, Francuski i wiele innych</p>
+            <p><strong>Prywatność:</strong> Działa lokalnie - żadne dane nie są wysyłane na serwer</p>
+            <p><strong>Rozmiar modelu:</strong> ~74 MB (pobierany raz i cachowany w przeglądarce)</p>
+            <p><strong>Pierwsze uruchomienie:</strong> Może potrwać ~1 minutę podczas ładowania modelu</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .speech-card {
+    background: transparent;
+    border: 2px solid #6b7280;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .card-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #6b7280;
+  }
+
+  .card-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-accent, #2563eb);
+    margin-bottom: 0.5rem;
+  }
+
+  .card-subtitle {
+    font-size: 1.125rem;
+    color: var(--color-text-muted, #6b7280);
+  }
+
+  .status-section {
+    margin-bottom: 2rem;
+  }
+
+  .status-message {
+    background: rgba(37, 99, 235, 0.1);
+    border: 2px solid var(--color-accent, #2563eb);
+    padding: 1rem 1.5rem;
+    text-align: center;
+    color: var(--color-accent, #2563eb);
+    font-weight: 500;
+  }
+
+  .section-label {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text, #1f2937);
+    margin-bottom: 1rem;
+  }
+
+  .languages-section {
+    margin-bottom: 2rem;
+  }
+
+  .language-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .lang-btn {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #6b7280;
+    background: transparent;
+    color: var(--color-text, #1f2937);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .lang-btn:hover {
+    border-color: var(--color-accent, #2563eb);
+    transform: translateY(-2px);
+  }
+
+  .lang-btn.active {
+    background: var(--color-accent, #2563eb);
+    color: white;
+    border-color: var(--color-accent, #2563eb);
+  }
+
+  .controls-section {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 1rem 2rem;
+    border: 2px solid #6b7280;
+    background: transparent;
+    color: var(--color-text, #1f2937);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  .btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-record {
+    border-color: var(--color-accent, #2563eb);
+    color: var(--color-accent, #2563eb);
+  }
+
+  .btn-record:hover:not(:disabled) {
+    background: var(--color-accent, #2563eb);
+    color: white;
+  }
+
+  .btn-record.recording {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: white;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  .btn-clear:hover {
+    background: #6b7280;
+    color: white;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .output-section {
+    margin-bottom: 2rem;
+  }
+
+  .output-content {
+    background: rgba(0, 0, 0, 0.02);
+    border: 2px solid #6b7280;
+    padding: 1.5rem;
+    min-height: 200px;
+    max-height: 400px;
+    overflow-y: auto;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--color-text, #1f2937);
+  }
+
+  .output-content.empty {
+    color: #9ca3af;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .transcript-entry {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .transcript-entry:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .transcript-timestamp {
+    font-size: 0.875rem;
+    color: var(--color-accent, #2563eb);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .transcript-text {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  .info-section {
+    background: rgba(37, 99, 235, 0.05);
+    border: 2px solid var(--color-accent, #2563eb);
+    padding: 1.5rem;
+  }
+
+  .info-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-accent, #2563eb);
+    margin-bottom: 1rem;
+  }
+
+  .info-content p {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+    color: var(--color-text, #1f2937);
+  }
+
+  .info-content p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    .card-title {
+      font-size: 2rem;
+    }
+
+    .language-buttons {
+      flex-direction: column;
+    }
+
+    .lang-btn {
+      width: 100%;
+    }
+
+    .controls-section {
+      flex-direction: column;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .speech-card,
+    .card-header,
+    .output-content {
+      border-color: #4b5563;
+    }
+
+    .card-title {
+      color: #60a5fa;
+    }
+
+    .lang-btn,
+    .btn {
+      border-color: #4b5563;
+      color: #f3f4f6;
+    }
+
+    .output-content {
+      background: rgba(255, 255, 255, 0.05);
+      color: #f3f4f6;
+    }
+
+    .info-content p {
+      color: #f3f4f6;
+    }
+
+    .transcript-entry {
+      border-bottom-color: #374151;
+    }
+  }
+</style>
+
+<script type="module">
+  import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.0';
+
+  let transcriber = null;
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let isRecording = false;
+  let selectedLanguage = 'pl';
+
+  const statusEl = document.getElementById('status');
+  const outputEl = document.getElementById('output');
+  const recordBtn = document.getElementById('recordBtn');
+  const clearBtn = document.getElementById('clearBtn');
+
+  // Initialize model
+  async function initModel() {
+    try {
+      statusEl.textContent = '⏳ Ładowanie modelu Whisper... (pierwsze uruchomienie ~1 min)';
+      statusEl.className = 'status-message';
+
+      transcriber = await pipeline(
+        'automatic-speech-recognition',
+        'onnx-community/whisper-base'
+      );
+
+      statusEl.textContent = '✅ Model załadowany! Gotowy do rozpoznawania mowy.';
+      statusEl.style.borderColor = '#10b981';
+      statusEl.style.color = '#10b981';
+      recordBtn.disabled = false;
+
+    } catch (error) {
+      console.error('Błąd:', error);
+      statusEl.textContent = '❌ Błąd ładowania modelu: ' + error.message;
+      statusEl.style.borderColor = '#ef4444';
+      statusEl.style.color = '#ef4444';
+    }
+  }
+
+  // Language selection
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedLanguage = btn.dataset.lang;
+    });
+  });
+
+  // Record button
+  recordBtn.addEventListener('click', async () => {
+    if (!isRecording) {
+      await startRecording();
+    } else {
+      await stopRecording();
+    }
+  });
+
+  async function startRecording() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        audioChunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        await transcribeAudio(audioBlob);
+      };
+
+      mediaRecorder.start();
+      isRecording = true;
+      recordBtn.textContent = '⏹️ Zatrzymaj Nagrywanie';
+      recordBtn.classList.add('recording');
+      statusEl.textContent = '🔴 Nagrywanie... Mów teraz!';
+      statusEl.style.borderColor = '#ef4444';
+      statusEl.style.color = '#ef4444';
+
+    } catch (error) {
+      statusEl.textContent = '❌ Błąd mikrofonu: ' + error.message;
+      statusEl.style.borderColor = '#ef4444';
+      statusEl.style.color = '#ef4444';
+    }
+  }
+
+  async function stopRecording() {
+    if (mediaRecorder && isRecording) {
+      mediaRecorder.stop();
+      mediaRecorder.stream.getTracks().forEach(track => track.stop());
+      isRecording = false;
+      recordBtn.textContent = '🎤 Rozpocznij Nagrywanie';
+      recordBtn.classList.remove('recording');
+      statusEl.textContent = '⏳ Przetwarzanie...';
+      statusEl.style.borderColor = '#f59e0b';
+      statusEl.style.color = '#f59e0b';
+    }
+  }
+
+  async function transcribeAudio(audioBlob) {
+    try {
+      statusEl.textContent = '🧠 Rozpoznawanie mowy...';
+
+      const result = await transcriber(audioBlob, {
+        language: selectedLanguage,
+        task: 'transcribe'
+      });
+
+      const transcription = result.text || result;
+
+      if (outputEl.classList.contains('empty')) {
+        outputEl.classList.remove('empty');
+        outputEl.innerHTML = '';
+      }
+
+      const timestamp = new Date().toLocaleTimeString('pl-PL');
+      const entryDiv = document.createElement('div');
+      entryDiv.className = 'transcript-entry';
+      entryDiv.innerHTML = `
+        <div class="transcript-timestamp">[${timestamp}]</div>
+        <div class="transcript-text">${transcription}</div>
+      `;
+
+      outputEl.appendChild(entryDiv);
+      outputEl.scrollTop = outputEl.scrollHeight;
+
+      statusEl.textContent = '✅ Gotowe! Możesz nagrać kolejne.';
+      statusEl.style.borderColor = '#10b981';
+      statusEl.style.color = '#10b981';
+
+    } catch (error) {
+      statusEl.textContent = '❌ Błąd transkrypcji: ' + error.message;
+      statusEl.style.borderColor = '#ef4444';
+      statusEl.style.color = '#ef4444';
+    }
+  }
+
+  // Clear button
+  clearBtn.addEventListener('click', () => {
+    outputEl.innerHTML = 'Naciśnij przycisk nagrywania i zacznij mówić...';
+    outputEl.classList.add('empty');
+    statusEl.textContent = '✅ Gotowy do rozpoznawania mowy.';
+    statusEl.style.borderColor = '#10b981';
+    statusEl.style.color = '#10b981';
+  });
+
+  // Initialize on page load
+  window.addEventListener('load', initModel);
+</script>

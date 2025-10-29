@@ -15,6 +15,7 @@ import BackToTop from "@components/Astro/BackToTop.astro";
 import Footer from "@components/Astro/Footer.astro";
 import Nav from "@components/Astro/Nav.astro";
 import Title from "@components/Astro/Title.astro";
+import QuickAccessWidget from "@components/Astro/QuickAccessWidget.astro";
 
 import logo from "@assets/logo.webp";
 
@@ -107,5 +108,6 @@ const headerLogo = typeof logo === "undefined" ? null : logo; // guard against n
       />
     </div>
     <BackToTop />
+    <QuickAccessWidget />
   </body>
 </html>

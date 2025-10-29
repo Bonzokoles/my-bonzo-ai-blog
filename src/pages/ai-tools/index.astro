@@ -1,15 +1,1080 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+import AIToolCard from "@components/Astro/AIToolCard.astro";
+import { Icon } from "astro-icon/components";
+
+const description =
+  "Kompleksowy katalog najlepszych darmowych narzędzi AI w 2025 roku. Od generatorów tekstu i obrazów po narzędzia do edycji video i automatyzacji.";
+
+// Quick Access - Najpopularniejsze narzędzia
+const quickAccess = [
+  {
+    icon: "🤖",
+    title: "ChatGPT",
+    description: "AI assistant for conversations and tasks",
+    url: "https://chat.openai.com",
+    category: "Chat AI"
+  },
+  {
+    icon: "🧠",
+    title: "Claude AI",
+    description: "Advanced AI by Anthropic",
+    url: "https://claude.ai",
+    category: "Chat AI"
+  },
+  {
+    icon: "✨",
+    title: "Google Gemini",
+    description: "Multimodal AI by Google",
+    url: "https://gemini.google.com",
+    category: "Chat AI"
+  },
+  {
+    icon: "🚀",
+    title: "MS Copilot",
+    description: "Microsoft's AI assistant",
+    url: "https://copilot.microsoft.com",
+    category: "Productivity"
+  },
+  {
+    icon: "🔍",
+    title: "Perplexity AI",
+    description: "AI-powered search engine",
+    url: "https://perplexity.ai",
+    category: "Search"
+  },
+  {
+    icon: "🤗",
+    title: "Hugging Face",
+    description: "ML models and datasets",
+    url: "https://huggingface.co",
+    category: "Platform"
+  },
+  {
+    icon: "💻",
+    title: "GitHub",
+    description: "Code repositories and collaboration",
+    url: "https://github.com",
+    category: "Development"
+  },
+  {
+    icon: "⚡",
+    title: "v0.dev",
+    description: "AI-powered UI generation",
+    url: "https://v0.dev",
+    category: "Design"
+  },
+];
+
+// Text & Writing Tools
+const textTools = [
+  {
+    icon: "✍️",
+    title: "Jasper",
+    description: "AI writing and content creation",
+    url: "https://www.jasper.ai",
+    category: "Writing"
+  },
+  {
+    icon: "🦅",
+    title: "QuillBot",
+    description: "Paraphrasing and grammar checker",
+    url: "https://quillbot.com",
+    category: "Writing"
+  },
+  {
+    icon: "📝",
+    title: "Copy.ai",
+    description: "AI copywriting assistant",
+    url: "https://www.copy.ai",
+    category: "Writing"
+  },
+  {
+    icon: "🗒️",
+    title: "Notion AI",
+    description: "AI-powered note-taking",
+    url: "https://www.notion.so/product/ai",
+    category: "Productivity"
+  },
+];
+
+// Image Generation & Editing
+const imageTools = [
+  {
+    icon: "🎨",
+    title: "Ideogram",
+    description: "Text to image generation",
+    url: "https://ideogram.ai",
+    category: "Image Gen"
+  },
+  {
+    icon: "🎮",
+    title: "Playground AI",
+    description: "AI art creation platform",
+    url: "https://playground.ai",
+    category: "Image Gen"
+  },
+  {
+    icon: "🖍️",
+    title: "Craiyon",
+    description: "Free AI image generator",
+    url: "https://www.craiyon.com",
+    category: "Image Gen"
+  },
+  {
+    icon: "🎭",
+    title: "Lexica",
+    description: "Stable Diffusion search engine",
+    url: "https://lexica.art",
+    category: "Image Gen"
+  },
+  {
+    icon: "✂️",
+    title: "Remove.bg",
+    description: "AI background remover",
+    url: "https://www.remove.bg",
+    category: "Photo Edit"
+  },
+  {
+    icon: "🧽",
+    title: "Cleanup Pictures",
+    description: "Remove unwanted objects",
+    url: "https://cleanup.pictures",
+    category: "Photo Edit"
+  },
+  {
+    icon: "🕳️",
+    title: "PhotoRoom",
+    description: "Product photography AI",
+    url: "https://www.photoroom.com",
+    category: "Photo Edit"
+  },
+  {
+    icon: "🎭",
+    title: "Canva AI",
+    description: "AI-powered design platform",
+    url: "https://www.canva.com/ai-image-generator",
+    category: "Design"
+  },
+];
+
+// Video & Audio Tools
+const videoAudioTools = [
+  {
+    icon: "🎥",
+    title: "Synthesia",
+    description: "AI video generation with avatars",
+    url: "https://www.synthesia.io",
+    category: "Video"
+  },
+  {
+    icon: "🎬",
+    title: "Runway ML",
+    description: "AI video editing suite",
+    url: "https://runway.ml",
+    category: "Video"
+  },
+  {
+    icon: "🎤",
+    title: "ElevenLabs",
+    description: "AI voice synthesis",
+    url: "https://elevenlabs.io",
+    category: "Voice"
+  },
+  {
+    icon: "🔊",
+    title: "Murf AI",
+    description: "Text to speech platform",
+    url: "https://murf.ai",
+    category: "Voice"
+  },
+  {
+    icon: "🦦",
+    title: "Otter.ai",
+    description: "AI meeting transcription",
+    url: "https://www.otter.ai",
+    category: "Transcription"
+  },
+  {
+    icon: "📣",
+    title: "Fireflies",
+    description: "AI meeting assistant",
+    url: "https://fireflies.ai",
+    category: "Transcription"
+  },
+];
+
+// Presentations & Documents
+const presentationTools = [
+  {
+    icon: "📖",
+    title: "Tome",
+    description: "AI presentation maker",
+    url: "https://tome.app",
+    category: "Presentations"
+  },
+  {
+    icon: "📊",
+    title: "Gamma",
+    description: "AI-powered presentations",
+    url: "https://gamma.app",
+    category: "Presentations"
+  },
+  {
+    icon: "📰",
+    title: "Beautiful.ai",
+    description: "Smart presentation software",
+    url: "https://beautiful.ai",
+    category: "Presentations"
+  },
+];
+
+// Hugging Face Spaces - Top Picks
+const huggingFaceSpaces = [
+  {
+    icon: "🎨",
+    title: "FLUX Image Gen",
+    description: "Fast text-to-image generation",
+    url: "https://huggingface.co/spaces/black-forest-labs/FLUX.1-schnell",
+    category: "HF Space"
+  },
+  {
+    icon: "🖼️",
+    title: "Stable Diffusion",
+    description: "Classic image generation",
+    url: "https://huggingface.co/spaces/stabilityai/stable-diffusion",
+    category: "HF Space"
+  },
+  {
+    icon: "🎤",
+    title: "Whisper WebGPU",
+    description: "Speech recognition in browser",
+    url: "https://huggingface.co/spaces/Xenova/whisper-webgpu",
+    category: "HF Space"
+  },
+  {
+    icon: "🏆",
+    title: "LLM Leaderboard",
+    description: "Compare AI models",
+    url: "https://huggingface.co/spaces/huggingface/open-llm-leaderboard",
+    category: "HF Space"
+  },
+  {
+    icon: "🎵",
+    title: "MusicGen",
+    description: "AI music generation",
+    url: "https://huggingface.co/spaces/facebook/MusicGen",
+    category: "HF Space"
+  },
+  {
+    icon: "🤼",
+    title: "Chatbot Arena",
+    description: "Compare AI chatbots",
+    url: "https://huggingface.co/spaces/lmsys/chatbot-arena-leaderboard",
+    category: "HF Space"
+  },
+];
+
+// Search Engines
+const searchEngines = [
+  {
+    icon: "🦆",
+    title: "DuckDuckGo",
+    description: "Privacy-focused search",
+    url: "https://duckduckgo.com",
+    category: "Search"
+  },
+  {
+    icon: "🦁",
+    title: "Brave Search",
+    description: "Independent private search",
+    url: "https://search.brave.com",
+    category: "Search"
+  },
+  {
+    icon: "🌳",
+    title: "Ecosia",
+    description: "Plant trees with searches",
+    url: "https://www.ecosia.org",
+    category: "Search"
+  },
+  {
+    icon: "🔐",
+    title: "Startpage",
+    description: "Google without tracking",
+    url: "https://www.startpage.com",
+    category: "Search"
+  },
+  {
+    icon: "💬",
+    title: "You.com",
+    description: "AI-powered search",
+    url: "https://you.com",
+    category: "AI Search"
+  },
+  {
+    icon: "🔎",
+    title: "Kagi",
+    description: "Premium ad-free search",
+    url: "https://kagi.com",
+    category: "Search"
+  },
+];
+
+// Development Tools
+const devTools = [
+  {
+    icon: "💻",
+    title: "GitHub Copilot",
+    description: "AI pair programmer",
+    url: "https://github.com/features/copilot",
+    category: "Development"
+  },
+  {
+    icon: "🔮",
+    title: "Cursor",
+    description: "AI-powered code editor",
+    url: "https://cursor.sh",
+    category: "Development"
+  },
+  {
+    icon: "⚡",
+    title: "Replit AI",
+    description: "AI coding assistant",
+    url: "https://replit.com",
+    category: "Development"
+  },
+  {
+    icon: "🤖",
+    title: "Tabnine",
+    description: "AI code completion",
+    url: "https://www.tabnine.com",
+    category: "Development"
+  },
+  {
+    icon: "📚",
+    title: "Stack Overflow",
+    description: "Developer Q&A community",
+    url: "https://stackoverflow.com",
+    category: "Development"
+  },
+  {
+    icon: "🐙",
+    title: "GitHub",
+    description: "Code hosting platform",
+    url: "https://github.com",
+    category: "Development"
+  },
+];
+
+// Productivity Tools
+const productivityTools = [
+  {
+    icon: "📋",
+    title: "Zapier AI",
+    description: "Workflow automation",
+    url: "https://zapier.com",
+    category: "Productivity"
+  },
+  {
+    icon: "🔄",
+    title: "Make.com",
+    description: "Visual automation platform",
+    url: "https://make.com",
+    category: "Productivity"
+  },
+  {
+    icon: "📊",
+    title: "Notion AI",
+    description: "All-in-one workspace",
+    url: "https://www.notion.so",
+    category: "Productivity"
+  },
+  {
+    icon: "📝",
+    title: "Grammarly",
+    description: "AI writing assistant",
+    url: "https://www.grammarly.com",
+    category: "Productivity"
+  },
+  {
+    icon: "🗓️",
+    title: "Reclaim AI",
+    description: "Smart calendar assistant",
+    url: "https://reclaim.ai",
+    category: "Productivity"
+  },
+  {
+    icon: "⏰",
+    title: "Motion",
+    description: "AI task management",
+    url: "https://usemotion.com",
+    category: "Productivity"
+  },
+];
+
+// Data & Analytics
+const dataTools = [
+  {
+    icon: "📊",
+    title: "Julius AI",
+    description: "AI data analyst",
+    url: "https://julius.ai",
+    category: "Data"
+  },
+  {
+    icon: "📈",
+    title: "Tableau",
+    description: "Data visualization",
+    url: "https://www.tableau.com",
+    category: "Data"
+  },
+  {
+    icon: "🔍",
+    title: "Akkio",
+    description: "No-code ML platform",
+    url: "https://www.akkio.com",
+    category: "Data"
+  },
+  {
+    icon: "💾",
+    title: "DataRobot",
+    description: "Enterprise AI platform",
+    url: "https://www.datarobot.com",
+    category: "Data"
+  },
+];
+
+// All tools combined for search/filter
+const allTools = [
+  ...quickAccess,
+  ...textTools,
+  ...imageTools,
+  ...videoAudioTools,
+  ...presentationTools,
+  ...huggingFaceSpaces,
+  ...searchEngines,
+  ...devTools,
+  ...productivityTools,
+  ...dataTools,
+];
+
+const totalTools = allTools.length;
 ---
 
-<Layout
-  title="AI Tools"
-  description="Narzędzia i aplikacje AI dla domu i rodziny"
->
-  <div class="container mx-auto px-4 py-16">
-    <h1 class="text-4xl font-bold mb-6">AI Tools</h1>
-    <p class="text-lg mb-8">
-      Tu powstać będą narzędzia i aplikacje związane z AI.
-    </p>
+<Layout title="AI Tools Dashboard - MyBonzo AI Blog" description={description}>
+  <PageHeader
+    heading="🚀 Dashboard Narzędzi AI"
+    description={description}
+    animate={true}
+  />
+
+  <div class="container mx-auto px-4 py-12">
+    <!-- Search & Filter Section -->
+    <div class="search-filter-section mb-12">
+      <div class="search-wrapper">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="🔍 Szukaj narzędzi AI..."
+          class="search-input"
+        />
+      </div>
+
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-category="all">
+          Wszystkie (<span id="count-all">{totalTools}</span>)
+        </button>
+        <button class="filter-btn" data-category="favorites">
+          ⭐ Ulubione (<span id="count-favorites">0</span>)
+        </button>
+        <button class="filter-btn" data-category="Chat AI">
+          🤖 Chat AI
+        </button>
+        <button class="filter-btn" data-category="Writing">
+          ✍️ Pisanie
+        </button>
+        <button class="filter-btn" data-category="Image Gen">
+          🎨 Obrazy
+        </button>
+        <button class="filter-btn" data-category="Video">
+          🎬 Wideo
+        </button>
+        <button class="filter-btn" data-category="Development">
+          💻 Dev Tools
+        </button>
+        <button class="filter-btn" data-category="Productivity">
+          📋 Produktywność
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+      <div class="stat-card">
+        <div class="stat-value">{totalTools}</div>
+        <div class="stat-label">Narzędzi AI</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">100%</div>
+        <div class="stat-label">Darmowych</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">2025</div>
+        <div class="stat-label">Rok</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">11</div>
+        <div class="stat-label">Kategorii</div>
+      </div>
+    </div>
+
+    <!-- Quick Access -->
+    <section class="mb-16">
+      <div class="section-header">
+        <Icon name="ri:flashlight-line" class="section-icon" />
+        <h2 class="section-title">⚡ Szybki Dostęp</h2>
+      </div>
+      <p class="section-description">
+        Najpopularniejsze i najczęściej używane narzędzia AI
+      </p>
+      <div class="tools-grid">
+        {quickAccess.map((tool) => (
+          <AIToolCard {...tool} />
+        ))}
+      </div>
+    </section>
+
+    <!-- Text & Writing Tools -->
+    <section class="mb-16">
+      <div class="section-header">
+        <Icon name="ri:quill-pen-line" class="section-icon" />
+        <h2 class="section-title">✍️ Pisanie i Treść</h2>
+      </div>
+      <p class="section-description">
+        Narzędzia AI do tworzenia tekstów, copywritingu i edycji
+      </p>
+      <div class="tools-grid">
+        {textTools.map((tool) => (
+          <AIToolCard {...tool} />
+        ))}
+      </div>
+    </section>
+
+    <!-- Image Tools -->
+    <section class="mb-16">
+      <div class="section-header">
+        <Icon name="ri:image-line" class="section-icon" />
+        <h2 class="section-title">🎨 Obrazy i Grafika</h2>
+      </div>
+      <p class="section-description">
+        Generatory obrazów, edytory zdjęć i narzędzia do designu
+      </p>
+      <div class="tools-grid">
+        {imageTools.map((tool) => (
+          <AIToolCard {...tool} />
+        ))}
+      </div>
+    </section>
+
+    <!-- Video & Audio -->
+    <section class="mb-16">
+      <div class="section-header">
+        <Icon name="ri:video-line" class="section-icon" />
+        <h2 class="section-title">🎬 Wideo i Audio</h2>
+      </div>
+      <p class="section-description">
+        Tworzenie i edycja wideo, synteza głosu i transkrypcja
+      </p>
+      <div class="tools-grid">
+        {videoAudioTools.map((tool) => (
+          <AIToolCard {...tool} />
+        ))}
+      </div>
+    </section>
+
+    <!-- Presentations -->
+    <section class="mb-16">
+      <div class="section-header">
+        <Icon name="ri:slideshow-line" class="section-icon" />
+        <h2 class="section-title">📊 Prezentacje</h2>
+      </div>
+      <p class="section-description">
+        AI-powered narzędzia do tworzenia prezentacji i dokumentów
+      </p>
+      <div class="tools-grid">
+        {presentationTools.map((tool) => (
+          <AIToolCard {...tool} />
+        ))}
+      </div>
+    </section>
+
+    <!-- Hugging Face Spaces -->
+    <section class="mb-16">
+      <div class="section-header">
+        <Icon name="ri:rocket-line" class="section-icon" />
+        <h2 class="section-title">🤗 Hugging Face Spaces</h2>
+      </div>
+      <p class="section-description">
+        Najlepsze darmowe modele AI dostępne w przeglądarce
+      </p>
+      <div class="tools-grid">
+        {huggingFaceSpaces.map((tool) => (
+          <AIToolCard {...tool} />
+        ))}
+      </div>
+    </section>
+
+    <!-- Search Engines -->
+    <section class="mb-16">
+      <div class="section-header">
+        <Icon name="ri:search-line" class="section-icon" />
+        <h2 class="section-title">🔍 Wyszukiwarki</h2>
+      </div>
+      <p class="section-description">
+        Alternatywne wyszukiwarki z naciskiem na prywatność i AI
+      </p>
+      <div class="tools-grid">
+        {searchEngines.map((tool) => (
+          <AIToolCard {...tool} />
+        ))}
+      </div>
+    </section>
+
+    <!-- Development Tools -->
+    <section class="mb-16">
+      <div class="section-header">
+        <Icon name="ri:code-line" class="section-icon" />
+        <h2 class="section-title">💻 Narzędzia Programistyczne</h2>
+      </div>
+      <p class="section-description">
+        AI dla programistów - copiloty, edytory i platformy developerskie
+      </p>
+      <div class="tools-grid">
+        {devTools.map((tool) => (
+          <AIToolCard {...tool} />
+        ))}
+      </div>
+    </section>
+
+    <!-- Productivity Tools -->
+    <section class="mb-16">
+      <div class="section-header">
+        <Icon name="ri:settings-3-line" class="section-icon" />
+        <h2 class="section-title">📋 Produktywność i Automatyzacja</h2>
+      </div>
+      <p class="section-description">
+        Narzędzia zwiększające produktywność i automatyzujące procesy
+      </p>
+      <div class="tools-grid">
+        {productivityTools.map((tool) => (
+          <AIToolCard {...tool} />
+        ))}
+      </div>
+    </section>
+
+    <!-- Data & Analytics -->
+    <section class="mb-16">
+      <div class="section-header">
+        <Icon name="ri:bar-chart-box-line" class="section-icon" />
+        <h2 class="section-title">📊 Dane i Analityka</h2>
+      </div>
+      <p class="section-description">
+        AI do analizy danych, wizualizacji i machine learning
+      </p>
+      <div class="tools-grid">
+        {dataTools.map((tool) => (
+          <AIToolCard {...tool} />
+        ))}
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="cta-content">
+        <Icon name="ri:sparkling-line" class="cta-icon" />
+        <h3 class="cta-title">Chcesz dodać swoje narzędzie?</h3>
+        <p class="cta-description">
+          Masz własne narzędzie AI? Skontaktuj się z nami i dodamy je do naszego katalogu!
+        </p>
+        <a href="/contact" class="cta-button">
+          Skontaktuj się
+        </a>
+      </div>
+    </section>
   </div>
 </Layout>
+
+<style>
+  /* Stats Cards */
+  .stat-card {
+    background: transparent;
+    border: 2px solid #6b7280;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .stat-card:hover {
+    border-color: var(--color-accent, #2563eb);
+    transform: translateY(-2px);
+  }
+
+  .stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-accent, #2563eb);
+    margin-bottom: 0.5rem;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted, #6b7280);
+    font-weight: 600;
+  }
+
+  /* Section Headers */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .section-icon {
+    width: 2rem;
+    height: 2rem;
+    color: var(--color-accent, #2563eb);
+  }
+
+  .section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text, #1f2937);
+    letter-spacing: -0.02em;
+  }
+
+  .section-description {
+    font-size: 1.125rem;
+    color: var(--color-text-muted, #6b7280);
+    margin-bottom: 2rem;
+    padding-left: 3rem;
+  }
+
+  /* Search & Filter Section */
+  .search-filter-section {
+    background: transparent;
+    border: 2px solid #6b7280;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .search-wrapper {
+    margin-bottom: 1.5rem;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1.125rem;
+    border: 2px solid #6b7280;
+    background: transparent;
+    color: var(--color-text, #1f2937);
+    transition: all 0.3s ease;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--color-accent, #2563eb);
+  }
+
+  .search-input::placeholder {
+    color: #9ca3af;
+  }
+
+  .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .filter-btn {
+    padding: 0.75rem 1.25rem;
+    border: 2px solid #6b7280;
+    background: transparent;
+    color: var(--color-text, #1f2937);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--color-accent, #2563eb);
+    transform: translateY(-2px);
+  }
+
+  .filter-btn.active {
+    background: var(--color-accent, #2563eb);
+    color: white;
+    border-color: var(--color-accent, #2563eb);
+  }
+
+  /* Tools Grid */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  /* Hidden tools */
+  .ai-tool-card-wrapper.hidden {
+    display: none;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+    border: 2px solid var(--color-accent, #2563eb);
+    padding: 3rem;
+    text-align: center;
+    margin-top: 4rem;
+  }
+
+  .cta-content {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .cta-icon {
+    width: 4rem;
+    height: 4rem;
+    color: var(--color-accent, #2563eb);
+    margin: 0 auto 1.5rem;
+  }
+
+  .cta-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text, #1f2937);
+    margin-bottom: 1rem;
+  }
+
+  .cta-description {
+    font-size: 1.125rem;
+    color: var(--color-text-muted, #6b7280);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: var(--color-accent, #2563eb);
+    color: white;
+    padding: 1rem 2rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid var(--color-accent, #2563eb);
+  }
+
+  .cta-button:hover {
+    background: transparent;
+    color: var(--color-accent, #2563eb);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .stat-card {
+      border-color: #4b5563;
+    }
+
+    .section-title,
+    .cta-title {
+      color: #f3f4f6;
+    }
+
+    .section-description,
+    .stat-label,
+    .cta-description {
+      color: #9ca3af;
+    }
+
+    .cta-section {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(147, 51, 234, 0.15) 100%);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .tools-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+    }
+
+    .filter-buttons {
+      flex-direction: column;
+    }
+
+    .filter-btn {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .search-filter-section {
+      border-color: #4b5563;
+    }
+
+    .search-input {
+      border-color: #4b5563;
+      color: #f3f4f6;
+    }
+
+    .filter-btn {
+      border-color: #4b5563;
+      color: #f3f4f6;
+    }
+  }
+</style>
+
+<script>
+  // Favorites Management
+  const FAVORITES_KEY = 'ai-tools-favorites';
+
+  function getFavorites() {
+    try {
+      return JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]');
+    } catch {
+      return [];
+    }
+  }
+
+  function saveFavorites(favorites) {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+  }
+
+  window.toggleFavorite = function(button) {
+    const title = button.dataset.toolTitle;
+    const url = button.dataset.toolUrl;
+    const favorites = getFavorites();
+    const index = favorites.findIndex(fav => fav.title === title);
+
+    if (index >= 0) {
+      // Remove from favorites
+      favorites.splice(index, 1);
+      button.classList.remove('active');
+      button.querySelector('.favorite-icon').textContent = '☆';
+    } else {
+      // Add to favorites
+      favorites.push({ title, url });
+      button.classList.add('active');
+      button.querySelector('.favorite-icon').textContent = '★';
+    }
+
+    saveFavorites(favorites);
+    updateFavoritesCount();
+  }
+
+  function updateFavoritesCount() {
+    const count = getFavorites().length;
+    const countEl = document.getElementById('count-favorites');
+    if (countEl) {
+      countEl.textContent = count.toString();
+    }
+  }
+
+  function initializeFavorites() {
+    const favorites = getFavorites();
+    document.querySelectorAll('.favorite-btn').forEach(button => {
+      const title = button.dataset.toolTitle;
+      const isFavorite = favorites.some(fav => fav.title === title);
+
+      if (isFavorite) {
+        button.classList.add('active');
+        button.querySelector('.favorite-icon').textContent = '★';
+      }
+    });
+    updateFavoritesCount();
+  }
+
+  // Search & Filter Functionality
+  let currentFilter = 'all';
+  let currentSearch = '';
+
+  function filterTools() {
+    const tools = document.querySelectorAll('.ai-tool-card-wrapper');
+    let visibleCount = 0;
+
+    tools.forEach(tool => {
+      const category = tool.dataset.category;
+      const title = tool.dataset.title || '';
+      const description = tool.dataset.description || '';
+      const toolTitle = tool.querySelector('.card-title')?.textContent || '';
+
+      // Check category filter
+      let matchesCategory = currentFilter === 'all';
+
+      if (currentFilter === 'favorites') {
+        const favorites = getFavorites();
+        matchesCategory = favorites.some(fav => fav.title === toolTitle);
+      } else if (currentFilter !== 'all') {
+        matchesCategory = category === currentFilter;
+      }
+
+      // Check search filter
+      const matchesSearch = currentSearch === '' ||
+        title.includes(currentSearch) ||
+        description.includes(currentSearch);
+
+      // Show/hide tool
+      if (matchesCategory && matchesSearch) {
+        tool.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        tool.classList.add('hidden');
+      }
+    });
+
+    return visibleCount;
+  }
+
+  // Search input handler
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        currentSearch = e.target.value.toLowerCase();
+        filterTools();
+      });
+    }
+
+    // Filter button handlers
+    document.querySelectorAll('.filter-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        // Update active state
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        button.classList.add('active');
+
+        // Set current filter
+        currentFilter = button.dataset.category;
+        filterTools();
+      });
+    });
+
+    // Initialize favorites on page load
+    initializeFavorites();
+  });
+</script>

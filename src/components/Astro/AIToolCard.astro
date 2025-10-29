@@ -1,0 +1,182 @@
+---
+// AI Tool Card Component
+interface Props {
+  icon: string;
+  title: string;
+  description: string;
+  url: string;
+  category?: string;
+}
+
+const { icon, title, description, url, category } = Astro.props;
+---
+
+<div class="ai-tool-card-wrapper" data-category={category} data-title={title.toLowerCase()} data-description={description.toLowerCase()}>
+  <a
+    href={url}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="ai-tool-card group"
+  >
+    <div class="card-content">
+      <div class="card-icon-wrapper">
+        <span class="card-icon">{icon}</span>
+      </div>
+      <h3 class="card-title">{title}</h3>
+      <p class="card-description">{description}</p>
+      {category && (
+        <span class="card-category">{category}</span>
+      )}
+    </div>
+  </a>
+  <button
+    class="favorite-btn"
+    data-tool-title={title}
+    data-tool-url={url}
+    onclick="window.toggleFavorite(this)"
+    title="Dodaj do ulubionych"
+  >
+    <span class="favorite-icon">☆</span>
+  </button>
+</div>
+
+<style>
+  .ai-tool-card-wrapper {
+    position: relative;
+  }
+
+  .ai-tool-card {
+    display: block;
+    background: transparent;
+    border: 2px solid #6b7280;
+    padding: 1.5rem;
+    padding-top: 2.5rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-tool-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .ai-tool-card:hover::before {
+    opacity: 1;
+  }
+
+  .ai-tool-card:hover {
+    border-color: var(--color-accent, #2563eb);
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.2);
+  }
+
+  .card-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-icon-wrapper {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-icon {
+    font-size: 3rem;
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-tool-card:hover .card-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--color-text, #1f2937);
+    transition: color 0.3s ease;
+  }
+
+  .ai-tool-card:hover .card-title {
+    color: var(--color-accent, #2563eb);
+  }
+
+  .card-description {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-text-muted, #6b7280);
+    margin-bottom: 0.5rem;
+  }
+
+  .card-category {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--color-accent, #2563eb);
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+
+  /* Favorite Button */
+  .favorite-btn {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    font-size: 1.5rem;
+    line-height: 1;
+    transition: transform 0.2s ease;
+    z-index: 10;
+  }
+
+  .favorite-btn:hover {
+    transform: scale(1.2);
+  }
+
+  .favorite-icon {
+    display: inline-block;
+    transition: all 0.3s ease;
+  }
+
+  .favorite-btn.active .favorite-icon {
+    content: "★";
+  }
+
+  .favorite-btn.active {
+    color: #fbbf24;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .ai-tool-card {
+      border-color: #4b5563;
+    }
+
+    .card-title {
+      color: #f3f4f6;
+    }
+
+    .card-description {
+      color: #9ca3af;
+    }
+  }
+</style>
