@@ -28,3 +28,6 @@ pnpm-debug.log*
 
 # Wrangler cache and state
 .wrangler/
+
+# Production backups
+PRODUCTION_BACKUP_*/

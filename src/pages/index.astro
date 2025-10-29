@@ -128,7 +128,10 @@ const options = {
           </div>
 
           <div class="mt-8 text-center lg:text-left">
-            <a href="/pro" class="inline-block bg-theme-accent text-white px-6 py-3 rounded-none font-semibold hover:opacity-90 transition-opacity border border-gray-500">
+            <a
+              href="/pro"
+              class="inline-block bg-theme-accent text-white px-6 py-3 rounded-none font-semibold hover:opacity-90 transition-opacity border border-gray-500"
+            >
               Sprawdź MyBonzo Pro →
             </a>
           </div>
@@ -380,8 +383,12 @@ const options = {
 
       // Render the featured post
       if (featuredPost) {
-        const featuredDate = new Date(featuredPost.date).toLocaleDateString("pl-PL");
-        const featuredTags = featuredPost.tags ? featuredPost.tags.split(/[\s,]+/).slice(0, 2) : [];
+        const featuredDate = new Date(featuredPost.date).toLocaleDateString(
+          "pl-PL"
+        );
+        const featuredTags = featuredPost.tags
+          ? featuredPost.tags.split(/[\s,]+/).slice(0, 2)
+          : [];
 
         featuredPostContainer.innerHTML = `
           <article class="featured-post border border-gray-500 bg-transparent rounded-none overflow-hidden hover:border-blue-400 hover:bg-gray-900 hover:shadow transition-colors">
