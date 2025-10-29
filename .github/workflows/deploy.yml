@@ -223,14 +223,18 @@ jobs:
             ((success_count++))
           fi
 
-          # Test AI API health endpoint
+          # Test AI API health check - GET should return health status
           if test_endpoint "https://mybonzoaiblog.pages.dev/api/ai/chat" "AI API health"; then
             ((success_count++))
+          else
+            echo "ℹ️ AI API may need Cloudflare bindings to be fully functional"
           fi
 
-          # Test blog API
+          # Test blog API - should return blog index
           if test_endpoint "https://mybonzoaiblog.pages.dev/api/blog/index" "Blog API"; then
             ((success_count++))
+          else
+            echo "ℹ️ Blog API may need database connections to be fully functional"
           fi
 
           # Summary
@@ -252,17 +256,16 @@ jobs:
           echo ""
           echo "🎉 Deployment pipeline completed! Main site is accessible."
           echo "📝 Note: Health checks are informational only and do not affect deployment success"
+          echo "🔍 API endpoints may need time to warm up or require Cloudflare bindings"
 
-          # Always exit 0 - health checks are informational, deployment already succeeded
+          # Always exit 0 - health checks are informational, deployment already succeeded  
+          echo "✅ Deployment successful regardless of health check results"
           exit 0
 
   # Job 3: Preview deployment dla PR
   deploy_preview:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-
-    environment:
-      name: preview
 
     steps:
       - name: Checkout repository
