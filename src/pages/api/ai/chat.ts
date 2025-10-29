@@ -189,17 +189,17 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     }
 
     const runtime = (locals as any)?.runtime;
-    const env = runtime?.env;
+    const env = runtime?.env as any;
 
-    if (!env?.AI) {
-      console.error('Cloudflare binding env.AI is missing.');
-      return new Response(
-        JSON.stringify({
-          error: 'AI runtime jest niedostepny. Sprawdz konfiguracje Cloudflare Workers AI.'
-        }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
+    const cfAccountId =
+      (env?.CLOUDFLARE_ACCOUNT_ID as string | undefined) ??
+      (typeof process !== 'undefined' ? process.env.CLOUDFLARE_ACCOUNT_ID : undefined) ??
+      ((import.meta as any).env?.CLOUDFLARE_ACCOUNT_ID as string | undefined);
+
+    const cfApiToken =
+      (env?.CLOUDFLARE_API_TOKEN as string | undefined) ??
+      (typeof process !== 'undefined' ? process.env.CLOUDFLARE_API_TOKEN : undefined) ??
+      ((import.meta as any).env?.CLOUDFLARE_API_TOKEN as string | undefined);
 
     const history = sanitiseHistory(body.history);
 
@@ -235,18 +235,56 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
       { role: 'user', content: prompt }
     ];
 
-    const aiResponse = (await env.AI.run(selectedModel, {
-      messages,
-      temperature,
-      max_tokens: maxTokens
-    })) as { response?: string } | string;
+    let responseText = '';
 
-    const responseText =
-      typeof aiResponse === 'string'
-        ? aiResponse
-        : typeof aiResponse?.response === 'string'
-        ? aiResponse.response
-        : '';
+    if (env?.AI) {
+      const aiResponse = (await env.AI.run(selectedModel, {
+        messages,
+        temperature,
+        max_tokens: maxTokens
+      })) as { response?: string } | string;
+
+      responseText =
+        typeof aiResponse === 'string'
+          ? aiResponse
+          : typeof (aiResponse as any)?.response === 'string'
+          ? (aiResponse as any).response
+          : '';
+    } else if (cfAccountId && cfApiToken) {
+      const endpoint = `https://api.cloudflare.com/client/v4/accounts/${encodeURIComponent(
+        cfAccountId
+      )}/ai/run/${encodeURIComponent(selectedModel)}`;
+
+      const resp = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${cfApiToken}`
+        },
+        body: JSON.stringify({ messages, temperature, max_tokens: maxTokens })
+      });
+
+      if (!resp.ok) {
+        const errText = await resp.text().catch(() => '');
+        throw new Error(`Cloudflare AI REST error ${resp.status}: ${errText || 'unknown'}`);
+      }
+
+      const json = (await resp.json()) as any;
+      responseText =
+        (json && (json.result?.response || json.response || json.result)) || '';
+      if (typeof responseText !== 'string') {
+        responseText = JSON.stringify(responseText);
+      }
+    } else {
+      console.warn('env.AI not available and no REST credentials found. Returning fallback.');
+      return new Response(
+        JSON.stringify({
+          error:
+            'AI runtime niedostepny lokalnie. Skorzystaj z wrangler dev lub ustaw CLOUDFLARE_ACCOUNT_ID i CLOUDFLARE_API_TOKEN w .env.'
+        }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     if (!responseText) {
       throw new Error('AI model returned empty response.');
@@ -287,7 +325,8 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
 };
 
 export const GET: APIRoute = async ({ url, locals }) => {
-  const { env } = (locals as any).runtime;
+  const runtime = (locals as any)?.runtime;
+  const env = (runtime as any)?.env as any;
   const prompt = url.searchParams.get('prompt');
   const mcpStatus = url.searchParams.get('mcp-status');
   
@@ -324,24 +363,63 @@ export const GET: APIRoute = async ({ url, locals }) => {
 
   // Simple GET chat for testing
   try {
-    const response = await env.AI.run('@cf/meta/llama-2-7b-chat-int8', {
-      messages: [
-        { role: 'system', content: buildSystemPrompt() },
-        { role: 'user', content: prompt }
-      ]
-    });
+    const model = '@cf/meta/llama-2-7b-chat-int8';
+    const messages = [
+      { role: 'system', content: buildSystemPrompt() },
+      { role: 'user', content: prompt }
+    ];
+
+    let text = '';
+    if (env?.AI) {
+      const r = (await env.AI.run(model, { messages })) as any;
+      text = r?.response || '';
+    } else {
+      const accountId =
+        (env?.CLOUDFLARE_ACCOUNT_ID as string | undefined) ??
+        (typeof process !== 'undefined' ? process.env.CLOUDFLARE_ACCOUNT_ID : undefined) ??
+        ((import.meta as any).env?.CLOUDFLARE_ACCOUNT_ID as string | undefined);
+      const token =
+        (env?.CLOUDFLARE_API_TOKEN as string | undefined) ??
+        (typeof process !== 'undefined' ? process.env.CLOUDFLARE_API_TOKEN : undefined) ??
+        ((import.meta as any).env?.CLOUDFLARE_API_TOKEN as string | undefined);
+
+      if (!accountId || !token) {
+        return new Response(
+          JSON.stringify({ error: 'AI binding and REST creds missing.' }),
+          { status: 500, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const endpoint = `https://api.cloudflare.com/client/v4/accounts/${encodeURIComponent(
+        accountId
+      )}/ai/run/${encodeURIComponent(model)}`;
+      const resp = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ messages })
+      });
+      if (!resp.ok) {
+        const errText = await resp.text().catch(() => '');
+        throw new Error(`Cloudflare AI REST error ${resp.status}: ${errText || 'unknown'}`);
+      }
+      const json = (await resp.json()) as any;
+      text = json?.result?.response || json?.response || '';
+    }
+
+    if (!text) {
+      throw new Error('Empty response from AI.');
+    }
 
     return new Response(
-      JSON.stringify({ 
-        response: response.response,
-        model: '@cf/meta/llama-2-7b-chat-int8',
-        mcp_enabled: true
-      }),
+      JSON.stringify({ response: text, model, mcp_enabled: true }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     return new Response(
-      JSON.stringify({ error: 'Chat failed', mcp_status: 'available' }),
+      JSON.stringify({ error: 'Chat failed', details: (error as Error)?.message, mcp_status: 'available' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
