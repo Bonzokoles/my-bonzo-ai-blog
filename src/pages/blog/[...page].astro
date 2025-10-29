@@ -8,6 +8,8 @@ import { getCollection } from "astro:content";
 import Posts from "@layouts/Posts.astro";
 import Pagination from "@components/Astro/Pagination.astro";
 
+export const prerender = true;
+
 export async function getStaticPaths({
   paginate,
 }: {
