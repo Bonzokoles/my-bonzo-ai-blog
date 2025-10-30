@@ -277,26 +277,39 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
       ...params
     };
 
-    let response;
     let imageBuffer: ArrayBuffer;
     
     try {
-      response = await env.AI.run(model, inputs);
+      // Cloudflare AI returns ReadableStream for image models
+      const response = await env.AI.run(model, inputs);
       
-      // Cloudflare AI returns response with blob() method or direct buffer
-      if (response && typeof response === 'object') {
-        if ('blob' in response && typeof response.blob === 'function') {
-          const blob = await response.blob();
-          imageBuffer = await blob.arrayBuffer();
-        } else if (response instanceof ArrayBuffer) {
-          imageBuffer = response;
-        } else if ('image' in response && response.image instanceof ArrayBuffer) {
-          imageBuffer = response.image;
-        } else {
-          throw new Error('Unknown response format: ' + JSON.stringify(Object.keys(response)));
+      // Response is a ReadableStream - convert to ArrayBuffer
+      if (response instanceof ReadableStream) {
+        const reader = response.getReader();
+        const chunks: Uint8Array[] = [];
+        
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
         }
+        
+        // Combine chunks into single buffer
+        const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+        const combined = new Uint8Array(totalLength);
+        let offset = 0;
+        for (const chunk of chunks) {
+          combined.set(chunk, offset);
+          offset += chunk.length;
+        }
+        imageBuffer = combined.buffer;
+      } else if (response instanceof ArrayBuffer) {
+        imageBuffer = response;
+      } else if (response && typeof response === 'object' && 'blob' in response) {
+        const blob = await (response as any).blob();
+        imageBuffer = await blob.arrayBuffer();
       } else {
-        throw new Error('Invalid response type: ' + typeof response);
+        throw new Error('Unexpected response type: ' + typeof response);
       }
     } catch (aiError) {
       console.error('AI.run failed:', aiError);
