@@ -71,6 +71,16 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
       );
     }
 
+    // Basic moderation (simple keyword filter)
+    const bannedWords = ["nude", "blood", "gore", "porn", "explicit", "hate", "weapon"];
+    const lower = prompt.toLowerCase();
+    if (bannedWords.some((w) => lower.includes(w))) {
+      return new Response(
+        JSON.stringify({ error: 'Unsafe content' }),
+        { status: 403, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Rate limiting
     const clientId = clientAddress || 'unknown';
     if (!checkRateLimit(clientId)) {
@@ -92,6 +102,20 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     // Access Cloudflare services
     const env = (locals as any).runtime?.env;
 
+    // Optional AI moderation (best-effort)
+    try {
+      if (env?.AI) {
+        const mod = await env.AI.run('@cf/openai/moderation-latest', { input: prompt });
+        const flagged = (mod as any)?.results?.[0]?.flagged;
+        if (flagged) {
+          return new Response(
+            JSON.stringify({ error: 'Prompt violates safety policy' }),
+            { status: 403, headers: { 'Content-Type': 'application/json' } }
+          );
+        }
+      }
+    } catch {}
+
     // Generate parameters object
     const params = {
       num_steps: Math.min(Math.max(num_steps, 1), 50),
@@ -99,8 +123,29 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
       strength: Math.min(Math.max(strength, 0), 1)
     };
 
-    // Generate unique hash for this exact request
-    const imageHash = generateImageHash(prompt, model, params);
+    // Translate PL->EN with KV cache (best-effort)
+    let translatedPrompt = prompt;
+    try {
+      const tKey = `translate:${prompt}`;
+      const cachedT = await env.CACHE.get(tKey);
+      if (cachedT) {
+        translatedPrompt = cachedT;
+      } else if (env?.AI) {
+        const tr = await env.AI.run('@cf/meta/m2m100-1.2b', {
+          text: prompt,
+          source_lang: 'pl',
+          target_lang: 'en'
+        });
+        const tText = (tr as any)?.translated_text;
+        if (tText && typeof tText === 'string') {
+          translatedPrompt = tText;
+          await env.CACHE.put(tKey, translatedPrompt, { expirationTtl: 86400 });
+        }
+      }
+    } catch {}
+
+    // Generate unique hash for this exact request (based on translated prompt)
+    const imageHash = generateImageHash(translatedPrompt, model, params);
     
     // Check if image already exists in R2
     const r2Key = `images/${imageHash}.png`;
@@ -146,13 +191,46 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
       });
     }
 
+    // Prompt-level mapping dedupe (return existing image if prompt was generated before)
+    try {
+      const promptMapKey = `img-map:${model}:${translatedPrompt}`;
+      const mapped = await env.CACHE.get(promptMapKey, 'json') as { imageId?: string } | null;
+      if (mapped?.imageId) {
+        const mappedR2Key = `images/${mapped.imageId}.png`;
+        const obj = await env.MEDIA_BUCKET.get(mappedR2Key);
+        if (obj) {
+          const buf = await obj.arrayBuffer();
+          return new Response(buf, {
+            headers: {
+              'Content-Type': 'image/png',
+              'X-Cache': 'PROMPT-MAP-R2',
+              'X-Image-ID': mapped.imageId,
+              'Cache-Control': 'public, max-age=86400'
+            }
+          });
+        }
+        const kvBuf = await env.CACHE.get(`img-cache:${mapped.imageId}`, 'arrayBuffer');
+        if (kvBuf) {
+          return new Response(kvBuf, {
+            headers: {
+              'Content-Type': 'image/png',
+              'X-Cache': 'PROMPT-MAP-KV',
+              'X-Image-ID': mapped.imageId,
+              'Cache-Control': 'public, max-age=3600'
+            }
+          });
+        }
+      }
+    } catch {}
+
     // If async mode is enabled and we have queue support
     if (async && env.IMAGE_QUEUE) {
       const requestId = generateRequestId();
 
       // Send to queue for background processing
       const queueMessage = {
-        prompt,
+        prompt: translatedPrompt,
+        originalPrompt: prompt,
         model,
         params,
         userId,
@@ -184,7 +262,7 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
 
     // Fallback to synchronous generation (original logic)
     const inputs = {
-      prompt: prompt,
+      prompt: translatedPrompt,
       ...params
     };
 
@@ -192,25 +270,34 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     const imageBuffer = response as ArrayBuffer;
     const imageSize = imageBuffer.byteLength;
 
-    // Store in R2 for long-term persistence (fire and forget)
-    env.MEDIA_BUCKET.put(r2Key, imageBuffer, {
-      httpMetadata: {
-        contentType: 'image/png'
-      },
-      customMetadata: {
-        prompt: prompt.slice(0, 200),
-        model,
-        createdAt: Date.now().toString(),
-        userId: userId || 'anonymous'
-      }
-    }).catch((error: any) => {
-      console.error('R2 storage failed:', error);
-    });
+    // Store in R2 for long-term persistence with fallback
+    try {
+      await env.MEDIA_BUCKET.put(r2Key, imageBuffer, {
+        httpMetadata: { contentType: 'image/png' },
+        customMetadata: {
+          prompt_original: (prompt || '').slice(0, 200),
+          prompt_translated: translatedPrompt.slice(0, 200),
+          model,
+          createdAt: Date.now().toString(),
+          userId: userId || 'anonymous'
+        }
+      });
+    } catch (e) {
+      console.warn('R2 storage failed, returning direct image');
+      return new Response(imageBuffer, {
+        headers: {
+          'Content-Type': 'image/png',
+          'X-Cache': 'SYNC-NO-R2',
+          'X-Image-ID': imageHash,
+          'Cache-Control': 'public, max-age=3600'
+        }
+      });
+    }
 
     // Store metadata and cache
     const metadata = {
       id: imageHash,
-      prompt,
+      prompt: translatedPrompt,
       model,
       params,
       createdAt: Date.now(),
@@ -226,6 +313,14 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     await env.CACHE.put(kvCacheKey, imageBuffer, {
       expirationTtl: 3600
     });
+
+    // Save prompt mapping for future dedupe (7 days)
+    try {
+      const promptMapKey = `img-map:${model}:${translatedPrompt}`;
+      await env.CACHE.put(promptMapKey, JSON.stringify({ imageId: imageHash }), {
+        expirationTtl: 86400 * 7
+      });
+    } catch {}
 
     // Update recent images list
     const recentKey = 'recent-images';
