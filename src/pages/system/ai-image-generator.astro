@@ -16,6 +16,26 @@ const description =
 
   <div class="container mx-auto px-4 py-12">
     <div class="max-w-7xl mx-auto">
+      <!-- Queue Status Panel -->
+      <div class="queue-status-panel hidden" id="queueStatus">
+        <div class="queue-card">
+          <div class="queue-header">
+            <h3>🎨 Generator w kolejce</h3>
+            <div class="queue-spinner"></div>
+          </div>
+          <div class="queue-body">
+            <div class="queue-progress">
+              <div class="progress-bar" id="queueProgressBar"></div>
+            </div>
+            <p class="queue-message" id="queueMessage">Przetwarzanie w kolejce...</p>
+            <div class="queue-meta">
+              <span class="queue-id" id="queueId">ID: -</span>
+              <span class="queue-timer" id="queueTimer">Czas: 0s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Settings Sidebar -->
         <div class="lg:col-span-1 space-y-6">
@@ -305,11 +325,126 @@ const description =
 </Layout>
 
 <style>
+  /* Background Pattern */
+  body {
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-background) 95%, var(--color-accent) 5%),
+      color-mix(in srgb, var(--color-background) 92%, var(--color-accent-alt) 8%)
+    );
+    background-attachment: fixed;
+    background-size: 400% 400%;
+    animation: backgroundShift 20s ease-in-out infinite;
+  }
+
+  @keyframes backgroundShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* Queue Status Panel */
+  .queue-status-panel {
+    margin-bottom: 2rem;
+    animation: slideDown 0.3s ease-out;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .queue-card {
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-background) 88%, var(--color-accent) 12%),
+      color-mix(in srgb, var(--color-background) 85%, var(--color-accent-alt) 15%)
+    );
+    border: 2px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 40px color-mix(in srgb, var(--color-accent) 20%, transparent);
+  }
+
+  .queue-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .queue-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin: 0;
+  }
+
+  .queue-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+    border-top: 3px solid var(--color-accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .queue-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .queue-progress {
+    background: color-mix(in srgb, var(--color-background) 70%, transparent);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
+  }
+
+  .progress-bar {
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-alt));
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+    animation: shimmer 2s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .queue-message {
+    font-size: 0.9rem;
+    color: color-mix(in srgb, var(--color-text) 80%, var(--color-background) 20%);
+    margin: 0;
+  }
+
+  .queue-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: color-mix(in srgb, var(--color-text) 60%, var(--color-background) 40%);
+  }
+
   /* Settings Card */
   .settings-card {
-    background: transparent;
-    border: 2px solid #6b7280;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-background) 88%, transparent),
+      color-mix(in srgb, var(--color-background) 82%, var(--color-accent) 18%)
+    );
+    border: 2px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
+    border-radius: 1.25rem;
     padding: 1.25rem;
+    backdrop-filter: blur(5px);
   }
 
   .settings-title {
@@ -441,6 +576,319 @@ const description =
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+  }
+
+  /* Enhanced Card Styles with Gradients */
+  .prompt-card,
+  .progress-card,
+  .result-card,
+  .gallery-card,
+  .tips-card {
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-background) 90%, transparent),
+      color-mix(in srgb, var(--color-background) 85%, var(--color-accent) 15%)
+    );
+    border: 2px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 10px 20px color-mix(in srgb, var(--color-accent) 15%, transparent);
+    transition: all 0.3s ease;
+  }
+
+  .prompt-card:hover,
+  .result-card:hover,
+  .gallery-card:hover,
+  .tips-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px color-mix(in srgb, var(--color-accent) 20%, transparent);
+    border-color: color-mix(in srgb, var(--color-accent) 50%, transparent);
+  }
+
+  .prompt-title,
+  .progress-title,
+  .result-title,
+  .gallery-title,
+  .tips-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+  }
+
+  /* Enhanced Prompt Textarea */
+  .prompt-textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--color-background) 95%, transparent);
+    color: var(--color-text);
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: vertical;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+  }
+
+  .prompt-textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-background) 98%, var(--color-accent) 2%);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--color-accent) 25%, transparent);
+  }
+
+  .prompt-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    gap: 1rem;
+  }
+
+  /* Enhanced Generate Button */
+  .generate-button {
+    background: linear-gradient(135deg, var(--color-accent), color-mix(in srgb, var(--color-accent-alt) 65%, var(--color-accent) 35%));
+    color: white;
+    border: 2px solid color-mix(in srgb, var(--color-accent) 60%, transparent);
+    padding: 1rem 2rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .generate-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px color-mix(in srgb, var(--color-accent) 30%, transparent);
+  }
+
+  .generate-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Progress Card */
+  .progress-card {
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-accent) 12%, transparent),
+      color-mix(in srgb, var(--color-accent-alt) 8%, transparent)
+    );
+    text-align: center;
+  }
+
+  .progress-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .progress-icon {
+    font-size: 3rem;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.05); }
+  }
+
+  .progress-bar-container {
+    width: 100%;
+    max-width: 300px;
+    height: 8px;
+    background: color-mix(in srgb, var(--color-background) 80%, transparent);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-alt));
+    border-radius: 999px;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 50%, transparent);
+  }
+
+  /* Result Card Enhancements */
+  .result-image {
+    width: 100%;
+    max-width: 512px;
+    height: auto;
+    border-radius: 1rem;
+    box-shadow: 0 15px 35px color-mix(in srgb, var(--color-accent) 20%, transparent);
+    transition: transform 0.3s ease;
+  }
+
+  .result-image:hover {
+    transform: scale(1.02);
+  }
+
+  .result-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: color-mix(in srgb, var(--color-background) 90%, transparent);
+    border-radius: 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+  }
+
+  .result-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .result-meta-label {
+    font-size: 0.85rem;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+    font-weight: 500;
+  }
+
+  .result-meta-value {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .result-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .action-button {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
+    background: color-mix(in srgb, var(--color-background) 95%, transparent);
+    color: var(--color-accent);
+    border-radius: 999px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .action-button:hover {
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px color-mix(in srgb, var(--color-accent) 25%, transparent);
+  }
+
+  /* Gallery Card Enhancements */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .gallery-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    border: 2px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
+  }
+
+  .gallery-item:hover {
+    transform: scale(1.05);
+    border-color: var(--color-accent);
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .gallery-item-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-background) 90%, transparent),
+      transparent 50%
+    );
+    display: flex;
+    align-items: flex-end;
+    padding: 0.75rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .gallery-item:hover .gallery-item-overlay {
+    opacity: 1;
+  }
+
+  .gallery-item-info {
+    font-size: 0.8rem;
+    color: var(--color-text);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Tips Card */
+  .tips-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .tips-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: color-mix(in srgb, var(--color-background) 95%, transparent);
+    border-radius: 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+    transition: all 0.3s ease;
+  }
+
+  .tips-list li:hover {
+    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+    border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+  }
+
+  .tips-list li::before {
+    content: "💡";
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .prompt-footer {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .result-actions {
+      flex-direction: column;
+    }
+    
+    .gallery-grid {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
   }
 
   .stat-item {
@@ -880,7 +1328,7 @@ const description =
     // DOM Elements
     const modelSelect = document.getElementById(
       "modelSelect"
-    ) as HTMLSelectElement;
+    ) as unknown as HTMLSelectElement;
     const styleButtons = document.querySelectorAll(".style-btn");
     const numStepsSlider = document.getElementById(
       "numSteps"
@@ -1082,7 +1530,8 @@ const description =
         stats.rateLimit--;
         updateStats();
 
-        const response = await fetch("/api/ai/generate-image", {
+        // Try queue-enabled endpoint first
+        const response = await fetch("/api/ai/generate-image-queue", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -1090,45 +1539,50 @@ const description =
             model: modelSelect.value,
             num_steps: parseInt(numStepsSlider.value),
             guidance: parseFloat(guidanceSlider.value),
+            async: true,
           }),
         });
 
         clearInterval(progressInterval);
-        progressBar.style.width = "100%";
 
         if (!response.ok) {
           const error = await response.json();
-          throw new Error(error.error || `HTTP ${response.status}`);
+          throw new Error((error as any)?.error || `HTTP ${response.status}`);
         }
 
+        const contentType = response.headers.get("Content-Type");
+
+        // Handle queued response (async mode)
+        if (
+          response.status === 202 &&
+          contentType?.includes("application/json")
+        ) {
+          const queueData = await response.json();
+
+          progressMessage.textContent =
+            "Kolejkowanie... Obraz będzie gotowy za chwilę";
+          progressBar.style.width = "100%";
+
+          // Poll for completion
+          await pollQueueResult(
+            (queueData as any).requestId,
+            (queueData as any).imageId,
+            fullPrompt,
+            startTime
+          );
+          return;
+        }
+
+        // Handle direct response (sync mode or cached)
+        progressBar.style.width = "100%";
         const blob = await response.blob();
         const imageUrl = URL.createObjectURL(blob);
-        const cached = response.headers.get("X-Cache") === "HIT";
+        const cached = response.headers.get("X-Cache")?.includes("HIT");
 
         if (cached) stats.cacheHits++;
 
         // Display image
-        generatedImage.src = imageUrl;
-        currentImageUrl = imageUrl;
-        resultPrompt.textContent = fullPrompt;
-        resultModel.textContent =
-          modelSelect.options[modelSelect.selectedIndex].text;
-        resultTime.textContent = `${((Date.now() - startTime) / 1000).toFixed(1)}s`;
-
-        if (cached) {
-          imageBadge.classList.remove("hidden");
-        } else {
-          imageBadge.classList.add("hidden");
-        }
-
-        progressArea.classList.add("hidden");
-        resultArea.classList.remove("hidden");
-
-        // Get image ID from response headers
-        const imageId = response.headers.get("X-Image-ID");
-
-        // Save to gallery
-        saveToGallery(imageUrl, fullPrompt, imageId || undefined);
+        displayGeneratedImage(imageUrl, fullPrompt, response, startTime);
 
         // Update stats
         stats.generated++;
@@ -1151,6 +1605,103 @@ const description =
           updateStats();
         }, 300000);
       }
+    }
+
+    async function pollQueueResult(
+      requestId: string,
+      imageId: string,
+      prompt: string,
+      startTime: number
+    ) {
+      const maxRetries = 60; // 60 * 2 seconds = 2 minutes max
+      let retries = 0;
+
+      const poll = async () => {
+        try {
+          retries++;
+
+          if (retries > maxRetries) {
+            throw new Error("Timeout - generowanie trwało zbyt długo");
+          }
+
+          const statusResponse = await fetch(
+            `/api/ai/queue-status/${requestId}`
+          );
+
+          if (!statusResponse.ok) {
+            throw new Error(`Status check failed: ${statusResponse.status}`);
+          }
+
+          const status = await statusResponse.json();
+
+          if ((status as any).status === "completed") {
+            // Image is ready, fetch it
+            const imageResponse = await fetch(`/api/ai/image/${imageId}`);
+
+            if (imageResponse.ok) {
+              const blob = await imageResponse.blob();
+              const imageUrl = URL.createObjectURL(blob);
+
+              displayGeneratedImage(imageUrl, prompt, imageResponse, startTime);
+
+              // Update stats
+              stats.generated++;
+              localStorage.setItem("img-generated", stats.generated.toString());
+              updateStats();
+
+              return;
+            }
+          }
+
+          } else if ((status as any).status === "error") {
+            throw new Error((status as any).error || "Queue processing failed");
+          }
+
+          // Still pending, continue polling
+          progressMessage.textContent = `Kolejka... (${retries}/${maxRetries})`;
+          setTimeout(poll, 2000); // Poll every 2 seconds
+        } catch (error) {
+          console.error("Queue polling error:", error);
+          progressArea.classList.add("hidden");
+          alert(
+            `Błąd kolejki: ${error instanceof Error ? error.message : "Nieznany błąd"}`
+          );
+        }
+      };
+
+      // Start polling
+      setTimeout(poll, 1000); // Start after 1 second
+    }
+
+    function displayGeneratedImage(
+      imageUrl: string,
+      prompt: string,
+      response: Response,
+      startTime: number
+    ) {
+      const cached = response.headers.get("X-Cache")?.includes("HIT");
+      const imageId = response.headers.get("X-Image-ID");
+
+      // Display image
+      generatedImage.src = imageUrl;
+      currentImageUrl = imageUrl;
+      resultPrompt.textContent = prompt;
+      resultModel.textContent =
+        modelSelect.options[modelSelect.selectedIndex].text;
+      resultTime.textContent = `${((Date.now() - startTime) / 1000).toFixed(1)}s`;
+
+      if (cached) {
+        imageBadge.classList.remove("hidden");
+        stats.cacheHits++;
+      } else {
+        imageBadge.classList.add("hidden");
+      }
+
+      progressArea.classList.add("hidden");
+      resultArea.classList.remove("hidden");
+
+      // Save to gallery
+      saveToGallery(imageUrl, prompt, imageId || undefined);
     }
 
     function updateStats() {
@@ -1193,7 +1744,7 @@ const description =
 
         if (response.ok) {
           const data = await response.json();
-          displayGallery(data.images);
+          displayGallery((data as any).images);
           return;
         }
       } catch (error) {
