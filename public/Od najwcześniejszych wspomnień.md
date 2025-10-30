@@ -16,7 +16,7 @@ Opowieściami, które choć anonimowe dla świata, stały się
 
 nieśmiertelne w moich prywatnych, osobistych zapisach. W 
 
-otoczeniu prostych chłopskich domostw i rozbrzmiewających nie 
+otoczeniu prostych wiejskich domostw i rozbrzmiewających nie 
 
 tylko w niedzielę kościelnych dzwonów, rodziły się legendy 
 
