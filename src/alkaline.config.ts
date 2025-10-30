@@ -1,5 +1,5 @@
 
-import type { Author, Blog, NavEntry, Site, Socials } from "./Types/types";
+import type { Author, Blog, NavEntry, Site, Socials } from "./types/types";
 
 /**
  * @description This file contains the configuration for the Alkaline theme.

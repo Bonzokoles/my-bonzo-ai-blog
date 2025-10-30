@@ -1,265 +1,94 @@
 ---
-import coverImage from "@assets/alk-cover-2.webp";
-import Card from "@components/Astro/Card.astro";
-import PageHeader from "@components/Astro/PageHeader.astro";
-import Layout from "@layouts/Layout.astro";
+/**
+ * Homepage - MyBonzo AI Blog
+ * Refactored to use component-based architecture and SSR data loading
+ * Reduced from 490 lines to ~150 lines (-69%)
+ */
+import Layout from '@layouts/Layout.astro';
+import PageHeader from '@components/Astro/PageHeader.astro';
+import HeroSection from '@components/features/HeroSection.astro';
+import FeaturesSection from '@components/features/FeaturesSection.astro';
+import BlogSection from '@components/features/BlogSection.astro';
 
-import { Icon } from "astro-icon/components";
+import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
+import Bing from '@assets/bing.jpg';
+import coverImage from '@assets/alk-cover-2.webp';
+import Card from '@components/Astro/Card.astro';
 
-import Bing from "@assets/bing.jpg";
-import { Image } from "astro:assets";
+// Configuration imports
+import { NAVIGATION_SECTIONS } from '@/config/navigation';
+import {
+  MAIN_FEATURE_CARDS,
+  SPEED_FEATURE_CARDS,
+  HOMEPAGE_METADATA
+} from '@/config/homepage';
+import { PRO_CONFIG } from '@/config/site';
 
-const description =
-  "MyBonzo AI Blog - Twoje centrum wiedzy o sztucznej inteligencji. Odkryj najnowsze narzędzia AI, przeczytaj przewodniki i eksperymentuj z technologiami przyszłości. Od podstaw do zaawansowanych zastosowań biznesowych.";
+// SSR data loading
+import { getHomepageBlogPosts } from '@/lib/homepage-data';
 
+// Import styles
+import '@/styles/pages/index.css';
+
+// Fetch blog posts at build time (SSR/SSG)
+const blogPosts = await getHomepageBlogPosts();
+
+// Theme options
 const options = {
-  "rounded-theme": true,
+  'rounded-theme': true
 };
 ---
 
-<Layout
-  title="MyBonzo AI Blog - Sztuczna Inteligencja dla Wszystkich"
-  description={description}
->
+<Layout title={HOMEPAGE_METADATA.title} description={HOMEPAGE_METADATA.description}>
   <PageHeader
-    heading="MyBonzo AI Blog - Przyszłość w Twoich Rękach"
-    description={description}
+    heading={HOMEPAGE_METADATA.heading}
+    description={HOMEPAGE_METADATA.description}
     image={coverImage}
     imageAlt="MyBonzo AI Blog - centrum wiedzy o sztucznej inteligencji"
     backgroundPattern="M20.3 29.35l-3.1-3.2-3.55 3.55-3.55-3.55 3.55-3.55 3.55 3.55L31.35 12 27.8 8.45l-3.55 3.55 3.55 3.55L30.9 18.65l-3.35 3.6L20.75 15.55l3.55-3.55L17.2 4.95 20.7 1.3l3.55 3.6L20.75 8.45 17.2 12l-7.45-7.45L13.35.9l3.85 4.05-3.55 3.55-3.55 3.55 3.55 3.55-3.55 3.55-3.55-3.55-3.9-3.9 3.55-3.55L13.65 15.55l-3.55-3.55L3.05 19.1l3.55 3.55L13.65 15.55l-3.55 3.55 3.55 3.55 3.55-3.55L23.75 25.8l.05.05-3.5 3.5"
     animate={true}
   />
 
-  <!-- Hero Section - Video + Navigation -->
-  <section class="w-full py-12 bg-theme-primary/5 backdrop-blur-sm">
-    <div class="container mx-auto px-4">
-      <div
-        class="flex flex-col lg:flex-row items-center justify-start lg:justify-between gap-8"
-      >
-        <!-- Video Section - Left Side -->
-        <div class="w-full lg:w-2/5 pl-0">
-          <div
-            class="w-full h-full max-w-[420px] aspect-[9/16] flex items-center justify-center border border-gray-700 bg-neutral-900 mx-auto lg:mx-0"
-          >
-            <video
-              id="mainVideo"
-              class="w-full h-full object-cover bg-gray-900"
-              controls
-              poster="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/alk4.png"
-            >
-              <source
-                src="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/mybonzo-avatar-welcome.mp4"
-                type="video/mp4"
-              />
-              Twoja przeglądarka nie obsługuje video HTML5.
-            </video>
-          </div>
-          <p
-            class="mt-6 text-lg text-theme-primary opacity-80 text-center lg:text-left"
-          >
-            Witaj w MyBonzo AI Blog! Poznaj Twojego asystenta AI
-          </p>
-        </div>
+  <!-- Hero Section with Video + Navigation -->
+  <HeroSection
+    videoUrl={HOMEPAGE_METADATA.videoUrl}
+    videoPoster={HOMEPAGE_METADATA.videoPoster}
+    title="Witaj w MyBonzo AI Blog! Poznaj Twojego asystenta AI"
+    sections={NAVIGATION_SECTIONS}
+  />
 
-        <!-- Navigation Buttons - Right Side -->
-        <div class="w-full lg:w-3/5 flex flex-col gap-6">
-          <h3
-            class="text-2xl font-semibold text-theme-primary mb-4 text-center lg:text-left"
-          >
-            Odkryj Nasze Sekcje
-          </h3>
+  <!-- Main Feature Cards -->
+  <FeaturesSection cards={MAIN_FEATURE_CARDS} className="mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-4 mt-14 mb-16 lg:mt-0 lg:justify-between lg:flex-nowrap lg:p-5 build-in" />
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <a
-              href="/BROWSERY"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Browsery
-            </a>
-
-            <a
-              href="/STRONY_INTERNETOWE"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Strony Internetowe
-            </a>
-
-            <a
-              href="/NARZEDZIA_AI"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Narzędzia AI
-            </a>
-
-            <a
-              href="/WIADOMOSCI_AI"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Wiadomości AI
-            </a>
-
-            <a
-              href="/HAPPY_NEWS"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Happy News
-            </a>
-
-            <a
-              href="/TOTAL_COULTURE"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Total Culture
-            </a>
-
-            <a
-              href="/ASYSTENT_AI"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Asystent AI
-            </a>
-
-            <a
-              href="/GENERATOR_GRAFIKI"
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
-            >
-              Generator Grafiki
-            </a>
-          </div>
-
-          <div class="mt-8 text-center lg:text-left">
-            <a
-              href="/pro"
-              class="inline-block bg-theme-accent text-white px-6 py-3 rounded-none font-semibold hover:opacity-90 transition-opacity border border-gray-500"
-            >
-              Sprawdź MyBonzo Pro →
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section
-    class="mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-4 mt-14 mb-16 lg:mt-0 lg:justify-between lg:flex-nowrap lg:p-5 build-in"
-  >
-    <Card
-      title="AI Tools"
-      description="Odkryj najnowsze narzędzia sztucznej inteligencji. Od generatorów treści po zaawansowane systemy analityczne - wszystko w jednym miejscu."
-      shadowSize="lg"
-      iconName="ri:robot-line"
-    />
-    <Card
-      title="Poradniki"
-      description="Praktyczne przewodniki krok po kroku. Naucz się wykorzystywać AI w codziennym życiu i biznesie z naszymi szczegółowymi instrukcjami."
-      shadowSize="lg"
-      iconName="ri:book-open-line"
-    />
-    <Card
-      title="Eksperymenty"
-      description="Laboratoria technologiczne i testy przyszłości. Bądź pierwszym, który pozna nadchodzące trendy w sztucznej inteligencji."
-      shadowSize="lg"
-      iconName="ri:flask-line"
-    />
-  </section>
-
+  <!-- AI dla Wszystkich Section -->
   <section class="flex flex-col items-center justify-center mt-6 mb-48 fade-in">
     <h2 class="graffiti-footer">AI DLA WSZYSTKICH</h2>
-    <p
-      class="text-xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-2xl lg:leading-relaxed"
-    >
+    <p class="text-xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-2xl lg:leading-relaxed">
       Sztuczna inteligencja nie musi być skomplikowana. MyBonzo AI Blog łączy
       zaawansowane technologie z prostotą użytkowania, bo przyszłość powinna być
       dostępna dla każdego, niezależnie od poziomu technicznego.
     </p>
-    <!-- <Link href="/docs" class="btn btn-primary mt-6" text="View Documentation" /> -->
   </section>
 
-  <section
-    id="Features"
-    class="mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-4 mt-8 mb-16 lg:justify-between lg:flex-nowrap lg:p-5 build-in"
-  >
-    <Card
-      title="Szybko"
-      description="Natychmiastowy dostęp do najnowszych informacji o AI. Nasze artykuły i narzędzia są aktualizowane w czasie rzeczywistym."
-      shadowSize="lg"
-      iconName="ri:rocket-2-line"
-    />
-    <Card
-      title="Praktycznie"
-      description="Nie tylko teoria - konkretne rozwiązania które możesz zastosować już dziś. Od domowych projektów po zaawansowane systemy biznesowe."
-      shadowSize="lg"
-      iconName="ri:code-s-slash-line"
-    />
-    <Card
-      title="Bezpłatnie"
-      description="Cała wiedza dostępna za darmo. Wierzymy że AI powinno być dostępne dla wszystkich, nie tylko dla wielkich korporacji."
-      shadowSize="lg"
-      iconName="ri:open-source-line"
-    />
-  </section>
+  <!-- Speed Feature Cards -->
+  <FeaturesSection cards={SPEED_FEATURE_CARDS} className="mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-4 mt-8 mb-16 lg:justify-between lg:flex-nowrap lg:p-5 build-in" />
 
-  <!-- Blog Section -->
-  <section class="py-16">
-    <div class="max-w-6xl mx-auto px-4">
-      <div class="text-center mb-12">
-        <div class="flex mt-12 mb-10 md:mt-24 md:mb-12 text-4xl font-bold mb-4">
-          <h2
-            class="tracking-widest text-4xl font-medium capitalize leading-relaxed mx-auto bg-theme-accent text-theme-secondary p-4 inline-block rounded-theme"
-          >
-            Najnowsze Artykuły
-          </h2>
-        </div>
-        <p class="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-          Praktyczne porady, narzędzia AI i rozwiązania dla całej rodziny. Bez
-          technicznego żargonu - po prostu działa!
-        </p>
-      </div>
+  <!-- Blog Posts Section (SSR) -->
+  <BlogSection posts={blogPosts} />
 
-      <!-- Featured Article -->
-      <div id="featured-post" class="mb-12"></div>
-
-      <div
-        class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-        id="blog-posts-grid"
-      >
-        <!-- Blog posts will be loaded here -->
-      </div>
-
-      <div class="text-center mt-12">
-        <a
-          href="/blog"
-          class="inline-block bg-theme-accent text-white px-6 py-3 rounded-none font-semibold hover:opacity-90 transition-opacity border border-gray-500"
-        >
-          Zobacz wszystkie artykuły
-        </a>
-      </div>
-    </div>
-  </section>
-
+  <!-- Stworzone dla Ciebie Section -->
   <section class="flex flex-col items-center justify-center mt-16 mb-0 fade-in">
-    <h2
-      class:list={[
-        "bg-theme-accent text-theme-secondary p-5 text-center  mb-8 lg:w-auto ",
-        options,
-      ]}
-    >
+    <h2 class:list={["bg-theme-accent text-theme-secondary p-5 text-center mb-8 lg:w-auto", options]}>
       Stworzone dla Ciebie
     </h2>
-    <p
-      class="text-2xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-2xl lg:leading-relaxed tracking-wide mt-6 mb-48"
-    >
+    <p class="text-2xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-2xl lg:leading-relaxed tracking-wide mt-6 mb-48">
       Niezależnie od tego czy jesteś początkujący czy ekspertem, MyBonzo AI Blog
       dostarcza narzędzia i wiedzę na odpowiednim poziomie. Rozwijaj swoje
       umiejętności AI w tempie które Ci odpowiada.
     </p>
     <a href="/blog" class="no-underline group group-hover:cursor-pointer">
-      <div
-        class:list={[
-          "text-xl tracking-wide bg-theme-primary text-theme-primary text-center shadow-sm shadow-theme-primary border-2  mb-4 group-hover:bg-theme-secondary group-hover:text-theme-accent group-hover:shadow-none transition-all duration-300 ease-in-out lg:text-2xl lg:tracking-wider",
-          options,
-        ]}
-      >
+      <div class:list={["text-xl tracking-wide bg-theme-primary text-theme-primary text-center shadow-sm shadow-theme-primary border-2 mb-4 group-hover:bg-theme-secondary group-hover:text-theme-accent group-hover:shadow-none transition-all duration-300 ease-in-out lg:text-2xl lg:tracking-wider", options]}>
         <div class="mt-0">
           <Icon name="ri:article-line" height="150" width="300" class="mb-5" />
           <p class="p-4 group-hover:text-theme-accent">Rozpocznij Czytanie</p>
@@ -268,6 +97,7 @@ const options = {
     </a>
   </section>
 
+  <!-- Chandler Bing Quote Image -->
   <section class="flex flex-col items-center justify-center mt-6">
     <div class="w-full mb-8 flex justify-center">
       <Image
@@ -281,210 +111,15 @@ const options = {
     </div>
   </section>
 
-  <!-- MyBonzo Pro Link Section -->
+  <!-- MyBonzo Pro CTA -->
   <section style="margin-top:2.5em; text-align:center; padding: 2rem 0;">
     <div class="container mx-auto px-4">
       <p class="text-lg">
-        <strong>Chcesz więcej mocy? </strong>
-        <a
-          href="/pro"
-          style="color:#2a6de9; text-decoration:underline; font-weight: 600;"
-        >
-          Zobacz MyBonzo Pro z zaawansowanymi narzędziami →
+        <strong>{PRO_CONFIG.ctaText}</strong>
+        <a href={PRO_CONFIG.ctaUrl} style="color:#2a6de9; text-decoration:underline; font-weight: 600;">
+          {PRO_CONFIG.ctaLinkText}
         </a>
       </p>
     </div>
   </section>
 </Layout>
-
-<style>
-  .build-in {
-    animation-delay: 0.75s;
-  }
-
-  .typing-animation {
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-    border-right: 0.15em solid orange;
-    animation:
-      typing 3.5s steps(40, end),
-      blink-caret 0.75s step-end infinite;
-  }
-
-  @keyframes typing {
-    from {
-      width: 0;
-    }
-    to {
-      width: 100%;
-    }
-  }
-
-  @keyframes blink-caret {
-    from,
-    to {
-      border-color: transparent;
-    }
-    50% {
-      border-color: orange;
-    }
-  }
-
-  .hero-button {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    border: 1px solid var(--color-accent);
-    background-color: transparent;
-    color: var(--color-text);
-    transition: all 0.3s ease;
-    text-align: center;
-  }
-
-  .hero-button:hover {
-    background-color: var(--color-accent);
-    color: var(--color-background);
-  }
-
-  .pro-button {
-    display: inline-block;
-    background-color: var(--color-accent);
-    color: white;
-    padding: 1rem 2rem;
-    font-weight: 600;
-    transition: opacity 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid #4a5568;
-  }
-
-  .pro-button:hover {
-    opacity: 0.9;
-  }
-
-  .featured-post {
-    border-width: 2px;
-    border-color: var(--color-accent);
-  }
-</style>
-
-<script>
-  // Load blog posts from R2 API
-  async function loadBlogPosts() {
-    try {
-      const response = await fetch("/api/blog/index");
-      const data = await response.json();
-
-      const featuredPostContainer = document.getElementById("featured-post");
-      const grid = document.getElementById("blog-posts-grid");
-      if (!grid || !featuredPostContainer) return;
-
-      // Get the first post as the featured post
-      const [featuredPost, ...posts] = data.posts;
-
-      // Render the featured post
-      if (featuredPost) {
-        const featuredDate = new Date(featuredPost.date).toLocaleDateString(
-          "pl-PL"
-        );
-        const featuredTags = featuredPost.tags
-          ? featuredPost.tags.split(/[\s,]+/).slice(0, 2)
-          : [];
-
-        featuredPostContainer.innerHTML = `
-          <article class="featured-post border border-gray-500 bg-transparent rounded-none overflow-hidden hover:border-blue-400 hover:bg-gray-900 hover:shadow transition-colors">
-            <div class="p-6">
-              <div class="flex flex-wrap gap-2 mb-3">
-                ${featuredTags
-                  .map(
-                    (tag) => `
-                  <span class="px-2 py-1 bg-blue-600 text-white text-xs rounded-none font-semibold tracking-wide uppercase">
-                    ${tag}
-                  </span>
-                `
-                  )
-                  .join("")}
-              </div>
-              
-              <div class="flex mt-12 mb-10 md:mt-24 md:mb-12 text-2xl font-semibold mb-2 line-clamp-2 text-theme-primary">
-                <h3 class="tracking-widest text-2xl font-medium capitalize leading-relaxed mx-auto bg-theme-accent text-theme-secondary p-4 inline-block rounded-theme">
-                  ${featuredPost.title}
-                </h3>
-              </div>
-              
-              <p class="text-theme-primary opacity-80 text-lg mb-3 line-clamp-3">
-                ${featuredPost.excerpt}
-              </p>
-              
-              <div class="flex justify-between items-center text-sm text-theme-primary opacity-70 mb-4">
-                <time datetime="${featuredPost.date}">
-                  ${featuredDate}
-                </time>
-              </div>
-              
-              <a href="/blog/${featuredPost.id}" class="inline-block text-theme-accent font-semibold hover:text-theme-accent-alt transition-colors">
-                Czytaj więcej →
-              </a>
-            </div>
-          </article>
-        `;
-      }
-
-      // Render the rest of the posts
-      grid.innerHTML = posts
-        .map((post) => {
-          const date = new Date(post.date);
-          const formattedDate = date.toLocaleDateString("pl-PL");
-          const tags = post.tags ? post.tags.split(/[\s,]+/).slice(0, 2) : [];
-
-          return `
-          <article class="border border-gray-500 bg-transparent rounded-none overflow-hidden hover:border-blue-400 hover:bg-gray-900 hover:shadow transition-colors">
-            <div class="p-6">
-              <div class="flex flex-wrap gap-2 mb-3">
-                ${tags
-                  .map(
-                    (tag) => `
-                  <span class="px-2 py-1 bg-blue-600 text-white text-xs rounded-none font-semibold tracking-wide uppercase">
-                    ${tag}
-                  </span>
-                `
-                  )
-                  .join("")}
-              </div>
-              
-              <div class="flex mt-12 mb-10 md:mt-24 md:mb-12 text-xl font-semibold mb-2 line-clamp-2 text-theme-primary">
-                <h3 class="tracking-widest text-xl font-medium capitalize leading-relaxed mx-auto bg-theme-accent text-theme-secondary p-4 inline-block rounded-theme">
-                  ${post.title}
-                </h3>
-              </div>
-              
-              <p class="text-theme-primary opacity-80 text-sm mb-3 line-clamp-3">
-                ${post.excerpt}
-              </p>
-              
-              <div class="flex justify-between items-center text-sm text-theme-primary opacity-70 mb-4">
-                <time datetime="${post.date}">
-                  ${formattedDate}
-                </time>
-              </div>
-              
-              <a href="/blog/${post.id}" class="inline-block text-theme-accent font-semibold hover:text-theme-accent-alt transition-colors">
-                Czytaj więcej →
-              </a>
-            </div>
-          </article>
-        `;
-        })
-        .join("");
-    } catch (error) {
-      console.error("Error loading blog posts:", error);
-      const grid = document.getElementById("blog-posts-grid");
-      if (grid) {
-        grid.innerHTML =
-          '<p class="text-center col-span-full text-theme-primary">Nie udało się załadować artykułów. Spróbuj ponownie później.</p>';
-      }
-    }
-  }
-
-  // Load posts when page is ready
-  document.addEventListener("DOMContentLoaded", loadBlogPosts);
-</script>

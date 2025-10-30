@@ -1,0 +1,135 @@
+---
+/**
+ * Blog Section Component
+ * Displays featured and recent blog posts
+ * Uses SSR data instead of client-side fetch
+ */
+import type { BlogPost } from '@/types/homepage';
+import { formatPostDate, parseTags, getPostUrl } from '@/lib/homepage-data';
+
+interface Props {
+  posts: BlogPost[];
+  title?: string;
+  description?: string;
+}
+
+const {
+  posts,
+  title = 'Najnowsze Artykuły',
+  description = 'Praktyczne porady, narzędzia AI i rozwiązania dla całej rodziny. Bez technicznego żargonu - po prostu działa!'
+} = Astro.props;
+
+const featuredPost = posts[0];
+const recentPosts = posts.slice(1, 4);
+---
+
+<section class="py-16">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-12">
+      <div class="flex mt-12 mb-10 md:mt-24 md:mb-12 text-4xl font-bold mb-4">
+        <h2 class="tracking-widest text-4xl font-medium capitalize leading-relaxed mx-auto bg-theme-accent text-theme-secondary p-4 inline-block rounded-theme">
+          {title}
+        </h2>
+      </div>
+      <p class="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+        {description}
+      </p>
+    </div>
+
+    <!-- Featured Article -->
+    {featuredPost && (
+      <div class="mb-12">
+        <article class="featured-post border border-gray-500 bg-transparent rounded-none overflow-hidden hover:border-blue-400 hover:bg-gray-900 hover:shadow transition-colors">
+          <div class="p-6">
+            <div class="flex flex-wrap gap-2 mb-3">
+              {parseTags(featuredPost.tags).map((tag) => (
+                <span class="px-2 py-1 bg-blue-600 text-white text-xs rounded-none font-semibold tracking-wide uppercase">
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <div class="flex mt-12 mb-10 md:mt-24 md:mb-12 text-2xl font-semibold mb-2 line-clamp-2 text-theme-primary">
+              <h3 class="tracking-widest text-2xl font-medium capitalize leading-relaxed mx-auto bg-theme-accent text-theme-secondary p-4 inline-block rounded-theme">
+                {featuredPost.title}
+              </h3>
+            </div>
+
+            <p class="text-theme-primary opacity-80 text-lg mb-3 line-clamp-3">
+              {featuredPost.excerpt}
+            </p>
+
+            <div class="flex justify-between items-center text-sm text-theme-primary opacity-70 mb-4">
+              <time datetime={featuredPost.date}>
+                {formatPostDate(featuredPost.date)}
+              </time>
+            </div>
+
+            <a
+              href={getPostUrl(featuredPost.id)}
+              class="inline-block text-theme-accent font-semibold hover:text-theme-accent-alt transition-colors"
+            >
+              Czytaj więcej →
+            </a>
+          </div>
+        </article>
+      </div>
+    )}
+
+    <!-- Recent Posts Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {recentPosts.map((post) => (
+        <article class="border border-gray-500 bg-transparent rounded-none overflow-hidden hover:border-blue-400 hover:bg-gray-900 hover:shadow transition-colors">
+          <div class="p-6">
+            <div class="flex flex-wrap gap-2 mb-3">
+              {parseTags(post.tags).map((tag) => (
+                <span class="px-2 py-1 bg-blue-600 text-white text-xs rounded-none font-semibold tracking-wide uppercase">
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <div class="flex mt-12 mb-10 md:mt-24 md:mb-12 text-xl font-semibold mb-2 line-clamp-2 text-theme-primary">
+              <h3 class="tracking-widest text-xl font-medium capitalize leading-relaxed mx-auto bg-theme-accent text-theme-secondary p-4 inline-block rounded-theme">
+                {post.title}
+              </h3>
+            </div>
+
+            <p class="text-theme-primary opacity-80 text-sm mb-3 line-clamp-3">
+              {post.excerpt}
+            </p>
+
+            <div class="flex justify-between items-center text-sm text-theme-primary opacity-70 mb-4">
+              <time datetime={post.date}>
+                {formatPostDate(post.date)}
+              </time>
+            </div>
+
+            <a
+              href={getPostUrl(post.id)}
+              class="inline-block text-theme-accent font-semibold hover:text-theme-accent-alt transition-colors"
+            >
+              Czytaj więcej →
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="text-center mt-12">
+      <a
+        href="/blog"
+        class="inline-block bg-theme-accent text-white px-6 py-3 rounded-none font-semibold hover:opacity-90 transition-opacity border border-gray-500"
+      >
+        Zobacz wszystkie artykuły
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured-post {
+    border-width: 2px;
+    border-color: var(--color-accent);
+  }
+</style>
