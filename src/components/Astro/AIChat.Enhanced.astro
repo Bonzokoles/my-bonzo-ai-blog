@@ -144,6 +144,12 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
               <span>Streaming</span>
             </label>
           )}
+          <label class="provider-toggle">
+            <select id="provider-select" class="provider-select">
+              <option value="cloudflare">Cloudflare AI</option>
+              <option value="openai">OpenAI</option>
+            </select>
+          </label>
         </div>
       </div>
 
@@ -800,17 +806,34 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
   async function handleNormalResponse(prompt) {
     if (!currentConversation || !modelSelect) return;
 
-    console.log('🌐 [AI Chat] Making API request to /api/ai/chat');
-    const response = await fetch('/api/ai/chat', {
+    const providerSelect = document.getElementById('provider-select');
+    const provider = providerSelect?.value || 'cloudflare';
+    
+    const endpoint = provider === 'openai' ? '/api/ai/chat-openai' : '/api/ai/chat';
+    console.log(`🌐 [AI Chat] Making API request to ${endpoint} (provider: ${provider})`);
+    
+    const requestBody = provider === 'openai' 
+      ? {
+          messages: [
+            ...history,
+            { role: 'user', content: prompt }
+          ],
+          model: 'gpt-4o-mini',
+          temperature: 0.7,
+          max_tokens: 1200
+        }
+      : {
+          prompt,
+          history,
+          model: (modelSelect && 'value' in modelSelect) ? String(modelSelect.value) : 'claude-3-haiku',
+          temperature: 0.6,
+          max_tokens: 1200
+        };
+
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prompt,
-        history,
-        model: (modelSelect && 'value' in modelSelect) ? String(modelSelect.value) : 'claude-3-haiku',
-        temperature: 0.6,
-        max_tokens: 1200
-      })
+      body: JSON.stringify(requestBody)
     });
 
     console.log('📡 [AI Chat] Response status:', response.status, response.statusText);
@@ -821,16 +844,27 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
 
     const data = await response.json();
 
-    if (data?.response) {
+    let aiContent = '';
+    let isCached = false;
+
+    if (provider === 'openai' && data?.choices?.[0]?.message?.content) {
+      aiContent = data.choices[0].message.content;
+      isCached = false;
+    } else if (data?.response) {
+      aiContent = data.response;
+      isCached = Boolean(data.cached);
+    }
+
+    if (aiContent) {
       const aiMessage = {
         role: 'ai',
-        content: data.response,
-        cached: Boolean(data.cached),
+        content: aiContent,
+        cached: isCached,
         timestamp: Date.now()
       };
       addMessage(aiMessage);
       currentConversation.messages.push(aiMessage);
-      history.push({ role: 'assistant', content: data.response, timestamp: aiMessage.timestamp });
+      history.push({ role: 'assistant', content: aiContent, timestamp: aiMessage.timestamp });
     } else {
       throw new Error('Pusta odpowiedź z API.');
     }
@@ -839,16 +873,38 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
   async function handleStreamingResponse(prompt) {
     if (!currentConversation || !modelSelect) return;
 
-    const response = await fetch('/api/ai/chat-stream', {
+    const providerSelect = document.getElementById('provider-select');
+    const provider = providerSelect?.value || 'cloudflare';
+    
+    const endpoint = provider === 'openai' 
+      ? '/api/ai/chat-openai'
+      : '/api/ai/chat-stream';
+    
+    console.log(`🌐 [AI Chat Stream] Using provider: ${provider}, endpoint: ${endpoint}`);
+    
+    const requestBody = provider === 'openai'
+      ? {
+          messages: [
+            ...history,
+            { role: 'user', content: prompt }
+          ],
+          model: 'gpt-4o-mini',
+          temperature: 0.7,
+          max_tokens: 1200,
+          stream: true
+        }
+      : {
+          prompt,
+          history,
+          model: (modelSelect && 'value' in modelSelect) ? String(modelSelect.value) : 'claude-3-haiku',
+          temperature: 0.6,
+          max_tokens: 1200
+        };
+
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prompt,
-        history,
-        model: (modelSelect && 'value' in modelSelect) ? String(modelSelect.value) : 'claude-3-haiku',
-        temperature: 0.6,
-        max_tokens: 1200
-      })
+      body: JSON.stringify(requestBody)
     });
 
     if (!response.ok) {

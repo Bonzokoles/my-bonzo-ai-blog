@@ -1,0 +1,44 @@
+---
+/**
+ * Features Section Component
+ * Reusable section for displaying feature cards
+ */
+import Card from '@components/Astro/Card.astro';
+import type { FeatureCard } from '@/types/homepage';
+
+interface Props {
+  title?: string;
+  description?: string;
+  cards: FeatureCard[];
+  className?: string;
+}
+
+const { title, description, cards, className = '' } = Astro.props;
+---
+
+<section
+  class:list={[
+    'mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-4 mt-14 mb-16 lg:mt-0 lg:justify-between lg:flex-nowrap lg:p-5 build-in',
+    className
+  ]}
+>
+  {cards.map((card) => (
+    <Card
+      title={card.title}
+      description={card.description}
+      shadowSize={card.shadowSize}
+      iconName={card.iconName}
+    />
+  ))}
+</section>
+
+{title && description && (
+  <section class="flex flex-col items-center justify-center mt-6 mb-48 fade-in">
+    {title && <h2 class="graffiti-footer">{title}</h2>}
+    {description && (
+      <p class="text-xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-2xl lg:leading-relaxed">
+        {description}
+      </p>
+    )}
+  </section>
+)}

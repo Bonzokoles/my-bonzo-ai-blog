@@ -1,0 +1,98 @@
+---
+import Card from "@components/Astro/Card.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+import Layout from "@layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const description =
+  "Total Culture - kultura w najszerszym wydaniu. Sztuka, muzyka, film, literatura i wszystko co kształtuje naszą cywilizację.";
+---
+
+<Layout title="Total Culture - MyBonzo AI Blog" description={description}>
+  <PageHeader
+    heading="Total Culture"
+    description={description}
+    animate={true}
+  />
+
+  <section class="container mx-auto px-4 py-16">
+    <div class="text-center mb-16">
+      <Icon
+        name="ri:palette-line"
+        class="w-24 h-24 mx-auto mb-6 text-theme-primary"
+      />
+      <h2 class="text-3xl font-bold mb-6 text-theme-primary">
+        Kultura bez Granic
+      </h2>
+      <p class="text-xl text-theme-primary opacity-80 max-w-4xl mx-auto">
+        Odkryj bogactwo ludzkiej kultury - od klasyki po współczesność, od
+        lokalnych tradycji po globalne trendy.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+      <Card
+        title="Sztuka & Design"
+        description="Malarstwo, rzeźba, architektura i design - od mistrzów przeszłości po współczesnych wizjonerów."
+        shadowSize="lg"
+        iconName="ri:brush-line"
+      />
+      <Card
+        title="Muzyka & Dźwięk"
+        description="Wszystkie gatunki muzyczne, nowe albumy, artyści i technologie audio."
+        shadowSize="lg"
+        iconName="ri:music-line"
+      />
+      <Card
+        title="Film & Media"
+        description="Kino światowe, seriale, dokumenty i nowe formy mediów cyfrowych."
+        shadowSize="lg"
+        iconName="ri:movie-line"
+      />
+      <Card
+        title="Literatura & Poezja"
+        description="Książki, poezja, dramaty i wszystkie formy pisanej ekspresji artystycznej."
+        shadowSize="lg"
+        iconName="ri:book-line"
+      />
+      <Card
+        title="Kultura Cyfrowa"
+        description="NFT, sztuka generowana przez AI, kultura internetowa i nowe media."
+        shadowSize="lg"
+        iconName="ri:computer-line"
+      />
+      <Card
+        title="Tradycje Świata"
+        description="Lokalne kultury, tradycje, festiwale i ceremonie z całego globu."
+        shadowSize="lg"
+        iconName="ri:earth-line"
+      />
+    </div>
+
+    <div
+      class="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 rounded-2xl p-8 text-center"
+    >
+      <h3 class="text-2xl font-bold mb-4 text-theme-primary">
+        Kultura w Erze AI
+      </h3>
+      <p class="text-lg text-theme-primary opacity-80 mb-6">
+        Jak sztuczna inteligencja wpływa na sztukę, muzykę, literaturę i inne
+        formy ekspresji kulturowej.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/blog"
+          class="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-4 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all shadow-lg"
+        >
+          Eksploruj Kulturę →
+        </a>
+        <a
+          href="/NARZEDZIA_AI"
+          class="inline-block border-2 border-pink-500 text-pink-600 px-8 py-4 rounded-lg font-semibold hover:bg-pink-500 hover:text-white transition-all"
+        >
+          AI w Sztuce →
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,353 @@
+---
+import Card from "@components/Astro/Card.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+import Layout from "@layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const description =
+  "Generator Grafiki AI MyBonzo - Twórz profesjonalne grafiki za pomocą sztucznej inteligencji. Od logo po kompleksne ilustracje, plakaty i grafiki marketingowe. Bez umiejętności graficznych!";
+---
+
+<Layout
+  title="Generator Grafiki AI - MyBonzo AI Blog"
+  description={description}
+>
+  <PageHeader
+    heading="Generator Grafiki AI"
+    description={description}
+    animate={true}
+  />
+
+  <section class="container mx-auto px-4 py-16">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold mb-6 text-theme-primary">
+        Twórz Profesjonalne Grafiki z AI
+      </h2>
+      <p
+        class="text-xl text-theme-primary opacity-80 max-w-4xl mx-auto leading-relaxed"
+      >
+        Zapomnij o skomplikowanych programach graficznych! MyBonzo Generator
+        Grafiki AI pozwala tworzyć oszałamiające obrazy, logo, ilustracje i
+        grafiki marketingowe jedynie za pomocą opisu tekstowego.
+      </p>
+    </div>
+
+    <!-- Główne funkcjonalności generatora -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+      <Card
+        title="Generowanie Logo"
+        description="Twórz profesjonalne logo dla swojej firmy lub projektu. Wystarczy opisać styl, kolory i koncepcję - AI stworzy unikalne propozycje."
+        shadowSize="lg"
+        iconName="ri:palette-line"
+      />
+
+      <Card
+        title="Ilustracje i Grafiki"
+        description="Od prostych ikon po złożone ilustracje. Generuj grafiki w różnych stylach: realistyczne, kreskówkowe, abstrakcyjne czy artystyczne."
+        shadowSize="lg"
+        iconName="ri:image-line"
+      />
+
+      <Card
+        title="Grafiki Marketingowe"
+        description="Posty na social media, banery reklamowe, ulotki i materiały promocyjne. Wszystko w kilka sekund z profesjonalną jakością."
+        shadowSize="lg"
+        iconName="ri:megaphone-line"
+      />
+
+      <Card
+        title="Edycja i Retusz"
+        description="Poprawiaj istniejące zdjęcia, usuwaj tło, zmieniaj elementy czy dodawaj nowe obiekty za pomocą AI."
+        shadowSize="lg"
+        iconName="ri:edit-2-line"
+      />
+
+      <Card
+        title="Style Artystyczne"
+        description="Eksperymentuj z różnymi stylami: od fotorealizmu po malarstwo olejne, akwarele czy sztukę cyfrową."
+        shadowSize="lg"
+        iconName="ri:brush-line"
+      />
+
+      <Card
+        title="Wysokie Rozdzielczości"
+        description="Generuj grafiki w jakości nadającej się do druku - od wizytówek po plakaty wielkości bilbordu."
+        shadowSize="lg"
+        iconName="ri:hd-line"
+      />
+    </div>
+
+    <!-- Sekcja możliwości -->
+    <section
+      class="bg-theme-primary/5 rounded-none p-12 mb-16 border border-gray-500"
+    >
+      <h3 class="text-3xl font-bold mb-8 text-center text-theme-primary">
+        Nieograniczone Możliwości Twórcze
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <h4 class="text-xl font-semibold mb-4 text-theme-primary">
+            <Icon name="ri:lightbulb-line" class="inline-block mr-2" />
+            Dla Kreatywnych
+          </h4>
+          <ul class="space-y-2 text-theme-primary opacity-90">
+            <li>• Ilustracje do książek i czasopism</li>
+            <li>• Koncepty postaci i światów fantasy</li>
+            <li>• Abstrakcyjna sztuka cyfrowa</li>
+            <li>• Projektowanie okładek</li>
+            <li>• Grafiki do gier komputerowych</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xl font-semibold mb-4 text-theme-primary">
+            <Icon name="ri:building-line" class="inline-block mr-2" />
+            Dla Biznesu
+          </h4>
+          <ul class="space-y-2 text-theme-primary opacity-90">
+            <li>• Logo i identyfikacja wizualna</li>
+            <li>• Materiały reklamowe i promocyjne</li>
+            <li>• Grafiki do prezentacji</li>
+            <li>• Zawartość dla mediów społecznościowych</li>
+            <li>• Wizualizacje produktów</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sekcja jak to działa -->
+    <section class="mb-16">
+      <h3 class="text-3xl font-bold mb-8 text-center text-theme-primary">
+        Jak To Działa?
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div
+            class="w-16 h-16 bg-theme-accent rounded-none flex items-center justify-center mx-auto mb-4"
+          >
+            <Icon name="ri:pencil-line" class="text-2xl text-white" />
+          </div>
+          <h4 class="text-lg font-semibold mb-2 text-theme-primary">
+            1. Opisz
+          </h4>
+          <p class="text-theme-primary opacity-80">
+            Napisz co chcesz stworzyć - im bardziej szczegółowo, tym lepiej
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div
+            class="w-16 h-16 bg-theme-accent rounded-none flex items-center justify-center mx-auto mb-4"
+          >
+            <Icon name="ri:settings-3-line" class="text-2xl text-white" />
+          </div>
+          <h4 class="text-lg font-semibold mb-2 text-theme-primary">
+            2. Dostosuj
+          </h4>
+          <p class="text-theme-primary opacity-80">
+            Wybierz styl, rozmiar i inne parametry grafiki
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div
+            class="w-16 h-16 bg-theme-accent rounded-none flex items-center justify-center mx-auto mb-4"
+          >
+            <Icon name="ri:magic-line" class="text-2xl text-white" />
+          </div>
+          <h4 class="text-lg font-semibold mb-2 text-theme-primary">
+            3. Generuj
+          </h4>
+          <p class="text-theme-primary opacity-80">
+            AI tworzy unikalne grafiki w kilka sekund
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div
+            class="w-16 h-16 bg-theme-accent rounded-none flex items-center justify-center mx-auto mb-4"
+          >
+            <Icon name="ri:download-line" class="text-2xl text-white" />
+          </div>
+          <h4 class="text-lg font-semibold mb-2 text-theme-primary">
+            4. Pobierz
+          </h4>
+          <p class="text-theme-primary opacity-80">
+            Zapisz gotowe grafiki w wysokiej rozdzielczości
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Przykłady stylów -->
+    <section class="mb-16">
+      <h3 class="text-3xl font-bold mb-8 text-center text-theme-primary">
+        Dostępne Style i Techniki
+      </h3>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div
+          class="bg-theme-primary/5 p-4 rounded-none border border-gray-500 text-center"
+        >
+          <Icon
+            name="ri:camera-line"
+            class="text-3xl text-theme-accent mb-2 mx-auto"
+          />
+          <h5 class="font-semibold text-theme-primary">Fotorealizm</h5>
+        </div>
+        <div
+          class="bg-theme-primary/5 p-4 rounded-none border border-gray-500 text-center"
+        >
+          <Icon
+            name="ri:brush-2-line"
+            class="text-3xl text-theme-accent mb-2 mx-auto"
+          />
+          <h5 class="font-semibold text-theme-primary">Malarstwo</h5>
+        </div>
+        <div
+          class="bg-theme-primary/5 p-4 rounded-none border border-gray-500 text-center"
+        >
+          <Icon
+            name="ri:compasses-2-line"
+            class="text-3xl text-theme-accent mb-2 mx-auto"
+          />
+          <h5 class="font-semibold text-theme-primary">Kreskówka</h5>
+        </div>
+        <div
+          class="bg-theme-primary/5 p-4 rounded-none border border-gray-500 text-center"
+        >
+          <Icon
+            name="ri:shape-line"
+            class="text-3xl text-theme-accent mb-2 mx-auto"
+          />
+          <h5 class="font-semibold text-theme-primary">Abstrakcja</h5>
+        </div>
+        <div
+          class="bg-theme-primary/5 p-4 rounded-none border border-gray-500 text-center"
+        >
+          <Icon
+            name="ri:computer-line"
+            class="text-3xl text-theme-accent mb-2 mx-auto"
+          />
+          <h5 class="font-semibold text-theme-primary">Cyber/Sci-fi</h5>
+        </div>
+        <div
+          class="bg-theme-primary/5 p-4 rounded-none border border-gray-500 text-center"
+        >
+          <Icon
+            name="ri:ancient-gate-line"
+            class="text-3xl text-theme-accent mb-2 mx-auto"
+          />
+          <h5 class="font-semibold text-theme-primary">Vintage</h5>
+        </div>
+        <div
+          class="bg-theme-primary/5 p-4 rounded-none border border-gray-500 text-center"
+        >
+          <Icon
+            name="ri:contrast-line"
+            class="text-3xl text-theme-accent mb-2 mx-auto"
+          />
+          <h5 class="font-semibold text-theme-primary">Minimalizm</h5>
+        </div>
+        <div
+          class="bg-theme-primary/5 p-4 rounded-none border border-gray-500 text-center"
+        >
+          <Icon
+            name="ri:artboard-line"
+            class="text-3xl text-theme-accent mb-2 mx-auto"
+          />
+          <h5 class="font-semibold text-theme-primary">Concept Art</h5>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sekcja CTA -->
+    <div
+      class="bg-theme-primary/5 rounded-none p-12 text-center border border-gray-500"
+    >
+      <h3 class="text-3xl font-bold mb-6 text-theme-primary">
+        Rozpocznij Tworzenie Już Dziś
+      </h3>
+      <p class="text-lg text-theme-primary opacity-80 mb-8 max-w-2xl mx-auto">
+        Dołącz do tysięcy twórców, którzy już korzystają z mocy AI w grafice.
+        Bez ograniczeń, bez skomplikowanych programów - tylko czysta
+        kreatywność.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/system/ai-image-generator"
+          class="px-8 py-4 bg-theme-accent text-white font-semibold rounded-none hover:opacity-90 transition-opacity shadow-lg border border-gray-500"
+        >
+          <Icon name="ri:image-add-line" class="inline-block mr-2" />
+          Uruchom Generator
+        </a>
+        <a
+          href="/blog"
+          class="px-8 py-4 border border-gray-500 bg-transparent text-theme-primary font-semibold rounded-none hover:bg-gray-900 hover:text-white transition-colors"
+        >
+          <Icon name="ri:book-open-line" class="inline-block mr-2" />
+          Poradniki Graficzne
+        </a>
+      </div>
+    </div>
+
+    <!-- Sekcja inspiracji -->
+    <section class="mt-16">
+      <h3 class="text-3xl font-bold mb-8 text-center text-theme-primary">
+        Zainspiruj Się
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-theme-primary/5 p-6 rounded-none border border-gray-500">
+          <h4 class="text-xl font-semibold mb-4 text-theme-primary">
+            <Icon name="ri:store-line" class="inline-block mr-2" />
+            E-commerce
+          </h4>
+          <p class="text-theme-primary opacity-80 mb-4">
+            Zdjęcia produktów, banery sklepowe, grafiki promocyjne
+          </p>
+          <p class="text-sm text-theme-primary opacity-60">
+            "Elegancki zegarek na białym tle, minimalistyczny styl, oświetlenie
+            studyjne"
+          </p>
+        </div>
+
+        <div class="bg-theme-primary/5 p-6 rounded-none border border-gray-500">
+          <h4 class="text-xl font-semibold mb-4 text-theme-primary">
+            <Icon name="ri:share-line" class="inline-block mr-2" />
+            Social Media
+          </h4>
+          <p class="text-theme-primary opacity-80 mb-4">
+            Posty, stories, okładki profili, grafiki viralne
+          </p>
+          <p class="text-sm text-theme-primary opacity-60">
+            "Kolorowa grafika motivacyjna z cytatem, gradientowe tło, nowoczesna
+            typografia"
+          </p>
+        </div>
+
+        <div class="bg-theme-primary/5 p-6 rounded-none border border-gray-500">
+          <h4 class="text-xl font-semibold mb-4 text-theme-primary">
+            <Icon name="ri:book-line" class="inline-block mr-2" />
+            Publikacje
+          </h4>
+          <p class="text-theme-primary opacity-80 mb-4">
+            Okładki książek, ilustracje do artykułów, infografiki
+          </p>
+          <p class="text-sm text-theme-primary opacity-60">
+            "Futurystyczna okładka sci-fi, kosmos w tle, metaliczne logo"
+          </p>
+        </div>
+      </div>
+    </section>
+  </section>
+</Layout>
+
+<style>
+  /* Dodatkowe style dla strony Generatora Grafiki */
+  .bg-theme-primary\/5 {
+    backdrop-filter: blur(8px);
+  }
+</style>

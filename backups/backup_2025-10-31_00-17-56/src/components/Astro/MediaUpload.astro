@@ -1,0 +1,544 @@
+---
+// Media Upload Component - upload do Cloudflare R2
+interface Props {
+  accept?: string;
+  maxSize?: number; // MB
+  multiple?: boolean;
+  showPreview?: boolean;
+}
+
+const {
+  accept = "image/*,video/*,audio/*",
+  maxSize = 50,
+  multiple = false,
+  showPreview = true,
+} = Astro.props;
+---
+
+<div
+  class="media-upload-container max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg"
+>
+  <div class="upload-header mb-6">
+    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+      📁 Upload Multimediów
+    </h3>
+    <p class="text-sm text-gray-600 dark:text-gray-400">
+      Obsługiwane formaty: obrazy (JPG, PNG, WebP, GIF), wideo (MP4, WebM),
+      audio (MP3, WAV) • Maksymalny rozmiar: {maxSize}MB • {
+        multiple ? "Wiele plików" : "Jeden plik"
+      }
+    </p>
+  </div>
+
+  <!-- Drop zone -->
+  <div
+    id="drop-zone"
+    class="drop-zone border-2 border-dashed border-gray-300 dark:border-gray-600
+           rounded-lg p-8 text-center transition-colors hover:border-blue-400
+           hover:bg-gray-50 dark:hover:bg-gray-700"
+  >
+    <div class="upload-icon mb-4">
+      <svg
+        class="mx-auto h-12 w-12 text-gray-400"
+        stroke="currentColor"
+        fill="none"
+        viewBox="0 0 48 48"
+      >
+        <path
+          d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+    </div>
+
+    <div class="upload-text">
+      <p class="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+        Przeciągnij pliki tutaj lub kliknij aby wybrać
+      </p>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        {accept.includes("image") && "Obrazy"}
+        {accept.includes("video") && accept.includes("image") && ", Wideo"}
+        {
+          accept.includes("audio") &&
+            (accept.includes("image") || accept.includes("video")) &&
+            ", Audio"
+        }
+        {!accept.includes("image") && accept.includes("video") && "Wideo"}
+        {
+          !accept.includes("image") &&
+            !accept.includes("video") &&
+            accept.includes("audio") &&
+            "Audio"
+        }
+      </p>
+    </div>
+
+    <input
+      type="file"
+      id="file-input"
+      accept={accept}
+      multiple={multiple}
+      class="hidden"
+    />
+
+    <button
+      id="select-button"
+      class="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg
+             transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      📂 Wybierz pliki
+    </button>
+  </div>
+
+  <!-- Progress bar -->
+  <div id="progress-container" class="hidden mt-4">
+    <div class="bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+      <div
+        id="progress-bar"
+        class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+        style="width: 0%"
+      >
+      </div>
+    </div>
+    <p
+      id="progress-text"
+      class="text-sm text-gray-600 dark:text-gray-400 mt-1 text-center"
+    >
+      Przygotowywanie...
+    </p>
+  </div>
+
+  <!-- File list -->
+  <div id="file-list" class="mt-6 hidden">
+    <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
+      📋 Wybrane pliki
+    </h4>
+    <div id="files-container" class="space-y-3"></div>
+  </div>
+
+  <!-- Upload results -->
+  <div id="results-container" class="mt-6 hidden">
+    <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
+      ✅ Przesłane pliki
+    </h4>
+    <div id="results-list" class="space-y-3"></div>
+  </div>
+
+  <!-- Upload controls -->
+  <div id="upload-controls" class="mt-6 flex gap-3 justify-center hidden">
+    <button
+      id="upload-button"
+      class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg
+             transition-colors focus:outline-none focus:ring-2 focus:ring-green-500
+             disabled:bg-gray-400 disabled:cursor-not-allowed"
+    >
+      ⬆️ Upload plików
+    </button>
+    <button
+      id="clear-button"
+      class="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg
+             transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+    >
+      🗑️ Wyczyść
+    </button>
+  </div>
+</div>
+
+<style>
+  .drop-zone.drag-over {
+    @apply border-blue-500 bg-blue-50 dark:bg-blue-900/20;
+  }
+
+  .file-item {
+    @apply border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-700;
+  }
+
+  .file-preview {
+    @apply w-16 h-16 object-cover rounded border;
+  }
+
+  .file-info {
+    @apply flex-1 min-w-0;
+  }
+
+  .file-name {
+    @apply font-medium text-gray-800 dark:text-gray-200 truncate;
+  }
+
+  .file-size {
+    @apply text-sm text-gray-500 dark:text-gray-400;
+  }
+
+  .file-actions {
+    @apply flex gap-2;
+  }
+</style>
+
+<script define:vars={{ maxSize, showPreview }}>
+  document.addEventListener("DOMContentLoaded", function () {
+    const dropZone = document.getElementById("drop-zone");
+    const fileInput = document.getElementById("file-input");
+    const selectButton = document.getElementById("select-button");
+    const progressContainer = document.getElementById("progress-container");
+    const progressBar = document.getElementById("progress-bar");
+    const progressText = document.getElementById("progress-text");
+    const fileList = document.getElementById("file-list");
+    const filesContainer = document.getElementById("files-container");
+    const resultsContainer = document.getElementById("results-container");
+    const resultsList = document.getElementById("results-list");
+    const uploadControls = document.getElementById("upload-controls");
+    const uploadButton = document.getElementById("upload-button");
+    const clearButton = document.getElementById("clear-button");
+
+    let selectedFiles = [];
+
+    // Drag and drop handlers
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("drag-over");
+    });
+
+    dropZone.addEventListener("dragleave", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("drag-over");
+    });
+
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("drag-over");
+
+      const files = Array.from(e.dataTransfer.files);
+      handleFiles(files);
+    });
+
+    // File input handlers
+    selectButton.addEventListener("click", () => {
+      fileInput.click();
+    });
+
+    dropZone.addEventListener("click", (e) => {
+      if (e.target === dropZone || e.target.closest(".upload-text")) {
+        fileInput.click();
+      }
+    });
+
+    fileInput.addEventListener("change", (e) => {
+      const files = Array.from(e.target.files);
+      handleFiles(files);
+    });
+
+    // Upload button
+    uploadButton.addEventListener("click", async () => {
+      if (selectedFiles.length === 0) return;
+
+      await uploadFiles(selectedFiles);
+    });
+
+    // Clear button
+    clearButton.addEventListener("click", () => {
+      selectedFiles = [];
+      fileInput.value = "";
+      updateFileList();
+      hideResults();
+      hideUploadControls();
+    });
+
+    // File handling
+    function handleFiles(files) {
+      const validFiles = [];
+      const errors = [];
+
+      for (const file of files) {
+        const validation = validateFile(file);
+        if (validation.valid) {
+          validFiles.push(file);
+        } else {
+          errors.push(`${file.name}: ${validation.error}`);
+        }
+      }
+
+      if (errors.length > 0) {
+        alert("Błędy walidacji plików:\n" + errors.join("\n"));
+      }
+
+      if (validFiles.length > 0) {
+        selectedFiles.push(...validFiles);
+        updateFileList();
+        showUploadControls();
+      }
+    }
+
+    function validateFile(file) {
+      // Check file size
+      if (file.size > maxSize * 1024 * 1024) {
+        return {
+          valid: false,
+          error: `Plik za duży (${formatFileSize(file.size)}). Maksymalny rozmiar: ${maxSize}MB`,
+        };
+      }
+
+      // Check file type
+      const acceptedTypes = {
+        "image/": ["jpeg", "jpg", "png", "webp", "gif"],
+        "video/": ["mp4", "webm", "ogg"],
+        "audio/": ["mp3", "wav", "ogg"],
+      };
+
+      let typeValid = false;
+      for (const [category, extensions] of Object.entries(acceptedTypes)) {
+        if (file.type.startsWith(category)) {
+          const extension = file.name.split(".").pop().toLowerCase();
+          if (extensions.includes(extension)) {
+            typeValid = true;
+            break;
+          }
+        }
+      }
+
+      if (!typeValid) {
+        return {
+          valid: false,
+          error: "Nieobsługiwany typ pliku",
+        };
+      }
+
+      return { valid: true };
+    }
+
+    function updateFileList() {
+      if (selectedFiles.length === 0) {
+        fileList.classList.add("hidden");
+        return;
+      }
+
+      fileList.classList.remove("hidden");
+      filesContainer.innerHTML = "";
+
+      selectedFiles.forEach((file, index) => {
+        const fileItem = createFileItem(file, index);
+        filesContainer.appendChild(fileItem);
+      });
+    }
+
+    function createFileItem(file, index) {
+      const div = document.createElement("div");
+      div.className = "file-item flex items-center gap-4";
+
+      let previewContent = "";
+      if (showPreview && file.type.startsWith("image/")) {
+        const previewUrl = URL.createObjectURL(file);
+        previewContent = `<img src="${previewUrl}" alt="Preview" class="file-preview">`;
+      } else {
+        const icon = getFileIcon(file.type);
+        previewContent = `<div class="file-preview flex items-center justify-center bg-gray-200 dark:bg-gray-600">${icon}</div>`;
+      }
+
+      div.innerHTML = `
+        ${previewContent}
+        <div class="file-info">
+          <div class="file-name">${file.name}</div>
+          <div class="file-size">${formatFileSize(file.size)} • ${file.type}</div>
+        </div>
+        <div class="file-actions">
+          <button 
+            onclick="removeFile(${index})"
+            class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-sm
+                   transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
+          >
+            ❌ Usuń
+          </button>
+        </div>
+      `;
+
+      return div;
+    }
+
+    function getFileIcon(mimeType) {
+      if (mimeType.startsWith("image/")) return "🖼️";
+      if (mimeType.startsWith("video/")) return "🎬";
+      if (mimeType.startsWith("audio/")) return "🎵";
+      return "📄";
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes === 0) return "0 B";
+
+      const k = 1024;
+      const sizes = ["B", "KB", "MB", "GB"];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    }
+
+    function showUploadControls() {
+      uploadControls.classList.remove("hidden");
+    }
+
+    function hideUploadControls() {
+      uploadControls.classList.add("hidden");
+    }
+
+    function hideResults() {
+      resultsContainer.classList.add("hidden");
+    }
+
+    function showProgress() {
+      progressContainer.classList.remove("hidden");
+    }
+
+    function hideProgress() {
+      progressContainer.classList.add("hidden");
+    }
+
+    function updateProgress(progress, text) {
+      progressBar.style.width = progress + "%";
+      progressText.textContent = text;
+    }
+
+    // Upload files
+    async function uploadFiles(files) {
+      showProgress();
+      uploadButton.disabled = true;
+
+      const results = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const progress = (i / files.length) * 100;
+
+        updateProgress(
+          progress,
+          `Przesyłanie ${i + 1}/${files.length}: ${file.name}`
+        );
+
+        try {
+          const result = await uploadSingleFile(file);
+          results.push({ file, result, success: true });
+        } catch (error) {
+          console.error("Upload error:", error);
+          results.push({ file, error: error.message, success: false });
+        }
+      }
+
+      updateProgress(100, "Upload zakończony!");
+      setTimeout(() => {
+        hideProgress();
+        showResults(results);
+      }, 1000);
+
+      uploadButton.disabled = false;
+      selectedFiles = [];
+      fileInput.value = "";
+      updateFileList();
+      hideUploadControls();
+    }
+
+    async function uploadSingleFile(file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", getFileCategory(file.type));
+
+      const response = await fetch("/api/media/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.error || "Upload failed");
+      }
+
+      return data;
+    }
+
+    function getFileCategory(mimeType) {
+      if (mimeType.startsWith("image/")) return "image";
+      if (mimeType.startsWith("video/")) return "video";
+      if (mimeType.startsWith("audio/")) return "audio";
+      return "other";
+    }
+
+    function showResults(results) {
+      resultsContainer.classList.remove("hidden");
+      resultsList.innerHTML = "";
+
+      results.forEach(({ file, result, error, success }) => {
+        const resultItem = document.createElement("div");
+        resultItem.className = `file-item ${success ? "border-green-200 bg-green-50 dark:bg-green-900/20" : "border-red-200 bg-red-50 dark:bg-red-900/20"}`;
+
+        const statusIcon = success ? "✅" : "❌";
+        const statusText = success ? "Przesłano pomyślnie" : `Błąd: ${error}`;
+
+        let actionContent = "";
+        if (success && result) {
+          actionContent = `
+            <div class="flex gap-2 text-sm">
+              <a href="${result.url}" target="_blank" 
+                 class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded
+                        transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+                🔗 Otwórz
+              </a>
+              <button onclick="copyToClipboard('${result.url}')"
+                      class="px-3 py-1 bg-gray-500 hover:bg-gray-600 text-white rounded
+                             transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500">
+                📋 Kopiuj URL
+              </button>
+            </div>
+          `;
+        }
+
+        resultItem.innerHTML = `
+          <div class="flex items-center gap-4 w-full">
+            <div class="text-2xl">${statusIcon}</div>
+            <div class="file-info">
+              <div class="file-name">${file.name}</div>
+              <div class="text-sm ${success ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}">
+                ${statusText}
+              </div>
+              ${success && result ? `<div class="text-xs text-gray-500 mt-1">URL: ${result.url}</div>` : ""}
+            </div>
+            <div class="ml-auto">
+              ${actionContent}
+            </div>
+          </div>
+        `;
+
+        resultsList.appendChild(resultItem);
+      });
+    }
+
+    // Global functions for button actions
+    window.removeFile = function (index) {
+      selectedFiles.splice(index, 1);
+      updateFileList();
+
+      if (selectedFiles.length === 0) {
+        hideUploadControls();
+      }
+    };
+
+    window.copyToClipboard = function (text) {
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          alert("URL skopiowany do schowka!");
+        })
+        .catch(() => {
+          // Fallback for older browsers
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textArea);
+          alert("URL skopiowany do schowka!");
+        });
+    };
+  });
+</script>

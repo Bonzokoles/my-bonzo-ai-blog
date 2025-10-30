@@ -1,0 +1,775 @@
+---
+import type { ChatModelOption } from '@/config/ai-chat-models';
+import { CHAT_MODELS, DEFAULT_CHAT_MODEL } from '@/config/ai-chat-models';
+
+interface Props {
+  placeholder?: string;
+  maxLength?: number;
+  defaultModel?: string;
+}
+
+const {
+  placeholder = 'Zadaj pytanie o AI, narzedzia lub technologie...',
+  maxLength = 800,
+  defaultModel = DEFAULT_CHAT_MODEL
+} = Astro.props as Props;
+
+const modelOptions: ChatModelOption[] = CHAT_MODELS;
+const resolvedDefault = modelOptions.find((model) => model.id === defaultModel)?.id ?? DEFAULT_CHAT_MODEL;
+const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDefault) ?? modelOptions[0];
+---
+
+<div class="ai-chat-shell">
+  <div class="ai-chat-container">
+    <div class="ai-chat-header">
+      <div class="ai-chat-title">
+        <span class="ai-chat-tag">MyBonzo AI | Live beta</span>
+        <h3>Asystent AI MyBonzo</h3>
+        <p>
+          Domyslny model:
+          <strong>{resolvedDefaultMeta.label}</strong>
+        </p>
+      </div>
+
+      <div class="ai-chat-model-switcher">
+        <label for="model-select">Model odpowiedzi</label>
+        <div class="ai-chat-select-wrapper">
+          <select id="model-select" class="ai-chat-select" data-default-model={resolvedDefault}>
+            {
+              modelOptions.map((model) => (
+                <option value={model.id}>
+                  {model.label}
+                </option>
+              ))
+            }
+          </select>
+          <svg
+            class="ai-chat-select-icon"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M5 7L10 12L15 7"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <div class="ai-chat-model-description">
+          <p id="model-description">
+            {resolvedDefaultMeta.description}
+          </p>
+          <span
+            id="model-hint"
+            class="ai-chat-model-hint"
+            data-visible={resolvedDefaultMeta.usageHint ? 'true' : 'false'}
+            hidden={!resolvedDefaultMeta.usageHint}
+          >
+            {resolvedDefaultMeta.usageHint ?? ''}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-chat-messages" id="messages-container" role="log" aria-live="polite">
+      <div class="message message-ai">
+        <div class="bubble">
+          <p>
+            Czesc! Jestem asystentem AI MyBonzo. Odpowiadam po polsku, korzystam z modeli Cloudflare
+            Workers AI i pomagam w tematach zwiazanych z technologia, automatyzacja oraz AI.
+            Napisz, z czym moge ci dzis pomoc.
+          </p>
+        </div>
+        <span class="meta">Teraz</span>
+      </div>
+    </div>
+
+    <form id="chat-form" class="ai-chat-form">
+      <div class="ai-chat-input">
+        <textarea
+          id="chat-input"
+          placeholder={placeholder}
+          maxlength={maxLength}
+          rows="3"
+          aria-label="Wpisz pytanie do asystenta AI"
+        ></textarea>
+        <div class="ai-chat-input-meta">
+          <span id="char-count">0/{maxLength}</span>
+          <span id="status"></span>
+        </div>
+      </div>
+
+      <div class="ai-chat-actions">
+        <button type="submit" id="send-button" class="btn btn-primary">
+          Wyslij
+        </button>
+        <button type="button" id="clear-button" class="btn btn-muted">
+          Wyczysc
+        </button>
+      </div>
+    </form>
+
+    <div id="loading" class="ai-chat-loading" hidden>
+      <span class="loader"></span>
+      <span>AI analizuje twoje pytanie...</span>
+    </div>
+  </div>
+
+  <div class="ai-chat-footnote">
+    <p>
+      Zasilane przez Cloudflare Workers AI. Wybierz model zgodny z twoimi potrzebami lub pozostan przy domyslnym
+      Gemma 3 12B IT dla najlepszej jakosci po polsku.
+    </p>
+  </div>
+</div>
+
+<script type="application/json" id="model-options-data">
+  {JSON.stringify(modelOptions)}
+</script>
+
+<script type="module">
+  type ChatMessage = { role: 'user' | 'ai'; content: string; cached?: boolean; error?: boolean };
+  type ChatHistoryEntry = { role: 'user' | 'assistant'; content: string };
+  type ChatModelOption = { id: string; label: string; description: string; usageHint?: string };
+
+  const modelDataElement = document.getElementById('model-options-data') as HTMLScriptElement | null;
+  const modelSelect = document.getElementById('model-select') as HTMLSelectElement | null;
+  const modelDescription = document.getElementById('model-description') as HTMLParagraphElement | null;
+  const modelHint = document.getElementById('model-hint') as HTMLSpanElement | null;
+  const messagesContainer = document.getElementById('messages-container') as HTMLDivElement | null;
+  const form = document.getElementById('chat-form') as HTMLFormElement | null;
+  const input = document.getElementById('chat-input') as HTMLTextAreaElement | null;
+  const sendButton = document.getElementById('send-button') as HTMLButtonElement | null;
+  const clearButton = document.getElementById('clear-button') as HTMLButtonElement | null;
+  const charCount = document.getElementById('char-count') as HTMLSpanElement | null;
+  const status = document.getElementById('status') as HTMLSpanElement | null;
+  const loading = document.getElementById('loading') as HTMLDivElement | null;
+
+  if (
+    !modelDataElement ||
+    !modelSelect ||
+    !modelDescription ||
+    !messagesContainer ||
+    !form ||
+    !input ||
+    !sendButton ||
+    !clearButton ||
+    !charCount ||
+    !status ||
+    !loading
+  ) {
+    console.error('Nie udalo sie zainicjalizowac komponentu AI Chat.');
+  } else {
+    const modelOptions = JSON.parse(modelDataElement.textContent ?? '[]') as ChatModelOption[];
+    const history: ChatHistoryEntry[] = [];
+    let isProcessing = false;
+
+    if (modelSelect.dataset.defaultModel) {
+      modelSelect.value = modelSelect.dataset.defaultModel;
+    }
+
+    updateModelDetails(modelSelect.value);
+    updateCharCount();
+
+    modelSelect.addEventListener('change', () => {
+      updateModelDetails(modelSelect.value);
+    });
+
+    input.addEventListener('input', updateCharCount);
+
+    clearButton.addEventListener('click', () => {
+      history.length = 0;
+      messagesContainer.innerHTML = '';
+      addMessage({
+        role: 'ai',
+        content:
+          'Historia rozmowy zostala wyczyszczona. Napisz nowe pytanie, aby zaczac kolejny watek.'
+      });
+      updateStatus('Historia konwersacji wyczyszczona.');
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (isProcessing) {
+        return;
+      }
+
+      const prompt = input.value.trim();
+      if (!prompt) {
+        updateStatus('Wpisz pytanie, aby kontynuowac.');
+        return;
+      }
+
+      addMessage({ role: 'user', content: prompt });
+      history.push({ role: 'user', content: prompt });
+      setProcessing(true);
+      addTypingIndicator();
+
+      try {
+        const response = await fetch('/api/ai/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt,
+            history,
+            model: modelSelect.value,
+            temperature: 0.6,
+            max_tokens: 1200
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Serwer zwrocil kod ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data?.response) {
+          addMessage({
+            role: 'ai',
+            content: data.response,
+            cached: Boolean(data.cached)
+          });
+          history.push({ role: 'assistant', content: data.response });
+        } else {
+          throw new Error('Pusta odpowiedz z API.');
+        }
+      } catch (error) {
+        console.error('AI chat fetch error:', error);
+        addMessage({
+          role: 'ai',
+          content:
+            'Nie udalo sie uzyskac odpowiedzi z serwera AI. Sprobuj ponownie za chwile albo zmien model.',
+          error: true
+        });
+        updateStatus('Wystapil blad podczas komunikacji z AI.');
+      } finally {
+        removeTypingIndicator();
+        setProcessing(false);
+        input.value = '';
+        updateCharCount();
+      }
+    });
+
+    function updateModelDetails(id: string) {
+      const meta = modelOptions.find((option) => option.id === id);
+      if (!meta) {
+        modelDescription.textContent = 'Wybrany model nie zostal znaleziony w konfiguracji.';
+        if (modelHint) {
+          modelHint.textContent = '';
+        }
+        return;
+      }
+
+      modelDescription.textContent = meta.description;
+      if (modelHint) {
+        modelHint.textContent = meta.usageHint ?? '';
+        modelHint.hidden = !meta.usageHint;
+      }
+    }
+
+    function updateCharCount() {
+      const length = input.value.length;
+      charCount.textContent = `${length}/${input.maxLength}`;
+    }
+
+    function addMessage({ role, content, cached, error }: ChatMessage) {
+      const message = document.createElement('div');
+      message.className = `message message-${role}${error ? ' message-error' : ''}`;
+
+      const now = new Date().toLocaleTimeString('pl-PL', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      message.innerHTML = `
+        <div class="bubble">
+          <div class="bubble-content">${role === 'ai' && !error ? renderMarkdown(content) : escapeHtml(content)}</div>
+          ${
+            cached
+              ? '<span class="badge">Cache</span>'
+              : ''
+          }
+        </div>
+        <span class="meta">${now}</span>
+      `;
+
+      if (role === 'ai' && !error) {
+        const copyButton = document.createElement('button');
+        copyButton.type = 'button';
+        copyButton.className = 'copy-button';
+        copyButton.textContent = 'Kopiuj';
+        copyButton.addEventListener('click', () => {
+          navigator.clipboard
+            .writeText(content)
+            .then(() => {
+              copyButton.textContent = 'Skopiowano';
+              setTimeout(() => {
+                copyButton.textContent = 'Kopiuj';
+              }, 2000);
+            })
+            .catch(() => {
+              copyButton.textContent = 'Blad';
+              setTimeout(() => {
+                copyButton.textContent = 'Kopiuj';
+              }, 2000);
+            });
+        });
+        message.querySelector('.bubble')?.appendChild(copyButton);
+      }
+
+      messagesContainer.appendChild(message);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function addTypingIndicator() {
+      const typing = document.createElement('div');
+      typing.id = 'typing-indicator';
+      typing.className = 'message message-ai';
+      typing.innerHTML = `
+        <div class="bubble">
+          <span class="typing">
+            <span></span><span></span><span></span>
+          </span>
+        </div>
+      `;
+      messagesContainer.appendChild(typing);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      document.getElementById('typing-indicator')?.remove();
+    }
+
+    function setProcessing(state: boolean) {
+      isProcessing = state;
+      sendButton.disabled = state;
+      input.disabled = state;
+
+      if (state) {
+        loading.hidden = false;
+        sendButton.textContent = 'Czekaj...';
+      } else {
+        loading.hidden = true;
+        sendButton.textContent = 'Wyslij';
+      }
+    }
+
+    function updateStatus(message: string) {
+      status.textContent = message;
+      if (message) {
+        setTimeout(() => {
+          status.textContent = '';
+        }, 3_000);
+      }
+    }
+
+    function renderMarkdown(markdown: string): string {
+      let html = escapeHtml(markdown);
+      html = html.replace(/```(\w+)?\n?([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+      html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+      html = html.replace(/\n/g, '<br>');
+      return html;
+    }
+
+    function escapeHtml(text: string): string {
+      const wrapper = document.createElement('div');
+      wrapper.textContent = text;
+      return wrapper.innerHTML;
+    }
+  }
+</script>
+
+<style>
+  .ai-chat-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .ai-chat-container {
+    position: relative;
+    overflow: hidden;
+    padding: 1.75rem;
+    border-radius: 1.75rem;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 42%, transparent);
+    background:
+      radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--color-accent) 18%, transparent) 0%, transparent 48%),
+      linear-gradient(135deg, color-mix(in srgb, var(--color-background) 78%, transparent) 0%, rgba(10, 10, 18, 0.08) 100%);
+    backdrop-filter: blur(22px);
+    color: var(--color-text);
+    box-shadow:
+      0 25px 60px rgba(10, 10, 20, 0.18),
+      0 10px 30px rgba(0, 0, 0, 0.05);
+  }
+
+  .ai-chat-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .ai-chat-title h3 {
+    font-size: clamp(1.6rem, 2vw, 2rem);
+    margin: 0.25rem 0;
+  }
+
+  .ai-chat-title p {
+    margin: 0;
+    color: color-mix(in srgb, var(--color-text) 80%, var(--color-background) 20%);
+    font-size: 0.95rem;
+  }
+
+  .ai-chat-title strong {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  .ai-chat-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+    color: color-mix(in srgb, var(--color-accent) 92%, #ffffff);
+  }
+
+  .ai-chat-model-switcher {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .ai-chat-model-switcher label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--color-text) 78%, var(--color-background) 22%);
+  }
+
+  .ai-chat-select-wrapper {
+    position: relative;
+  }
+
+  .ai-chat-select {
+    width: 100%;
+    appearance: none;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    border-radius: 0.95rem;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 35%, transparent);
+    background: color-mix(in srgb, var(--color-background) 86%, transparent);
+    color: var(--color-text);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .ai-chat-select:focus-visible {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 22%, transparent);
+  }
+
+  .ai-chat-select-icon {
+    position: absolute;
+    right: 0.9rem;
+    top: 50%;
+    width: 1.1rem;
+    height: 1.1rem;
+    pointer-events: none;
+    color: color-mix(in srgb, var(--color-text) 70%, var(--color-background) 30%);
+    transform: translateY(-50%);
+  }
+
+  .ai-chat-model-description {
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    color: color-mix(in srgb, var(--color-text) 75%, var(--color-background) 25%);
+    line-height: 1.5;
+  }
+
+  .ai-chat-model-hint {
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  .ai-chat-model-hint[hidden] {
+    display: none;
+  }
+
+  .ai-chat-messages {
+    margin-top: 1.75rem;
+    padding: 1.25rem;
+    border-radius: 1.15rem;
+    min-height: 240px;
+    max-height: 420px;
+    overflow-y: auto;
+    background: color-mix(in srgb, var(--color-background) 78%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 22%, transparent);
+    display: grid;
+    gap: 1rem;
+  }
+
+  .message {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .message .bubble {
+    position: relative;
+    padding: 0.85rem 1rem;
+    border-radius: 1rem;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 18%, transparent);
+    background: color-mix(in srgb, var(--color-background) 92%, transparent);
+  }
+
+  .message .bubble-content {
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .message-user .bubble {
+    margin-left: auto;
+    background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+    color: color-mix(in srgb, var(--color-text) 92%, #ffffff 8%);
+    border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+  }
+
+  .message-ai .bubble {
+    margin-right: auto;
+  }
+
+  .message-error .bubble {
+    border-color: color-mix(in srgb, #ff6b6b 60%, transparent);
+    background: color-mix(in srgb, #ff6b6b 15%, transparent);
+  }
+
+  .message .meta {
+    font-size: 0.75rem;
+    color: color-mix(in srgb, var(--color-text) 65%, var(--color-background) 35%);
+  }
+
+  .copy-button {
+    position: absolute;
+    top: 0.65rem;
+    right: 0.65rem;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 35%, transparent);
+    background: color-mix(in srgb, var(--color-background) 92%, transparent);
+    color: color-mix(in srgb, var(--color-text) 86%, var(--color-background) 14%);
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .copy-button:hover {
+    transform: translateY(-1px);
+    border-color: var(--color-accent);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+    color: color-mix(in srgb, var(--color-accent) 90%, #ffffff 10%);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .ai-chat-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .ai-chat-input textarea {
+    width: 100%;
+    border-radius: 1.15rem;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 28%, transparent);
+    padding: 1rem 1.15rem;
+    resize: none;
+    font-size: 1rem;
+    background: color-mix(in srgb, var(--color-background) 88%, transparent);
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+
+  .ai-chat-input textarea:focus-visible {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 20%, transparent);
+  }
+
+  .ai-chat-input-meta {
+    margin-top: 0.35rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: color-mix(in srgb, var(--color-text) 60%, var(--color-background) 40%);
+  }
+
+  .ai-chat-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: flex-end;
+  }
+
+  .btn {
+    border-radius: 999px;
+    padding: 0.65rem 1.45rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--color-accent), color-mix(in srgb, var(--color-accent-alt) 65%, var(--color-accent) 35%));
+    color: color-mix(in srgb, #ffffff 92%, var(--color-background) 8%);
+    border-color: color-mix(in srgb, var(--color-accent) 60%, transparent);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px color-mix(in srgb, var(--color-accent) 24%, transparent);
+  }
+
+  .btn-primary:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .btn-muted {
+    background: transparent;
+    border-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+    color: color-mix(in srgb, var(--color-text) 86%, var(--color-background) 14%);
+  }
+
+  .btn-muted:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+  }
+
+  .ai-chat-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.95rem;
+    border: 1px dashed color-mix(in srgb, var(--color-accent) 32%, transparent);
+    background: color-mix(in srgb, var(--color-background) 82%, transparent);
+    color: color-mix(in srgb, var(--color-text) 80%, var(--color-background) 20%);
+    font-size: 0.85rem;
+  }
+
+  .loader {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    border: 2px solid color-mix(in srgb, var(--color-accent) 18%, transparent);
+    border-top-color: var(--color-accent);
+    animation: spin 0.9s linear infinite;
+  }
+
+  .typing {
+    display: inline-flex;
+    gap: 0.35rem;
+  }
+
+  .typing span {
+    width: 0.3rem;
+    height: 0.3rem;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-text) 70%, var(--color-background) 30%);
+    animation: typing 1.2s infinite ease-in-out;
+  }
+
+  .typing span:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .typing span:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  .ai-chat-footnote {
+    text-align: center;
+    font-size: 0.85rem;
+    color: color-mix(in srgb, var(--color-text) 70%, var(--color-background) 30%);
+    line-height: 1.5;
+  }
+
+  pre {
+    margin: 0.8rem 0 0;
+    padding: 0.75rem;
+    border-radius: 0.85rem;
+    background: rgba(30, 30, 35, 0.8);
+    color: #f5f5f5;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  code {
+    background: color-mix(in srgb, var(--color-background) 70%, rgba(0, 0, 0, 0.08));
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.35rem;
+    font-size: 0.85rem;
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-accent) 65%, transparent);
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes typing {
+    0%, 80%, 100% {
+      opacity: 0.2;
+      transform: translateY(0);
+    }
+    40% {
+      opacity: 1;
+      transform: translateY(-3px);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .ai-chat-header {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .ai-chat-model-switcher {
+      max-width: 320px;
+    }
+  }
+</style>

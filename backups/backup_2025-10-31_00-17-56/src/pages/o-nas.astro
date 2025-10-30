@@ -1,0 +1,57 @@
+---
+import Link from "@components/Astro/Link.astro";
+import BackgroundPattern from "@components/elements/BackgroundPattern.astro";
+import Layout from "@layouts/Layout.astro";
+
+// Prerender statycznej strony dla lepszej wydajności
+export const prerender = true;
+---
+
+<Layout title="O nas" description="Kim jesteśmy - zespół MyBonzo AI Blog">
+  <BackgroundPattern />
+  <section class="py-16">
+    <div class="max-w-4xl mx-auto px-4">
+      <h1 class="text-4xl font-bold mb-6">O nas</h1>
+      <div class="prose prose-lg dark:prose-invert max-w-none">
+        <p class="text-lg text-gray-700 dark:text-gray-300 mb-6">
+          Jesteśmy zespołem MyBonzo - polską platformą AI dla domu i rodziny.
+        </p>
+
+        <h2 class="text-2xl font-semibold mt-8 mb-4">Nasza misja</h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-4">
+          Tworzymy proste, domowe rozwiązania AI dla Polaków. Wierzymy, że
+          sztuczna inteligencja powinna być dostępna dla każdego - bez
+          skomplikowanych instrukcji i technicznego żargonu.
+        </p>
+
+        <h2 class="text-2xl font-semibold mt-8 mb-4">Co robimy</h2>
+        <ul
+          class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-6"
+        >
+          <li>Tworzymy narzędzia AI dla codziennych zadań</li>
+          <li>Piszemy proste poradniki bez technicznego żargonu</li>
+          <li>Testujemy i polecamy najlepsze rozwiązania AI</li>
+          <li>Pomagamy rodzinom odkrywać potencjał sztucznej inteligencji</li>
+        </ul>
+
+        <div class="mt-8 p-6 bg-blue-50 dark:bg-gray-800 rounded-lg">
+          <p class="text-center">
+            Chcesz poznać profesjonalną platformę?
+            <Link
+              href="/pro"
+              text="Zobacz MyBonzo Pro"
+              class="text-blue-600 font-semibold"
+            />
+            lub przejdź na
+            <Link
+              href="https://www.mybonzo.com"
+              text="www.mybonzo.com"
+              external={true}
+              class="text-blue-600 font-semibold"
+            />
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
