@@ -45,7 +45,7 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
       userId?: string;
       async?: boolean; // New parameter to choose sync/async mode
     };
-    
+
     const {
       prompt,
       model = '@cf/stabilityai/stable-diffusion-xl-base-1.0',
@@ -105,7 +105,7 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     // Validate env availability
     if (!env || !env.AI) {
       return new Response(
-        JSON.stringify({ 
+        JSON.stringify({
           error: 'AI service not available',
           details: 'Cloudflare AI binding not found'
         }),
@@ -125,7 +125,7 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
           );
         }
       }
-    } catch {}
+    } catch { }
 
     // Generate parameters object
     const params = {
@@ -153,15 +153,15 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
           await env.CACHE.put(tKey, translatedPrompt, { expirationTtl: 86400 });
         }
       }
-    } catch {}
+    } catch { }
 
     // Generate unique hash for this exact request (based on translated prompt)
     const imageHash = generateImageHash(translatedPrompt, model, params);
-    
+
     // Check if image already exists in R2
     const r2Key = `images/${imageHash}.png`;
     let existingImage: ArrayBuffer | null = null;
-    
+
     try {
       const r2Object = await env.MEDIA_BUCKET.get(r2Key);
       if (r2Object) {
@@ -175,7 +175,7 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     if (existingImage) {
       // Get metadata from KV
       const metadata = await env.CACHE.get(`img-meta:${imageHash}`, 'json');
-      
+
       return new Response(existingImage, {
         headers: {
           'Content-Type': 'image/png',
@@ -232,7 +232,7 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
           });
         }
       }
-    } catch {}
+    } catch { }
 
     // If async mode is enabled and we have queue support
     if (async && env.IMAGE_QUEUE) {
@@ -278,22 +278,22 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     };
 
     let imageBuffer: ArrayBuffer;
-    
+
     try {
       // Cloudflare AI returns ReadableStream for image models
       const response = await env.AI.run(model, inputs);
-      
+
       // Response is a ReadableStream - convert to ArrayBuffer
       if (response instanceof ReadableStream) {
         const reader = response.getReader();
         const chunks: Uint8Array[] = [];
-        
+
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
           chunks.push(value);
         }
-        
+
         // Combine chunks into single buffer
         const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
         const combined = new Uint8Array(totalLength);
@@ -385,7 +385,7 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
       await env.CACHE.put(promptMapKey, JSON.stringify({ imageId: imageHash }), {
         expirationTtl: 86400 * 7
       });
-    } catch {}
+    } catch { }
 
     // Update recent images list
     const recentKey = 'recent-images';
@@ -408,7 +408,7 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
 
   } catch (error) {
     console.error('Image Generation Error:', error);
-    
+
     // Enhanced error reporting
     const errorDetails = {
       message: error instanceof Error ? error.message : 'Unknown error',
