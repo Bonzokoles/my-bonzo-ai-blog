@@ -29,12 +29,14 @@ binding = "MEDIA_BUCKET"
 bucket_name = "mybonzo-media"
 preview_bucket_name = "mybonzo-media-preview"
 
-# Queues - Image processing (optional, uncomment when needed)
-# Note: Create queue before deployment
-# wrangler queues create image-processing
-# [[queues.producers]]
-# binding = "IMAGE_QUEUE"
-# queue = "image-processing"
+# Queues - Image processing
+# Note: Create queue before deployment: wrangler queues create image-generation-queue
+[[queues.producers]]
+binding = "IMAGE_QUEUE"
+queue = "image-generation-queue"
+
+# Queue consumers require separate Worker deployment
+# This will be deployed as a separate service
 
 # Durable Objects - disabled for now (complex setup required)
 # [durable_objects]
