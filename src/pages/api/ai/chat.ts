@@ -141,6 +141,10 @@ function createCacheKey(payload: {
 }
 
 export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
+  console.log('🚀 AI Chat API Called');
+  console.log('📍 clientAddress:', clientAddress);
+  console.log('🔍 locals.runtime:', (locals as any)?.runtime ? 'Available' : 'Not Available');
+
   try {
     const body = (await request.json()) as {
       prompt?: string;
@@ -150,9 +154,12 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
       max_tokens?: number;
     };
 
+    console.log('📝 Request body:', JSON.stringify(body, null, 2));
+
     const prompt = typeof body.prompt === 'string' ? body.prompt.trim() : '';
 
     if (!prompt) {
+      console.log('❌ No prompt provided');
       return new Response(
         JSON.stringify({ error: 'Pole "prompt" jest wymagane.' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
@@ -237,7 +244,13 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
 
     let responseText = '';
 
+    console.log('🤖 AI Binding Available:', !!env?.AI);
+    console.log('🔑 CF AccountId:', !!cfAccountId);
+    console.log('🔑 CF API Token:', !!cfApiToken);
+    console.log('📄 Selected Model:', selectedModel);
+
     if (env?.AI) {
+      console.log('✅ Using AI binding...');
       const aiResponse = (await env.AI.run(selectedModel, {
         messages,
         temperature,
@@ -250,7 +263,9 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
           : typeof (aiResponse as any)?.response === 'string'
           ? (aiResponse as any).response
           : '';
+      console.log('🎯 AI Response received, length:', responseText.length);
     } else if (cfAccountId && cfApiToken) {
+      console.log('🌐 Using REST API fallback...');
       const endpoint = `https://api.cloudflare.com/client/v4/accounts/${encodeURIComponent(
         cfAccountId
       )}/ai/run/${selectedModel}`;

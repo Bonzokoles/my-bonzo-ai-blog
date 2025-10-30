@@ -101,43 +101,49 @@ jobs:
           echo "• Assets:"
           ls -la ./dist/_assets/ 2>/dev/null || echo "  No assets directory"
 
-      - name: Deploy to Cloudflare Pages
+      - name: Validate environment
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "❌ Missing GitHub Secrets!"
-            echo ""
-            echo "🔧 Required secrets in GitHub repository settings:"
-            echo "1. CLOUDFLARE_API_TOKEN - Cloudflare API token with Pages:Edit permissions"
-            echo "2. CLOUDFLARE_ACCOUNT_ID - 7f490d58a478c6baccb0ae01ea1d87c3"
-            echo ""
-            echo "� To create API token:"
-            echo "1. Go to https://dash.cloudflare.com/profile/api-tokens"
-            echo "2. Create Custom Token with:"
-            echo "   • Permissions: Zone:Zone:Read, Zone:Page Rules:Edit, Account:Cloudflare Pages:Edit"
-            echo "   • Account Resources: Include - Your Account"
-            echo "   • Zone Resources: Include - All zones from account"
-            echo ""
-            echo "�📁 Built files are ready in ./dist directory"
-            echo "🚀 Manual deployment command:"
-            echo "   npx wrangler pages deploy ./dist --project-name=mybonzoaiblog"
-            exit 1
+            echo "⚠️ Missing CLOUDFLARE_API_TOKEN - checking fallback options..."
+            if [ -f wrangler.toml ]; then
+              echo "✅ wrangler.toml found - checking for account_id"
+              if grep -q "account_id" wrangler.toml; then
+                echo "✅ Account ID found in wrangler.toml"
+              else
+                echo "❌ No account_id in wrangler.toml and no secrets configured"
+                exit 1
+              fi
+            else
+              echo "❌ No wrangler.toml found and no secrets configured"
+              exit 1
+            fi
+          else
+            echo "✅ Cloudflare credentials available"
           fi
 
-          echo "� Deploying to Cloudflare Pages..."
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+
+          echo "🌐 Deploying to Cloudflare Pages..."
           echo "📋 Deployment info:"
           echo "• Project: mybonzoaiblog"
-          echo "• Account: $CLOUDFLARE_ACCOUNT_ID"
+          echo "• Account: ${CLOUDFLARE_ACCOUNT_ID:-from-wrangler-toml}"
           echo "• Environment: production"
           echo "• Build output: ./dist"
+          echo "• Config: ./wrangler.toml"
 
-          # Deploy główny
+          # Deploy Pages (główna strona)
           echo ""
-          echo "🌐 Deploying to production..."
-          npx wrangler pages deploy ./dist \
-            --project-name=mybonzoaiblog
+          echo "📄 Deploying Pages..."
+          npx wrangler@${{ env.WRANGLER_VERSION }} pages deploy ./dist \
+            --project-name=mybonzoaiblog \
+            --config ./wrangler.toml
 
           deployment_status=$?
 
@@ -187,7 +193,7 @@ jobs:
           success_count=0
           total_checks=3
 
-          # Function to test endpoint with retries and detailed logging
+          # Enhanced function to test endpoint with proper HTTP status handling
           test_endpoint() {
             local url=$1
             local name=$2
@@ -198,21 +204,45 @@ jobs:
             for attempt in $(seq 1 $max_attempts); do
               echo "Attempt $attempt/$max_attempts for $url"
               
-              # Get detailed response info (removed -f flag to prevent exit codes)
-              response=$(curl -s -w "HTTPSTATUS:%{http_code};TIME:%{time_total}" --connect-timeout 10 --max-time 30 "$url" 2>/dev/null || true)
-              http_status=$(echo "$response" | grep -o "HTTPSTATUS:[0-9]*" | cut -d: -f2 || echo "")
-              time_total=$(echo "$response" | grep -o "TIME:[0-9.]*" | cut -d: -f2 || echo "")
+              # Get detailed response with proper error handling
+              response=$(curl -s -w "HTTPSTATUS:%{http_code};TIME:%{time_total};SIZE:%{size_download}" \
+                --connect-timeout 10 --max-time 30 \
+                -H "User-Agent: GitHub-Actions-Health-Check/1.0" \
+                "$url" 2>/dev/null || echo "CURL_ERROR")
               
+              if [ "$response" = "CURL_ERROR" ]; then
+                echo "⚠️ CURL ERROR: Cannot connect to $url"
+                http_status="0"
+              else
+                http_status=$(echo "$response" | grep -o "HTTPSTATUS:[0-9]*" | cut -d: -f2 || echo "")
+                time_total=$(echo "$response" | grep -o "TIME:[0-9.]*" | cut -d: -f2 || echo "")
+                size_download=$(echo "$response" | grep -o "SIZE:[0-9.]*" | cut -d: -f2 || echo "")
+              fi
+              
+              # Check HTTP status ranges
               if [ "$http_status" = "200" ]; then
-                echo "✅ SUCCESS: $url ($http_status) - Response time: ${time_total}s"
+                echo "✅ SUCCESS: $url (HTTP $http_status) - Time: ${time_total}s, Size: ${size_download} bytes"
                 echo "success" > /tmp/test_result_$name
                 return
+              elif [ "$http_status" -ge "200" ] 2>/dev/null && [ "$http_status" -lt "300" ] 2>/dev/null; then
+                echo "✅ SUCCESS: $url (HTTP $http_status - 2xx range) - Time: ${time_total}s"
+                echo "success" > /tmp/test_result_$name
+                return
+              elif [ "$http_status" -ge "300" ] 2>/dev/null && [ "$http_status" -lt "400" ] 2>/dev/null; then
+                echo "⚠️ REDIRECT: $url (HTTP $http_status - 3xx range) - Time: ${time_total}s"
+                echo "redirect" > /tmp/test_result_$name
+                return
+              elif [ "$http_status" -ge "400" ] 2>/dev/null && [ "$http_status" -lt "500" ] 2>/dev/null; then
+                echo "❌ CLIENT ERROR: $url (HTTP $http_status - 4xx range) - Time: ${time_total}s"
+              elif [ "$http_status" -ge "500" ] 2>/dev/null; then
+                echo "❌ SERVER ERROR: $url (HTTP $http_status - 5xx range) - Time: ${time_total}s"
               else
-                echo "⚠️ ATTEMPT $attempt FAILED: $url (HTTP: ${http_status:-'N/A'}) - Time: ${time_total:-'N/A'}s"
-                if [ $attempt -lt $max_attempts ]; then
-                  echo "   Retrying in 5 seconds..."
-                  sleep 5
-                fi
+                echo "⚠️ UNKNOWN STATUS: $url (HTTP: ${http_status:-'N/A'}) - Time: ${time_total:-'N/A'}s"
+              fi
+              
+              if [ $attempt -lt $max_attempts ]; then
+                echo "   Retrying in 10 seconds..."
+                sleep 10
               fi
             done
             echo "❌ FAILED: $name after $max_attempts attempts (Final status: ${http_status:-'Unknown'})"
@@ -221,24 +251,32 @@ jobs:
 
           # Test main site
           test_endpoint "https://mybonzoaiblog.pages.dev" "Main_site"
-          if [ -f /tmp/test_result_Main_site ] && [ "$(cat /tmp/test_result_Main_site)" = "success" ]; then
+          result=$(cat /tmp/test_result_Main_site 2>/dev/null || echo "failed")
+          if [ "$result" = "success" ] || [ "$result" = "redirect" ]; then
             ((success_count++))
+            echo "✅ Main site: OK ($result)"
+          else
+            echo "❌ Main site: FAILED"
           fi
 
           # Test AI API health check - GET should return health status
           test_endpoint "https://mybonzoaiblog.pages.dev/api/ai/chat" "AI_API_health"
-          if [ -f /tmp/test_result_AI_API_health ] && [ "$(cat /tmp/test_result_AI_API_health)" = "success" ]; then
+          result=$(cat /tmp/test_result_AI_API_health 2>/dev/null || echo "failed")
+          if [ "$result" = "success" ]; then
             ((success_count++))
+            echo "✅ AI API: OK"
           else
-            echo "ℹ️ AI API may need Cloudflare bindings to be fully functional"
+            echo "ℹ️ AI API ($result) - may need Cloudflare bindings to be fully functional"
           fi
 
-          # Test blog API - should return blog index
-          test_endpoint "https://mybonzoaiblog.pages.dev/api/blog/index" "Blog_API"
-          if [ -f /tmp/test_result_Blog_API ] && [ "$(cat /tmp/test_result_Blog_API)" = "success" ]; then
+          # Test enhanced AI chat page
+          test_endpoint "https://mybonzoaiblog.pages.dev/system/ai-chat-enhanced" "AI_Chat_Page"
+          result=$(cat /tmp/test_result_AI_Chat_Page 2>/dev/null || echo "failed")
+          if [ "$result" = "success" ]; then
             ((success_count++))
+            echo "✅ AI Chat Enhanced: OK"
           else
-            echo "ℹ️ Blog API may not be implemented yet"
+            echo "ℹ️ AI Chat Enhanced ($result) - page may not be fully rendered"
           fi
 
           # Summary

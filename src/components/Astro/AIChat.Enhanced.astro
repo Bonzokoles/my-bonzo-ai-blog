@@ -270,10 +270,20 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
 
   // ========== Initialization ==========
   function initializeChat() {
+    console.log('🔧 [AI Chat] Initialize started');
+    console.log('📋 Elements check:', {
+      modelSelect: !!modelSelect,
+      messagesContainer: !!messagesContainer, 
+      form: !!form,
+      input: !!input
+    });
+    
     if (!modelSelect || !messagesContainer || !form || !input) {
-      console.error('Nie udało się zainicjalizować komponentu AI Chat.');
+      console.error('❌ [AI Chat] Failed to initialize - missing elements');
       return;
     }
+
+    console.log('✅ [AI Chat] All elements found, proceeding with initialization');
 
     // Load persisted data
     if (config.enablePersistence) {
@@ -322,11 +332,14 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     closeModalBtn?.addEventListener('click', hideExportModal);
 
     form.addEventListener('submit', handleSubmit);
+    console.log('🎯 [AI Chat] Form submit listener attached');
 
     // Render sidebar
     if (config.enableHistorySidebar) {
       renderConversationsList();
     }
+    
+    console.log('🚀 [AI Chat] Initialization complete');
   }
 
   // ========== Conversation Management ==========
@@ -729,12 +742,18 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
 
   // ========== Message Handling ==========
   async function handleSubmit(event) {
+    console.log('🚀 [AI Chat] Form submit triggered');
     event.preventDefault();
-    if (isProcessing || !input || !currentConversation) return;
+    if (isProcessing || !input || !currentConversation) {
+      console.log('❌ [AI Chat] Submit blocked - processing:', isProcessing, 'input:', !!input, 'conversation:', !!currentConversation);
+      return;
+    }
 
     const prompt = (input && 'value' in input) ? String(input.value).trim() : '';
+    console.log('📝 [AI Chat] User prompt:', prompt);
     if (!prompt) {
       updateStatus('Wpisz pytanie, aby kontynuować.');
+      console.log('⚠️ [AI Chat] Empty prompt - aborting');
       return;
     }
 
@@ -781,6 +800,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
   async function handleNormalResponse(prompt) {
     if (!currentConversation || !modelSelect) return;
 
+    console.log('🌐 [AI Chat] Making API request to /api/ai/chat');
     const response = await fetch('/api/ai/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -792,6 +812,8 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
         max_tokens: 1200
       })
     });
+
+    console.log('📡 [AI Chat] Response status:', response.status, response.statusText);
 
     if (!response.ok) {
       throw new Error(`Serwer zwrócił kod ${response.status}`);
