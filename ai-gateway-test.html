@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Gateway Test - MyBonzo AI Blog</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        
+        .container {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+        
+        h1 {
+            color: #60a5fa;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            background: #334155;
+            color: #e2e8f0;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background: #3b82f6;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background: #2563eb;
+        }
+        
+        button:disabled {
+            background: #475569;
+            cursor: not-allowed;
+        }
+        
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+        }
+        
+        .success {
+            background: #064e3b;
+            border: 1px solid #059669;
+            color: #6ee7b7;
+        }
+        
+        .error {
+            background: #7f1d1d;
+            border: 1px solid #dc2626;
+            color: #fca5a5;
+        }
+        
+        .loading {
+            background: #1e40af;
+            border: 1px solid #3b82f6;
+            color: #93c5fd;
+        }
+        
+        .config-info {
+            background: #374151;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #60a5fa;
+        }
+        
+        .config-info h3 {
+            margin: 0 0 10px 0;
+            color: #60a5fa;
+        }
+        
+        .config-info code {
+            background: #1f2937;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AI Gateway Test</h1>
+        
+        <div class="config-info">
+            <h3>Konfiguracja AI Gateway</h3>
+            <p>Aby test działał, musisz:</p>
+            <ol>
+                <li>Utworzyć AI Gateway w Cloudflare Dashboard</li>
+                <li>Dodać <code>CLOUDFLARE_AI_GATEWAY_ID</code> do pliku .env</li>
+                <li>Upewnić się, że masz poprawny <code>CLOUDFLARE_ACCOUNT_ID</code></li>
+            </ol>
+            <p><strong>Endpoint:</strong> <code>/api/ai/gateway</code></p>
+        </div>
+        
+        <form id="aiForm">
+            <div class="form-group">
+                <label for="gatewayId">Gateway ID:</label>
+                <input type="text" id="gatewayId" name="gatewayId" 
+                       placeholder="np. my-ai-gateway" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="model">Model:</label>
+                <select id="model" name="model">
+                    <option value="@cf/google/gemma-3-12b-it">Gemma 3 12B IT</option>
+                    <option value="@cf/meta/llama-2-7b-chat-int8">Llama 2 7B Chat</option>
+                    <option value="@cf/microsoft/phi-2">Phi-2</option>
+                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo (jeśli skonfigurowany)</option>
+                    <option value="gpt-4">GPT-4 (jeśli skonfigurowany)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Wiadomość:</label>
+                <textarea id="message" name="message" required 
+                          placeholder="Napisz swoją wiadomość do AI...">Cześć! Jestem testem AI Gateway. Odpowiedz krótko po polsku.</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="temperature">Temperature (0-1):</label>
+                <input type="number" id="temperature" name="temperature" 
+                       min="0" max="1" step="0.1" value="0.7">
+            </div>
+            
+            <div class="form-group">
+                <label for="maxTokens">Max Tokens:</label>
+                <input type="number" id="maxTokens" name="maxTokens" 
+                       min="1" max="2048" value="512">
+            </div>
+            
+            <button type="submit" id="submitBtn">🚀 Wyślij do AI Gateway</button>
+        </form>
+        
+        <div id="response"></div>
+    </div>
+
+    <script>
+        document.getElementById('aiForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const responseDiv = document.getElementById('response');
+            
+            // Get form data
+            const formData = new FormData(e.target);
+            const gatewayId = formData.get('gatewayId');
+            const model = formData.get('model');
+            const message = formData.get('message');
+            const temperature = parseFloat(formData.get('temperature'));
+            const maxTokens = parseInt(formData.get('maxTokens'));
+            
+            // Update .env info
+            const envInfo = `Dodaj do .env: CLOUDFLARE_AI_GATEWAY_ID=${gatewayId}`;
+            console.log(envInfo);
+            
+            // Prepare request
+            const requestBody = {
+                messages: [
+                    { role: 'user', content: message }
+                ],
+                model: model,
+                temperature: temperature,
+                max_tokens: maxTokens
+            };
+            
+            // UI updates
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Wysyłanie...';
+            responseDiv.innerHTML = '<div class="response loading">Wysyłanie zapytania do AI Gateway...</div>';
+            
+            try {
+                const response = await fetch('/api/ai/gateway', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    let displayResult = JSON.stringify(result, null, 2);
+                    
+                    // Try to extract actual AI response for better display
+                    if (result.choices && result.choices[0] && result.choices[0].message) {
+                        displayResult = `AI Response: ${result.choices[0].message.content}\n\nFull Response:\n${displayResult}`;
+                    }
+                    
+                    responseDiv.innerHTML = `<div class="response success">✅ Sukces!\n\n${displayResult}</div>`;
+                } else {
+                    responseDiv.innerHTML = `<div class="response error">❌ Błąd!\n\n${JSON.stringify(result, null, 2)}</div>`;
+                }
+            } catch (error) {
+                responseDiv.innerHTML = `<div class="response error">❌ Błąd połączenia!\n\n${error.message}</div>`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚀 Wyślij do AI Gateway';
+            }
+        });
+        
+        // Auto-populate Gateway ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const gatewayIdFromUrl = urlParams.get('gateway');
+        if (gatewayIdFromUrl) {
+            document.getElementById('gatewayId').value = gatewayIdFromUrl;
+        }
+    </script>
+</body>
+</html>
