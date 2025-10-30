@@ -1322,79 +1322,45 @@ const description =
   }
 </style>
 
-<script>
+<script type="module">
   // AI Image Generator functionality
   document.addEventListener("DOMContentLoaded", () => {
     // DOM Elements
-    const modelSelect = document.getElementById(
-      "modelSelect"
-    ) as unknown as HTMLSelectElement;
+    const modelSelect = document.getElementById("modelSelect");
     const styleButtons = document.querySelectorAll(".style-btn");
-    const numStepsSlider = document.getElementById(
-      "numSteps"
-    ) as HTMLInputElement;
-    const guidanceSlider = document.getElementById(
-      "guidance"
-    ) as HTMLInputElement;
-    const stepsValue = document.getElementById("stepsValue") as HTMLElement;
-    const guidanceValue = document.getElementById(
-      "guidanceValue"
-    ) as HTMLElement;
+    const numStepsSlider = document.getElementById("numSteps");
+    const guidanceSlider = document.getElementById("guidance");
+    const stepsValue = document.getElementById("stepsValue");
+    const guidanceValue = document.getElementById("guidanceValue");
 
-    const generateForm = document.getElementById(
-      "generateForm"
-    ) as HTMLFormElement;
-    const promptInput = document.getElementById(
-      "promptInput"
-    ) as HTMLTextAreaElement;
-    const promptCounter = document.getElementById(
-      "promptCounter"
-    ) as HTMLElement;
-    const currentStyleBadge = document.getElementById(
-      "currentStyle"
-    ) as HTMLElement;
-    const generateBtn = document.getElementById(
-      "generateBtn"
-    ) as HTMLButtonElement;
-    const generateBtnText = document.getElementById(
-      "generateBtnText"
-    ) as HTMLElement;
+    const generateForm = document.getElementById("generateForm");
+    const promptInput = document.getElementById("promptInput");
+    const promptCounter = document.getElementById("promptCounter");
+    const currentStyleBadge = document.getElementById("currentStyle");
+    const generateBtn = document.getElementById("generateBtn");
+    const generateBtnText = document.getElementById("generateBtnText");
 
-    const progressArea = document.getElementById("progressArea") as HTMLElement;
-    const progressMessage = document.getElementById(
-      "progressMessage"
-    ) as HTMLElement;
-    const progressBar = document.getElementById("progressBar") as HTMLElement;
+    const progressArea = document.getElementById("progressArea");
+    const progressMessage = document.getElementById("progressMessage");
+    const progressBar = document.getElementById("progressBar");
 
-    const resultArea = document.getElementById("resultArea") as HTMLElement;
-    const generatedImage = document.getElementById(
-      "generatedImage"
-    ) as HTMLImageElement;
-    const imageBadge = document.getElementById("imageBadge") as HTMLElement;
-    const resultPrompt = document.getElementById("resultPrompt") as HTMLElement;
-    const resultModel = document.getElementById("resultModel") as HTMLElement;
-    const resultTime = document.getElementById("resultTime") as HTMLElement;
+    const resultArea = document.getElementById("resultArea");
+    const generatedImage = document.getElementById("generatedImage");
+    const imageBadge = document.getElementById("imageBadge");
+    const resultPrompt = document.getElementById("resultPrompt");
+    const resultModel = document.getElementById("resultModel");
+    const resultTime = document.getElementById("resultTime");
 
-    const downloadBtn = document.getElementById(
-      "downloadBtn"
-    ) as HTMLButtonElement;
-    const shareBtn = document.getElementById("shareBtn") as HTMLButtonElement;
-    const newImageBtn = document.getElementById(
-      "newImageBtn"
-    ) as HTMLButtonElement;
+    const downloadBtn = document.getElementById("downloadBtn");
+    const shareBtn = document.getElementById("shareBtn");
+    const newImageBtn = document.getElementById("newImageBtn");
 
-    const galleryGrid = document.getElementById("galleryGrid") as HTMLElement;
-    const clearGalleryBtn = document.getElementById(
-      "clearGalleryBtn"
-    ) as HTMLButtonElement;
+    const galleryGrid = document.getElementById("galleryGrid");
+    const clearGalleryBtn = document.getElementById("clearGalleryBtn");
 
-    const generatedCount = document.getElementById(
-      "generatedCount"
-    ) as HTMLElement;
-    const rateLimitStatus = document.getElementById(
-      "rateLimitStatus"
-    ) as HTMLElement;
-    const cacheRate = document.getElementById("cacheRate") as HTMLElement;
+    const generatedCount = document.getElementById("generatedCount");
+    const rateLimitStatus = document.getElementById("rateLimitStatus");
+    const cacheRate = document.getElementById("cacheRate");
 
     const quickPromptButtons = document.querySelectorAll(".quick-prompt-btn");
 
@@ -1497,7 +1463,7 @@ const description =
       }
     }
 
-    async function handleGenerate(e: Event) {
+    async function handleGenerate(e) {
       e.preventDefault();
 
       const prompt = promptInput.value.trim();
@@ -1547,7 +1513,7 @@ const description =
 
         if (!response.ok) {
           const error = await response.json();
-          throw new Error((error as any)?.error || `HTTP ${response.status}`);
+          throw new Error(error?.error || `HTTP ${response.status}`);
         }
 
         const contentType = response.headers.get("Content-Type");
@@ -1565,8 +1531,8 @@ const description =
 
           // Poll for completion
           await pollQueueResult(
-            (queueData as any).requestId,
-            (queueData as any).imageId,
+            queueData.requestId,
+            queueData.imageId,
             fullPrompt,
             startTime
           );
@@ -1608,10 +1574,10 @@ const description =
     }
 
     async function pollQueueResult(
-      requestId: string,
-      imageId: string,
-      prompt: string,
-      startTime: number
+      requestId,
+      imageId,
+      prompt,
+      startTime
     ) {
       const maxRetries = 60; // 60 * 2 seconds = 2 minutes max
       let retries = 0;
@@ -1634,7 +1600,7 @@ const description =
 
           const status = await statusResponse.json();
 
-          if ((status as any).status === "completed") {
+          if (status.status === "completed") {
             // Image is ready, fetch it
             const imageResponse = await fetch(`/api/ai/image/${imageId}`);
 
@@ -1651,10 +1617,8 @@ const description =
 
               return;
             }
-          }
-
-          } else if ((status as any).status === "error") {
-            throw new Error((status as any).error || "Queue processing failed");
+          } else if (status.status === "error") {
+            throw new Error(status.error || "Queue processing failed");
           }
 
           // Still pending, continue polling
@@ -1674,10 +1638,10 @@ const description =
     }
 
     function displayGeneratedImage(
-      imageUrl: string,
-      prompt: string,
-      response: Response,
-      startTime: number
+      imageUrl,
+      prompt,
+      response,
+      startTime
     ) {
       const cached = response.headers.get("X-Cache")?.includes("HIT");
       const imageId = response.headers.get("X-Image-ID");
@@ -1714,7 +1678,7 @@ const description =
       cacheRate.textContent = `${rate}%`;
     }
 
-    function saveToGallery(imageUrl: string, prompt: string, imageId?: string) {
+    function saveToGallery(imageUrl, prompt, imageId) {
       // Save to localStorage as backup
       try {
         const gallery = JSON.parse(localStorage.getItem("img-gallery") || "[]");
@@ -1744,7 +1708,7 @@ const description =
 
         if (response.ok) {
           const data = await response.json();
-          displayGallery((data as any).images);
+          displayGallery(data.images);
           return;
         }
       } catch (error) {
@@ -1772,7 +1736,7 @@ const description =
       }
     }
 
-    function displayGallery(images: any[]) {
+    function displayGallery(images) {
       if (images.length === 0) {
         galleryGrid.innerHTML =
           '<div class="gallery-empty"><p>Wygenerowane obrazy pojawią się tutaj</p></div>';
@@ -1781,7 +1745,7 @@ const description =
 
       galleryGrid.innerHTML = images
         .map(
-          (item: any, index: number) => `
+          (item, index) => `
         <div class="gallery-item" data-index="${index}" data-id="${item.id || ""}">
           <img src="${item.url || item.thumbnail || "/api/ai/image/" + item.id}" alt="${item.prompt}" />
           <div class="gallery-overlay">
