@@ -2,7 +2,8 @@
 import Layout from "@layouts/Layout.astro";
 import PageHeader from "@components/Astro/PageHeader.astro";
 
-const description = "Test OpenAI chat through Cloudflare AI Gateway - GPT-4, GPT-4o Mini and more";
+const description =
+  "Test OpenAI chat through Cloudflare AI Gateway - GPT-4, GPT-4o Mini and more";
 ---
 
 <Layout title="OpenAI Chat - MyBonzo AI" description={description}>
@@ -11,7 +12,9 @@ const description = "Test OpenAI chat through Cloudflare AI Gateway - GPT-4, GPT
     description={description}
     animate={true}
   />
-  <div class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-12 px-4">
+  <div
+    class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-12 px-4"
+  >
     <div class="max-w-4xl mx-auto">
       <!-- Header -->
       <div class="text-center mb-8">
@@ -20,17 +23,25 @@ const description = "Test OpenAI chat through Cloudflare AI Gateway - GPT-4, GPT
           <span class="text-purple-400">via AI Gateway</span>
         </h1>
         <p class="text-slate-300">
-          Powered by Cloudflare AI Gateway - with caching, rate limiting & analytics
+          Powered by Cloudflare AI Gateway - with caching, rate limiting &
+          analytics
         </p>
       </div>
 
       <!-- Chat Container -->
-      <div class="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+      <div
+        class="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 overflow-hidden"
+      >
         <!-- Model Selection -->
         <div class="bg-white/5 p-4 border-b border-white/10">
           <label class="text-white text-sm font-medium mb-2 block">Model</label>
-          <select id="modelSelect" class="w-full bg-slate-800 text-white rounded-lg px-4 py-2 border border-slate-600 focus:border-purple-500 focus:outline-none">
-            <option value="gpt-4o-mini" selected>GPT-4o Mini (Fast & Cheap)</option>
+          <select
+            id="modelSelect"
+            class="w-full bg-slate-800 text-white rounded-lg px-4 py-2 border border-slate-600 focus:border-purple-500 focus:outline-none"
+          >
+            <option value="gpt-4o-mini" selected
+              >GPT-4o Mini (Fast & Cheap)</option
+            >
             <option value="gpt-4o">GPT-4o (Most Capable)</option>
             <option value="gpt-4-turbo">GPT-4 Turbo</option>
             <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Legacy)</option>
@@ -77,15 +88,23 @@ const description = "Test OpenAI chat through Cloudflare AI Gateway - GPT-4, GPT
 
       <!-- Stats -->
       <div id="stats" class="mt-6 grid grid-cols-3 gap-4 text-center">
-        <div class="bg-white/10 backdrop-blur-lg rounded-lg p-4 border border-white/20">
-          <div class="text-2xl font-bold text-purple-400" id="messageCount">0</div>
+        <div
+          class="bg-white/10 backdrop-blur-lg rounded-lg p-4 border border-white/20"
+        >
+          <div class="text-2xl font-bold text-purple-400" id="messageCount">
+            0
+          </div>
           <div class="text-xs text-slate-400">Messages</div>
         </div>
-        <div class="bg-white/10 backdrop-blur-lg rounded-lg p-4 border border-white/20">
+        <div
+          class="bg-white/10 backdrop-blur-lg rounded-lg p-4 border border-white/20"
+        >
           <div class="text-2xl font-bold text-pink-400" id="tokensUsed">0</div>
           <div class="text-xs text-slate-400">Tokens Used</div>
         </div>
-        <div class="bg-white/10 backdrop-blur-lg rounded-lg p-4 border border-white/20">
+        <div
+          class="bg-white/10 backdrop-blur-lg rounded-lg p-4 border border-white/20"
+        >
           <div class="text-2xl font-bold text-blue-400" id="lastLatency">-</div>
           <div class="text-xs text-slate-400">Last Response (ms)</div>
         </div>
@@ -94,35 +113,35 @@ const description = "Test OpenAI chat through Cloudflare AI Gateway - GPT-4, GPT
   </div>
 
   <script type="module">
-    const chatMessages = document.getElementById('chatMessages');
-    const messageInput = document.getElementById('messageInput');
-    const sendButton = document.getElementById('sendButton');
-    const clearButton = document.getElementById('clearButton');
-    const modelSelect = document.getElementById('modelSelect');
-    const streamToggle = document.getElementById('streamToggle');
-    const messageCount = document.getElementById('messageCount');
-    const tokensUsed = document.getElementById('tokensUsed');
-    const lastLatency = document.getElementById('lastLatency');
+    const chatMessages = document.getElementById("chatMessages");
+    const messageInput = document.getElementById("messageInput");
+    const sendButton = document.getElementById("sendButton");
+    const clearButton = document.getElementById("clearButton");
+    const modelSelect = document.getElementById("modelSelect");
+    const streamToggle = document.getElementById("streamToggle");
+    const messageCount = document.getElementById("messageCount");
+    const tokensUsed = document.getElementById("tokensUsed");
+    const lastLatency = document.getElementById("lastLatency");
 
     let conversationHistory = [];
     let totalTokens = 0;
     let messageCounter = 0;
 
     function addMessage(role, content, isStreaming = false) {
-      const messageDiv = document.createElement('div');
-      messageDiv.className = role === 'user' 
-        ? 'flex justify-end' 
-        : 'flex justify-start';
+      const messageDiv = document.createElement("div");
+      messageDiv.className =
+        role === "user" ? "flex justify-end" : "flex justify-start";
 
-      const bubble = document.createElement('div');
-      bubble.className = role === 'user'
-        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl px-4 py-3 max-w-[80%] break-words'
-        : 'bg-slate-700/50 text-white rounded-2xl px-4 py-3 max-w-[80%] break-words';
-      
+      const bubble = document.createElement("div");
+      bubble.className =
+        role === "user"
+          ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl px-4 py-3 max-w-[80%] break-words"
+          : "bg-slate-700/50 text-white rounded-2xl px-4 py-3 max-w-[80%] break-words";
+
       if (isStreaming) {
-        bubble.id = 'streaming-message';
+        bubble.id = "streaming-message";
       }
-      
+
       bubble.textContent = content;
       messageDiv.appendChild(bubble);
       chatMessages.appendChild(messageDiv);
@@ -132,7 +151,7 @@ const description = "Test OpenAI chat through Cloudflare AI Gateway - GPT-4, GPT
     }
 
     function updateStreamingMessage(content) {
-      const streamingMsg = document.getElementById('streaming-message');
+      const streamingMsg = document.getElementById("streaming-message");
       if (streamingMsg) {
         streamingMsg.textContent = content;
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -140,9 +159,9 @@ const description = "Test OpenAI chat through Cloudflare AI Gateway - GPT-4, GPT
     }
 
     function removeStreamingId() {
-      const streamingMsg = document.getElementById('streaming-message');
+      const streamingMsg = document.getElementById("streaming-message");
       if (streamingMsg) {
-        streamingMsg.removeAttribute('id');
+        streamingMsg.removeAttribute("id");
       }
     }
 
@@ -154,9 +173,9 @@ const description = "Test OpenAI chat through Cloudflare AI Gateway - GPT-4, GPT
       const useStreaming = streamToggle.checked;
 
       // Add user message
-      conversationHistory.push({ role: 'user', content: message });
-      addMessage('user', message);
-      messageInput.value = '';
+      conversationHistory.push({ role: "user", content: message });
+      addMessage("user", message);
+      messageInput.value = "";
       sendButton.disabled = true;
       messageCounter++;
       messageCount.textContent = messageCounter;
@@ -166,17 +185,17 @@ const description = "Test OpenAI chat through Cloudflare AI Gateway - GPT-4, GPT
       try {
         if (useStreaming) {
           // Streaming mode
-          let streamedContent = '';
-          addMessage('assistant', '', true);
+          let streamedContent = "";
+          addMessage("assistant", "", true);
 
-          const response = await fetch('/api/ai/chat-openai', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+          const response = await fetch("/api/ai/chat-openai", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               model,
               messages: conversationHistory,
-              stream: true
-            })
+              stream: true,
+            }),
           });
 
           if (!response.ok) {
@@ -191,12 +210,12 @@ const description = "Test OpenAI chat through Cloudflare AI Gateway - GPT-4, GPT
             if (done) break;
 
             const chunk = decoder.decode(value);
-            const lines = chunk.split('\n');
+            const lines = chunk.split("\n");
 
             for (const line of lines) {
-              if (line.startsWith('data: ')) {
+              if (line.startsWith("data: ")) {
                 const data = line.slice(6);
-                if (data === '[DONE]') continue;
+                if (data === "[DONE]") continue;
 
                 try {
                   const parsed = JSON.parse(data);
@@ -213,31 +232,36 @@ const description = "Test OpenAI chat through Cloudflare AI Gateway - GPT-4, GPT
           }
 
           removeStreamingId();
-          conversationHistory.push({ role: 'assistant', content: streamedContent });
+          conversationHistory.push({
+            role: "assistant",
+            content: streamedContent,
+          });
           messageCounter++;
-
         } else {
           // Non-streaming mode
-          const response = await fetch('/api/ai/chat-openai', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+          const response = await fetch("/api/ai/chat-openai", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               model,
               messages: conversationHistory,
-              stream: false
-            })
+              stream: false,
+            }),
           });
 
           if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error || 'Request failed');
+            throw new Error(errorData.error || "Request failed");
           }
 
           const data = await response.json();
           const assistantMessage = data.choices[0].message.content;
-          
-          addMessage('assistant', assistantMessage);
-          conversationHistory.push({ role: 'assistant', content: assistantMessage });
+
+          addMessage("assistant", assistantMessage);
+          conversationHistory.push({
+            role: "assistant",
+            content: assistantMessage,
+          });
           messageCounter++;
 
           // Update token stats
@@ -250,32 +274,32 @@ const description = "Test OpenAI chat through Cloudflare AI Gateway - GPT-4, GPT
         const latency = Date.now() - startTime;
         lastLatency.textContent = latency;
         messageCount.textContent = messageCounter;
-
       } catch (error) {
-        console.error('Error:', error);
-        addMessage('assistant', `Error: ${error.message}`);
+        console.error("Error:", error);
+        addMessage("assistant", `Error: ${error.message}`);
       } finally {
         sendButton.disabled = false;
         messageInput.focus();
       }
     }
 
-    sendButton.addEventListener('click', sendMessage);
-    messageInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
+    sendButton.addEventListener("click", sendMessage);
+    messageInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         sendMessage();
       }
     });
 
-    clearButton.addEventListener('click', () => {
+    clearButton.addEventListener("click", () => {
       conversationHistory = [];
-      chatMessages.innerHTML = '<div class="text-center text-slate-400 text-sm">Start a conversation...</div>';
+      chatMessages.innerHTML =
+        '<div class="text-center text-slate-400 text-sm">Start a conversation...</div>';
       messageCounter = 0;
       totalTokens = 0;
-      messageCount.textContent = '0';
-      tokensUsed.textContent = '0';
-      lastLatency.textContent = '-';
+      messageCount.textContent = "0";
+      tokensUsed.textContent = "0";
+      lastLatency.textContent = "-";
     });
   </script>
 </Layout>
