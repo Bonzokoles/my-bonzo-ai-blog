@@ -207,7 +207,7 @@ const description =
           <!-- Prompt Input -->
           <div class="prompt-card">
             <h3 class="prompt-title">✍️ Opisz obraz</h3>
-            <form id="generateForm">
+            <form id="generateForm" onsubmit="return false;">
               <textarea
                 id="promptInput"
                 placeholder="Opisz obraz który chcesz wygenerować... np. 'majestatyczny zamek na wzgórzu o zachodzie słońca'"
@@ -221,7 +221,7 @@ const description =
                     >Styl: Domyślny</span
                   >
                 </div>
-                <button type="submit" id="generateBtn" class="generate-button">
+                <button type="button" id="generateBtn" class="generate-button">
                   <span id="generateBtnText">🎨 Generuj Obraz</span>
                 </button>
               </div>
@@ -1485,7 +1485,9 @@ const description =
       });
     });
 
+    // Event listeners dla formularza i przycisku
     generateForm.addEventListener("submit", handleGenerate);
+    generateBtn.addEventListener("click", handleGenerate);
 
     downloadBtn.addEventListener("click", downloadImage);
     shareBtn.addEventListener("click", shareImage);
@@ -1533,7 +1535,11 @@ const description =
     }
 
     async function handleGenerate(e) {
-      e.preventDefault();
+      // Zapobiegaj domyślnej akcji formularza
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
 
       const prompt = promptInput.value.trim();
       if (!prompt) {
