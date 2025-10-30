@@ -1132,7 +1132,12 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
   }
 
   // ========== Start Application ==========
-  initializeChat();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeChat);
+  } else {
+    // DOM already loaded
+    initializeChat();
+  }
 </script>
 
 <style>
