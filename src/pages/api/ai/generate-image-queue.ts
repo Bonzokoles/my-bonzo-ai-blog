@@ -102,6 +102,17 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     // Access Cloudflare services
     const env = (locals as any).runtime?.env;
 
+    // Validate env availability
+    if (!env || !env.AI) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'AI service not available',
+          details: 'Cloudflare AI binding not found'
+        }),
+        { status: 503, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Optional AI moderation (best-effort)
     try {
       if (env?.AI) {
@@ -266,9 +277,44 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
       ...params
     };
 
-    const response = await env.AI.run(model, inputs);
+    let response;
+    try {
+      response = await env.AI.run(model, inputs);
+    } catch (aiError) {
+      console.error('AI.run failed:', aiError);
+      return new Response(
+        JSON.stringify({
+          error: 'Failed to generate image',
+          details: aiError instanceof Error ? aiError.message : 'AI service error',
+          model,
+          prompt: translatedPrompt.slice(0, 100)
+        }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!response || !(response instanceof ArrayBuffer)) {
+      return new Response(
+        JSON.stringify({
+          error: 'Invalid AI response',
+          details: 'Expected ArrayBuffer, got ' + typeof response
+        }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     const imageBuffer = response as ArrayBuffer;
     const imageSize = imageBuffer.byteLength;
+
+    if (imageSize === 0) {
+      return new Response(
+        JSON.stringify({
+          error: 'Empty image generated',
+          details: 'AI returned empty buffer'
+        }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Store in R2 for long-term persistence with fallback
     try {
@@ -343,11 +389,19 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
 
   } catch (error) {
     console.error('Image Generation Error:', error);
+    
+    // Enhanced error reporting
+    const errorDetails = {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack?.split('\n').slice(0, 3).join('\n') : undefined,
+      type: error?.constructor?.name || typeof error
+    };
 
     return new Response(
       JSON.stringify({
         error: 'Failed to generate image',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: errorDetails.message,
+        debugInfo: errorDetails
       }),
       {
         status: 500,

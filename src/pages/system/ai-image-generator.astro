@@ -1633,9 +1633,25 @@ const description =
         clearInterval(progressInterval);
         console.error("Generation error:", error);
         progressArea.classList.add("hidden");
-        alert(
-          `Błąd generowania: ${error instanceof Error ? error.message : "Nieznany błąd"}`
-        );
+        
+        // Try to extract detailed error info
+        let errorMsg = "Nieznany błąd";
+        if (error instanceof Error) {
+          errorMsg = error.message;
+          // If error message contains JSON, try to parse it
+          try {
+            const jsonMatch = errorMsg.match(/\{.*\}/);
+            if (jsonMatch) {
+              const errorData = JSON.parse(jsonMatch[0]);
+              errorMsg = errorData.details || errorData.error || errorMsg;
+              if (errorData.debugInfo) {
+                console.error("Debug info:", errorData.debugInfo);
+              }
+            }
+          } catch {}
+        }
+        
+        alert(`Błąd generowania: ${errorMsg}\n\nSprawdź konsolę dla szczegółów.`);
       } finally {
         generateBtn.disabled = false;
         generateBtnText.textContent = "🎨 Generuj Obraz";
