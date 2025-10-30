@@ -3,7 +3,8 @@
 import Layout from "@layouts/Layout.astro";
 import PageHeader from "@components/Astro/PageHeader.astro";
 
-const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tekstowych. Stable Diffusion XL, Dreamshaper i inne modele AI.";
+const description =
+  "Generator grafiki AI - twórz unikalne obrazy z opisów tekstowych. Stable Diffusion XL, Dreamshaper i inne modele AI.";
 ---
 
 <Layout title="Generator Grafiki AI - MyBonzo" description={description}>
@@ -22,8 +23,12 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
           <div class="settings-card">
             <h3 class="settings-title">🤖 Model AI</h3>
             <select id="modelSelect" class="settings-select">
-              <option value="@cf/stabilityai/stable-diffusion-xl-base-1.0">Stable Diffusion XL</option>
-              <option value="@cf/bytedance/stable-diffusion-xl-lightning">SDXL Lightning (Szybki)</option>
+              <option value="@cf/stabilityai/stable-diffusion-xl-base-1.0"
+                >Stable Diffusion XL</option
+              >
+              <option value="@cf/bytedance/stable-diffusion-xl-lightning"
+                >SDXL Lightning (Szybki)</option
+              >
               <option value="@cf/lykon/dreamshaper-8-lcm">Dreamshaper 8</option>
             </select>
             <p class="setting-hint">Wybierz model generujący</p>
@@ -37,23 +42,38 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
                 <span class="style-icon">✨</span>
                 <span class="style-name">Domyślny</span>
               </button>
-              <button class="style-btn" data-style="photorealistic, detailed, 8k, professional photography">
+              <button
+                class="style-btn"
+                data-style="photorealistic, detailed, 8k, professional photography"
+              >
                 <span class="style-icon">📸</span>
                 <span class="style-name">Fotorealistyczny</span>
               </button>
-              <button class="style-btn" data-style="digital art, trending on artstation, highly detailed">
+              <button
+                class="style-btn"
+                data-style="digital art, trending on artstation, highly detailed"
+              >
                 <span class="style-icon">🎨</span>
                 <span class="style-name">Digital Art</span>
               </button>
-              <button class="style-btn" data-style="anime style, manga, vibrant colors">
+              <button
+                class="style-btn"
+                data-style="anime style, manga, vibrant colors"
+              >
                 <span class="style-icon">🎌</span>
                 <span class="style-name">Anime</span>
               </button>
-              <button class="style-btn" data-style="oil painting, classical art, masterpiece">
+              <button
+                class="style-btn"
+                data-style="oil painting, classical art, masterpiece"
+              >
                 <span class="style-icon">🖼️</span>
                 <span class="style-name">Malarstwo</span>
               </button>
-              <button class="style-btn" data-style="3d render, octane render, unreal engine">
+              <button
+                class="style-btn"
+                data-style="3d render, octane render, unreal engine"
+              >
                 <span class="style-icon">🎮</span>
                 <span class="style-name">3D Render</span>
               </button>
@@ -101,22 +121,40 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
           <div class="settings-card">
             <h3 class="settings-title">💡 Przykłady</h3>
             <div class="quick-prompts">
-              <button class="quick-prompt-btn" data-prompt="a majestic lion in golden sunset light">
+              <button
+                class="quick-prompt-btn"
+                data-prompt="a majestic lion in golden sunset light"
+              >
                 🦁 Majestatyczny lew
               </button>
-              <button class="quick-prompt-btn" data-prompt="futuristic cityscape with flying cars at night">
+              <button
+                class="quick-prompt-btn"
+                data-prompt="futuristic cityscape with flying cars at night"
+              >
                 🌃 Futurystyczne miasto
               </button>
-              <button class="quick-prompt-btn" data-prompt="mystical forest with glowing mushrooms">
+              <button
+                class="quick-prompt-btn"
+                data-prompt="mystical forest with glowing mushrooms"
+              >
                 🍄 Magiczny las
               </button>
-              <button class="quick-prompt-btn" data-prompt="astronaut floating in colorful nebula">
+              <button
+                class="quick-prompt-btn"
+                data-prompt="astronaut floating in colorful nebula"
+              >
                 🚀 Astronauta w nebuli
               </button>
-              <button class="quick-prompt-btn" data-prompt="steampunk mechanical dragon">
+              <button
+                class="quick-prompt-btn"
+                data-prompt="steampunk mechanical dragon"
+              >
                 🐉 Mechaniczny smok
               </button>
-              <button class="quick-prompt-btn" data-prompt="underwater city with coral architecture">
+              <button
+                class="quick-prompt-btn"
+                data-prompt="underwater city with coral architecture"
+              >
                 🌊 Podwodne miasto
               </button>
             </div>
@@ -153,12 +191,13 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
                 placeholder="Opisz obraz który chcesz wygenerować... np. 'majestatyczny zamek na wzgórzu o zachodzie słońca'"
                 rows="4"
                 maxlength="500"
-                class="prompt-textarea"
-              ></textarea>
+                class="prompt-textarea"></textarea>
               <div class="prompt-footer">
                 <div class="flex items-center gap-4">
                   <span id="promptCounter" class="char-counter">0/500</span>
-                  <span id="currentStyle" class="current-style-badge">Styl: Domyślny</span>
+                  <span id="currentStyle" class="current-style-badge"
+                    >Styl: Domyślny</span
+                  >
                 </div>
                 <button type="submit" id="generateBtn" class="generate-button">
                   <span id="generateBtnText">🎨 Generuj Obraz</span>
@@ -172,7 +211,9 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
             <div class="progress-content">
               <div class="progress-icon">⏳</div>
               <h3 class="progress-title">Generowanie obrazu...</h3>
-              <p id="progressMessage" class="progress-message">Przygotowywanie...</p>
+              <p id="progressMessage" class="progress-message">
+                Przygotowywanie...
+              </p>
               <div class="progress-bar-container">
                 <div id="progressBar" class="progress-bar"></div>
               </div>
@@ -184,19 +225,35 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
             <div class="result-header">
               <h3 class="result-title">🖼️ Wygenerowany Obraz</h3>
               <div class="result-actions">
-                <button id="downloadBtn" class="action-icon-btn" title="Pobierz">
+                <button
+                  id="downloadBtn"
+                  class="action-icon-btn"
+                  title="Pobierz"
+                >
                   💾
                 </button>
-                <button id="shareBtn" class="action-icon-btn" title="Udostępnij">
+                <button
+                  id="shareBtn"
+                  class="action-icon-btn"
+                  title="Udostępnij"
+                >
                   📤
                 </button>
-                <button id="newImageBtn" class="action-icon-btn" title="Nowy obraz">
+                <button
+                  id="newImageBtn"
+                  class="action-icon-btn"
+                  title="Nowy obraz"
+                >
                   ➕
                 </button>
               </div>
             </div>
             <div class="result-image-container">
-              <img id="generatedImage" alt="Generated image" class="result-image" />
+              <img
+                id="generatedImage"
+                alt="Generated image"
+                class="result-image"
+              />
               <div id="imageBadge" class="image-badge hidden">📦 Z cache</div>
             </div>
             <div class="result-info">
@@ -228,8 +285,14 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
             <h3 class="tips-title">💡 Wskazówki</h3>
             <ul class="tips-list">
               <li>Używaj szczegółowych opisów dla lepszych rezultatów</li>
-              <li>Dodaj style artystyczne: "oil painting", "digital art", "photorealistic"</li>
-              <li>Określ oświetlenie: "golden hour", "dramatic lighting", "soft light"</li>
+              <li>
+                Dodaj style artystyczne: "oil painting", "digital art",
+                "photorealistic"
+              </li>
+              <li>
+                Określ oświetlenie: "golden hour", "dramatic lighting", "soft
+                light"
+              </li>
               <li>Dodaj jakość: "8k", "highly detailed", "masterpiece"</li>
               <li>Unikaj negatywów - opisuj co chcesz, nie czego nie chcesz</li>
               <li>Limit: 5 generacji na 5 minut</li>
@@ -486,8 +549,12 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
   }
 
   @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   .progress-title {
@@ -676,6 +743,27 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
     object-fit: cover;
   }
 
+  .gallery-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    padding: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .gallery-item:hover .gallery-overlay {
+    opacity: 1;
+  }
+
+  .gallery-date {
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
   /* Tips Card */
   .tips-card {
     background: rgba(37, 99, 235, 0.05);
@@ -706,7 +794,7 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
   }
 
   .tips-list li::before {
-    content: '→';
+    content: "→";
     position: absolute;
     left: 0;
     color: var(--color-accent, #2563eb);
@@ -788,54 +876,88 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
 
 <script>
   // AI Image Generator functionality
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
     // DOM Elements
-    const modelSelect = document.getElementById('modelSelect') as HTMLSelectElement;
-    const styleButtons = document.querySelectorAll('.style-btn');
-    const numStepsSlider = document.getElementById('numSteps') as HTMLInputElement;
-    const guidanceSlider = document.getElementById('guidance') as HTMLInputElement;
-    const stepsValue = document.getElementById('stepsValue') as HTMLElement;
-    const guidanceValue = document.getElementById('guidanceValue') as HTMLElement;
+    const modelSelect = document.getElementById(
+      "modelSelect"
+    ) as HTMLSelectElement;
+    const styleButtons = document.querySelectorAll(".style-btn");
+    const numStepsSlider = document.getElementById(
+      "numSteps"
+    ) as HTMLInputElement;
+    const guidanceSlider = document.getElementById(
+      "guidance"
+    ) as HTMLInputElement;
+    const stepsValue = document.getElementById("stepsValue") as HTMLElement;
+    const guidanceValue = document.getElementById(
+      "guidanceValue"
+    ) as HTMLElement;
 
-    const generateForm = document.getElementById('generateForm') as HTMLFormElement;
-    const promptInput = document.getElementById('promptInput') as HTMLTextAreaElement;
-    const promptCounter = document.getElementById('promptCounter') as HTMLElement;
-    const currentStyleBadge = document.getElementById('currentStyle') as HTMLElement;
-    const generateBtn = document.getElementById('generateBtn') as HTMLButtonElement;
-    const generateBtnText = document.getElementById('generateBtnText') as HTMLElement;
+    const generateForm = document.getElementById(
+      "generateForm"
+    ) as HTMLFormElement;
+    const promptInput = document.getElementById(
+      "promptInput"
+    ) as HTMLTextAreaElement;
+    const promptCounter = document.getElementById(
+      "promptCounter"
+    ) as HTMLElement;
+    const currentStyleBadge = document.getElementById(
+      "currentStyle"
+    ) as HTMLElement;
+    const generateBtn = document.getElementById(
+      "generateBtn"
+    ) as HTMLButtonElement;
+    const generateBtnText = document.getElementById(
+      "generateBtnText"
+    ) as HTMLElement;
 
-    const progressArea = document.getElementById('progressArea') as HTMLElement;
-    const progressMessage = document.getElementById('progressMessage') as HTMLElement;
-    const progressBar = document.getElementById('progressBar') as HTMLElement;
+    const progressArea = document.getElementById("progressArea") as HTMLElement;
+    const progressMessage = document.getElementById(
+      "progressMessage"
+    ) as HTMLElement;
+    const progressBar = document.getElementById("progressBar") as HTMLElement;
 
-    const resultArea = document.getElementById('resultArea') as HTMLElement;
-    const generatedImage = document.getElementById('generatedImage') as HTMLImageElement;
-    const imageBadge = document.getElementById('imageBadge') as HTMLElement;
-    const resultPrompt = document.getElementById('resultPrompt') as HTMLElement;
-    const resultModel = document.getElementById('resultModel') as HTMLElement;
-    const resultTime = document.getElementById('resultTime') as HTMLElement;
+    const resultArea = document.getElementById("resultArea") as HTMLElement;
+    const generatedImage = document.getElementById(
+      "generatedImage"
+    ) as HTMLImageElement;
+    const imageBadge = document.getElementById("imageBadge") as HTMLElement;
+    const resultPrompt = document.getElementById("resultPrompt") as HTMLElement;
+    const resultModel = document.getElementById("resultModel") as HTMLElement;
+    const resultTime = document.getElementById("resultTime") as HTMLElement;
 
-    const downloadBtn = document.getElementById('downloadBtn') as HTMLButtonElement;
-    const shareBtn = document.getElementById('shareBtn') as HTMLButtonElement;
-    const newImageBtn = document.getElementById('newImageBtn') as HTMLButtonElement;
+    const downloadBtn = document.getElementById(
+      "downloadBtn"
+    ) as HTMLButtonElement;
+    const shareBtn = document.getElementById("shareBtn") as HTMLButtonElement;
+    const newImageBtn = document.getElementById(
+      "newImageBtn"
+    ) as HTMLButtonElement;
 
-    const galleryGrid = document.getElementById('galleryGrid') as HTMLElement;
-    const clearGalleryBtn = document.getElementById('clearGalleryBtn') as HTMLButtonElement;
+    const galleryGrid = document.getElementById("galleryGrid") as HTMLElement;
+    const clearGalleryBtn = document.getElementById(
+      "clearGalleryBtn"
+    ) as HTMLButtonElement;
 
-    const generatedCount = document.getElementById('generatedCount') as HTMLElement;
-    const rateLimitStatus = document.getElementById('rateLimitStatus') as HTMLElement;
-    const cacheRate = document.getElementById('cacheRate') as HTMLElement;
+    const generatedCount = document.getElementById(
+      "generatedCount"
+    ) as HTMLElement;
+    const rateLimitStatus = document.getElementById(
+      "rateLimitStatus"
+    ) as HTMLElement;
+    const cacheRate = document.getElementById("cacheRate") as HTMLElement;
 
-    const quickPromptButtons = document.querySelectorAll('.quick-prompt-btn');
+    const quickPromptButtons = document.querySelectorAll(".quick-prompt-btn");
 
     // State
-    let currentStyle = '';
-    let currentImageUrl = '';
+    let currentStyle = "";
+    let currentImageUrl = "";
     let stats = {
-      generated: parseInt(localStorage.getItem('img-generated') || '0'),
+      generated: parseInt(localStorage.getItem("img-generated") || "0"),
       cacheHits: 0,
       totalRequests: 0,
-      rateLimit: 5
+      rateLimit: 5,
     };
 
     // Initialize
@@ -848,29 +970,30 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
     }
 
     // Event Listeners
-    numStepsSlider.addEventListener('input', () => {
+    numStepsSlider.addEventListener("input", () => {
       stepsValue.textContent = numStepsSlider.value;
     });
 
-    guidanceSlider.addEventListener('input', () => {
+    guidanceSlider.addEventListener("input", () => {
       guidanceValue.textContent = guidanceSlider.value;
     });
 
-    styleButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        styleButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentStyle = btn.getAttribute('data-style') || '';
-        const styleName = btn.querySelector('.style-name')?.textContent || 'Domyślny';
+    styleButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        styleButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentStyle = btn.getAttribute("data-style") || "";
+        const styleName =
+          btn.querySelector(".style-name")?.textContent || "Domyślny";
         currentStyleBadge.textContent = `Styl: ${styleName}`;
       });
     });
 
-    promptInput.addEventListener('input', updatePromptCounter);
+    promptInput.addEventListener("input", updatePromptCounter);
 
-    quickPromptButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const prompt = btn.getAttribute('data-prompt');
+    quickPromptButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const prompt = btn.getAttribute("data-prompt");
         if (prompt) {
           promptInput.value = prompt;
           updatePromptCounter();
@@ -879,18 +1002,38 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
       });
     });
 
-    generateForm.addEventListener('submit', handleGenerate);
+    generateForm.addEventListener("submit", handleGenerate);
 
-    downloadBtn.addEventListener('click', downloadImage);
-    shareBtn.addEventListener('click', shareImage);
-    newImageBtn.addEventListener('click', () => {
-      resultArea.classList.add('hidden');
+    downloadBtn.addEventListener("click", downloadImage);
+    shareBtn.addEventListener("click", shareImage);
+    newImageBtn.addEventListener("click", () => {
+      resultArea.classList.add("hidden");
       promptInput.focus();
     });
 
-    clearGalleryBtn.addEventListener('click', () => {
-      if (confirm('Wyczyścić całą galerię?')) {
-        localStorage.removeItem('img-gallery');
+    clearGalleryBtn.addEventListener("click", async () => {
+      if (!confirm("Wyczyścić całą galerię? Ta operacja jest nieodwracalna.")) {
+        return;
+      }
+
+      try {
+        // Clear server gallery
+        const response = await fetch("/api/ai/gallery-manage", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "clear-all" }),
+        });
+
+        if (response.ok) {
+          // Also clear localStorage
+          localStorage.removeItem("img-gallery");
+          loadGallery();
+        } else {
+          throw new Error("Server clear failed");
+        }
+      } catch (error) {
+        console.warn("Server clear failed, clearing localStorage only:", error);
+        localStorage.removeItem("img-gallery");
         loadGallery();
       }
     });
@@ -900,9 +1043,9 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
       const length = promptInput.value.length;
       promptCounter.textContent = `${length}/500`;
       if (length > 450) {
-        promptCounter.style.color = '#ef4444';
+        promptCounter.style.color = "#ef4444";
       } else {
-        promptCounter.style.color = '';
+        promptCounter.style.color = "";
       }
     }
 
@@ -911,7 +1054,7 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
 
       const prompt = promptInput.value.trim();
       if (!prompt) {
-        alert('Wpisz opis obrazu');
+        alert("Wpisz opis obrazu");
         return;
       }
 
@@ -919,10 +1062,10 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
       const fullPrompt = currentStyle ? `${prompt}, ${currentStyle}` : prompt;
 
       // Show progress
-      progressArea.classList.remove('hidden');
-      resultArea.classList.add('hidden');
+      progressArea.classList.remove("hidden");
+      resultArea.classList.add("hidden");
       generateBtn.disabled = true;
-      generateBtnText.textContent = '⏳ Generowanie...';
+      generateBtnText.textContent = "⏳ Generowanie...";
 
       const startTime = Date.now();
       let progress = 0;
@@ -939,19 +1082,19 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
         stats.rateLimit--;
         updateStats();
 
-        const response = await fetch('/api/ai/generate-image', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const response = await fetch("/api/ai/generate-image", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             prompt: fullPrompt,
             model: modelSelect.value,
             num_steps: parseInt(numStepsSlider.value),
-            guidance: parseFloat(guidanceSlider.value)
-          })
+            guidance: parseFloat(guidanceSlider.value),
+          }),
         });
 
         clearInterval(progressInterval);
-        progressBar.style.width = '100%';
+        progressBar.style.width = "100%";
 
         if (!response.ok) {
           const error = await response.json();
@@ -960,7 +1103,7 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
 
         const blob = await response.blob();
         const imageUrl = URL.createObjectURL(blob);
-        const cached = response.headers.get('X-Cache') === 'HIT';
+        const cached = response.headers.get("X-Cache") === "HIT";
 
         if (cached) stats.cacheHits++;
 
@@ -968,34 +1111,39 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
         generatedImage.src = imageUrl;
         currentImageUrl = imageUrl;
         resultPrompt.textContent = fullPrompt;
-        resultModel.textContent = modelSelect.options[modelSelect.selectedIndex].text;
+        resultModel.textContent =
+          modelSelect.options[modelSelect.selectedIndex].text;
         resultTime.textContent = `${((Date.now() - startTime) / 1000).toFixed(1)}s`;
 
         if (cached) {
-          imageBadge.classList.remove('hidden');
+          imageBadge.classList.remove("hidden");
         } else {
-          imageBadge.classList.add('hidden');
+          imageBadge.classList.add("hidden");
         }
 
-        progressArea.classList.add('hidden');
-        resultArea.classList.remove('hidden');
+        progressArea.classList.add("hidden");
+        resultArea.classList.remove("hidden");
+
+        // Get image ID from response headers
+        const imageId = response.headers.get("X-Image-ID");
 
         // Save to gallery
-        saveToGallery(imageUrl, fullPrompt);
+        saveToGallery(imageUrl, fullPrompt, imageId || undefined);
 
         // Update stats
         stats.generated++;
-        localStorage.setItem('img-generated', stats.generated.toString());
+        localStorage.setItem("img-generated", stats.generated.toString());
         updateStats();
-
       } catch (error) {
         clearInterval(progressInterval);
-        console.error('Generation error:', error);
-        progressArea.classList.add('hidden');
-        alert(`Błąd generowania: ${error instanceof Error ? error.message : 'Nieznany błąd'}`);
+        console.error("Generation error:", error);
+        progressArea.classList.add("hidden");
+        alert(
+          `Błąd generowania: ${error instanceof Error ? error.message : "Nieznany błąd"}`
+        );
       } finally {
         generateBtn.disabled = false;
-        generateBtnText.textContent = '🎨 Generuj Obraz';
+        generateBtnText.textContent = "🎨 Generuj Obraz";
 
         // Reset rate limit after 5 minutes
         setTimeout(() => {
@@ -1008,68 +1156,119 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
     function updateStats() {
       generatedCount.textContent = stats.generated.toString();
       rateLimitStatus.textContent = `${stats.rateLimit}/5`;
-      const rate = stats.totalRequests > 0
-        ? Math.round((stats.cacheHits / stats.totalRequests) * 100)
-        : 0;
+      const rate =
+        stats.totalRequests > 0
+          ? Math.round((stats.cacheHits / stats.totalRequests) * 100)
+          : 0;
       cacheRate.textContent = `${rate}%`;
     }
 
-    function saveToGallery(imageUrl: string, prompt: string) {
+    function saveToGallery(imageUrl: string, prompt: string, imageId?: string) {
+      // Save to localStorage as backup
       try {
-        const gallery = JSON.parse(localStorage.getItem('img-gallery') || '[]');
+        const gallery = JSON.parse(localStorage.getItem("img-gallery") || "[]");
         gallery.unshift({
+          id: imageId,
           url: imageUrl,
           prompt: prompt,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         });
 
         // Keep last 20
         if (gallery.length > 20) gallery.length = 20;
 
-        localStorage.setItem('img-gallery', JSON.stringify(gallery));
-        loadGallery();
+        localStorage.setItem("img-gallery", JSON.stringify(gallery));
       } catch (e) {
-        console.error('Error saving to gallery:', e);
+        console.error("Error saving to localStorage:", e);
       }
+
+      // Load fresh gallery from server
+      loadGallery();
     }
 
-    function loadGallery() {
+    async function loadGallery() {
       try {
-        const gallery = JSON.parse(localStorage.getItem('img-gallery') || '[]');
+        // Try to load from server first
+        const response = await fetch("/api/ai/image-gallery?limit=20");
+
+        if (response.ok) {
+          const data = await response.json();
+          displayGallery(data.images);
+          return;
+        }
+      } catch (error) {
+        console.warn(
+          "Failed to load server gallery, using localStorage:",
+          error
+        );
+      }
+
+      // Fallback to localStorage
+      try {
+        const gallery = JSON.parse(localStorage.getItem("img-gallery") || "[]");
 
         if (gallery.length === 0) {
-          galleryGrid.innerHTML = '<div class="gallery-empty"><p>Wygenerowane obrazy pojawią się tutaj</p></div>';
+          galleryGrid.innerHTML =
+            '<div class="gallery-empty"><p>Wygenerowane obrazy pojawią się tutaj</p></div>';
           return;
         }
 
-        galleryGrid.innerHTML = gallery.map((item: any, index: number) => `
-          <div class="gallery-item" data-index="${index}">
-            <img src="${item.url}" alt="${item.prompt}" />
-          </div>
-        `).join('');
-
-        // Add click handlers
-        document.querySelectorAll('.gallery-item').forEach(item => {
-          item.addEventListener('click', () => {
-            const index = parseInt(item.getAttribute('data-index') || '0');
-            const image = gallery[index];
-            generatedImage.src = image.url;
-            currentImageUrl = image.url;
-            resultPrompt.textContent = image.prompt;
-            resultArea.classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          });
-        });
-
+        displayGallery(gallery);
       } catch (e) {
-        console.error('Error loading gallery:', e);
+        console.error("Error loading gallery:", e);
+        galleryGrid.innerHTML =
+          '<div class="gallery-empty"><p>Błąd ładowania galerii</p></div>';
       }
+    }
+
+    function displayGallery(images: any[]) {
+      if (images.length === 0) {
+        galleryGrid.innerHTML =
+          '<div class="gallery-empty"><p>Wygenerowane obrazy pojawią się tutaj</p></div>';
+        return;
+      }
+
+      galleryGrid.innerHTML = images
+        .map(
+          (item: any, index: number) => `
+        <div class="gallery-item" data-index="${index}" data-id="${item.id || ""}">
+          <img src="${item.url || item.thumbnail || "/api/ai/image/" + item.id}" alt="${item.prompt}" />
+          <div class="gallery-overlay">
+            <span class="gallery-date">${new Date(item.createdAt || item.timestamp).toLocaleDateString()}</span>
+          </div>
+        </div>
+      `
+        )
+        .join("");
+
+      // Add click handlers
+      document.querySelectorAll(".gallery-item").forEach((item, index) => {
+        item.addEventListener("click", () => {
+          const image = images[index];
+          const imageUrl = image.url || `/api/ai/image/${image.id}`;
+
+          generatedImage.src = imageUrl;
+          currentImageUrl = imageUrl;
+          resultPrompt.textContent = image.prompt;
+
+          if (image.model) {
+            resultModel.textContent = image.model;
+          }
+          if (image.createdAt || image.timestamp) {
+            const date = new Date(image.createdAt || image.timestamp);
+            resultTime.textContent = date.toLocaleString();
+          }
+
+          resultArea.classList.remove("hidden");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      });
     }
 
     function downloadImage() {
       if (!currentImageUrl) return;
 
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = currentImageUrl;
       a.download = `ai-image-${Date.now()}.png`;
       a.click();
@@ -1081,22 +1280,24 @@ const description = "Generator grafiki AI - twórz unikalne obrazy z opisów tek
       try {
         const response = await fetch(currentImageUrl);
         const blob = await response.blob();
-        const file = new File([blob], 'ai-image.png', { type: 'image/png' });
+        const file = new File([blob], "ai-image.png", { type: "image/png" });
 
         if (navigator.share) {
           await navigator.share({
             files: [file],
-            title: 'Obraz wygenerowany AI',
-            text: resultPrompt.textContent || 'Obraz stworzony przez MyBonzo AI Generator'
+            title: "Obraz wygenerowany AI",
+            text:
+              resultPrompt.textContent ||
+              "Obraz stworzony przez MyBonzo AI Generator",
           });
         } else {
           // Fallback - copy image URL
           await navigator.clipboard.writeText(window.location.href);
-          alert('Link skopiowany do schowka!');
+          alert("Link skopiowany do schowka!");
         }
       } catch (error) {
-        console.error('Share error:', error);
-        alert('Nie udało się udostępnić obrazu');
+        console.error("Share error:", error);
+        alert("Nie udało się udostępnić obrazu");
       }
     }
   });
