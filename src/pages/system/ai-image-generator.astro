@@ -1571,7 +1571,7 @@ const description =
         stats.rateLimit--;
         updateStats();
 
-        // Try queue-enabled endpoint first
+        // Generate directly (sync mode for faster response)
         const response = await fetch("/api/ai/generate-image-queue", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -1580,7 +1580,7 @@ const description =
             model: modelSelect.value,
             num_steps: parseInt(numStepsSlider.value),
             guidance: parseFloat(guidanceSlider.value),
-            async: true,
+            async: false, // Sync mode - no queue, immediate generation
           }),
         });
 
