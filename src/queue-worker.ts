@@ -18,7 +18,9 @@ interface ImageMetadata {
 
 // Queue message interface
 interface ImageGenerationMessage {
-  prompt: string;
+  prompt: string; // should be translated prompt when available
+  originalPrompt?: string;
+  translatedPrompt?: string;
   model: string;
   params: {
     num_steps: number;
@@ -43,13 +45,35 @@ export default {
     for (const message of batch.messages) {
       try {
         const body = message.body as ImageGenerationMessage;
-        const { prompt, model, params, userId, requestId, timestamp } = body;
+        const { prompt, translatedPrompt, originalPrompt, model, params, userId, requestId, timestamp } = body;
 
         console.log(`Processing image generation for request: ${requestId}`);
 
+        const usedPrompt = translatedPrompt || prompt;
+
         // Generate unique hash for this exact request
-        const imageHash = generateImageHash(prompt, model, params);
+        const imageHash = generateImageHash(usedPrompt, model, params);
         const r2Key = `images/${imageHash}.png`;
+
+        // Prompt mapping fast-path
+        try {
+          const mapKey = `img-map:${model}:${usedPrompt}`;
+          const mapped = await env.CACHE.get(mapKey, 'json') as { imageId?: string } | null;
+          if (mapped?.imageId) {
+            const mappedR2Key = `images/${mapped.imageId}.png`;
+            const r2Obj = await env.MEDIA_BUCKET.get(mappedR2Key);
+            if (r2Obj) {
+              await updateRecentImagesList(env, mapped.imageId);
+              await env.CACHE.put(`queue-result:${requestId}`, JSON.stringify({
+                status: 'completed',
+                imageId: mapped.imageId,
+                cached: true,
+                timestamp: Date.now()
+              }), { expirationTtl: 3600 });
+              continue;
+            }
+          }
+        } catch {}
 
         // Check if image already exists in R2 (deduplication)
         let existingImage: ArrayBuffer | null = null;
@@ -78,7 +102,7 @@ export default {
 
         // Generate new image using AI
         const inputs = {
-          prompt: prompt,
+          prompt: usedPrompt,
           ...params
         };
 
@@ -92,7 +116,7 @@ export default {
         // Create metadata
         const metadata: ImageMetadata = {
           id: imageHash,
-          prompt,
+          prompt: usedPrompt,
           model,
           params,
           createdAt: timestamp,
@@ -103,11 +127,10 @@ export default {
 
         // Store in R2 for long-term persistence
         await env.MEDIA_BUCKET.put(r2Key, imageBuffer, {
-          httpMetadata: {
-            contentType: 'image/png'
-          },
+          httpMetadata: { contentType: 'image/png' },
           customMetadata: {
-            prompt: prompt.slice(0, 200), // Truncate for metadata limits
+            prompt_original: (originalPrompt || '').slice(0, 200),
+            prompt_translated: usedPrompt.slice(0, 200),
             model,
             createdAt: timestamp.toString(),
             userId: userId || 'anonymous',
@@ -126,6 +149,12 @@ export default {
         await env.CACHE.put(`img-cache:${imageHash}`, imageBuffer, {
           expirationTtl: 3600 // 1 hour
         });
+
+        // Save prompt mapping
+        try {
+          const mapKey = `img-map:${model}:${usedPrompt}`;
+          await env.CACHE.put(mapKey, JSON.stringify({ imageId: imageHash }), { expirationTtl: 86400 * 7 });
+        } catch {}
 
         // Update recent images list
         await updateRecentImagesList(env, imageHash);
