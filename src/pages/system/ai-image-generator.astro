@@ -27,7 +27,9 @@ const description =
             <div class="queue-progress">
               <div class="progress-bar" id="queueProgressBar"></div>
             </div>
-            <p class="queue-message" id="queueMessage">Przetwarzanie w kolejce...</p>
+            <p class="queue-message" id="queueMessage">
+              Przetwarzanie w kolejce...
+            </p>
             <div class="queue-meta">
               <span class="queue-id" id="queueId">ID: -</span>
               <span class="queue-timer" id="queueTimer">Czas: 0s</span>
@@ -330,7 +332,11 @@ const description =
     background: linear-gradient(
       135deg,
       color-mix(in srgb, var(--color-background) 95%, var(--color-accent) 5%),
-      color-mix(in srgb, var(--color-background) 92%, var(--color-accent-alt) 8%)
+      color-mix(
+        in srgb,
+        var(--color-background) 92%,
+        var(--color-accent-alt) 8%
+      )
     );
     background-attachment: fixed;
     background-size: 400% 400%;
@@ -338,8 +344,13 @@ const description =
   }
 
   @keyframes backgroundShift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
   }
 
   /* Queue Status Panel */
@@ -349,21 +360,32 @@ const description =
   }
 
   @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .queue-card {
     background: linear-gradient(
       135deg,
       color-mix(in srgb, var(--color-background) 88%, var(--color-accent) 12%),
-      color-mix(in srgb, var(--color-background) 85%, var(--color-accent-alt) 15%)
+      color-mix(
+        in srgb,
+        var(--color-background) 85%,
+        var(--color-accent-alt) 15%
+      )
     );
     border: 2px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
     border-radius: 1.5rem;
     padding: 1.5rem;
     backdrop-filter: blur(10px);
-    box-shadow: 0 20px 40px color-mix(in srgb, var(--color-accent) 20%, transparent);
+    box-shadow: 0 20px 40px
+      color-mix(in srgb, var(--color-accent) 20%, transparent);
   }
 
   .queue-header {
@@ -390,8 +412,12 @@ const description =
   }
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   .queue-body {
@@ -409,7 +435,11 @@ const description =
   }
 
   .progress-bar {
-    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-alt));
+    background: linear-gradient(
+      90deg,
+      var(--color-accent),
+      var(--color-accent-alt)
+    );
     height: 100%;
     border-radius: 999px;
     transition: width 0.3s ease;
@@ -417,13 +447,22 @@ const description =
   }
 
   @keyframes shimmer {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
   }
 
   .queue-message {
     font-size: 0.9rem;
-    color: color-mix(in srgb, var(--color-text) 80%, var(--color-background) 20%);
+    color: color-mix(
+      in srgb,
+      var(--color-text) 80%,
+      var(--color-background) 20%
+    );
     margin: 0;
   }
 
@@ -431,7 +470,11 @@ const description =
     display: flex;
     justify-content: space-between;
     font-size: 0.8rem;
-    color: color-mix(in srgb, var(--color-text) 60%, var(--color-background) 40%);
+    color: color-mix(
+      in srgb,
+      var(--color-text) 60%,
+      var(--color-background) 40%
+    );
   }
 
   /* Settings Card */
@@ -593,7 +636,8 @@ const description =
     border-radius: 1.25rem;
     padding: 1.5rem;
     backdrop-filter: blur(5px);
-    box-shadow: 0 10px 20px color-mix(in srgb, var(--color-accent) 15%, transparent);
+    box-shadow: 0 10px 20px
+      color-mix(in srgb, var(--color-accent) 15%, transparent);
     transition: all 0.3s ease;
   }
 
@@ -602,7 +646,8 @@ const description =
   .gallery-card:hover,
   .tips-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 20px 40px color-mix(in srgb, var(--color-accent) 20%, transparent);
+    box-shadow: 0 20px 40px
+      color-mix(in srgb, var(--color-accent) 20%, transparent);
     border-color: color-mix(in srgb, var(--color-accent) 50%, transparent);
   }
 
@@ -635,8 +680,13 @@ const description =
   .prompt-textarea:focus {
     outline: none;
     border-color: var(--color-accent);
-    background: color-mix(in srgb, var(--color-background) 98%, var(--color-accent) 2%);
-    box-shadow: 0 0 20px color-mix(in srgb, var(--color-accent) 25%, transparent);
+    background: color-mix(
+      in srgb,
+      var(--color-background) 98%,
+      var(--color-accent) 2%
+    );
+    box-shadow: 0 0 20px
+      color-mix(in srgb, var(--color-accent) 25%, transparent);
   }
 
   .prompt-footer {
@@ -649,7 +699,11 @@ const description =
 
   /* Enhanced Generate Button */
   .generate-button {
-    background: linear-gradient(135deg, var(--color-accent), color-mix(in srgb, var(--color-accent-alt) 65%, var(--color-accent) 35%));
+    background: linear-gradient(
+      135deg,
+      var(--color-accent),
+      color-mix(in srgb, var(--color-accent-alt) 65%, var(--color-accent) 35%)
+    );
     color: white;
     border: 2px solid color-mix(in srgb, var(--color-accent) 60%, transparent);
     padding: 1rem 2rem;
@@ -663,7 +717,8 @@ const description =
 
   .generate-button:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px color-mix(in srgb, var(--color-accent) 30%, transparent);
+    box-shadow: 0 10px 25px
+      color-mix(in srgb, var(--color-accent) 30%, transparent);
   }
 
   .generate-button:disabled {
@@ -694,8 +749,15 @@ const description =
   }
 
   @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(1.05); }
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.05);
+    }
   }
 
   .progress-bar-container {
@@ -710,10 +772,15 @@ const description =
 
   .progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-alt));
+    background: linear-gradient(
+      90deg,
+      var(--color-accent),
+      var(--color-accent-alt)
+    );
     border-radius: 999px;
     transition: width 0.3s ease;
-    box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 50%, transparent);
+    box-shadow: 0 0 10px
+      color-mix(in srgb, var(--color-accent) 50%, transparent);
   }
 
   /* Result Card Enhancements */
@@ -722,7 +789,8 @@ const description =
     max-width: 512px;
     height: auto;
     border-radius: 1rem;
-    box-shadow: 0 15px 35px color-mix(in srgb, var(--color-accent) 20%, transparent);
+    box-shadow: 0 15px 35px
+      color-mix(in srgb, var(--color-accent) 20%, transparent);
     transition: transform 0.3s ease;
   }
 
@@ -782,7 +850,8 @@ const description =
   .action-button:hover {
     background: color-mix(in srgb, var(--color-accent) 10%, transparent);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px color-mix(in srgb, var(--color-accent) 25%, transparent);
+    box-shadow: 0 5px 15px
+      color-mix(in srgb, var(--color-accent) 25%, transparent);
   }
 
   /* Gallery Card Enhancements */
@@ -876,16 +945,16 @@ const description =
     .grid {
       grid-template-columns: 1fr;
     }
-    
+
     .prompt-footer {
       flex-direction: column;
       align-items: stretch;
     }
-    
+
     .result-actions {
       flex-direction: column;
     }
-    
+
     .gallery-grid {
       grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     }
@@ -1573,12 +1642,7 @@ const description =
       }
     }
 
-    async function pollQueueResult(
-      requestId,
-      imageId,
-      prompt,
-      startTime
-    ) {
+    async function pollQueueResult(requestId, imageId, prompt, startTime) {
       const maxRetries = 60; // 60 * 2 seconds = 2 minutes max
       let retries = 0;
 
@@ -1637,12 +1701,7 @@ const description =
       setTimeout(poll, 1000); // Start after 1 second
     }
 
-    function displayGeneratedImage(
-      imageUrl,
-      prompt,
-      response,
-      startTime
-    ) {
+    function displayGeneratedImage(imageUrl, prompt, response, startTime) {
       const cached = response.headers.get("X-Cache")?.includes("HIT");
       const imageId = response.headers.get("X-Image-ID");
 
