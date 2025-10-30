@@ -252,7 +252,7 @@ jobs:
           test_endpoint "https://mybonzoaiblog.pages.dev" "Main_site"
           result=$(cat /tmp/test_result_Main_site 2>/dev/null || echo "failed")
           if [ "$result" = "success" ] || [ "$result" = "redirect" ]; then
-            ((success_count++))
+            success_count=$((success_count + 1))
             echo "✅ Main site: OK ($result)"
           else
             echo "❌ Main site: FAILED"
@@ -262,7 +262,7 @@ jobs:
           test_endpoint "https://mybonzoaiblog.pages.dev/api/ai/chat" "AI_API_health"
           result=$(cat /tmp/test_result_AI_API_health 2>/dev/null || echo "failed")
           if [ "$result" = "success" ]; then
-            ((success_count++))
+            success_count=$((success_count + 1))
             echo "✅ AI API: OK"
           else
             echo "ℹ️ AI API ($result) - may need Cloudflare bindings to be fully functional"
@@ -272,7 +272,7 @@ jobs:
           test_endpoint "https://mybonzoaiblog.pages.dev/system/ai-chat-enhanced" "AI_Chat_Page"
           result=$(cat /tmp/test_result_AI_Chat_Page 2>/dev/null || echo "failed")
           if [ "$result" = "success" ]; then
-            ((success_count++))
+            success_count=$((success_count + 1))
             echo "✅ AI Chat Enhanced: OK"
           else
             echo "ℹ️ AI Chat Enhanced ($result) - page may not be fully rendered"
