@@ -1633,7 +1633,7 @@ const description =
         clearInterval(progressInterval);
         console.error("Generation error:", error);
         progressArea.classList.add("hidden");
-        
+
         // Try to extract detailed error info
         let errorMsg = "Nieznany błąd";
         if (error instanceof Error) {
@@ -1650,8 +1650,10 @@ const description =
             }
           } catch {}
         }
-        
-        alert(`Błąd generowania: ${errorMsg}\n\nSprawdź konsolę dla szczegółów.`);
+
+        alert(
+          `Błąd generowania: ${errorMsg}\n\nSprawdź konsolę dla szczegółów.`
+        );
       } finally {
         generateBtn.disabled = false;
         generateBtnText.textContent = "🎨 Generuj Obraz";
