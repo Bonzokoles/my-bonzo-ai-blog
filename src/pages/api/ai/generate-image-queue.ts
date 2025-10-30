@@ -278,8 +278,26 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     };
 
     let response;
+    let imageBuffer: ArrayBuffer;
+    
     try {
       response = await env.AI.run(model, inputs);
+      
+      // Cloudflare AI returns response with blob() method or direct buffer
+      if (response && typeof response === 'object') {
+        if ('blob' in response && typeof response.blob === 'function') {
+          const blob = await response.blob();
+          imageBuffer = await blob.arrayBuffer();
+        } else if (response instanceof ArrayBuffer) {
+          imageBuffer = response;
+        } else if ('image' in response && response.image instanceof ArrayBuffer) {
+          imageBuffer = response.image;
+        } else {
+          throw new Error('Unknown response format: ' + JSON.stringify(Object.keys(response)));
+        }
+      } else {
+        throw new Error('Invalid response type: ' + typeof response);
+      }
     } catch (aiError) {
       console.error('AI.run failed:', aiError);
       return new Response(
@@ -292,18 +310,6 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
         { status: 500, headers: { 'Content-Type': 'application/json' } }
       );
     }
-
-    if (!response || !(response instanceof ArrayBuffer)) {
-      return new Response(
-        JSON.stringify({
-          error: 'Invalid AI response',
-          details: 'Expected ArrayBuffer, got ' + typeof response
-        }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const imageBuffer = response as ArrayBuffer;
     const imageSize = imageBuffer.byteLength;
 
     if (imageSize === 0) {
