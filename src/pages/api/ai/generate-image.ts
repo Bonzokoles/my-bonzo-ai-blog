@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { createHash } from 'crypto';
 
 // Simple rate limiter
 const rateLimiter = new Map<string, { count: number; resetTime: number }>();
@@ -22,9 +23,37 @@ function checkRateLimit(identifier: string): boolean {
   return true;
 }
 
+// Generate unique hash for image content
+function generateImageHash(prompt: string, model: string, params: any): string {
+  const hashInput = `${prompt}:${model}:${JSON.stringify(params)}`;
+  return createHash('sha256').update(hashInput).digest('hex');
+}
+
+// Image metadata interface
+interface ImageMetadata {
+  id: string;
+  prompt: string;
+  model: string;
+  params: {
+    num_steps: number;
+    guidance: number;
+    strength: number;
+  };
+  createdAt: number;
+  size: number;
+  r2Key: string;
+}
+
 export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
   try {
-    const body = await request.json();
+    const body = await request.json() as {
+      prompt?: string;
+      model?: string;
+      num_steps?: number;
+      guidance?: number;
+      strength?: number;
+    };
+    
     const {
       prompt,
       model = '@cf/stabilityai/stable-diffusion-xl-base-1.0',
@@ -67,43 +96,125 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     }
 
     // Access Cloudflare AI
-    const { env } = locals.runtime;
+    const { env } = locals.runtime as { env: any };
 
-    // Check cache first
-    const cacheKey = `img:${model}:${Buffer.from(prompt).toString('base64').slice(0, 100)}`;
-    const cached = await env.CACHE.get(cacheKey, 'arrayBuffer');
-
-    if (cached) {
-      return new Response(cached, {
-        headers: {
-          'Content-Type': 'image/png',
-          'X-Cache': 'HIT'
-        }
-      });
-    }
-
-    // Generate image
-    const inputs = {
-      prompt: prompt,
+    // Generate parameters object
+    const params = {
       num_steps: Math.min(Math.max(num_steps, 1), 50),
       guidance: Math.min(Math.max(guidance, 1), 20),
       strength: Math.min(Math.max(strength, 0), 1)
     };
 
+    // Generate unique hash for this exact request
+    const imageHash = generateImageHash(prompt, model, params);
+    
+    // Check if image already exists in R2
+    const r2Key = `images/${imageHash}.png`;
+    let existingImage: ArrayBuffer | null = null;
+    
+    try {
+      const r2Object = await env.MEDIA_BUCKET.get(r2Key);
+      if (r2Object) {
+        existingImage = await r2Object.arrayBuffer();
+      }
+    } catch (error) {
+      console.warn('R2 lookup failed:', error);
+    }
+
+    // If image exists, return it with metadata
+    if (existingImage) {
+      // Get metadata from KV
+      const metadata = await env.CACHE.get(`img-meta:${imageHash}`, 'json') as ImageMetadata | null;
+      
+      return new Response(existingImage, {
+        headers: {
+          'Content-Type': 'image/png',
+          'X-Cache': 'R2-HIT',
+          'X-Image-ID': imageHash,
+          'X-Created-At': metadata?.createdAt?.toString() || 'unknown',
+          'Cache-Control': 'public, max-age=86400' // 24 hours for R2 content
+        }
+      });
+    }
+
+    // Check KV cache for temporary storage (faster than R2 for recent images)
+    const kvCacheKey = `img-cache:${imageHash}`;
+    const cachedBuffer = await env.CACHE.get(kvCacheKey, 'arrayBuffer');
+
+    if (cachedBuffer) {
+      return new Response(cachedBuffer, {
+        headers: {
+          'Content-Type': 'image/png',
+          'X-Cache': 'KV-HIT',
+          'X-Image-ID': imageHash,
+          'Cache-Control': 'public, max-age=3600'
+        }
+      });
+    }
+
+    // Generate new image
+    const inputs = {
+      prompt: prompt,
+      ...params
+    };
+
     const response = await env.AI.run(model, inputs);
-
-    // Response is an ArrayBuffer with PNG image
     const imageBuffer = response as ArrayBuffer;
+    const imageSize = imageBuffer.byteLength;
 
-    // Cache the image (1 hour)
-    await env.CACHE.put(cacheKey, imageBuffer, {
+    // Create metadata
+    const metadata: ImageMetadata = {
+      id: imageHash,
+      prompt,
+      model,
+      params,
+      createdAt: Date.now(),
+      size: imageSize,
+      r2Key
+    };
+
+    // Store in R2 for long-term persistence (fire and forget)
+    env.MEDIA_BUCKET.put(r2Key, imageBuffer, {
+      httpMetadata: {
+        contentType: 'image/png'
+      },
+      customMetadata: {
+        prompt: prompt.slice(0, 200), // Truncate for metadata limits
+        model,
+        createdAt: Date.now().toString()
+      }
+    }).catch((error: any) => {
+      console.error('R2 storage failed:', error);
+    });
+
+    // Store metadata in KV
+    await env.CACHE.put(`img-meta:${imageHash}`, JSON.stringify(metadata), {
+      expirationTtl: 86400 * 30 // 30 days
+    });
+
+    // Cache image in KV for fast access (1 hour)
+    await env.CACHE.put(kvCacheKey, imageBuffer, {
       expirationTtl: 3600
+    });
+
+    // Add to recent images list (for gallery)
+    const recentKey = 'recent-images';
+    const recent = await env.CACHE.get(recentKey, 'json') as string[] || [];
+    recent.unshift(imageHash);
+    
+    // Keep last 50 images
+    if (recent.length > 50) recent.length = 50;
+    
+    await env.CACHE.put(recentKey, JSON.stringify(recent), {
+      expirationTtl: 86400 * 7 // 7 days
     });
 
     return new Response(imageBuffer, {
       headers: {
         'Content-Type': 'image/png',
         'X-Cache': 'MISS',
+        'X-Image-ID': imageHash,
+        'X-Created-At': metadata.createdAt.toString(),
         'Cache-Control': 'public, max-age=3600'
       }
     });
