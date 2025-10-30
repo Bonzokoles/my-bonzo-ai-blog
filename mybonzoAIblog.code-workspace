@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "alkaline-main"
+		},
+		{
+			"path": "zenon-browser"
+		},
+		{
+			"path": "public/Browsers"
+		}
+	],
+	"settings": {}
+}
