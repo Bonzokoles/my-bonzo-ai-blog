@@ -142,8 +142,7 @@ jobs:
           echo ""
           echo "📄 Deploying Pages..."
           npx wrangler@${{ env.WRANGLER_VERSION }} pages deploy ./dist \
-            --project-name=mybonzoaiblog \
-            --config ./wrangler.toml
+            --project-name=mybonzoaiblog
 
           deployment_status=$?
 
