@@ -13,5 +13,7 @@
 			"path": "public/Browsers"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"powershell.cwd": "mybonzoAIblog"
+	}
 }
