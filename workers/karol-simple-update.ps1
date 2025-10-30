@@ -11,11 +11,11 @@ Write-Host "Full bio length: $($fullBio.Length) characters" -ForegroundColor Cya
 
 # Create update payload
 $updateData = @{
-    title = "Karol Życiorys - Historia jednego życia"
-    content = $fullBio
-    tags = "autobiografia,skateboarding,londyn,surfing,życie,transformacja"
+    title     = "Karol Życiorys - Historia jednego życia"
+    content   = $fullBio
+    tags      = "autobiografia,skateboarding,londyn,surfing,życie,transformacja"
     published = $true
-    password = "HAOS77"
+    password  = "HAOS77"
 }
 
 $jsonPayload = $updateData | ConvertTo-Json -Compress
