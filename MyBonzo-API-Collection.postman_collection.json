@@ -1,0 +1,401 @@
+{
+	"info": {
+		"_postman_id": "mybonzo-api-collection",
+		"name": "MyBonzo AI Blog - API Collection",
+		"description": "Kompletna kolekcja API dla MyBonzo AI Blog - Docker, AI, Media",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🩺 Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/api/health",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"health"
+					]
+				},
+				"description": "Sprawdza czy serwer API jest dostępny i działa poprawnie"
+			}
+		},
+		{
+			"name": "🐳 Docker API",
+			"item": [
+				{
+					"name": "Lista kontenerów",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"list\",\n    \"params\": {}\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/containers/manage",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"containers",
+								"manage"
+							]
+						},
+						"description": "Pobiera listę wszystkich kontenerów Docker"
+					}
+				},
+				{
+					"name": "Start kontenera",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"start\",\n    \"params\": {\n        \"id\": \"b580a686f5ef\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/containers/manage",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"containers",
+								"manage"
+							]
+						},
+						"description": "Startuje kontener o podanym ID"
+					}
+				},
+				{
+					"name": "Stop kontenera",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"stop\",\n    \"params\": {\n        \"id\": \"b580a686f5ef\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/containers/manage",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"containers",
+								"manage"
+							]
+						},
+						"description": "Zatrzymuje kontener o podanym ID"
+					}
+				},
+				{
+					"name": "Logi kontenera",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"logs\",\n    \"params\": {\n        \"id\": \"b580a686f5ef\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/containers/manage",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"containers",
+								"manage"
+							]
+						},
+						"description": "Pobiera logi kontenera o podanym ID"
+					}
+				}
+			],
+			"description": "API do zarządzania kontenerami Docker"
+		},
+		{
+			"name": "🤖 AI API",
+			"item": [
+				{
+					"name": "AI Chat",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"message\": \"Jak działa Docker?\",\n    \"stream\": false\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/ai/chat",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"chat"
+							]
+						},
+						"description": "Rozmowa z AI wykorzystującym Cloudflare Workers AI"
+					}
+				},
+				{
+					"name": "Generowanie obrazu",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"prompt\": \"Beautiful landscape with mountains and lake\",\n    \"width\": 1024,\n    \"height\": 1024\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/ai/generate-image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"generate-image"
+							]
+						},
+						"description": "Generuje obraz używając AI"
+					}
+				}
+			],
+			"description": "API do funkcji AI - chat i generowanie obrazów"
+		},
+		{
+			"name": "📁 Media API",
+			"item": [
+				{
+					"name": "Lista plików",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/media/list",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"media",
+								"list"
+							]
+						},
+						"description": "Pobiera listę wszystkich plików w R2 bucket"
+					}
+				},
+				{
+					"name": "Upload pliku",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/media/upload",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"media",
+								"upload"
+							]
+						},
+						"description": "Wgrywa plik do R2 bucket"
+					}
+				},
+				{
+					"name": "Usuń plik",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"key\": \"filename.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/media/delete",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"media",
+								"delete"
+							]
+						},
+						"description": "Usuwa plik z R2 bucket"
+					}
+				}
+			],
+			"description": "API do zarządzania plikami w Cloudflare R2"
+		},
+		{
+			"name": "📝 Blog API",
+			"item": [
+				{
+					"name": "Lista artykułów",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/blog",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"blog"
+							]
+						},
+						"description": "Pobiera listę artykułów bloga"
+					}
+				},
+				{
+					"name": "Artykuł po ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/blog/ai-w-codziennosci",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"ai-w-codziennosci"
+							]
+						},
+						"description": "Pobiera konkretny artykuł po slug"
+					}
+				}
+			],
+			"description": "API do zarządzania artykułami bloga"
+		},
+		{
+			"name": "🏠 Strony główne",
+			"item": [
+				{
+					"name": "Strona główna",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "Strona główna serwisu"
+					}
+				},
+				{
+					"name": "System - Panel kontenerów",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/system/containers",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"system",
+								"containers"
+							]
+						},
+						"description": "Panel zarządzania kontenerami (UI)"
+					}
+				}
+			],
+			"description": "Główne strony serwisu"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://127.0.0.1:8787",
+			"type": "string"
+		}
+	]
+}

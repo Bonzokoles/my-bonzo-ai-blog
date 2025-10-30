@@ -1,0 +1,356 @@
+---
+import Layout from "@layouts/Layout.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+---
+
+<Layout title="Container Management - MyBonzo AI">
+  <PageHeader
+    title="🐳 Container Management"
+    subtitle="Zarządzaj kontenerami Docker i Kubernetes z pomocą AI"
+  />
+
+  <section class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Docker Management -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-bold mb-4 flex items-center">
+          🐋 Docker Management
+        </h2>
+
+        <div class="space-y-4">
+          <button
+            id="docker-list"
+            class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Lista Kontenerów Docker
+          </button>
+
+          <div class="grid grid-cols-2 gap-2">
+            <input
+              id="docker-container-id"
+              type="text"
+              placeholder="Container ID"
+              class="px-3 py-2 border rounded"
+            />
+            <select id="docker-action" class="px-3 py-2 border rounded">
+              <option value="start">Start</option>
+              <option value="stop">Stop</option>
+              <option value="logs">Logs</option>
+            </select>
+          </div>
+
+          <button
+            id="docker-execute"
+            class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          >
+            Wykonaj Akcję Docker
+          </button>
+        </div>
+
+        <div
+          id="docker-results"
+          class="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded max-h-64 overflow-y-auto"
+        >
+        </div>
+      </div>
+
+      <!-- Kubernetes Management -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-bold mb-4 flex items-center">
+          ⚙️ Kubernetes Management
+        </h2>
+
+        <div class="space-y-4">
+          <div class="grid grid-cols-2 gap-2">
+            <input
+              id="k8s-namespace"
+              type="text"
+              placeholder="Namespace (default)"
+              class="px-3 py-2 border rounded"
+            />
+            <select id="k8s-action" class="px-3 py-2 border rounded">
+              <option value="pods">Lista Pods</option>
+              <option value="deployments">Lista Deployments</option>
+              <option value="services">Lista Services</option>
+            </select>
+          </div>
+
+          <button
+            id="k8s-list"
+            class="w-full bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+          >
+            Wykonaj K8s Query
+          </button>
+
+          <!-- Scaling -->
+          <div class="border-t pt-4">
+            <h3 class="font-semibold mb-2">Scale Deployment</h3>
+            <div class="grid grid-cols-3 gap-2">
+              <input
+                id="k8s-deployment-name"
+                type="text"
+                placeholder="Deployment name"
+                class="px-3 py-2 border rounded"
+              />
+              <input
+                id="k8s-replicas"
+                type="number"
+                placeholder="Replicas"
+                min="0"
+                class="px-3 py-2 border rounded"
+              />
+              <button
+                id="k8s-scale"
+                class="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700"
+              >
+                Scale
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="k8s-results"
+          class="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded max-h-64 overflow-y-auto"
+        >
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Analysis Panel -->
+    <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+      <h2 class="text-2xl font-bold mb-4 flex items-center">
+        🤖 AI Container Analysis
+      </h2>
+      <div
+        id="ai-analysis"
+        class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded border-l-4 border-blue-500"
+      >
+        <p class="text-gray-600 dark:text-gray-300">
+          Wykonaj operację na kontenerach aby otrzymać analizę AI...
+        </p>
+      </div>
+    </div>
+
+    <!-- Real-time Status -->
+    <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+      <h2 class="text-2xl font-bold mb-4 flex items-center">
+        📊 System Status
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="text-center p-4 bg-green-100 dark:bg-green-900/20 rounded">
+          <div
+            class="text-3xl font-bold text-green-600"
+            id="healthy-containers"
+          >
+            -
+          </div>
+          <div class="text-sm text-gray-600 dark:text-gray-300">
+            Healthy Containers
+          </div>
+        </div>
+        <div
+          class="text-center p-4 bg-yellow-100 dark:bg-yellow-900/20 rounded"
+        >
+          <div
+            class="text-3xl font-bold text-yellow-600"
+            id="warning-containers"
+          >
+            -
+          </div>
+          <div class="text-sm text-gray-600 dark:text-gray-300">Warnings</div>
+        </div>
+        <div class="text-center p-4 bg-red-100 dark:bg-red-900/20 rounded">
+          <div class="text-3xl font-bold text-red-600" id="failed-containers">
+            -
+          </div>
+          <div class="text-sm text-gray-600 dark:text-gray-300">Failed</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // Docker Management
+  document
+    .getElementById("docker-list")
+    ?.addEventListener("click", async () => {
+      await executeContainerAction("docker", "list", {});
+    });
+
+  document
+    .getElementById("docker-execute")
+    ?.addEventListener("click", async () => {
+      const containerId = (
+        document.getElementById("docker-container-id") as HTMLInputElement
+      )?.value;
+      const action = (
+        document.getElementById("docker-action") as HTMLSelectElement
+      )?.value;
+
+      if (!containerId) {
+        alert("Podaj Container ID");
+        return;
+      }
+
+      await executeContainerAction("docker", action, { id: containerId });
+    });
+
+  // Kubernetes Management
+  document.getElementById("k8s-list")?.addEventListener("click", async () => {
+    const namespace =
+      (document.getElementById("k8s-namespace") as HTMLInputElement)?.value ||
+      "default";
+    const action = (document.getElementById("k8s-action") as HTMLSelectElement)
+      ?.value;
+
+    await executeContainerAction("kubernetes", action, { namespace });
+  });
+
+  document.getElementById("k8s-scale")?.addEventListener("click", async () => {
+    const namespace =
+      (document.getElementById("k8s-namespace") as HTMLInputElement)?.value ||
+      "default";
+    const deploymentName = (
+      document.getElementById("k8s-deployment-name") as HTMLInputElement
+    )?.value;
+    const replicas = (
+      document.getElementById("k8s-replicas") as HTMLInputElement
+    )?.value;
+
+    if (!deploymentName || !replicas) {
+      alert("Podaj nazwę deployment i liczbę replik");
+      return;
+    }
+
+    await executeContainerAction("kubernetes", "scale", {
+      namespace,
+      name: deploymentName,
+      replicas: parseInt(replicas),
+    });
+  });
+
+  async function executeContainerAction(
+    target: string,
+    action: string,
+    params: any
+  ) {
+    try {
+      const resultsElement = document.getElementById(
+        `${target === "kubernetes" ? "k8s" : "docker"}-results`
+      );
+      const aiAnalysisElement = document.getElementById("ai-analysis");
+
+      if (resultsElement) {
+        resultsElement.innerHTML =
+          '<div class="text-center">🔄 Wykonywanie...</div>';
+      }
+
+      const response = await fetch("/api/containers/manage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          target,
+          action,
+          params,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Display results
+        if (resultsElement) {
+          resultsElement.innerHTML = `
+            <pre class="text-sm overflow-x-auto">${JSON.stringify(result.data, null, 2)}</pre>
+          `;
+        }
+
+        // Display AI analysis if available
+        if (result.analysis && aiAnalysisElement) {
+          aiAnalysisElement.innerHTML = `
+            <div class="space-y-3">
+              <div>
+                <h3 class="font-semibold text-blue-700 dark:text-blue-300">🔍 AI Analysis:</h3>
+                <p class="mt-1">${result.analysis.aiAnalysis}</p>
+              </div>
+              <div>
+                <h3 class="font-semibold text-green-700 dark:text-green-300">📊 Health Score:</h3>
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1">
+                  <div class="bg-green-600 h-2.5 rounded-full" style="width: ${result.analysis.healthScore}%"></div>
+                </div>
+                <span class="text-sm">${result.analysis.healthScore.toFixed(1)}%</span>
+              </div>
+              ${
+                result.analysis.recommendations.length > 0
+                  ? `
+                <div>
+                  <h3 class="font-semibold text-orange-700 dark:text-orange-300">💡 Recommendations:</h3>
+                  <ul class="mt-1 list-disc list-inside space-y-1">
+                    ${result.analysis.recommendations.map((rec: string) => `<li class="text-sm">${rec}</li>`).join("")}
+                  </ul>
+                </div>
+              `
+                  : ""
+              }
+            </div>
+          `;
+        }
+
+        // Update status counters
+        updateStatusCounters(result.analysis);
+      } else {
+        if (resultsElement) {
+          resultsElement.innerHTML = `<div class="text-red-600">❌ Błąd: ${result.error}</div>`;
+        }
+      }
+    } catch (error) {
+      const resultsElement = document.getElementById(
+        `${target === "kubernetes" ? "k8s" : "docker"}-results`
+      );
+      if (resultsElement) {
+        resultsElement.innerHTML = `<div class="text-red-600">❌ Błąd: ${error.message}</div>`;
+      }
+    }
+  }
+
+  function updateStatusCounters(analysis: any) {
+    if (!analysis) return;
+
+    const healthyElement = document.getElementById("healthy-containers");
+    const warningElement = document.getElementById("warning-containers");
+    const failedElement = document.getElementById("failed-containers");
+
+    if (analysis.containers) {
+      const containers = Array.isArray(analysis.containers)
+        ? analysis.containers
+        : analysis.containers.items || [];
+      const healthy = containers.filter(
+        (c: any) => c.State === "running" || c.status?.phase === "Running"
+      ).length;
+      const failed = containers.filter(
+        (c: any) => c.State === "exited" || c.status?.phase === "Failed"
+      ).length;
+      const warning = containers.length - healthy - failed;
+
+      if (healthyElement) healthyElement.textContent = healthy.toString();
+      if (warningElement) warningElement.textContent = warning.toString();
+      if (failedElement) failedElement.textContent = failed.toString();
+    }
+  }
+
+  // Auto-refresh every 30 seconds
+  setInterval(() => {
+    executeContainerAction("docker", "list", {});
+  }, 30000);
+</script>
+
+<style>
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+</style>
