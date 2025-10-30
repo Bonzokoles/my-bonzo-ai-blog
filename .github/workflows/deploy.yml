@@ -264,7 +264,7 @@ jobs:
 
           # Always exit 0 - health checks are informational, deployment already succeeded  
           echo "✅ Deployment successful regardless of health check results"
-          
+
           # Force success exit - main site is working, API checks are informational only
           if [ $success_count -gt 0 ]; then
             echo "🎯 Main site operational - deployment pipeline successful"

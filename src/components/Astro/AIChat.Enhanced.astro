@@ -1,15 +1,5 @@
 ---
-import type { ChatModelOption } from '@/config/ai-chat-models';
 import { CHAT_MODELS, DEFAULT_CHAT_MODEL } from '@/config/ai-chat-models';
-
-interface Props {
-  placeholder?: string;
-  maxLength?: number;
-  defaultModel?: string;
-  enablePersistence?: boolean;
-  enableHistorySidebar?: boolean;
-  enableStreaming?: boolean;
-}
 
 const {
   placeholder = 'Zadaj pytanie o AI, narzedzia lub technologie...',
@@ -18,9 +8,9 @@ const {
   enablePersistence = true,
   enableHistorySidebar = true,
   enableStreaming = true
-} = Astro.props as Props;
+} = Astro.props;
 
-const modelOptions: ChatModelOption[] = CHAT_MODELS;
+const modelOptions = CHAT_MODELS;
 const resolvedDefault = modelOptions.find((model) => model.id === defaultModel)?.id ?? DEFAULT_CHAT_MODEL;
 const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDefault) ?? modelOptions[0];
 ---
@@ -217,95 +207,57 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
   })}
 </script>
 
-<script type="module">
-  // ========== Type Definitions ==========
-  type ChatMessage = {
-    role: 'user' | 'ai';
-    content: string;
-    cached?: boolean;
-    error?: boolean;
-    timestamp?: number;
-    bookmarked?: boolean;
-  };
-
-  type ChatHistoryEntry = {
-    role: 'user' | 'assistant';
-    content: string;
-    timestamp?: number;
-  };
-
-  type ChatModelOption = {
-    id: string;
-    label: string;
-    description: string;
-    usageHint?: string;
-  };
-
-  type Conversation = {
-    id: string;
-    title: string;
-    messages: ChatMessage[];
-    model: string;
-    createdAt: number;
-    updatedAt: number;
-    bookmarked: boolean;
-  };
-
-  type ChatConfig = {
-    enablePersistence: boolean;
-    enableHistorySidebar: boolean;
-    enableStreaming: boolean;
-    maxLength: number;
-  };
+<script>
+  // ========== Enhanced AI Chat JavaScript ==========
 
   // ========== DOM Element References ==========
-  const modelDataElement = document.getElementById('model-options-data') as HTMLScriptElement | null;
-  const configElement = document.getElementById('chat-config') as HTMLScriptElement | null;
-  const modelSelect = document.getElementById('model-select') as HTMLSelectElement | null;
-  const modelDescription = document.getElementById('model-description') as HTMLParagraphElement | null;
-  const modelHint = document.getElementById('model-hint') as HTMLSpanElement | null;
-  const currentModelLabel = document.getElementById('current-model-label') as HTMLSpanElement | null;
-  const messagesContainer = document.getElementById('messages-container') as HTMLDivElement | null;
-  const form = document.getElementById('chat-form') as HTMLFormElement | null;
-  const input = document.getElementById('chat-input') as HTMLTextAreaElement | null;
-  const sendButton = document.getElementById('send-button') as HTMLButtonElement | null;
-  const clearButton = document.getElementById('clear-button') as HTMLButtonElement | null;
-  const charCount = document.getElementById('char-count') as HTMLSpanElement | null;
-  const status = document.getElementById('status') as HTMLSpanElement | null;
-  const loading = document.getElementById('loading') as HTMLDivElement | null;
-  const conversationTitle = document.getElementById('conversation-title') as HTMLHeadingElement | null;
+  const modelDataElement = document.getElementById('model-options-data');
+  const configElement = document.getElementById('chat-config');
+  const modelSelect = document.getElementById('model-select');
+  const modelDescription = document.getElementById('model-description');
+  const modelHint = document.getElementById('model-hint');
+  const currentModelLabel = document.getElementById('current-model-label');
+  const messagesContainer = document.getElementById('messages-container');
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('chat-input');
+  const sendButton = document.getElementById('send-button');
+  const clearButton = document.getElementById('clear-button');
+  const charCount = document.getElementById('char-count');
+  const status = document.getElementById('status');
+  const loading = document.getElementById('loading');
+  const conversationTitle = document.getElementById('conversation-title');
 
   // Sidebar elements
-  const historySidebar = document.getElementById('history-sidebar') as HTMLElement | null;
-  const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn') as HTMLButtonElement | null;
-  const newConversationBtn = document.getElementById('new-conversation-btn') as HTMLButtonElement | null;
-  const conversationSearch = document.getElementById('conversation-search') as HTMLInputElement | null;
-  const conversationsList = document.getElementById('conversations-list') as HTMLDivElement | null;
-  const bookmarkConversationBtn = document.getElementById('bookmark-conversation-btn') as HTMLButtonElement | null;
-  const exportConversationBtn = document.getElementById('export-conversation-btn') as HTMLButtonElement | null;
-  const exportAllBtn = document.getElementById('export-all-btn') as HTMLButtonElement | null;
+  const historySidebar = document.getElementById('history-sidebar');
+  const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
+  const newConversationBtn = document.getElementById('new-conversation-btn');
+  const conversationSearch = document.getElementById('conversation-search');
+  const conversationsList = document.getElementById('conversations-list');
+  const bookmarkConversationBtn = document.getElementById('bookmark-conversation-btn');
+  const exportConversationBtn = document.getElementById('export-conversation-btn');
+  const exportAllBtn = document.getElementById('export-all-btn');
 
   // Modal elements
-  const exportModal = document.getElementById('export-modal') as HTMLDivElement | null;
-  const closeModalBtn = document.getElementById('close-modal-btn') as HTMLButtonElement | null;
+  const exportModal = document.getElementById('export-modal');
+  const closeModalBtn = document.getElementById('close-modal-btn');
 
   // Streaming elements
-  const streamingEnabledCheckbox = document.getElementById('streaming-enabled') as HTMLInputElement | null;
+  const streamingEnabledCheckbox = document.getElementById('streaming-enabled');
 
   // ========== Configuration ==========
-  const config: ChatConfig = configElement ? JSON.parse(configElement.textContent ?? '{}') : {
+  const config = configElement ? JSON.parse(configElement.textContent || '{}') : {
     enablePersistence: true,
     enableHistorySidebar: true,
     enableStreaming: true,
     maxLength: 800
   };
 
-  const modelOptions = modelDataElement ? JSON.parse(modelDataElement.textContent ?? '[]') as ChatModelOption[] : [];
+  const modelOptions = modelDataElement ? JSON.parse(modelDataElement.textContent || '[]') : [];
 
   // ========== State Management ==========
-  let currentConversation: Conversation | null = null;
-  let conversations: Conversation[] = [];
-  let history: ChatHistoryEntry[] = [];
+  let currentConversation = null;
+  let conversations = [];
+  let history = [];
   let isProcessing = false;
   let isSidebarOpen = true;
 
@@ -384,7 +336,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
       id: `conv-${now}`,
       title: 'Nowa konwersacja',
       messages: [],
-      model: modelSelect?.value ?? DEFAULT_CHAT_MODEL,
+      model: (modelSelect && 'value' in modelSelect) ? String(modelSelect.value) : 'claude-3-haiku',
       createdAt: now,
       updatedAt: now,
       bookmarked: false
@@ -410,7 +362,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     renderConversationsList();
   }
 
-  function loadConversation(conversation: Conversation) {
+  function loadConversation(conversation) {
     currentConversation = conversation;
     history = conversation.messages.map(msg => ({
       role: msg.role === 'user' ? 'user' : 'assistant',
@@ -428,7 +380,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     }
 
     if (modelSelect) {
-      modelSelect.value = conversation.model;
+      if (modelSelect && 'value' in modelSelect) modelSelect.value = conversation.model;
       updateModelDetails(conversation.model);
     }
 
@@ -540,7 +492,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
 
     conversationsList.innerHTML = '';
 
-    const searchQuery = conversationSearch?.value.toLowerCase() ?? '';
+    const searchQuery = (conversationSearch && 'value' in conversationSearch) ? String(conversationSearch.value).toLowerCase() : '';
     const filteredConversations = conversations.filter(conv => {
       if (!searchQuery) return true;
       return conv.title.toLowerCase().includes(searchQuery) ||
@@ -593,7 +545,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     renderConversationsList();
   }
 
-  function deleteConversation(id: string) {
+  function deleteConversation(id) {
     const confirmed = confirm('Czy na pewno chcesz usunąć tę konwersację?');
     if (!confirmed) return;
 
@@ -613,7 +565,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
   }
 
   // ========== Export Functions ==========
-  function showExportModal(conversation: Conversation | null) {
+  function showExportModal(conversation) {
     if (!conversation || !exportModal) return;
     exportModal.hidden = false;
 
@@ -633,7 +585,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     }
   }
 
-  function exportConversation(conversation: Conversation, format: string) {
+  function exportConversation(conversation, format) {
     let content = '';
     let filename = `${sanitizeFilename(conversation.title)}-${new Date().toISOString().split('T')[0]}`;
     let mimeType = 'text/plain';
@@ -681,7 +633,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     updateStatus('Wszystkie konwersacje wyeksportowane');
   }
 
-  function formatConversationAsText(conv: Conversation): string {
+  function formatConversationAsText(conv) {
     let text = `KONWERSACJA: ${conv.title}\n`;
     text += `Data utworzenia: ${new Date(conv.createdAt).toLocaleString('pl-PL')}\n`;
     text += `Model: ${conv.model}\n`;
@@ -699,7 +651,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     return text;
   }
 
-  function formatConversationAsMarkdown(conv: Conversation): string {
+  function formatConversationAsMarkdown(conv) {
     let md = `# ${conv.title}\n\n`;
     md += `**Data utworzenia:** ${new Date(conv.createdAt).toLocaleString('pl-PL')}  \n`;
     md += `**Model:** ${conv.model}  \n`;
@@ -716,7 +668,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     return md;
   }
 
-  function formatConversationAsHTML(conv: Conversation): string {
+  function formatConversationAsHTML(conv) {
     let html = `<!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -759,7 +711,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     return html;
   }
 
-  function downloadFile(content: string, filename: string, mimeType: string) {
+  function downloadFile(content, filename, mimeType) {
     const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -771,23 +723,23 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     URL.revokeObjectURL(url);
   }
 
-  function sanitizeFilename(name: string): string {
+  function sanitizeFilename(name) {
     return name.replace(/[^a-z0-9]/gi, '-').toLowerCase();
   }
 
   // ========== Message Handling ==========
-  async function handleSubmit(event: Event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     if (isProcessing || !input || !currentConversation) return;
 
-    const prompt = input.value.trim();
+    const prompt = (input && 'value' in input) ? String(input.value).trim() : '';
     if (!prompt) {
       updateStatus('Wpisz pytanie, aby kontynuować.');
       return;
     }
 
     const timestamp = Date.now();
-    const userMessage: ChatMessage = { role: 'user', content: prompt, timestamp };
+    const userMessage = { role: 'user', content: prompt, timestamp };
 
     addMessage(userMessage);
     currentConversation.messages.push(userMessage);
@@ -796,7 +748,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     setProcessing(true);
     addTypingIndicator();
 
-    const useStreaming = config.enableStreaming && streamingEnabledCheckbox?.checked;
+    const useStreaming = config.enableStreaming && (streamingEnabledCheckbox && 'checked' in streamingEnabledCheckbox && streamingEnabledCheckbox.checked);
 
     try {
       if (useStreaming) {
@@ -809,7 +761,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
       saveConversations();
     } catch (error) {
       console.error('AI chat error:', error);
-      const errorMessage: ChatMessage = {
+      const errorMessage = {
         role: 'ai',
         content: 'Nie udało się uzyskać odpowiedzi z serwera AI. Spróbuj ponownie za chwilę albo zmień model.',
         error: true,
@@ -821,12 +773,12 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     } finally {
       removeTypingIndicator();
       setProcessing(false);
-      input.value = '';
+      if (input && 'value' in input) input.value = '';
       updateCharCount();
     }
   }
 
-  async function handleNormalResponse(prompt: string) {
+  async function handleNormalResponse(prompt) {
     if (!currentConversation || !modelSelect) return;
 
     const response = await fetch('/api/ai/chat', {
@@ -835,7 +787,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
       body: JSON.stringify({
         prompt,
         history,
-        model: modelSelect.value,
+        model: (modelSelect && 'value' in modelSelect) ? String(modelSelect.value) : 'claude-3-haiku',
         temperature: 0.6,
         max_tokens: 1200
       })
@@ -848,7 +800,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     const data = await response.json();
 
     if (data?.response) {
-      const aiMessage: ChatMessage = {
+      const aiMessage = {
         role: 'ai',
         content: data.response,
         cached: Boolean(data.cached),
@@ -862,7 +814,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     }
   }
 
-  async function handleStreamingResponse(prompt: string) {
+  async function handleStreamingResponse(prompt) {
     if (!currentConversation || !modelSelect) return;
 
     const response = await fetch('/api/ai/chat-stream', {
@@ -871,7 +823,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
       body: JSON.stringify({
         prompt,
         history,
-        model: modelSelect.value,
+        model: (modelSelect && 'value' in modelSelect) ? String(modelSelect.value) : 'claude-3-haiku',
         temperature: 0.6,
         max_tokens: 1200
       })
@@ -919,7 +871,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
             }
 
             if (data.done) {
-              const aiMessage: ChatMessage = {
+              const aiMessage = {
                 role: 'ai',
                 content: accumulatedText,
                 timestamp: Date.now()
@@ -936,7 +888,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     }
   }
 
-  function createStreamingMessage(): HTMLDivElement {
+  function createStreamingMessage() {
     const message = document.createElement('div');
     message.className = 'message message-ai streaming';
 
@@ -959,7 +911,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     return message;
   }
 
-  function updateStreamingMessage(element: HTMLDivElement, content: string) {
+  function updateStreamingMessage(element, content) {
     const bubbleContent = element.querySelector('.bubble-content');
     if (bubbleContent) {
       bubbleContent.innerHTML = renderMarkdown(content);
@@ -967,7 +919,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     messagesContainer?.scrollTo({ top: messagesContainer.scrollHeight, behavior: 'smooth' });
   }
 
-  function finalizeStreamingMessage(element: HTMLDivElement | null, content: string) {
+  function finalizeStreamingMessage(element, content) {
     if (!element) return;
 
     element.classList.remove('streaming');
@@ -1001,11 +953,12 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     }
   }
 
-  function addMessage({ role, content, cached, error, timestamp }: ChatMessage) {
+  function addMessage(msg) {
+    const { role, content, cached, error, timestamp } = msg;
     if (!messagesContainer) return;
 
-    const message = document.createElement('div');
-    message.className = `message message-${role}${error ? ' message-error' : ''}`;
+    const messageElement = document.createElement('div');
+    messageElement.className = `message message-${role}${error ? ' message-error' : ''}`;
 
     const time = timestamp ? new Date(timestamp) : new Date();
     const timeStr = time.toLocaleTimeString('pl-PL', {
@@ -1013,7 +966,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
       minute: '2-digit'
     });
 
-    message.innerHTML = `
+    messageElement.innerHTML = `
       <div class="bubble">
         <div class="bubble-content">${role === 'ai' && !error ? renderMarkdown(content) : escapeHtml(content)}</div>
         ${cached ? '<span class="badge">Cache</span>' : ''}
@@ -1042,10 +995,10 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
             }, 2000);
           });
       });
-      message.querySelector('.bubble')?.appendChild(copyButton);
+      messageElement.querySelector('.bubble')?.appendChild(copyButton);
     }
 
-    messagesContainer.appendChild(message);
+    messagesContainer.appendChild(messageElement);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
 
@@ -1071,8 +1024,8 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
   }
 
   // ========== UI Update Functions ==========
-  function updateModelDetails(id: string) {
-    const meta = modelOptions.find((option) => option.id === id);
+  function updateModelDetails(id) {
+    const meta = modelOptions.find((option) => option?.id === id);
     if (!meta) {
       if (modelDescription) modelDescription.textContent = 'Wybrany model nie został znaleziony w konfiguracji.';
       if (modelHint) modelHint.textContent = '';
@@ -1090,21 +1043,22 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
 
   function updateCharCount() {
     if (!input || !charCount) return;
-    const length = input.value.length;
-    charCount.textContent = `${length}/${input.maxLength}`;
+    const length = (input && 'value' in input) ? String(input.value).length : 0;
+    const maxLength = (input && 'maxLength' in input) ? input.maxLength : 800;
+    if (charCount) charCount.textContent = `${length}/${maxLength}`;
   }
 
-  function setProcessing(state: boolean) {
+  function setProcessing(state) {
     isProcessing = state;
-    if (sendButton) {
+    if (sendButton && 'disabled' in sendButton) {
       sendButton.disabled = state;
       sendButton.textContent = state ? 'Czekaj...' : 'Wyślij';
     }
-    if (input) input.disabled = state;
-    if (loading) loading.hidden = !state;
+    if (input && 'disabled' in input) input.disabled = state;
+    if (loading && 'hidden' in loading) loading.hidden = !state;
   }
 
-  function updateStatus(message: string) {
+  function updateStatus(message) {
     if (!status) return;
     status.textContent = message;
     if (message) {
@@ -1114,7 +1068,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     }
   }
 
-  function renderMarkdown(markdown: string): string {
+  function renderMarkdown(markdown) {
     let html = escapeHtml(markdown);
     html = html.replace(/```(\w+)?\n?([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
     html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
@@ -1125,7 +1079,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     return html;
   }
 
-  function escapeHtml(text: string): string {
+  function escapeHtml(text) {
     const wrapper = document.createElement('div');
     wrapper.textContent = text;
     return wrapper.innerHTML;
