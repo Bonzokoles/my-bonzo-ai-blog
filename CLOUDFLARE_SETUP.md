@@ -38,20 +38,22 @@
 ### Windows CMD:
 ```cmd
 set CLOUDFLARE_API_TOKEN=<TWÓJ_TOKEN_TUTAJ>
-set CLOUDFLARE_ACCOUNT_ID=7f490d58a478c6baccb0ae01ea1d87c3
+set CLOUDFLARE_ACCOUNT_ID=<TWÓJ_ACCOUNT_ID>
 ```
 
 ### Windows PowerShell:
 ```powershell
 $env:CLOUDFLARE_API_TOKEN="<TWÓJ_TOKEN_TUTAJ>"
-$env:CLOUDFLARE_ACCOUNT_ID="7f490d58a478c6baccb0ae01ea1d87c3"
+$env:CLOUDFLARE_ACCOUNT_ID="<TWÓJ_ACCOUNT_ID>"
 ```
 
 ### Git Bash / Linux / macOS:
 ```bash
 export CLOUDFLARE_API_TOKEN="<TWÓJ_TOKEN_TUTAJ>"
-export CLOUDFLARE_ACCOUNT_ID="7f490d58a478c6baccb0ae01ea1d87c3"
+export CLOUDFLARE_ACCOUNT_ID="<TWÓJ_ACCOUNT_ID>"
 ```
+
+> **💡 Znajdź swój Account ID:** Cloudflare Dashboard → prawy panel → API → Account ID
 
 ---
 
@@ -68,28 +70,28 @@ npx wrangler kv:namespace create "SESSION"
  ID: abc123xyz456def789ghi012  ← SKOPIUJ TO!
 ```
 
-➡️ **SKOPIUJ ID** i wklej w `wrangler.jsonc` linia 26: `"id": "abc123xyz456def789ghi012"`
+➡️ **SKOPIUJ ID** i wklej w `wrangler.toml` sekcja SESSION: `id = "abc123xyz456def789ghi012"`
 
 ---
 
 ```bash
 npx wrangler kv:namespace create "SESSION" --preview
 ```
-➡️ **SKOPIUJ ID** i wklej w `wrangler.jsonc` linia 27: `"preview_id": "..."`
+➡️ **SKOPIUJ ID** i wklej w `wrangler.toml` sekcja SESSION: `preview_id = "..."`
 
 ---
 
 ```bash
 npx wrangler kv:namespace create "CACHE"
 ```
-➡️ **SKOPIUJ ID** i wklej w `wrangler.jsonc` linia 31: `"id": "..."`
+➡️ **SKOPIUJ ID** i wklej w `wrangler.toml` sekcja CACHE: `id = "..."`
 
 ---
 
 ```bash
 npx wrangler kv:namespace create "CACHE" --preview
 ```
-➡️ **SKOPIUJ ID** i wklej w `wrangler.jsonc` linia 32: `"preview_id": "..."`
+➡️ **SKOPIUJ ID** i wklej w `wrangler.toml` sekcja CACHE: `preview_id = "..."`
 
 ---
 
@@ -102,47 +104,31 @@ npx wrangler r2 bucket create mybonzo-media
 ```
 ✅ Created bucket 'mybonzo-media'
 ```
-✅ **Nic nie kopiuj** - nazwa bucketa już jest w `wrangler.jsonc`
+✅ **Nic nie kopiuj** - nazwa bucketa już jest w `wrangler.toml`
 
 ---
 
 ```bash
 npx wrangler r2 bucket create mybonzo-media-preview
 ```
-✅ **Nic nie kopiuj** - nazwa bucketa już jest w `wrangler.jsonc`
+✅ **Nic nie kopiuj** - nazwa bucketa już jest w `wrangler.toml`
 
 ---
 
-### 3.3 Queue
+## ✏️ Krok 4: Edytuj wrangler.toml
 
-```bash
-npx wrangler queues create image-processing-queue
-```
-**Wynik:**
-```
-✅ Created queue 'image-processing-queue'
-```
-✅ **Nic nie kopiuj** - nazwa queue już jest w `wrangler.jsonc`
+Otwórz `wrangler.toml` i **ZAMIEŃ 4 placeholdery**:
 
----
+```toml
+[[kv_namespaces]]
+binding = "SESSION"
+id = "<WKLEJ_SESSION_ID>"           # 👈 TUTAJ wklej pierwsze ID
+preview_id = "<WKLEJ_SESSION_PREVIEW_ID>"  # 👈 TUTAJ wklej drugie ID
 
-## ✏️ Krok 4: Edytuj wrangler.jsonc
-
-Otwórz `wrangler.jsonc` i **ZAMIEŃ 4 placeholdery**:
-
-```jsonc
-"kv_namespaces": [
-  {
-    "binding": "SESSION",
-    "id": "<WKLEJ_SESSION_ID>",  // 👈 TUTAJ wklej pierwsze ID
-    "preview_id": "<WKLEJ_SESSION_PREVIEW_ID>"  // 👈 TUTAJ wklej drugie ID
-  },
-  {
-    "binding": "CACHE",
-    "id": "<WKLEJ_CACHE_ID>",  // 👈 TUTAJ wklej trzecie ID
-    "preview_id": "<WKLEJ_CACHE_PREVIEW_ID>"  // 👈 TUTAJ wklej czwarte ID
-  }
-]
+[[kv_namespaces]]
+binding = "CACHE"
+id = "<WKLEJ_CACHE_ID>"             # 👈 TUTAJ wklej trzecie ID
+preview_id = "<WKLEJ_CACHE_PREVIEW_ID>"    # 👈 TUTAJ wklej czwarte ID
 ```
 
 **Zapisz plik!**
@@ -164,7 +150,7 @@ Value: <WKLEJ_SWÓJ_TOKEN>
 **Secret 2:**
 ```
 Name: CLOUDFLARE_ACCOUNT_ID
-Value: 7f490d58a478c6baccb0ae01ea1d87c3
+Value: <TWÓJ_ACCOUNT_ID>
 ```
 
 ---
@@ -192,24 +178,52 @@ npx wrangler pages deploy ./dist --project-name=mybonzoaiblog
 ## 🚀 Krok 7: Deployment przez GitHub Actions
 
 ```bash
-git add wrangler.jsonc CLOUDFLARE_SETUP.md
+git add wrangler.toml CLOUDFLARE_SETUP.md
 git commit -m "feat: Configure Cloudflare deployment with all resources"
 git push origin main
 ```
 
 Deployment automatycznie wystartuje przez GitHub Actions!
 
-Monitor: https://github.com/<TWÓJ_USERNAME>/mybonzoAIblog/actions
+Monitor: `https://github.com/<TWÓJ_USERNAME>/mybonzoAIblog/actions`
 
 ---
 
-## ✅ Weryfikacja po deploymencie
+## ✅ Post-Deploy Sanity Checks
 
-1. **Strona główna**: https://mybonzoaiblog.pages.dev
-2. **AI Chat API**: https://mybonzoaiblog.pages.dev/api/ai/generate-text
-3. **AI Image API**: https://mybonzoaiblog.pages.dev/api/ai/generate-image
-4. **Media Upload**: https://mybonzoaiblog.pages.dev/api/media/upload
-5. **Cloudflare Dashboard**: https://dash.cloudflare.com/7f490d58a478c6baccb0ae01ea1d87c3/pages
+Po udanym deployment wykonaj te testy:
+
+### 1. Sprawdź autentykację
+```bash
+npx wrangler whoami
+```
+Powinno zwrócić Twoją nazwę użytkownika i account ID.
+
+### 2. Test endpointów API
+```bash
+# Health check AI Chat
+curl https://mybonzoaiblog.pages.dev/api/ai/chat
+
+# Test prostego zapytania (GET)
+curl "https://mybonzoaiblog.pages.dev/api/ai/chat?prompt=test"
+
+# Health check blogu
+curl https://mybonzoaiblog.pages.dev/api/blog/index
+```
+
+### 3. Test interfejsu
+- **Strona główna**: `https://mybonzoaiblog.pages.dev`
+- **AI Chat Enhanced**: `https://mybonzoaiblog.pages.dev/system/ai-chat-enhanced`
+- **Cloudflare Dashboard**: `https://dash.cloudflare.com/<TWÓJ_ACCOUNT_ID>/pages`
+
+### 4. Sprawdź logi
+```bash
+# Logi Workers
+npx wrangler tail
+
+# Logi Pages Functions
+npx wrangler pages deployment tail
+```
 
 ---
 
