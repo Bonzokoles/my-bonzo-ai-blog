@@ -839,7 +839,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
           max_tokens: 1200
         };
 
-    console.log('📦 [AI Chat] Request body:', JSON.stringify(requestBody, null, 2));
+    console.log('📦 [AI Chat] Request body:', requestBody);
 
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -926,7 +926,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
           max_tokens: 1200
         };
 
-    console.log('📦 [AI Chat Stream] Request body:', JSON.stringify(requestBody, null, 2));
+    console.log('📦 [AI Chat Stream] Request body:', requestBody);
 
     const response = await fetch(endpoint, {
       method: 'POST',

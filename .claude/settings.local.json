@@ -10,7 +10,11 @@
       "Bash(npm run dev:*)",
       "Bash(curl:*)",
       "Bash(dir:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfix(ai-chat): Enhanced error handling and console logging for debugging\n\n- Add comprehensive console logging throughout message flow\n- Add default provider selection (Cloudflare AI)\n- Add detailed error messages for API responses\n- Add provider select styling\n- Add TypeScript type assertions for DOM elements\n- Fix missing default model value\n- Improve request/response debugging visibility\n\nThis commit addresses chat functionality issues by adding extensive\nlogging and error handling to identify where messages fail to send.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfix(ai-chat): Remove problematic JSON.stringify in console.log\n\n- Replace JSON.stringify(obj, null, 2) with direct object logging\n- Fixes \"Expected property name or '}' in JSON\" error\n- Console will automatically format objects nicely\n- Prevents issues with circular references or non-serializable values\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
