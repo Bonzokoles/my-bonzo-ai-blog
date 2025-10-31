@@ -3,9 +3,9 @@
  * Experiments Page - Bonzo Door Sales Avatar
  * Interactive AI avatar for PORTA door sales
  */
-import Layout from '@layouts/Layout.astro';
-import PageHeader from '@components/Astro/PageHeader.astro';
-import coverImage from '@assets/alk-cover-2.webp';
+import Layout from "@layouts/Layout.astro";
+import PageHeader from "@components/Astro/PageHeader.astro";
+import coverImage from "@assets/alk-cover-2.webp";
 ---
 
 <Layout
@@ -35,10 +35,15 @@ import coverImage from '@assets/alk-cover-2.webp';
             loop
             poster="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/alk4.png"
           >
-            <source src="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/DD1.mp4" type="video/mp4" />
+            <source
+              src="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/DD1.mp4"
+              type="video/mp4"
+            />
             Twoja przeglądarka nie obsługuje wideo HTML5.
           </video>
-          <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">Prezentacja Bonzo</p>
+          <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
+            Prezentacja Bonzo
+          </p>
         </div>
 
         <div class="video-container rounded-lg overflow-hidden shadow-lg">
@@ -50,15 +55,22 @@ import coverImage from '@assets/alk-cover-2.webp';
             loop
             poster="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/alk4.png"
           >
-            <source src="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/avatar/bonzo-intro.mp4" type="video/mp4" />
+            <source
+              src="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/avatar/bonzo-intro.mp4"
+              type="video/mp4"
+            />
             Twoja przeglądarka nie obsługuje wideo HTML5.
           </video>
-          <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">Intro Video</p>
+          <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
+            Intro Video
+          </p>
         </div>
       </div>
 
       <!-- Chat Interface -->
-      <div class="chat-container bg-gray-100 dark:bg-gray-800 rounded-lg p-6 shadow-lg">
+      <div
+        class="chat-container bg-gray-100 dark:bg-gray-800 rounded-lg p-6 shadow-lg"
+      >
         <h2 class="text-2xl font-bold mb-4 text-center">Czat z Bonzo</h2>
 
         <!-- Mode Toggle -->
@@ -77,8 +89,12 @@ import coverImage from '@assets/alk-cover-2.webp';
           </button>
         </div>
 
-        <p id="mode-description" class="text-center mb-6 text-gray-600 dark:text-gray-300">
-          Zapytaj o modele PORTA, ceny, parametry techniczne lub porady przy wyborze drzwi!
+        <p
+          id="mode-description"
+          class="text-center mb-6 text-gray-600 dark:text-gray-300"
+        >
+          Zapytaj o modele PORTA, ceny, parametry techniczne lub porady przy
+          wyborze drzwi!
         </p>
 
         <!-- Voice Interface (hidden by default) -->
@@ -98,7 +114,10 @@ import coverImage from '@assets/alk-cover-2.webp';
               <span class="text-2xl">🛑</span>
               <span>Zakończ Rozmowę</span>
             </button>
-            <div id="voice-status" class="text-sm text-gray-500 dark:text-gray-400">
+            <div
+              id="voice-status"
+              class="text-sm text-gray-500 dark:text-gray-400"
+            >
               Naciśnij przycisk aby rozpocząć rozmowę głosową
             </div>
           </div>
@@ -106,13 +125,19 @@ import coverImage from '@assets/alk-cover-2.webp';
 
         <!-- Text Interface (shown by default) -->
         <div id="text-interface">
-          <div id="chat-messages" class="chat-messages bg-white dark:bg-gray-900 rounded-lg p-4 mb-4 h-96 overflow-y-auto">
+          <div
+            id="chat-messages"
+            class="chat-messages bg-white dark:bg-gray-900 rounded-lg p-4 mb-4 h-96 overflow-y-auto"
+          >
             <div class="message bot-message mb-4">
-              <div class="font-bold text-blue-600 dark:text-blue-400 mb-1">Bonzo:</div>
+              <div class="font-bold text-blue-600 dark:text-blue-400 mb-1">
+                Bonzo:
+              </div>
               <div class="text-gray-800 dark:text-gray-200">
-                Cześć! Jestem Bonzo, Twój ekspert od drzwi PORTA. Pomogę Ci wybrać idealne drzwi!
-                Mamy 5 świetnych modeli - od stylowych FOCUS PREMIUM (od 1033 PLN) po eleganckie VERTE HOME.
-                Zadaj pytanie o ceny, parametry lub pomoc w wyborze!
+                Cześć! Jestem Bonzo, Twój ekspert od drzwi PORTA. Pomogę Ci
+                wybrać idealne drzwi! Mamy 5 świetnych modeli - od stylowych
+                FOCUS PREMIUM (od 1033 PLN) po eleganckie VERTE HOME. Zadaj
+                pytanie o ceny, parametry lub pomoc w wyborze!
               </div>
             </div>
           </div>
@@ -132,8 +157,11 @@ import coverImage from '@assets/alk-cover-2.webp';
             </button>
           </div>
 
-          <div class="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center">
-            💡 Przykłady: "Jakie masz modele?", "Ile kosztuje FOCUS PREMIUM?", "Które drzwi mają szkło?"
+          <div
+            class="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center"
+          >
+            💡 Przykłady: "Jakie masz modele?", "Ile kosztuje FOCUS PREMIUM?",
+            "Które drzwi mają szkło?"
           </div>
         </div>
       </div>
@@ -177,8 +205,14 @@ import coverImage from '@assets/alk-cover-2.webp';
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .bot-message {
@@ -232,8 +266,15 @@ import coverImage from '@assets/alk-cover-2.webp';
 
   /* Voice Animation */
   @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.1); opacity: 0.8; }
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
   }
 
   .voice-active {
@@ -243,17 +284,17 @@ import coverImage from '@assets/alk-cover-2.webp';
 
 <script>
   // UI Elements
-  const chatMessages = document.getElementById('chat-messages');
-  const userInput = document.getElementById('user-input') as HTMLInputElement;
-  const sendBtn = document.getElementById('send-btn');
-  const textModeBtn = document.getElementById('text-mode-btn');
-  const voiceModeBtn = document.getElementById('voice-mode-btn');
-  const textInterface = document.getElementById('text-interface');
-  const voiceInterface = document.getElementById('voice-interface');
-  const voiceStartBtn = document.getElementById('voice-start-btn');
-  const voiceStopBtn = document.getElementById('voice-stop-btn');
-  const voiceStatus = document.getElementById('voice-status');
-  const modeDescription = document.getElementById('mode-description');
+  const chatMessages = document.getElementById("chat-messages");
+  const userInput = document.getElementById("user-input") as HTMLInputElement;
+  const sendBtn = document.getElementById("send-btn");
+  const textModeBtn = document.getElementById("text-mode-btn");
+  const voiceModeBtn = document.getElementById("voice-mode-btn");
+  const textInterface = document.getElementById("text-interface");
+  const voiceInterface = document.getElementById("voice-interface");
+  const voiceStartBtn = document.getElementById("voice-start-btn");
+  const voiceStopBtn = document.getElementById("voice-stop-btn");
+  const voiceStatus = document.getElementById("voice-status");
+  const modeDescription = document.getElementById("mode-description");
 
   // Voice state
   let voiceSession: WebSocket | null = null;
@@ -262,38 +303,42 @@ import coverImage from '@assets/alk-cover-2.webp';
   let isVoiceActive = false;
 
   // Mode Toggle
-  textModeBtn?.addEventListener('click', () => {
-    textModeBtn.classList.add('active');
-    voiceModeBtn?.classList.remove('active');
-    textInterface?.classList.remove('hidden');
-    voiceInterface?.classList.add('hidden');
-    if (modeDescription) modeDescription.textContent = 'Zapytaj o modele PORTA, ceny, parametry techniczne lub porady przy wyborze drzwi!';
+  textModeBtn?.addEventListener("click", () => {
+    textModeBtn.classList.add("active");
+    voiceModeBtn?.classList.remove("active");
+    textInterface?.classList.remove("hidden");
+    voiceInterface?.classList.add("hidden");
+    if (modeDescription)
+      modeDescription.textContent =
+        "Zapytaj o modele PORTA, ceny, parametry techniczne lub porady przy wyborze drzwi!";
     stopVoiceSession();
   });
 
-  voiceModeBtn?.addEventListener('click', () => {
-    voiceModeBtn.classList.add('active');
-    textModeBtn?.classList.remove('active');
-    voiceInterface?.classList.remove('hidden');
-    textInterface?.classList.add('hidden');
-    if (modeDescription) modeDescription.textContent = 'Kliknij przycisk i rozmawiaj z Bonzo głosowo! AI odpowie Ci w czasie rzeczywistym.';
+  voiceModeBtn?.addEventListener("click", () => {
+    voiceModeBtn.classList.add("active");
+    textModeBtn?.classList.remove("active");
+    voiceInterface?.classList.remove("hidden");
+    textInterface?.classList.add("hidden");
+    if (modeDescription)
+      modeDescription.textContent =
+        "Kliknij przycisk i rozmawiaj z Bonzo głosowo! AI odpowie Ci w czasie rzeczywistym.";
   });
 
   // Voice Session Management
-  voiceStartBtn?.addEventListener('click', startVoiceSession);
-  voiceStopBtn?.addEventListener('click', stopVoiceSession);
+  voiceStartBtn?.addEventListener("click", startVoiceSession);
+  voiceStopBtn?.addEventListener("click", stopVoiceSession);
 
   async function startVoiceSession() {
     try {
-      updateVoiceStatus('Łączenie z Bonzo...');
+      updateVoiceStatus("Łączenie z Bonzo...");
 
       // Get session token
-      const response = await fetch('/api/ai/bonzo-voice', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+      const response = await fetch("/api/ai/bonzo-voice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
       });
 
-      if (!response.ok) throw new Error('Failed to create session');
+      if (!response.ok) throw new Error("Failed to create session");
 
       const { client_secret } = await response.json();
 
@@ -301,22 +346,23 @@ import coverImage from '@assets/alk-cover-2.webp';
       mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
       // Initialize audio context
-      audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      audioContext = new (window.AudioContext ||
+        (window as any).webkitAudioContext)();
 
       // Connect to WebSocket
       const wsUrl = `wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17`;
       voiceSession = new WebSocket(wsUrl, [], {
         headers: {
-          'Authorization': `Bearer ${client_secret}`,
-          'OpenAI-Beta': 'realtime=v1'
-        }
+          Authorization: `Bearer ${client_secret}`,
+          "OpenAI-Beta": "realtime=v1",
+        },
       } as any);
 
       voiceSession.onopen = () => {
-        updateVoiceStatus('✅ Połączono! Mów do mikrofonu...');
-        voiceStartBtn?.classList.add('hidden');
-        voiceStopBtn?.classList.remove('hidden');
-        voiceStartBtn?.classList.add('voice-active');
+        updateVoiceStatus("✅ Połączono! Mów do mikrofonu...");
+        voiceStartBtn?.classList.add("hidden");
+        voiceStopBtn?.classList.remove("hidden");
+        voiceStartBtn?.classList.add("voice-active");
         isVoiceActive = true;
 
         // Start audio capture
@@ -329,19 +375,18 @@ import coverImage from '@assets/alk-cover-2.webp';
       };
 
       voiceSession.onerror = (error) => {
-        console.error('WebSocket error:', error);
-        updateVoiceStatus('❌ Błąd połączenia');
+        console.error("WebSocket error:", error);
+        updateVoiceStatus("❌ Błąd połączenia");
         stopVoiceSession();
       };
 
       voiceSession.onclose = () => {
-        updateVoiceStatus('Rozłączono');
+        updateVoiceStatus("Rozłączono");
         stopVoiceSession();
       };
-
     } catch (error) {
-      console.error('Voice session error:', error);
-      updateVoiceStatus('❌ Nie udało się uruchomić rozmowy');
+      console.error("Voice session error:", error);
+      updateVoiceStatus("❌ Nie udało się uruchomić rozmowy");
       stopVoiceSession();
     }
   }
@@ -355,7 +400,7 @@ import coverImage from '@assets/alk-cover-2.webp';
     }
 
     if (mediaStream) {
-      mediaStream.getTracks().forEach(track => track.stop());
+      mediaStream.getTracks().forEach((track) => track.stop());
       mediaStream = null;
     }
 
@@ -364,9 +409,9 @@ import coverImage from '@assets/alk-cover-2.webp';
       audioContext = null;
     }
 
-    voiceStartBtn?.classList.remove('hidden', 'voice-active');
-    voiceStopBtn?.classList.add('hidden');
-    updateVoiceStatus('Naciśnij przycisk aby rozpocząć rozmowę głosową');
+    voiceStartBtn?.classList.remove("hidden", "voice-active");
+    voiceStopBtn?.classList.add("hidden");
+    updateVoiceStatus("Naciśnij przycisk aby rozpocząć rozmowę głosową");
   }
 
   function updateVoiceStatus(message: string) {
@@ -383,40 +428,47 @@ import coverImage from '@assets/alk-cover-2.webp';
     processor.connect(audioContext.destination);
 
     processor.onaudioprocess = (e) => {
-      if (!isVoiceActive || !voiceSession || voiceSession.readyState !== WebSocket.OPEN) return;
+      if (
+        !isVoiceActive ||
+        !voiceSession ||
+        voiceSession.readyState !== WebSocket.OPEN
+      )
+        return;
 
       const inputData = e.inputBuffer.getChannelData(0);
       const pcm16 = convertFloat32ToPCM16(inputData);
       const base64Audio = arrayBufferToBase64(pcm16);
 
-      voiceSession.send(JSON.stringify({
-        type: 'input_audio_buffer.append',
-        audio: base64Audio
-      }));
+      voiceSession.send(
+        JSON.stringify({
+          type: "input_audio_buffer.append",
+          audio: base64Audio,
+        }),
+      );
     };
   }
 
   function handleRealtimeEvent(event: any) {
-    console.log('Realtime event:', event.type);
+    console.log("Realtime event:", event.type);
 
     switch (event.type) {
-      case 'response.audio.delta':
+      case "response.audio.delta":
         playAudioDelta(event.delta);
         break;
-      case 'response.audio_transcript.delta':
+      case "response.audio_transcript.delta":
         updateVoiceStatus(`🔊 Bonzo: ${event.delta}`);
         break;
-      case 'response.done':
-        updateVoiceStatus('✅ Bonzo skończył mówić. Twoja kolej!');
+      case "response.done":
+        updateVoiceStatus("✅ Bonzo skończył mówić. Twoja kolej!");
         break;
-      case 'input_audio_buffer.speech_started':
-        updateVoiceStatus('🎤 Słucham...');
+      case "input_audio_buffer.speech_started":
+        updateVoiceStatus("🎤 Słucham...");
         break;
-      case 'input_audio_buffer.speech_stopped':
-        updateVoiceStatus('⏳ Przetwarzanie...');
+      case "input_audio_buffer.speech_stopped":
+        updateVoiceStatus("⏳ Przetwarzanie...");
         break;
-      case 'error':
-        console.error('Realtime error:', event.error);
+      case "error":
+        console.error("Realtime error:", event.error);
         updateVoiceStatus(`❌ Błąd: ${event.error.message}`);
         break;
     }
@@ -439,14 +491,14 @@ import coverImage from '@assets/alk-cover-2.webp';
     const pcm16 = new Int16Array(float32Array.length);
     for (let i = 0; i < float32Array.length; i++) {
       const s = Math.max(-1, Math.min(1, float32Array[i]));
-      pcm16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+      pcm16[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
     }
     return pcm16.buffer;
   }
 
   function arrayBufferToBase64(buffer: ArrayBuffer): string {
     const bytes = new Uint8Array(buffer);
-    let binary = '';
+    let binary = "";
     for (let i = 0; i < bytes.byteLength; i++) {
       binary += String.fromCharCode(bytes[i]);
     }
@@ -468,39 +520,52 @@ import coverImage from '@assets/alk-cover-2.webp';
     const message = userInput.value.trim();
     if (!message) return;
 
-    addMessage('user', message);
-    userInput.value = '';
+    addMessage("user", message);
+    userInput.value = "";
 
-    const typingId = addMessage('bot', 'Bonzo pisze...');
+    const typingId = addMessage("bot", "Bonzo pisze...");
 
     try {
-      const response = await fetch('/api/ai/bonzo-chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message })
+      const response = await fetch("/api/ai/bonzo-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
       });
 
-      if (!response.ok) throw new Error('API error');
+      if (!response.ok) throw new Error("API error");
 
       const data = await response.json();
       document.getElementById(typingId)?.remove();
-      addMessage('bot', data.reply);
+      addMessage("bot", data.reply);
 
+      // Play HeyGen audio if available
+      if (data.audioUrl) {
+        const audio = new Audio(data.audioUrl);
+        audio
+          .play()
+          .catch((err) => console.error("Audio playback error:", err));
+      }
     } catch (error) {
       document.getElementById(typingId)?.remove();
-      addMessage('bot', 'Przepraszam, wystąpił problem. Spróbuj ponownie za chwilę.');
-      console.error('Chat error:', error);
+      addMessage(
+        "bot",
+        "Przepraszam, wystąpił problem. Spróbuj ponownie za chwilę.",
+      );
+      console.error("Chat error:", error);
     }
   }
 
-  function addMessage(type: 'user' | 'bot', text: string): string {
+  function addMessage(type: "user" | "bot", text: string): string {
     const messageId = `msg-${Date.now()}`;
-    const messageDiv = document.createElement('div');
+    const messageDiv = document.createElement("div");
     messageDiv.id = messageId;
     messageDiv.className = `message ${type}-message mb-4`;
 
-    const senderName = type === 'bot' ? 'Bonzo' : 'Ty';
-    const senderColor = type === 'bot' ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400';
+    const senderName = type === "bot" ? "Bonzo" : "Ty";
+    const senderColor =
+      type === "bot"
+        ? "text-blue-600 dark:text-blue-400"
+        : "text-green-600 dark:text-green-400";
 
     messageDiv.innerHTML = `
       <div class="font-bold ${senderColor} mb-1">${senderName}:</div>
@@ -513,8 +578,8 @@ import coverImage from '@assets/alk-cover-2.webp';
     return messageId;
   }
 
-  sendBtn?.addEventListener('click', sendMessage);
-  userInput?.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage();
+  sendBtn?.addEventListener("click", sendMessage);
+  userInput?.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
   });
 </script>

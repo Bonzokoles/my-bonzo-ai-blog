@@ -1,0 +1,77 @@
+{
+  "drzwi": [
+    {
+      "id": 1,
+      "name": "PORTA FOCUS PREMIUM model 5.A",
+      "price": "od 1033 PLN netto",
+      "description": "Wypełnienie typu plaster miodu lub płyta wiórowa, pokryte płytą HDF. Powierzchnia trwała, matowa. Szyba ze szkła hartowanego 8mm. Kolory: białe lakierowane lub farba akrylowa UV.",
+      "features": [
+        "Wypełnienie: plaster miodu lub płyta wiórowa",
+        "Powierzchnia: odporna na ścieranie",
+        "Szyba: szkło hartowane matowe 8mm",
+        "Okucia: zamki na klucz, blokada WC, wkładka patentowa",
+        "Zawiasy: trzyczęściowe"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "PORTA FACTOR model 5",
+      "price": "od 629 PLN netto",
+      "description": "Minimalistyczny design, biały kolor z symetrycznym frezowaniem. Wypełnienie z płyty wiórowej, możliwy skrót do niestandardowych wymiarów.",
+      "features": [
+        "Design: minimalistyczny, biały",
+        "Frezowanie: symetryczne",
+        "Zawiasy: 2-3 sztuki czopowe",
+        "Zamki: klucz zwykły, blokada WC, wkładka patentowa",
+        "Możliwość niestandardowych wymiarów"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "PORTA DESIRE 5",
+      "price": "cena dostępna po kontakcie",
+      "description": "Skrzydło z płyty wiórowej otworowej z aluminiowymi listwami dekoracyjnymi. Powłoka farba akrylowa UV.",
+      "features": [
+        "Płyta wiórowa otworowa",
+        "Listwy aluminiowe dekoracyjne",
+        "Powłoka: farba akrylowa UV",
+        "Zawiasy: 3 Prime lub 2 zawiasy 3D",
+        "Wymiary: 60-100cm szerokości",
+        "Gwarancja: 2 lata"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "PORTA ART DECO model 5",
+      "price": "cena dostępna po kontakcie",
+      "description": "Styl art deco, lakierowane lub malowane. Szerokości od 60 do 100 cm, przylgowe lub bezprzylgowe.",
+      "features": [
+        "Styl: art deco",
+        "Wykończenie: lakierowane lub malowane",
+        "Szerokości: 60-100cm",
+        "Typ: przylgowe lub bezprzylgowe",
+        "Warianty zgodne z katalogiem producenta"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "PORTA VERTE HOME model H.5",
+      "price": "cena dostępna po kontakcie",
+      "description": "Drzwi ramiakowe z szybami matowymi 4mm. Opcje dwuskrzydłowe, szeroki wybór kolorów. Trwała konstrukcja i estetyczne wykończenie.",
+      "features": [
+        "Konstrukcja: ramiakowa",
+        "Szyby: matowe 4mm",
+        "Opcje: dwuskrzydłowe",
+        "Kolory: szeroki wybór",
+        "Wykończenie: estetyczne, trwałe"
+      ]
+    }
+  ],
+  "kontakt": {
+    "sprzedawca": "Norbert king bruce lee karate mistrz",
+    "adres": "ul. Jacka niezbyt Mądrego 13",
+    "telefon": "790 645 410",
+    "dostepnosc": "kontakt tylko po 23:00 w środę",
+    "uwaga": "Możesz kontaktować się bezpośrednio telefonicznie lub mailowo"
+  }
+}

@@ -537,6 +537,14 @@ import coverImage from "@assets/alk-cover-2.webp";
       const data = await response.json();
       document.getElementById(typingId)?.remove();
       addMessage("bot", data.reply);
+
+      // Play HeyGen audio if available
+      if (data.audioUrl) {
+        const audio = new Audio(data.audioUrl);
+        audio
+          .play()
+          .catch((err) => console.error("Audio playback error:", err));
+      }
     } catch (error) {
       document.getElementById(typingId)?.remove();
       addMessage(
