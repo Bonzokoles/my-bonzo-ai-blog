@@ -146,7 +146,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
           )}
           <label class="provider-toggle">
             <select id="provider-select" class="provider-select">
-              <option value="cloudflare">Cloudflare AI</option>
+              <option value="cloudflare" selected>Cloudflare AI</option>
               <option value="openai">OpenAI</option>
             </select>
           </label>
@@ -804,15 +804,24 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
   }
 
   async function handleNormalResponse(prompt) {
-    if (!currentConversation || !modelSelect) return;
+    console.log('🔵 [handleNormalResponse] START', {
+      hasConversation: !!currentConversation,
+      hasModelSelect: !!modelSelect
+    });
 
-    const providerSelect = document.getElementById('provider-select');
+    if (!currentConversation || !modelSelect) {
+      console.error('❌ [handleNormalResponse] Missing requirements');
+      return;
+    }
+
+    const providerSelect = document.getElementById('provider-select') as HTMLSelectElement | null;
     const provider = providerSelect?.value || 'cloudflare';
-    
+    console.log('🎯 [handleNormalResponse] Provider:', provider, 'Select element:', !!providerSelect);
+
     const endpoint = provider === 'openai' ? '/api/ai/chat-openai' : '/api/ai/chat';
     console.log(`🌐 [AI Chat] Making API request to ${endpoint} (provider: ${provider})`);
-    
-    const requestBody = provider === 'openai' 
+
+    const requestBody = provider === 'openai'
       ? {
           messages: [
             ...history,
@@ -825,10 +834,12 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
       : {
           prompt,
           history,
-          model: (modelSelect && 'value' in modelSelect) ? String(modelSelect.value) : 'claude-3-haiku',
+          model: (modelSelect && 'value' in modelSelect) ? String(modelSelect.value) : '@cf/google/gemma-3-12b-it',
           temperature: 0.6,
           max_tokens: 1200
         };
+
+    console.log('📦 [AI Chat] Request body:', JSON.stringify(requestBody, null, 2));
 
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -839,10 +850,13 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     console.log('📡 [AI Chat] Response status:', response.status, response.statusText);
 
     if (!response.ok) {
-      throw new Error(`Serwer zwrócił kod ${response.status}`);
+      const errorText = await response.text();
+      console.error('❌ [AI Chat] Response error:', errorText);
+      throw new Error(`Serwer zwrócił kod ${response.status}: ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('📥 [AI Chat] Response data:', data);
 
     let aiContent = '';
     let isCached = false;
@@ -850,12 +864,17 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     if (provider === 'openai' && data?.choices?.[0]?.message?.content) {
       aiContent = data.choices[0].message.content;
       isCached = false;
+      console.log('✅ [AI Chat] OpenAI response extracted');
     } else if (data?.response) {
       aiContent = data.response;
       isCached = Boolean(data.cached);
+      console.log('✅ [AI Chat] Cloudflare response extracted', { cached: isCached });
+    } else {
+      console.error('❌ [AI Chat] Unexpected response format:', data);
     }
 
     if (aiContent) {
+      console.log('✅ [AI Chat] AI content received, length:', aiContent.length);
       const aiMessage = {
         role: 'ai',
         content: aiContent,
@@ -871,15 +890,21 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
   }
 
   async function handleStreamingResponse(prompt) {
-    if (!currentConversation || !modelSelect) return;
+    console.log('🔵 [handleStreamingResponse] START');
 
-    const providerSelect = document.getElementById('provider-select');
+    if (!currentConversation || !modelSelect) {
+      console.error('❌ [handleStreamingResponse] Missing requirements');
+      return;
+    }
+
+    const providerSelect = document.getElementById('provider-select') as HTMLSelectElement | null;
     const provider = providerSelect?.value || 'cloudflare';
-    
-    const endpoint = provider === 'openai' 
+    console.log('🎯 [handleStreamingResponse] Provider:', provider);
+
+    const endpoint = provider === 'openai'
       ? '/api/ai/chat-openai'
       : '/api/ai/chat-stream';
-    
+
     console.log(`🌐 [AI Chat Stream] Using provider: ${provider}, endpoint: ${endpoint}`);
     
     const requestBody = provider === 'openai'
@@ -901,19 +926,28 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
           max_tokens: 1200
         };
 
+    console.log('📦 [AI Chat Stream] Request body:', JSON.stringify(requestBody, null, 2));
+
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody)
     });
 
+    console.log('📡 [AI Chat Stream] Response status:', response.status);
+
     if (!response.ok) {
-      throw new Error(`Serwer zwrócił kod ${response.status}`);
+      const errorText = await response.text();
+      console.error('❌ [AI Chat Stream] Response error:', errorText);
+      throw new Error(`Serwer zwrócił kod ${response.status}: ${errorText}`);
     }
 
     if (!response.body) {
+      console.error('❌ [AI Chat Stream] No response body');
       throw new Error('Brak strumienia odpowiedzi');
     }
+
+    console.log('✅ [AI Chat Stream] Starting to read stream');
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
@@ -1631,6 +1665,28 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
 
   .streaming-toggle input {
     cursor: pointer;
+  }
+
+  .provider-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .provider-select {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+    background: color-mix(in srgb, var(--color-background) 88%, transparent);
+    color: var(--color-text);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  .provider-select:focus-visible {
+    outline: none;
+    border-color: var(--color-accent);
   }
 
   .ai-chat-actions {
