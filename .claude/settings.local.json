@@ -6,7 +6,9 @@
       "Bash(taskkill:*)",
       "Bash(kill:*)",
       "Bash(powershell -Command \"Stop-Process -Id 18956 -Force\")",
-      "Bash(wrangler r2 object put:*)"
+      "Bash(wrangler r2 object put:*)",
+      "Bash(python -m http.server:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
