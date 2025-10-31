@@ -254,12 +254,21 @@ import coverImage from "@assets/alk-cover-2.webp";
     try {
       updateStatus('Łączenie z awatarem...', false);
 
+      // Check if HeyGen SDK is loaded
+      if (typeof HeyGenStreamingAvatar === 'undefined') {
+        throw new Error('HeyGen SDK nie załadował się. Odśwież stronę.');
+      }
+
+      console.log('Inicjalizacja HeyGen Avatar...');
+      console.log('API Key:', HEYGEN_API_KEY ? 'Obecny' : 'Brak');
+
       // @ts-ignore - HeyGen SDK loaded via CDN
       avatar = new HeyGenStreamingAvatar.StreamingAvatar({
         apiKey: HEYGEN_API_KEY,
         videoElement: avatarVideo
       });
 
+      console.log('Tworzenie sesji awatara...');
       const session = await avatar.createStartAvatar({
         avatarName: AVATAR_ID,
         voice: { voiceId: VOICE_ID, rate: 1.0, emotion: 'Friendly' },
@@ -269,13 +278,15 @@ import coverImage from "@assets/alk-cover-2.webp";
 
       sessionId = session.session_id;
       isReady = true;
+      console.log('Avatar gotowy! Session ID:', sessionId);
       updateStatus('✅ Bonzo gotowy!', true);
 
       await speak('Cześć! Pytaj o drzwi PORTA!');
     } catch (err) {
       console.error('Avatar error:', err);
+      console.error('Error details:', JSON.stringify(err, null, 2));
       updateStatus('❌ Błąd awatara', false);
-      addMessage('bot', 'Przepraszam, problem z połączeniem. Odśwież stronę.');
+      addMessage('bot', `Przepraszam, problem z połączeniem: ${err.message || 'Nieznany błąd'}`);
     }
   }
 
