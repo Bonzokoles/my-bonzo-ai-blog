@@ -1,209 +1,186 @@
-⚠️ Co poprawić — bo perfekcja nie istnieje
-1. Brak obsługi cache / duplikatów promptów
+📂 Struktura folderów
+bonzo-ai-door-avatar/
+├── public/
+│   ├── avatar/
+│   │   ├── Untitled Videoja334+mybonz.mp4
+│   │   └── Untitled Videoja334+mybonz-caption.srt
+│   └── catalog.json
+├── src/
+│   ├── components/
+│   │   └── AvatarChat.tsx
+│   ├── utils/
+│   │   └── avatar-player.js
+│   └── workers/
+│       └── ai-avatar.ts
+├── wrangler.toml
+└── README.md
 
-Jeśli użytkownik wpisze ten sam prompt 20 razy, system za każdym razem generuje nowy obraz i marnuje GPU.
-Poprawka:
-Przed generacją sprawdzaj KV (CACHE) po kluczu prompt.hash.
-Jeśli istnieje, zwróć istniejący obraz zamiast tworzyć nowy:
-
-const cacheKey = `img:${model}:${prompt}`;
-const cached = await env.CACHE.get(cacheKey);
-if (cached) {
-  return new Response(cached, { headers: { 'Content-Type': 'application/json' } });
+1. Plik public/catalog.json
+{
+  "drzwi": [
+    { "id": 1, "name": "Drzwi 1", "price": "1300 PLN" },
+    { "id": 2, "name": "Drzwi 2", "price": "1500 PLN" },
+    { "id": 3, "name": "Drzwi 3", "price": "1700 PLN" },
+    { "id": 4, "name": "Drzwi 4", "price": "2000 PLN" },
+    { "id": 5, "name": "Drzwi 5", "price": "2400 PLN" }
+  ]
 }
 
-
-Po uploadzie do R2 — zapisz w cache:
-
-await env.CACHE.put(cacheKey, JSON.stringify({ url: imageUrl, prompt }));
-
-2. Brak kolejki dla samej generacji
-
-Masz wrangler-queue.toml, ale generate-image.ts nie wysyła żądań do kolejki.
-Obecnie generacja odbywa się synchronicznie w API — przy dłuższym modelu może timeoutować.
-
-Poprawka:
-Zamiast generować obraz bezpośrednio, wyślij zadanie do kolejki:
-
-await env.IMAGE_QUEUE.send({ prompt, model });
-return new Response(JSON.stringify({ status: "queued", prompt }), { status: 202 });
-
-
-A worker z wrangler-queue.toml przetworzy to i zapisze wynik w R2.
-Możesz dodać osobny endpoint /api/ai/image-status do sprawdzania postępu (np. przez KV).
-
-3. Brak walidacji promptu
-
-Jeśli chcesz uniknąć niepożądanych treści (NSFW, nienawiści, itp.), dodaj prosty filtr regexem:
-
-const bannedWords = ["nude", "blood", "gore"];
-if (bannedWords.some(w => prompt.toLowerCase().includes(w))) {
-  return new Response(JSON.stringify({ error: "Unsafe content" }), { status: 403 });
+2. Plik src/utils/avatar-player.js
+// Odtwarza wideo HeyGen i pokazuje napisy z pliku .srt
+export function setupAvatarPlayer(videoEl, captionsEl, srtUrl) {
+  fetch(srtUrl)
+    .then(r => r.text())
+    .then(text => {
+      const captions = parseSRT(text);
+      videoEl.addEventListener("timeupdate", () => {
+        const t = videoEl.currentTime;
+        const line = captions.find(c => t >= c.start && t <= c.end);
+        captionsEl.textContent = line ? line.text : "";
+      });
+    });
 }
 
-
-Albo użyj Workers AI moderation modelu (@cf/openai/moderation-latest).
-
-4. Brak fallbacku dla R2
-
-Jeśli zapis do R2 się nie powiedzie, API zwróci błąd 500.
-Lepiej dodać lokalny fallback:
-
-try {
-  await env.MEDIA_BUCKET.put(imageKey, imageData, { httpMetadata: { contentType: "image/png" } });
-} catch {
-  console.warn("R2 upload failed, serving direct response.");
-  return new Response(imageData, { headers: { "Content-Type": "image/png" } });
-}
-
-5. Brak kompresji
-
-Generowany PNG może być ciężki.
-Zrób konwersję do WebP przy uploadzie (użyj Content-Type: image/webp lub Workers image-resize API).
-
-💡 Propozycja ulepszonego flow
-Frontend (prompt) 
-   ↓
-API /api/ai/generate-image
-   → sprawdza cache
-   → wysyła zadanie do queue
-   ↓
-Worker (queue consumer)
-   → generuje obraz w AI
-   → zapisuje do R2
-   → zapisuje link w KV
-   ↓
-Frontend pyta /api/ai/image-status?prompt=...
-   → otrzymuje URL gotowego obrazu
-
-✨ Bonus – protipy wydajnościowe
-
-Użyj Cloudflare KV expiration (expiration_ttl) dla cache (np. 7 dni).
-
-Generuj miniatury przez https://imagedelivery.net API.
-
-Dodaj AI model switcher (sd-xl, sd-1.5, openjourney itp.) jako dropdown w UI.
-
-Masz już 90% kompletnej platformy do AI Image Generation.
-Chcesz, żebym Ci napisał kompletny przykład nowego workerowego flow (API + Queue worker + KV cache + R2 upload), gotowy do wrzucenia do /src/workers/ai-image/?
-
-Stable Diffusion nie zna polskiego, więc jak ktoś wpisze „lis w lesie o zachodzie słońca w stylu Ghibli”, model zwróci coś pomiędzy abstrakcją a memem. Musisz dodać warstwę tłumaczenia promptu przed wysłaniem go do modelu.
-
-Masz trzy sensowne opcje, zależnie od tego, czy chcesz pozostać w infrastrukturze Cloudflare, czy użyć zewnętrznego API:
-
-🧩 1. Najczystsze rozwiązanie: Cloudflare Workers AI – model tłumaczenia
-
-Cloudflare ma już model tłumaczący — @cf/meta/m2m100-1.2b, czyli wariant multilingual Facebooka.
-Działa całkowicie w ekosystemie Cloudflare (bez zewnętrznych API), więc zero problemów z RODO czy latency.
-
-Dodaj w wrangler.toml:
-
-[ai]
-binding = "AI"
-
-
-A w kodzie generate-image.ts:
-
-// 1️⃣ tłumaczenie promptu PL -> EN
-const translationResponse = await env.AI.run(
-  "@cf/meta/m2m100-1.2b",
-  { text: prompt, source_lang: "pl", target_lang: "en" }
-);
-const translatedPrompt = translationResponse.translated_text || prompt;
-
-// 2️⃣ generowanie obrazu
-const aiResponse = await env.AI.run(
-  "@cf/stabilityai/stable-diffusion-xl-base-1.0",
-  { prompt: translatedPrompt }
-);
-
-
-Zalety:
-
-wszystko lokalnie w Cloudflare Workers AI,
-
-bez opóźnień ani kosztów API,
-
-prostota wdrożenia.
-
-Wady:
-
-tłumaczenia bywają lekko techniczne (bardziej „dictionary literal” niż artystyczne).
-
-🌍 2. Alternatywa: API OpenAI / DeepL / Gemini
-
-Jeśli zależy Ci na jakości tłumaczenia promptów (bardziej „poetyckich”), możesz podłączyć:
-
-DeepL Translate API, albo
-
-OpenAI gpt-4o-mini z promptem tłumaczącym.
-
-Przykład (OpenAI API w Workerze):
-
-const translation = await fetch("https://api.openai.com/v1/chat/completions", {
-  method: "POST",
-  headers: {
-    "Authorization": `Bearer ${env.OPENAI_API_KEY}`,
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    model: "gpt-4o-mini",
-    messages: [
-      { role: "system", content: "Translate this prompt from Polish to English, keeping artistic meaning intact." },
-      { role: "user", content: prompt }
-    ]
-  })
-}).then(r => r.json());
-
-const translatedPrompt = translation.choices[0].message.content;
-
-
-Tylko pamiętaj — jeśli używasz GitHub Actions do deployu, klucz API musi być w sekrecie (OPENAI_API_KEY).
-
-⚙️ 3. Hybrydowy tryb fallback
-
-Najrozsądniejszy setup:
-
-używaj Cloudflare AI (m2m100-1.2b) jako domyślnego tłumacza,
-
-jeśli zwróci błąd lub nonsens, fallback do OpenAI API.
-
-let translatedPrompt = prompt;
-try {
-  const t = await env.AI.run("@cf/meta/m2m100-1.2b", {
-    text: prompt, source_lang: "pl", target_lang: "en"
+function parseSRT(srt) {
+  return srt.split("\n\n").map(block => {
+    const [, time, ...text] = block.split("\n");
+    const [start, end] = time.split(" --> ").map(t => toSec(t));
+    return { start, end, text: text.join(" ") };
   });
-  translatedPrompt = t.translated_text;
-} catch {
-  const t = await fetch(...OpenAI);
-  translatedPrompt = t.choices[0].message.content;
+}
+function toSec(t) {
+  const [h, m, s] = t.split(":");
+  const [sec] = s.split(",");
+  return +h * 3600 + +m * 60 + +sec;
 }
 
-🧠 Bonus: Cache tłumaczeń
+3. Plik src/components/AvatarChat.tsx
+import { useEffect, useRef, useState } from "react";
+import { setupAvatarPlayer } from "../utils/avatar-player";
 
-Zanim tłumaczysz, wrzuć prompty do KV cache.
-Polscy użytkownicy często powtarzają podobne frazy, więc warto je przechować:
+export default function AvatarChat() {
+  const [phase, setPhase] = useState<"intro"|"live">("intro");
+  const [response, setResponse] = useState("");
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const captionsRef = useRef<HTMLDivElement>(null);
 
-const key = `translate:${prompt}`;
-const cached = await env.CACHE.get(key);
-if (cached) translatedPrompt = cached;
-else {
-  // tłumaczysz i zapisujesz
-  await env.CACHE.put(key, translatedPrompt, { expiration_ttl: 86400 });
+  useEffect(() => {
+    setupAvatarPlayer(
+      videoRef.current!,
+      captionsRef.current!,
+      "/avatar/Untitled Videoja334+mybonz-caption.srt"
+    );
+    videoRef.current!.addEventListener("ended", () => setPhase("live"));
+  }, []);
+
+  const speakLive = async (text: string) => {
+    const resp = await fetch("/api/ai/avatar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    });
+    const data = await resp.json();
+    setResponse(data.reply);
+    const audio = new Audio(data.audioUrl);
+    audio.play();
+  };
+
+  return (
+    <div className="avatar-wrapper">
+      <video ref={videoRef} src="/avatar/Untitled Videoja334+mybonz.mp4" autoPlay />
+      <div ref={captionsRef} className="captions" />
+      {phase === "live" && (
+        <div className="chat">
+          <input id="msg" placeholder="Zadaj pytanie..." onKeyDown={e=>{
+            if(e.key==="Enter") speakLive((e.target as HTMLInputElement).value);
+          }}/>
+          <div className="bot">{response}</div>
+        </div>
+      )}
+    </div>
+  );
 }
 
+4. Plik src/workers/ai-avatar.ts
+export default {
+  async fetch(request, env) {
+    const { message } = await request.json();
+    const base = `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/bonzo-ai-gateway/openai`;
 
-Wynik:
+    const chat = await fetch(`${base}/chat/completions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content:
+            "Jesteś Bonzo – sprzedawca drzwi. Odpowiadasz po polsku, rzeczowo, z lekkim sarkazmem i humorem." },
+          { role: "user", content: message }
+        ]
+      })
+    });
+    const data = await chat.json();
+    const text = data.choices[0].message.content;
 
-użytkownik pisze po polsku,
+    // generuj głos
+    const tts = await fetch(`${base}/audio/speech`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini-tts",
+        voice: "oak",
+        input: text
+      })
+    });
+    const audioArrayBuffer = await tts.arrayBuffer();
+    const audioBase64 = Buffer.from(audioArrayBuffer).toString("base64");
+    const audioUrl = `data:audio/mp3;base64,${audioBase64}`;
 
-system tłumaczy prompt PL→EN,
+    return new Response(JSON.stringify({ reply: text, audioUrl }), {
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+};
 
-Stable Diffusion dostaje sensowny input,
+5. Plik wrangler.toml
+name = "bonzo-ai-door-avatar"
+main = "src/workers/ai-avatar.ts"
+compatibility_date = "2024-10-30"
 
-rezultat trafia do R2,
+[vars]
+CF_ACCOUNT_ID = "twoje-cloudflare-account-id"
+OPENAI_API_KEY = "twój-klucz-openai"
 
-a użytkownik widzi, że magia działa.
+6. Plik README.md
+# Bonzo AI Avatar - Sprzedawca Drzwi
+
+## Instrukcja Uruchomienia
+
+1. **Zainstaluj wymagane zależności**:
+   ```bash
+   npm install
 
 
-i tak chce ustawic za chwile openai i agentów 
+Uruchom lokalnie:
+
+npm run dev
+
+
+Otwórz w przeglądarce:
+Wejdź na http://localhost:8787, aby zobaczyć działającego Bonzo w akcji!
+
+Po zakończeniu intro:
+Bonzo będzie mówił i reagował na Twoje pytania. Możesz zapytać o drzwi, ich ceny lub poprosić o więcej informacji.
+
+
+---
+
+### **Pliki wideo i napisy**
+- **Wideo:** `Untitled Videoja334+mybonz.mp4` (Twój HeyGen awatar)
+- **Napisy:** `Untitled Videoja334+mybonz-caption.srt`  

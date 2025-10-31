@@ -116,8 +116,40 @@ export const POST: APIRoute = async ({ request }) => {
     const data = await response.json();
     const reply = data.choices[0]?.message?.content || 'Przepraszam, nie mogę odpowiedzieć w tym momencie.';
 
+    // Generate voice with HeyGen
+    let audioUrl = null;
+    const heygenApiKey = import.meta.env.HEYGEN_API_KEY;
+    const heygenVoiceId = "30e127089cf14adfad2d8d2eed5e3efe"; // Your HeyGen voice ID
+
+    if (heygenApiKey) {
+      try {
+        const ttsResponse = await fetch(`https://api.heygen.com/v1/voice.create`, {
+          method: 'POST',
+          headers: {
+            'X-Api-Key': heygenApiKey,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            text: reply,
+            voice_id: heygenVoiceId,
+            language: 'pl-PL'
+          })
+        });
+
+        if (ttsResponse.ok) {
+          const audioArrayBuffer = await ttsResponse.arrayBuffer();
+          const audioBase64 = Buffer.from(audioArrayBuffer).toString('base64');
+          audioUrl = `data:audio/mp3;base64,${audioBase64}`;
+        } else {
+          console.error('HeyGen TTS error:', await ttsResponse.text());
+        }
+      } catch (ttsError) {
+        console.error('HeyGen TTS request failed:', ttsError);
+      }
+    }
+
     return new Response(
-      JSON.stringify({ reply }),
+      JSON.stringify({ reply, audioUrl }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
 

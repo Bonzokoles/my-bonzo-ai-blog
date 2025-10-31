@@ -5,6 +5,17 @@ pages_build_output_dir = "dist"
 
 # Account ID will be set via CLOUDFLARE_ACCOUNT_ID env var
 
+# Environment Variables for AI Services
+# WARNING: DO NOT commit actual secrets to git!
+# Set these in Cloudflare Dashboard > Pages > Settings > Environment Variables
+# Or use wrangler secret commands
+[vars]
+# CF_ACCOUNT_ID = "your-cloudflare-account-id"
+# OPENAI_API_KEY = "your-openai-api-key"
+# HEYGEN_API_KEY = "sk_V2_hgu_kK84UzkIxrW_PEPm3pJCAPQmwVSObR94ccqfdU9CYl2l"
+HEYGEN_VOICE_ID = "30e127089cf14adfad2d8d2eed5e3efe"
+AI_GATEWAY_SLUG = "bonzo-ai-gateway"
+
 # KV Namespaces - existing ones with proper bindings
 [[kv_namespaces]]
 binding = "SESSION"
