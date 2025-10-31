@@ -22,49 +22,22 @@ import coverImage from "@assets/alk-cover-2.webp";
 
   <section class="container mx-auto px-4 py-12">
     <div class="max-w-4xl mx-auto">
-      <!-- Video Section -->
-      <!-- Video Grid: Two videos side by side -->
-      <div class="grid md:grid-cols-2 gap-4 mb-8">
-        <div class="video-container rounded-lg overflow-hidden shadow-lg">
+      <!-- Interactive Avatar Video -->
+      <div class="mb-8">
+        <div class="video-container rounded-lg overflow-hidden shadow-lg bg-gray-900 relative">
           <video
-            id="bonzo-video-1"
-            class="w-full"
-            controls
+            id="avatar-video"
+            class="w-full aspect-video"
             autoplay
-            muted
-            loop
-            poster="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/alk4.png"
-          >
-            <source
-              src="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/DD1.mp4"
-              type="video/mp4"
-            />
-            Twoja przeglądarka nie obsługuje wideo HTML5.
-          </video>
-          <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
-            Prezentacja Bonzo
-          </p>
+            playsinline
+          ></video>
+          <div id="avatar-status" class="absolute top-4 left-4 bg-black bg-opacity-70 text-white px-4 py-2 rounded-lg">
+            Ładowanie awatara...
+          </div>
         </div>
-
-        <div class="video-container rounded-lg overflow-hidden shadow-lg">
-          <video
-            id="bonzo-video-2"
-            class="w-full"
-            controls
-            muted
-            loop
-            poster="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/alk4.png"
-          >
-            <source
-              src="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/avatar/bonzo-intro.mp4"
-              type="video/mp4"
-            />
-            Twoja przeglądarka nie obsługuje wideo HTML5.
-          </video>
-          <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
-            Intro Video
-          </p>
-        </div>
+        <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
+          🎭 Interaktywny Awatar Bonzo - Rozmawia na żywo!
+        </p>
       </div>
 
       <!-- Chat Interface -->
@@ -73,57 +46,11 @@ import coverImage from "@assets/alk-cover-2.webp";
       >
         <h2 class="text-2xl font-bold mb-4 text-center">Czat z Bonzo</h2>
 
-        <!-- Mode Toggle -->
-        <div class="flex justify-center gap-4 mb-6">
-          <button
-            id="text-mode-btn"
-            class="mode-btn active px-6 py-2 rounded-lg font-semibold transition-all duration-200"
-          >
-            💬 Tekst
-          </button>
-          <button
-            id="voice-mode-btn"
-            class="mode-btn px-6 py-2 rounded-lg font-semibold transition-all duration-200"
-          >
-            🎤 Głos (Realtime)
-          </button>
-        </div>
-
-        <p
-          id="mode-description"
-          class="text-center mb-6 text-gray-600 dark:text-gray-300"
-        >
-          Zapytaj o modele PORTA, ceny, parametry techniczne lub porady przy
-          wyborze drzwi!
+        <p class="text-center mb-6 text-gray-600 dark:text-gray-300">
+          Zapytaj o modele PORTA, ceny, parametry techniczne lub porady przy wyborze drzwi!
+          Bonzo odpowie głosem przez interaktywnego awatara powyżej 👆
         </p>
 
-        <!-- Voice Interface (hidden by default) -->
-        <div id="voice-interface" class="hidden">
-          <div class="flex flex-col items-center gap-4 mb-6">
-            <button
-              id="voice-start-btn"
-              class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white rounded-full font-semibold text-lg transition-all duration-200 flex items-center gap-2"
-            >
-              <span class="text-2xl">🎤</span>
-              <span>Rozpocznij Rozmowę</span>
-            </button>
-            <button
-              id="voice-stop-btn"
-              class="hidden px-8 py-4 bg-red-600 hover:bg-red-700 text-white rounded-full font-semibold text-lg transition-all duration-200 flex items-center gap-2"
-            >
-              <span class="text-2xl">🛑</span>
-              <span>Zakończ Rozmowę</span>
-            </button>
-            <div
-              id="voice-status"
-              class="text-sm text-gray-500 dark:text-gray-400"
-            >
-              Naciśnij przycisk aby rozpocząć rozmowę głosową
-            </div>
-          </div>
-        </div>
-
-        <!-- Text Interface (shown by default) -->
         <div id="text-interface">
           <div
             id="chat-messages"
@@ -287,46 +214,16 @@ import coverImage from "@assets/alk-cover-2.webp";
   const chatMessages = document.getElementById("chat-messages");
   const userInput = document.getElementById("user-input") as HTMLInputElement;
   const sendBtn = document.getElementById("send-btn");
-  const textModeBtn = document.getElementById("text-mode-btn");
-  const voiceModeBtn = document.getElementById("voice-mode-btn");
-  const textInterface = document.getElementById("text-interface");
-  const voiceInterface = document.getElementById("voice-interface");
-  const voiceStartBtn = document.getElementById("voice-start-btn");
-  const voiceStopBtn = document.getElementById("voice-stop-btn");
-  const voiceStatus = document.getElementById("voice-status");
-  const modeDescription = document.getElementById("mode-description");
+  const avatarVideo = document.getElementById("avatar-video") as HTMLVideoElement;
+  const avatarStatus = document.getElementById("avatar-status");
 
-  // Voice state
-  let voiceSession: WebSocket | null = null;
-  let audioContext: AudioContext | null = null;
-  let mediaStream: MediaStream | null = null;
-  let isVoiceActive = false;
+  // Avatar state
+  let avatarSessionId: string | null = null;
+  let peerConnection: RTCPeerConnection | null = null;
+  let isAvatarReady = false;
 
-  // Mode Toggle
-  textModeBtn?.addEventListener("click", () => {
-    textModeBtn.classList.add("active");
-    voiceModeBtn?.classList.remove("active");
-    textInterface?.classList.remove("hidden");
-    voiceInterface?.classList.add("hidden");
-    if (modeDescription)
-      modeDescription.textContent =
-        "Zapytaj o modele PORTA, ceny, parametry techniczne lub porady przy wyborze drzwi!";
-    stopVoiceSession();
-  });
-
-  voiceModeBtn?.addEventListener("click", () => {
-    voiceModeBtn.classList.add("active");
-    textModeBtn?.classList.remove("active");
-    voiceInterface?.classList.remove("hidden");
-    textInterface?.classList.add("hidden");
-    if (modeDescription)
-      modeDescription.textContent =
-        "Kliknij przycisk i rozmawiaj z Bonzo głosowo! AI odpowie Ci w czasie rzeczywistym.";
-  });
-
-  // Voice Session Management
-  voiceStartBtn?.addEventListener("click", startVoiceSession);
-  voiceStopBtn?.addEventListener("click", stopVoiceSession);
+  // Initialize avatar on page load
+  window.addEventListener('DOMContentLoaded', initializeAvatar);
 
   async function startVoiceSession() {
     try {
@@ -349,14 +246,13 @@ import coverImage from "@assets/alk-cover-2.webp";
       audioContext = new (window.AudioContext ||
         (window as any).webkitAudioContext)();
 
-      // Connect to WebSocket
+      // Connect to WebSocket with ephemeral token in protocol
       const wsUrl = `wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17`;
-      voiceSession = new WebSocket(wsUrl, [], {
-        headers: {
-          Authorization: `Bearer ${client_secret}`,
-          "OpenAI-Beta": "realtime=v1",
-        },
-      } as any);
+      voiceSession = new WebSocket(wsUrl, [
+        'realtime',
+        `openai-insecure-api-key.${client_secret}`,
+        'openai-beta.realtime-v1'
+      ]);
 
       voiceSession.onopen = () => {
         updateVoiceStatus("✅ Połączono! Mów do mikrofonu...");
@@ -477,13 +373,25 @@ import coverImage from "@assets/alk-cover-2.webp";
   function playAudioDelta(base64Audio: string) {
     if (!audioContext) return;
 
-    const audioData = base64ToArrayBuffer(base64Audio);
-    audioContext.decodeAudioData(audioData, (buffer) => {
-      const source = audioContext!.createBufferSource();
-      source.buffer = buffer;
-      source.connect(audioContext!.destination);
-      source.start();
-    });
+    // Decode base64 to PCM16 data
+    const pcm16Data = base64ToArrayBuffer(base64Audio);
+    const int16Array = new Int16Array(pcm16Data);
+
+    // Convert PCM16 to Float32 for Web Audio API
+    const float32Array = new Float32Array(int16Array.length);
+    for (let i = 0; i < int16Array.length; i++) {
+      float32Array[i] = int16Array[i] / (int16Array[i] < 0 ? 0x8000 : 0x7fff);
+    }
+
+    // Create audio buffer (24kHz mono from OpenAI)
+    const audioBuffer = audioContext.createBuffer(1, float32Array.length, 24000);
+    audioBuffer.getChannelData(0).set(float32Array);
+
+    // Play the audio
+    const source = audioContext.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(audioContext.destination);
+    source.start();
   }
 
   // Utility functions
