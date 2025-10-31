@@ -930,24 +930,51 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
 
       for (const line of lines) {
         if (line.startsWith('data: ')) {
+          const dataStr = line.slice(6).trim();
+          
+          // OpenAI format: data: [DONE]
+          if (dataStr === '[DONE]') {
+            if (messageElement && accumulatedText) {
+              const aiMessage = {
+                role: 'ai',
+                content: accumulatedText,
+                timestamp: Date.now()
+              };
+              currentConversation.messages.push(aiMessage);
+              history.push({ role: 'assistant', content: accumulatedText, timestamp: aiMessage.timestamp });
+              finalizeStreamingMessage(messageElement, accumulatedText);
+            }
+            break;
+          }
+
           try {
-            const data = JSON.parse(line.slice(6));
+            const data = JSON.parse(dataStr);
 
             if (data.error) {
               throw new Error(data.error);
             }
 
-            if (data.chunk) {
-              accumulatedText += data.chunk;
+            // OpenAI format: choices[0].delta.content
+            let contentChunk = '';
+            if (provider === 'openai' && data?.choices?.[0]?.delta?.content) {
+              contentChunk = data.choices[0].delta.content;
+            } 
+            // Cloudflare format: data.chunk
+            else if (data.chunk) {
+              contentChunk = data.chunk;
+            }
+
+            if (contentChunk) {
+              accumulatedText += contentChunk;
 
               if (!messageElement) {
-                // Create message element for streaming
                 messageElement = createStreamingMessage();
               }
 
               updateStreamingMessage(messageElement, accumulatedText);
             }
 
+            // Cloudflare done signal
             if (data.done) {
               const aiMessage = {
                 role: 'ai',
