@@ -19,7 +19,7 @@ You are Bonzo, expert on PORTA doors. Knowledge base:
 
 export const POST: APIRoute = async ({ request }) => {
     try {
-        const body = await request.json() as { 
+        const body = await request.json() as {
             action: 'create' | 'talk' | 'close';
             sessionId?: string;
             message?: string;
@@ -123,7 +123,7 @@ export const POST: APIRoute = async ({ request }) => {
                 }>;
             };
 
-            const aiReply = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || 
+            const aiReply = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ||
                 'Przepraszam, nie mogę teraz odpowiedzieć.';
 
             // 2. Send to HeyGen avatar to speak
@@ -153,9 +153,9 @@ export const POST: APIRoute = async ({ request }) => {
             }
 
             return new Response(
-                JSON.stringify({ 
-                    success: true, 
-                    reply: aiReply 
+                JSON.stringify({
+                    success: true,
+                    reply: aiReply
                 }),
                 { status: 200, headers: { 'Content-Type': 'application/json' } }
             );
