@@ -58,6 +58,8 @@ export const POST: APIRoute = async ({ request }) => {
         }
 
         const geminiApiKey = import.meta.env.GEMINI_API_KEY;
+        const cfAccountId = import.meta.env.CF_ACCOUNT_ID;
+        const aiGatewaySlug = 'google_ai_gate'; // Your new AI Gateway
 
         if (!geminiApiKey) {
             return new Response(
@@ -66,13 +68,23 @@ export const POST: APIRoute = async ({ request }) => {
             );
         }
 
-        // Call Gemini API
+        if (!cfAccountId) {
+            return new Response(
+                JSON.stringify({ error: 'Cloudflare Account ID not configured' }),
+                { status: 500, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+
+        // Call Gemini API through Cloudflare AI Gateway for caching, rate limiting, and analytics
+        const gatewayUrl = `https://gateway.ai.cloudflare.com/v1/${cfAccountId}/${aiGatewaySlug}/google-ai-studio/v1beta/models/gemini-2.0-flash-exp:generateContent`;
+
         const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${geminiApiKey}`,
+            gatewayUrl,
             {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'x-goog-api-key': geminiApiKey,
                 },
                 body: JSON.stringify({
                     contents: [
