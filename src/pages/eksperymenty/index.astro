@@ -25,7 +25,9 @@ import coverImage from "@assets/alk-cover-2.webp";
       <!-- Video Section -->
       <!-- Video Grid: Two videos side by side -->
       <div class="grid md:grid-cols-2 gap-4 mb-8">
-        <div class="video-container rounded-lg overflow-hidden shadow-lg bg-black flex items-center justify-center">
+        <div
+          class="video-container rounded-lg overflow-hidden shadow-lg bg-black flex items-center justify-center"
+        >
           <video
             id="bonzo-video-1"
             class="h-[600px] w-auto object-contain"
@@ -41,12 +43,16 @@ import coverImage from "@assets/alk-cover-2.webp";
             />
             Twoja przeglądarka nie obsługuje wideo HTML5.
           </video>
-          <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2 absolute bottom-2">
+          <p
+            class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2 absolute bottom-2"
+          >
             Prezentacja Bonzo
           </p>
         </div>
 
-        <div class="video-container rounded-lg overflow-hidden shadow-lg bg-black flex items-center justify-center">
+        <div
+          class="video-container rounded-lg overflow-hidden shadow-lg bg-black flex items-center justify-center"
+        >
           <video
             id="bonzo-video-2"
             class="h-[600px] w-auto object-contain"
@@ -61,7 +67,9 @@ import coverImage from "@assets/alk-cover-2.webp";
             />
             Twoja przeglądarka nie obsługuje wideo HTML5.
           </video>
-          <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2 absolute bottom-2">
+          <p
+            class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2 absolute bottom-2"
+          >
             Intro Video
           </p>
         </div>
@@ -532,7 +540,8 @@ import coverImage from "@assets/alk-cover-2.webp";
     const typingId = addMessage("bot", "Bonzo pisze...");
 
     try {
-      const response = await fetch("/api/ai/bonzo-chat", {
+      // Use Gemini AI instead of OpenAI
+      const response = await fetch("/api/ai/gemini-chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message }),
