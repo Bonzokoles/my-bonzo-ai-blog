@@ -19,9 +19,9 @@ Edytuj plik `.env`:
 
 ```env
 # Cloudflare AI Gateway Configuration
-CLOUDFLARE_ACCOUNT_ID=7f490d58a478c6baccb0ae01ea1d87c3
+CLOUDFLARE_ACCOUNT_ID=[USUNIĘTO_ZE_WZGLĘDÓW_BEZPIECZEŃSTWA]
 CLOUDFLARE_AI_GATEWAY_ID=your-gateway-id-here
-CLOUDFLARE_API_TOKEN=your-api-token
+CLOUDFLARE_API_TOKEN=[USUNIĘTO_ZE_WZGLĘDÓW_BEZPIECZEŃSTWA]
 ```
 
 ### 3. Endpoint URL
