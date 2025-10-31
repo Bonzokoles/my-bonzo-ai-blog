@@ -45,7 +45,7 @@ export const POST: APIRoute = async ({ request }) => {
                 },
                 body: JSON.stringify({
                     quality: 'high',
-                    avatar_name: 'Wayne_20240711', // Replace with your avatar ID
+                    avatar_name: '4d8080384450417b84ebf008487a6b35',
                     voice: {
                         voice_id: '30e127089cf14adfad2d8d2eed5e3efe', // Polish voice
                         rate: 1.0,
