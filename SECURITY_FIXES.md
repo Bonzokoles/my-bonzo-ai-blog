@@ -8,7 +8,7 @@
 ### 1. Dane wrażliwe w `wrangler.toml` ✅
 **Problem:** Cloudflare Account ID ujawnione publicznie w pliku konfiguracyjnym
 **Naprawa:**
-- Usunięto `CF_ACCOUNT_ID = "7f490d58a478c6baccb0ae01ea1d87c3"` z pliku
+- Usunięto `CF_ACCOUNT_ID = "[USUNIĘTO_ZE_WZGLĘDÓW_BEZPIECZEŃSTWA]"` z pliku
 - Dodano komentarze z instrukcją konfiguracji przez Cloudflare Dashboard
 - Zastąpiono placeholder `YOUR_HASH` instrukcjami konfiguracji
 
@@ -118,7 +118,7 @@ Przemianowane (1):
 
 ```bash
 # Sprawdź czy nie ma wrażliwych danych w repo
-git grep -i "7f490d58a478c6baccb0ae01ea1d87c3"  # Powinno być puste
+git grep -i "[USUNIĘTO_ZE_WZGLĘDÓW_BEZPIECZEŃSTWA]"  # Powinno być puste
 git grep -i "jared"  # Powinno być puste (poza historią)
 
 # Upewnij się, że .env jest w .gitignore

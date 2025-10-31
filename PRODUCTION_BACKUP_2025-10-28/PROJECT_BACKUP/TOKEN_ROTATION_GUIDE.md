@@ -16,7 +16,7 @@
    ```
 
 2. **Znajdź stary token i kliknij "Roll"** (regenerate):
-   - Szukaj tokenu który zaczyna się na: `4x_3hWoIMDEn4jJwgKC0Rz5CRRkS-Kk5qMky56LU`
+   - Szukaj tokenu który zaczyna się na: `[USUNIĘTO_ZE_WZGLĘDÓW_BEZPIECZEŃSTWA]`
    - Kliknij "Roll" aby wygenerować nowy
    - LUB kliknij "Delete" i stwórz nowy poniżej
 
@@ -48,7 +48,7 @@ wrangler whoami
 
 # Pokaże:
 # Account Name: Twoje konto
-# Account ID: 7f490d58a478c6baccb0ae01ea1d87c3
+# Account ID: [USUNIĘTO_ZE_WZGLĘDÓW_BEZPIECZEŃSTWA]
 ```
 
 **UWAGA**: CLI nie może usuwać/regenerować tokenów - tylko Dashboard!
@@ -73,7 +73,7 @@ gh secret set CLOUDFLARE_API_TOKEN
 
 **Co zaktualizować:**
 - ✅ `CLOUDFLARE_API_TOKEN` = [NOWY_TOKEN]
-- ⚠️ `CLOUDFLARE_ACCOUNT_ID` = `7f490d58a478c6baccb0ae01ea1d87c3` (może pozostać ten sam)
+- ⚠️ `CLOUDFLARE_ACCOUNT_ID` = `[USUNIĘTO_ZE_WZGLĘDÓW_BEZPIECZEŃSTWA]` (może pozostać ten sam)
 
 ---
 
@@ -127,7 +127,7 @@ PUBLIC_BLOG_API_URL=https://blog-api.mybonzo-ai-blog.pages.dev
 BLOG_API_TOKEN=[NOWY_TOKEN_TUTAJ]
 
 # Cloudflare Configuration
-CLOUDFLARE_ACCOUNT_ID=7f490d58a478c6baccb0ae01ea1d87c3
+CLOUDFLARE_ACCOUNT_ID=[USUNIĘTO_ZE_WZGLĘDÓW_BEZPIECZEŃSTWA]
 CLOUDFLARE_API_TOKEN=[NOWY_TOKEN_TUTAJ]
 
 # Cloudflare Images (opcjonalnie)
@@ -145,7 +145,7 @@ CF_IMAGES_API_TOKEN=[NOWY_TOKEN_TUTAJ]
 
 ```bash
 # Powinien zwrócić błąd 401 lub 403
-curl -H "Authorization: Bearer 4x_3hWoIMDEn4jJwgKC0Rz5CRRkS-Kk5qMky56LU" \
+curl -H "Authorization: Bearer [USUNIĘTO_ZE_WZGLĘDÓW_BEZPIECZEŃSTWA]" \
   https://api.cloudflare.com/client/v4/user/tokens/verify
 ```
 
@@ -186,7 +186,7 @@ wrangler whoami
 
 # Oczekiwany wynik:
 # Account Name: Stolarnia (lub twoja nazwa)
-# Account ID: 7f490d58a478c6baccb0ae01ea1d87c3
+# Account ID: [USUNIĘTO_ZE_WZGLĘDÓW_BEZPIECZEŃSTWA]
 ```
 
 ### Test 4: Test Deployment

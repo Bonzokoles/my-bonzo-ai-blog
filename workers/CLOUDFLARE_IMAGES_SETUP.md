@@ -42,7 +42,7 @@ FormData:
 ### 1. Cloudflare Dashboard Setup
 1. Go to **Cloudflare Dashboard > Images**
 2. Click **"Enable Cloudflare Images"**
-3. Note your **Account ID** (already configured: `7f490d58a478c6baccb0ae01ea1d87c3`)
+3. Note your **Account ID** (already configured: `[USUNIĘTO_ZE_WZGLĘDÓW_BEZPIECZEŃSTWA]`)
 4. Get your **delivery hash** from the Images section
 
 ### 2. API Token Setup
