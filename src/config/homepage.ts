@@ -56,6 +56,6 @@ export const HOMEPAGE_METADATA = {
   title: 'MyBonzo AI Blog - Sztuczna Inteligencja dla Wszystkich',
   description: 'MyBonzo AI Blog - Twoje centrum wiedzy o sztucznej inteligencji. Odkryj najnowsze narzędzia AI, przeczytaj przewodniki i eksperymentuj z technologiami przyszłości. Od podstaw do zaawansowanych zastosowań biznesowych.',
   heading: 'MyBonzo AI Blog - Przyszłość w Twoich Rękach',
-  videoUrl: 'https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/mybonzo-avatar-welcome.mp4',
+  videoUrl: 'https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/DD1.mp4',
   videoPoster: 'https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/alk4.png'
 };
