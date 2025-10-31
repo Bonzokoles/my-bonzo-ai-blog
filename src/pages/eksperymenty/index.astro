@@ -22,31 +22,12 @@ import coverImage from "@assets/alk-cover-2.webp";
 
   <section class="container mx-auto px-4 py-12">
     <div class="max-w-4xl mx-auto">
-      <!-- Gemini Avatar Link -->
-      <div
-        class="mb-8 p-6 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-xl text-white"
-      >
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-2xl font-bold mb-2">🤖 Nowy: Gemini Avatar</h3>
-            <p class="text-indigo-100">
-              Rozmawiaj z Bonzo przez głos i tekst w czasie rzeczywistym
-            </p>
-          </div>
-          <a
-            href="/gemini-avatar/"
-            target="_blank"
-            class="px-6 py-3 bg-white text-indigo-600 rounded-lg font-semibold hover:bg-indigo-50 transition-colors"
-          >
-            Otwórz Gemini Avatar →
-          </a>
-        </div>
-      </div>
       <!-- Video Section -->
       <!-- Video Grid: Two videos side by side -->
       <div class="grid md:grid-cols-2 gap-4 mb-8">
+        <!-- Static Video -->
         <div
-          class="video-container rounded-lg overflow-hidden shadow-lg bg-black flex items-center justify-center"
+          class="video-container rounded-lg overflow-hidden shadow-lg bg-black flex items-center justify-center relative"
         >
           <video
             id="bonzo-video-1"
@@ -70,28 +51,49 @@ import coverImage from "@assets/alk-cover-2.webp";
           </p>
         </div>
 
+        <!-- HeyGen Interactive Avatar -->
         <div
-          class="video-container rounded-lg overflow-hidden shadow-lg bg-black flex items-center justify-center"
+          class="video-container rounded-lg overflow-hidden shadow-lg bg-black flex flex-col items-center justify-center relative"
         >
           <video
-            id="bonzo-video-2"
+            id="heygen-avatar-video"
             class="h-[600px] w-auto object-contain"
-            controls
-            muted
-            loop
-            poster="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/alk4.png"
+            autoplay
+            playsInline
           >
-            <source
-              src="https://pub-25059caf15274ebd844548094bfb4dc1.r2.dev/avatar/bonzo-intro.mp4"
-              type="video/mp4"
-            />
-            Twoja przeglądarka nie obsługuje wideo HTML5.
           </video>
-          <p
-            class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2 absolute bottom-2"
-          >
-            Intro Video
-          </p>
+          
+          <!-- Avatar Controls -->
+          <div class="absolute top-4 right-4 space-y-2">
+            <button
+              id="avatar-connect-btn"
+              class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold shadow-lg"
+            >
+              🎥 Uruchom Avatara
+            </button>
+            <button
+              id="avatar-disconnect-btn"
+              class="hidden px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold shadow-lg"
+            >
+              🛑 Zatrzymaj
+            </button>
+          </div>
+
+          <!-- Avatar Status -->
+          <div id="avatar-status" class="absolute top-4 left-4 px-3 py-1 bg-gray-900 bg-opacity-80 text-white rounded-lg text-sm">
+            ⚪ Nieaktywny
+          </div>
+
+          <!-- Placeholder when disconnected -->
+          <div id="avatar-placeholder" class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90">
+            <div class="text-center text-white">
+              <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
+                <span class="text-5xl">🤖</span>
+              </div>
+              <p class="text-lg">HeyGen Interactive Avatar</p>
+              <p class="text-sm text-gray-400 mt-2">Kliknij "Uruchom Avatara" aby rozpocząć</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -629,4 +631,153 @@ import coverImage from "@assets/alk-cover-2.webp";
   userInput?.addEventListener("keypress", (e) => {
     if (e.key === "Enter") sendMessage();
   });
+
+  // ============================================
+  // HeyGen Interactive Avatar Integration
+  // ============================================
+  
+  let avatarSessionId: string | null = null;
+  let peerConnection: RTCPeerConnection | null = null;
+  
+  const avatarVideo = document.getElementById('heygen-avatar-video') as HTMLVideoElement;
+  const connectBtn = document.getElementById('avatar-connect-btn');
+  const disconnectBtn = document.getElementById('avatar-disconnect-btn');
+  const avatarStatus = document.getElementById('avatar-status');
+  const avatarPlaceholder = document.getElementById('avatar-placeholder');
+
+  async function connectAvatar() {
+    try {
+      avatarStatus!.textContent = '🔄 Łączenie...';
+      avatarStatus!.className = 'absolute top-4 left-4 px-3 py-1 bg-yellow-600 bg-opacity-80 text-white rounded-lg text-sm';
+      
+      // Create HeyGen session
+      const response = await fetch('/api/ai/avatar-stream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'create' }),
+      });
+
+      if (!response.ok) throw new Error('Failed to create session');
+
+      const data = await response.json() as { session_id: string; sdp: { answer: string }; ice_servers: any[] };
+      avatarSessionId = data.session_id;
+
+      // Setup WebRTC
+      peerConnection = new RTCPeerConnection({
+        iceServers: data.ice_servers || [{ urls: 'stun:stun.l.google.com:19302' }],
+      });
+
+      peerConnection.ontrack = (event) => {
+        if (avatarVideo && event.streams[0]) {
+          avatarVideo.srcObject = event.streams[0];
+          avatarPlaceholder!.style.display = 'none';
+        }
+      };
+
+      peerConnection.oniceconnectionstatechange = () => {
+        console.log('ICE state:', peerConnection!.iceConnectionState);
+        if (peerConnection!.iceConnectionState === 'connected') {
+          avatarStatus!.textContent = '🟢 Połączony';
+          avatarStatus!.className = 'absolute top-4 left-4 px-3 py-1 bg-green-600 bg-opacity-80 text-white rounded-lg text-sm';
+        }
+      };
+
+      // Set remote description
+      await peerConnection.setRemoteDescription(
+        new RTCSessionDescription({
+          type: 'answer',
+          sdp: data.sdp.answer,
+        })
+      );
+
+      // Create and set local description
+      const offer = await peerConnection.createOffer();
+      await peerConnection.setLocalDescription(offer);
+
+      connectBtn!.classList.add('hidden');
+      disconnectBtn!.classList.remove('hidden');
+      
+    } catch (error) {
+      console.error('Failed to connect avatar:', error);
+      avatarStatus!.textContent = '🔴 Błąd połączenia';
+      avatarStatus!.className = 'absolute top-4 left-4 px-3 py-1 bg-red-600 bg-opacity-80 text-white rounded-lg text-sm';
+      alert('Nie udało się połączyć z avatarem. Sprawdź konfigurację HEYGEN_API_KEY.');
+    }
+  }
+
+  async function disconnectAvatar() {
+    if (avatarSessionId) {
+      try {
+        await fetch('/api/ai/avatar-stream', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'close', sessionId: avatarSessionId }),
+        });
+      } catch (error) {
+        console.error('Failed to close session:', error);
+      }
+    }
+
+    if (peerConnection) {
+      peerConnection.close();
+      peerConnection = null;
+    }
+
+    if (avatarVideo) {
+      avatarVideo.srcObject = null;
+    }
+
+    avatarPlaceholder!.style.display = 'flex';
+    avatarSessionId = null;
+    
+    avatarStatus!.textContent = '⚪ Nieaktywny';
+    avatarStatus!.className = 'absolute top-4 left-4 px-3 py-1 bg-gray-900 bg-opacity-80 text-white rounded-lg text-sm';
+    
+    connectBtn!.classList.remove('hidden');
+    disconnectBtn!.classList.add('hidden');
+  }
+
+  // Wrapper for sendMessage to also send to avatar when connected
+  const originalSendMessage = sendMessage;
+  async function sendMessageWithAvatar() {
+    await originalSendMessage();
+    
+    // If avatar is connected, send last bot message to avatar
+    if (avatarSessionId && chatMessages) {
+      const botMessages = chatMessages.querySelectorAll('.bot-message');
+      const lastBotMessage = botMessages[botMessages.length - 1];
+      
+      if (lastBotMessage) {
+        const text = lastBotMessage.textContent?.replace('Bonzo:', '').trim() || '';
+        
+        try {
+          await fetch('/api/ai/avatar-stream', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'talk',
+              sessionId: avatarSessionId,
+              message: text,
+            }),
+          });
+        } catch (error) {
+          console.error('Failed to send to avatar:', error);
+        }
+      }
+    }
+  }
+
+  // Replace original sendMessage
+  sendBtn?.removeEventListener("click", sendMessage);
+  sendBtn?.addEventListener("click", sendMessageWithAvatar);
+  
+  userInput?.removeEventListener("keypress", (e: any) => {
+    if (e.key === "Enter") sendMessage();
+  });
+  userInput?.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessageWithAvatar();
+  });
+
+  connectBtn?.addEventListener('click', connectAvatar);
+  disconnectBtn?.addEventListener('click', disconnectAvatar);
 </script>
