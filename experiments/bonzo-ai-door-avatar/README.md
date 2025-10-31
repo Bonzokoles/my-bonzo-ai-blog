@@ -1,10 +1,13 @@
-# Bonzo AI Avatar - Sprzedawca Drzwi
+# Bonzo AI Door Avatar 🚪🤖
 
-Interaktywny awatar AI sprzedający drzwi, wykorzystujący:
-- **HeyGen** - wideo awatara z napisami SRT
-- **OpenAI GPT-4o-mini** - chatbot z osobowością Bonzo
-- **OpenAI TTS** - synteza mowy
-- **Cloudflare AI Gateway** - caching i analytics
+Interaktywny awatar AI sprzedający drzwi PORTA, zbudowany z HeyGen Streaming Avatar API.
+
+## 🌟 Funkcje
+
+- **Żywy Awatar Video**: Prawdziwy awatar 3D, który się rusza i mówi
+- **Rozmowa Głosowa**: Awatar odpowiada głosem po polsku
+- **Baza Wiedzy PORTA**: Pełna wiedza o 5 modelach drzwi, cenach, parametrach
+- **Inteligentne Odpowiedzi**: AI rozumie pytania o modele, ceny, porady
 
 ## 📂 Struktura Projektu
 
@@ -27,55 +30,37 @@ bonzo-ai-door-avatar/
 └── README.md
 ```
 
-## 🚀 Instrukcja Uruchomienia
+## 🚀 Szybki Start
 
-### 1. Przygotowanie Plików Wideo
+### 1. Otwórz w przeglądarce
 
-**WAŻNE**: Musisz dodać pliki wideo do folderu `public/avatar/`:
-- `Untitled Videoja334+mybonz.mp4` - wideo intro awatara (z HeyGen)
-- `Untitled Videoja334+mybonz-caption.srt` - napisy do wideo
-
-### 2. Instalacja Zależności
+Aplikacja działa jako standalone HTML. Wystarczy otworzyć:
 
 ```bash
-cd experiments/bonzo-ai-door-avatar
-npm install
+open experiments/bonzo-ai-door-avatar/public/index.html
 ```
 
-### 3. Konfiguracja Zmiennych Środowiskowych
-
-Ustaw zmienne środowiskowe:
+Lub uruchom prosty serwer HTTP:
 
 ```bash
-# Windows PowerShell
-$env:CLOUDFLARE_ACCOUNT_ID="your-account-id"
-$env:OPENAI_API_KEY="your-openai-api-key"
-
-# Linux/Mac
-export CLOUDFLARE_ACCOUNT_ID="your-account-id"
-export OPENAI_API_KEY="your-openai-api-key"
+cd experiments/bonzo-ai-door-avatar/public
+python -m http.server 8000
+# Lub: npx http-server -p 8000
 ```
 
-Lub utwórz plik `.dev.vars`:
+Następnie otwórz: **http://localhost:8000**
 
-```bash
-CLOUDFLARE_ACCOUNT_ID=your-account-id
-OPENAI_API_KEY=your-openai-api-key
-```
+### 2. Konfiguracja
 
-### 4. Uruchomienie Lokalnie
+Edytuj `public/avatar.js`:
 
-```bash
-npm run dev
-```
+- `HEYGEN_API_KEY`: Twój klucz API HeyGen
+- `AVATAR_ID`: ID awatara (domyślnie: `Wayne_20240711`)
+- `VOICE_ID`: ID głosu (domyślnie: polski męski głos)
 
-Aplikacja będzie dostępna na: `http://localhost:8787`
+### 3. Integracja OpenAI (Opcjonalnie)
 
-### 5. Wdrożenie na Cloudflare
-
-```bash
-wrangler deploy
-```
+Zastąp prostą logikę w `getAIResponse()` prawdziwym API call do Cloudflare Workers lub bezpośrednio do OpenAI.
 
 ## 🎯 Jak Działa?
 
