@@ -1,0 +1,230 @@
+---
+// Przykładowa strona główna - Subpage
+// src/pages/index.astro
+import Layout from "../layouts/Layout.astro";
+
+// UWAGA: Wszystkie linki MUSZĄ używać base path: /subpage/
+const basePath = "/subpage";
+---
+
+<Layout title="MyBonzo - Podstrona Projektu">
+    <main class="container">
+        <section class="hero">
+            <h1>📦 Podstrona Projektu</h1>
+            <p class="subtitle">Deploy z base path: {basePath}/</p>
+            <p class="subtitle">Cloudflare Pages + Worker Proxy routing</p>
+        </section>
+
+        <section class="status">
+            <h2>✅ Status konfiguracji</h2>
+            <div class="status-grid">
+                <div class="status-item">
+                    <span class="icon">🌐</span>
+                    <div>
+                        <strong>Base Path</strong>
+                        <code>{basePath}/</code>
+                    </div>
+                </div>
+
+                <div class="status-item">
+                    <span class="icon">🔗</span>
+                    <div>
+                        <strong>Proxy URL</strong>
+                        <code>example.com{basePath}/</code>
+                    </div>
+                </div>
+
+                <div class="status-item">
+                    <span class="icon">📍</span>
+                    <div>
+                        <strong>Direct URL</strong>
+                        <code>mybonzo-subpage.pages.dev</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="navigation">
+            <h2>🧭 Nawigacja wewnętrzna</h2>
+            <p>Wszystkie linki automatycznie używają base path:</p>
+            <nav>
+                <a href={`${basePath}/`} class="button">Home</a>
+                <a href={`${basePath}/about`} class="button">About</a>
+                <a href={`${basePath}/contact`} class="button">Contact</a>
+                <a href="/" class="button secondary">← Powrót do głównej</a>
+            </nav>
+        </section>
+
+        <section class="features">
+            <h2>⚡ Features</h2>
+            <ul>
+                <li>✅ Oddzielny deployment od main app</li>
+                <li>✅ Własny build pipeline</li>
+                <li>✅ Niezależne environment variables</li>
+                <li>✅ Routing przez Worker proxy</li>
+                <li>✅ Automatyczny CI/CD z GitHub Actions</li>
+                <li>✅ Base path aware assets</li>
+            </ul>
+        </section>
+
+        <section class="example-code">
+            <h3>📝 Przykład użycia base path w kodzie:</h3>
+            <pre><code>{`// W Astro components:
+const basePath = '/subpage';
+
+// Linki:
+<a href={\`\${basePath}/page\`}>Link</a>
+
+// Assets:
+<img src={\`\${basePath}/assets/image.png\`} />
+
+// API calls:
+fetch(\`\${basePath}/api/endpoint\`)
+`}</code></pre>
+        </section>
+    </main>
+</Layout>
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .hero {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        border-radius: 20px;
+        color: white;
+        margin-bottom: 3rem;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .subtitle {
+        font-size: 1.1rem;
+        opacity: 0.95;
+        margin: 0.5rem 0;
+    }
+
+    code {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+    }
+
+    .status {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+
+    .status-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .status-item {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .icon {
+        font-size: 2rem;
+    }
+
+    .status-item strong {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #11998e;
+    }
+
+    .status-item code {
+        background: #e9ecef;
+        color: #495057;
+        font-size: 0.9rem;
+    }
+
+    .navigation {
+        margin-bottom: 2rem;
+    }
+
+    .navigation nav {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+
+    .button {
+        display: inline-block;
+        background: #11998e;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .button:hover {
+        background: #0d7d71;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(17, 153, 142, 0.3);
+    }
+
+    .button.secondary {
+        background: #6c757d;
+    }
+
+    .button.secondary:hover {
+        background: #5a6268;
+    }
+
+    .features ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .features li {
+        padding: 0.75rem 0;
+        font-size: 1.1rem;
+        color: #495057;
+    }
+
+    .example-code {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 10px;
+        margin-top: 2rem;
+    }
+
+    .example-code pre {
+        background: #2d2d2d;
+        color: #f8f8f2;
+        padding: 1.5rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin-top: 1rem;
+    }
+
+    .example-code code {
+        background: transparent;
+        padding: 0;
+        color: inherit;
+    }
+</style>

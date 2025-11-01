@@ -1,0 +1,29 @@
+{
+    // Wrangler Configuration - Subpage (Cloudflare Pages)
+    "name": "mybonzo-subpage",
+    "compatibility_date": "2025-10-31",
+    "compatibility_flags": [
+        "nodejs_compat",
+        "disable_nodejs_process_v2",
+        "global_fetch_strictly_public"
+    ],
+    "pages_build_output_dir": "./dist",
+    "vars": {
+        "ENVIRONMENT": "production",
+        "BASE_PATH": "/subpage/",
+        "LOG_LEVEL": "info"
+    },
+    // Bindings (shared lub osobne resources)
+    // "kv_namespaces": [
+    //   {
+    //     "binding": "SUBPAGE_CACHE",
+    //     "id": "your-subpage-kv-id"
+    //   }
+    // ],
+    "observability": {
+        "enabled": true
+    },
+    "build": {
+        "command": "npm run build"
+    }
+}

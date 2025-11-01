@@ -1,0 +1,22 @@
+{
+    "name": "mybonzo-proxy-worker",
+    "version": "1.0.0",
+    "description": "Cloudflare Worker - Reverse Proxy dla routingu podstron MyBonzo",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "dev": "wrangler dev index.js --compatibility-date=2025-10-31 --port=8787",
+        "start": "wrangler dev index.js --compatibility-date=2025-10-31",
+        "deploy": "wrangler deploy index.js",
+        "deploy:prod": "wrangler deploy index.js --env production",
+        "tail": "wrangler tail",
+        "logs": "wrangler tail mybonzo-proxy-worker",
+        "wrangler": "wrangler"
+    },
+    "devDependencies": {
+        "wrangler": "^3.80.0"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}

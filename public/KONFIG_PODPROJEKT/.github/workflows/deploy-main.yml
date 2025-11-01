@@ -1,0 +1,92 @@
+# GitHub Actions Workflow - Main App Deploy
+# Automatyczny deploy głównej aplikacji do Cloudflare Pages
+
+name: Deploy Main App
+
+# Kiedy uruchomić workflow
+on:
+  # Push do main branch
+  push:
+    branches:
+      - main
+    # Tylko gdy zmienione są pliki main-app
+    paths:
+      - 'main-app/**'
+      - '.github/workflows/deploy-main.yml'
+  
+  # Manualny trigger z GitHub UI
+  workflow_dispatch:
+
+# Permissions dla CLOUDFLARE_API_TOKEN
+permissions:
+  contents: read
+  deployments: write
+
+# Environment variables
+env:
+  NODE_VERSION: '18'
+  WORKING_DIRECTORY: './main-app'
+
+jobs:
+  deploy:
+    name: Deploy Main App to Cloudflare Pages
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history dla better logging
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: '${{ env.WORKING_DIRECTORY }}/package-lock.json'
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm ci
+
+      # 4. Run Astro check
+      - name: Run Astro check
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm run check
+
+      # 5. Build project
+      - name: Build Astro project
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm run build
+        env:
+          # Environment variables dla build (jeśli potrzebne)
+          NODE_ENV: production
+
+      # 6. Deploy to Cloudflare Pages
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist --project-name=mybonzo-main-app --branch=main
+          workingDirectory: ${{ env.WORKING_DIRECTORY }}
+
+      # 7. Output deployment info
+      - name: Deployment summary
+        if: success()
+        run: |
+          echo "✅ Main App successfully deployed to Cloudflare Pages!"
+          echo "🔗 URL: https://mybonzo-main-app.pages.dev"
+          echo "📦 Branch: ${{ github.ref_name }}"
+          echo "📝 Commit: ${{ github.sha }}"
+
+      # 8. Notify on failure (opcjonalnie - Discord/Slack webhook)
+      # - name: Notify on failure
+      #   if: failure()
+      #   run: |
+      #     curl -X POST ${{ secrets.DISCORD_WEBHOOK_URL }} \
+      #       -H "Content-Type: application/json" \
+      #       -d '{"content":"❌ Main App deployment failed!"}'

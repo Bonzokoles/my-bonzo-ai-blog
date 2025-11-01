@@ -1,0 +1,152 @@
+---
+// Przykładowa strona główna - Main App
+// src/pages/index.astro
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="MyBonzo - Strona Główna">
+    <main class="container">
+        <section class="hero">
+            <h1>🚀 Witaj w MyBonzo!</h1>
+            <p class="subtitle">
+                Główna aplikacja z Cloudflare Pages deployment
+            </p>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <h2>✨ Nowoczesna architektura</h2>
+                <p>
+                    Astro v5 + Cloudflare Workers proxy dla optymalnej
+                    wydajności
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <h2>🌐 Globalny CDN</h2>
+                <p>
+                    Cloudflare Edge network - ultra niskie latency na całym
+                    świecie
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <h2>🔒 Bezpieczeństwo</h2>
+                <p>SSL/TLS, security headers, automatyczne DDOS protection</p>
+            </div>
+        </section>
+
+        <section class="links">
+            <h2>🔗 Nawigacja</h2>
+            <nav>
+                <a href="/about" class="button">O nas</a>
+                <a href="/subpage/" class="button">Podstrona projektu</a>
+                <a href="/api/hello" class="button">Test API</a>
+            </nav>
+        </section>
+
+        <section class="info">
+            <h3>📊 Status deploymentu</h3>
+            <ul>
+                <li>Environment: Production</li>
+                <li>Platform: Cloudflare Pages</li>
+                <li>Base path: / (root)</li>
+                <li>Deployed via: GitHub Actions</li>
+            </ul>
+        </section>
+    </main>
+</Layout>
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .hero {
+        text-align: center;
+        padding: 4rem 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        color: white;
+        margin-bottom: 3rem;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .subtitle {
+        font-size: 1.25rem;
+        opacity: 0.9;
+    }
+
+    .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .feature-card {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-card h2 {
+        margin-bottom: 1rem;
+        color: #667eea;
+    }
+
+    .links {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .links nav {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+
+    .button {
+        display: inline-block;
+        background: #667eea;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition:
+            transform 0.2s,
+            box-shadow 0.2s;
+    }
+
+    .button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .info {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+    }
+
+    .info ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .info li {
+        padding: 0.5rem 0;
+        color: #555;
+    }
+</style>

@@ -1,0 +1,27 @@
+# Custom Headers - Main App
+# Dokumentacja: https://developers.cloudflare.com/pages/platform/headers/
+
+# Security headers dla wszystkich stron
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.openai.com https://gateway.ai.cloudflare.com
+
+# Cache headers dla statycznych assetów
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# API endpoints - no cache
+/api/*
+  Cache-Control: no-store, no-cache, must-revalidate
+  X-Robots-Tag: noindex
+
+# HTML pages - krótkszy cache
+/*.html
+  Cache-Control: public, max-age=3600, must-revalidate
