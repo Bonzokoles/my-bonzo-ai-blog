@@ -90,6 +90,10 @@ export const NAVIGATION: NavEntry[] = [
 		text: "AI Tools",
 	},
 	{
+		href: "/eksperymenty",
+		text: "Eksperymenty",
+	},
+	{
 		href: "/poradniki",
 		text: "Poradniki",
 	},
