@@ -685,9 +685,11 @@ import coverImage from "@assets/alk-cover-2.webp";
 
       const data = (await response.json()) as {
         session_id: string;
-        sdp: { answer: string };
+        sdp: { type: string; sdp: string };
         ice_servers: any[];
       };
+      
+      console.log("HeyGen CREATE data:", data);
       avatarSessionId = data.session_id;
 
       // Setup WebRTC
@@ -698,6 +700,7 @@ import coverImage from "@assets/alk-cover-2.webp";
       });
 
       peerConnection.ontrack = (event) => {
+        console.log("WebRTC ontrack:", event);
         if (avatarVideo && event.streams[0]) {
           avatarVideo.srcObject = event.streams[0];
           avatarPlaceholder!.style.display = "none";
@@ -714,9 +717,10 @@ import coverImage from "@assets/alk-cover-2.webp";
       };
 
       // Set remote description (HeyGen's SDP offer)
+      console.log("Setting remote SDP:", data.sdp);
       await peerConnection.setRemoteDescription(
         new RTCSessionDescription({
-          type: "offer",
+          type: data.sdp.type as RTCSdpType,
           sdp: data.sdp.sdp,
         }),
       );
