@@ -72,6 +72,39 @@ export const POST: APIRoute = async ({ request }) => {
             );
         }
 
+        // START - Complete ICE exchange with local SDP
+        if (body.action === 'start' && body.sessionId && body.sdp) {
+            const response = await fetch('https://api.heygen.com/v1/streaming.start', {
+                method: 'POST',
+                headers: {
+                    'X-Api-Key': heygenApiKey,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    session_id: body.sessionId,
+                    sdp: {
+                        type: 'answer',
+                        sdp: body.sdp
+                    }
+                }),
+            });
+
+            if (!response.ok) {
+                const error = await response.text();
+                console.error('HeyGen start session error:', error);
+                return new Response(
+                    JSON.stringify({ error: 'Failed to start avatar session' }),
+                    { status: 500, headers: { 'Content-Type': 'application/json' } }
+                );
+            }
+
+            const data = await response.json();
+            return new Response(
+                JSON.stringify(data),
+                { status: 200, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+
         // TALK - Send message to avatar
         if (body.action === 'talk' && body.sessionId && body.message) {
             // 1. Get Gemini response
