@@ -1,0 +1,72 @@
+{
+    // Wrangler Configuration - Main App (Cloudflare Pages)
+    // Dokumentacja: https://developers.cloudflare.com/workers/wrangler/configuration/
+    // Nazwa projektu w Cloudflare Dashboard
+    "name": "mybonzo-main-app",
+    // Data kompatybilności - ZAWSZE aktualizuj do daty deployu
+    "compatibility_date": "2025-10-31",
+    // Flagi kompatybilności dla Node.js i bezpieczeństwa
+    "compatibility_flags": [
+        "nodejs_compat", // Node.js runtime APIs
+        "disable_nodejs_process_v2", // Nowa wersja process API
+        "global_fetch_strictly_public" // Strict fetch security
+    ],
+    // Cloudflare Pages - output directory
+    "pages_build_output_dir": "./dist",
+    // Environment variables (development only)
+    // Produkcyjne sekrety: wrangler secret put <KEY>
+    "vars": {
+        "ENVIRONMENT": "production",
+        "LOG_LEVEL": "info"
+    },
+    // Bindings - dostęp do Cloudflare resources
+    // Dokumentacja: https://developers.cloudflare.com/workers/platform/bindings/
+    // KV Namespace (key-value storage)
+    // "kv_namespaces": [
+    //   {
+    //     "binding": "CACHE",
+    //     "id": "your-kv-namespace-id",
+    //     "preview_id": "your-preview-kv-id"
+    //   }
+    // ],
+    // R2 Bucket (object storage)
+    // "r2_buckets": [
+    //   {
+    //     "binding": "ASSETS",
+    //     "bucket_name": "mybonzo-assets",
+    //     "preview_bucket_name": "mybonzo-assets-preview"
+    //   }
+    // ],
+    // D1 Database (SQL)
+    // "d1_databases": [
+    //   {
+    //     "binding": "DB",
+    //     "database_name": "mybonzo-db",
+    //     "database_id": "your-d1-database-id"
+    //   }
+    // ],
+    // AI Gateway binding
+    // "ai": {
+    //   "binding": "AI"
+    // },
+    // Observability - monitoring i logging
+    "observability": {
+        "enabled": true
+    },
+    // Routes dla custom domain (opcjonalnie, jeśli nie używasz proxy)
+    // "routes": [
+    //   {
+    //     "pattern": "example.com/*",
+    //     "zone_name": "example.com"
+    //   }
+    // ],
+    // Build configuration
+    "build": {
+        // Komenda build (opcjonalnie, może być w package.json)
+        "command": "npm run build"
+    }
+    // Limits i performance
+    // "limits": {
+    //   "cpu_ms": 50
+    // }
+}

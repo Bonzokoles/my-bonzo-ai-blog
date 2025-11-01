@@ -1,0 +1,60 @@
+{
+    // Wrangler Configuration - Worker Proxy
+    // To jest główny Worker odpowiedzialny za routing na domenie
+    // Nazwa projektu - pojawi się w Dashboard
+    "name": "mybonzo-proxy-worker",
+    // Compatibility date
+    "compatibility_date": "2025-10-31",
+    // Flagi dla Workers (nie Pages!)
+    "compatibility_flags": [
+        "nodejs_compat",
+        "global_fetch_strictly_public"
+    ],
+    // Entry point - główny plik Workera
+    "main": "index.js",
+    // Environment variables
+    "vars": {
+        "ENVIRONMENT": "production",
+        "LOG_LEVEL": "info"
+    },
+    // Workers routes - gdzie Worker będzie działał
+    // OPCJA 1: Custom domain w Workers Dashboard (zalecane)
+    // Ustaw w: Workers & Pages → mybonzo-proxy-worker → Settings → Triggers → Custom Domains
+    // OPCJA 2: Route patterns (jeśli masz Cloudflare DNS)
+    // "routes": [
+    //   {
+    //     "pattern": "example.com/*",
+    //     "zone_name": "example.com"
+    //   },
+    //   {
+    //     "pattern": "www.example.com/*",
+    //     "zone_name": "example.com"
+    //   }
+    // ],
+    // Account ID - znajdź w Dashboard
+    // "account_id": "your-cloudflare-account-id",
+    // Observability
+    "observability": {
+        "enabled": true
+    },
+    // Limits (opcjonalnie - zwiększ jeśli potrzebujesz)
+    "limits": {
+        "cpu_ms": 50 // 50ms CPU time per request
+    }
+    // Workers KV binding (jeśli chcesz dodać caching)
+    // "kv_namespaces": [
+    //   {
+    //     "binding": "PROXY_CACHE",
+    //     "id": "your-kv-namespace-id",
+    //     "preview_id": "your-preview-kv-id"
+    //   }
+    // ],
+    // Analytics Engine binding (advanced monitoring)
+    // "analytics_engine_datasets": [
+    //   {
+    //     "binding": "ANALYTICS"
+    //   }
+    // ],
+    // Usage Model (opcjonalnie)
+    // "usage_model": "bundled"  // lub "unbound" dla długich requestów
+}

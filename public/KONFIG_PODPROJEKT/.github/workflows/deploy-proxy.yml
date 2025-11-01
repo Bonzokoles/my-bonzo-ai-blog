@@ -1,0 +1,70 @@
+# GitHub Actions Workflow - Worker Proxy Deploy
+# Deploy Cloudflare Worker odpowiedzialnego za routing
+
+name: Deploy Proxy Worker
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'worker-proxy/**'
+      - '.github/workflows/deploy-proxy.yml'
+  
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+env:
+  NODE_VERSION: '18'
+  WORKING_DIRECTORY: './worker-proxy'
+
+jobs:
+  deploy:
+    name: Deploy Proxy Worker to Cloudflare
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: '${{ env.WORKING_DIRECTORY }}/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm ci
+
+      # Worker nie wymaga build - deploy bezpośrednio index.js
+      - name: Deploy Worker to Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy index.js
+          workingDirectory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Deployment summary
+        if: success()
+        run: |
+          echo "✅ Proxy Worker successfully deployed!"
+          echo "🔧 Worker name: mybonzo-proxy-worker"
+          echo "🌐 Configure custom domain in Cloudflare Dashboard:"
+          echo "   Workers & Pages → mybonzo-proxy-worker → Settings → Triggers"
+          echo "📦 Branch: ${{ github.ref_name }}"
+          echo "📝 Commit: ${{ github.sha }}"
+
+      # Test health endpoint po deploy
+      - name: Test Worker health
+        if: success()
+        run: |
+          sleep 5  # Poczekaj na propagację
+          echo "🔍 Testing worker health endpoint..."
+          # UWAGA: Zmień URL na swój custom domain po konfiguracji
+          # curl -f https://example.com/_proxy-health || echo "⚠️ Worker not responding yet (expected if custom domain not configured)"

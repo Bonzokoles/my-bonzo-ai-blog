@@ -1,0 +1,71 @@
+# GitHub Actions Workflow - Subpage Deploy
+# Automatyczny deploy podstrony do Cloudflare Pages
+
+name: Deploy Subpage
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'subpage/**'
+      - '.github/workflows/deploy-subpage.yml'
+  
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+env:
+  NODE_VERSION: '18'
+  WORKING_DIRECTORY: './subpage'
+
+jobs:
+  deploy:
+    name: Deploy Subpage to Cloudflare Pages
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: '${{ env.WORKING_DIRECTORY }}/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm ci
+
+      - name: Run Astro check
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm run check
+
+      - name: Build Astro project
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist --project-name=mybonzo-subpage --branch=main
+          workingDirectory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Deployment summary
+        if: success()
+        run: |
+          echo "✅ Subpage successfully deployed to Cloudflare Pages!"
+          echo "🔗 Direct URL: https://mybonzo-subpage.pages.dev"
+          echo "🔗 Proxy URL: https://example.com/subpage/"
+          echo "📦 Branch: ${{ github.ref_name }}"
+          echo "📝 Commit: ${{ github.sha }}"
