@@ -22,6 +22,19 @@ import coverImage from "@assets/alk-cover-2.webp";
 
   <section class="container mx-auto px-4 py-12">
     <div class="max-w-4xl mx-auto">
+      
+      <!-- Google Gemini Avatar Link -->
+      <div class="mb-8 p-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg text-white">
+        <h3 class="text-2xl font-bold mb-2">🤖 Google Gemini Avatar (Testowy)</h3>
+        <p class="mb-4">Nowa strona z Google Gemini Multimodal - wideo + głos</p>
+        <a 
+          href="/avatar" 
+          class="inline-block px-6 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
+        >
+          ▶️ Otwórz Google Avatar
+        </a>
+      </div>
+
       <!-- Video Section -->
       <!-- Video Grid: Two videos side by side -->
       <div class="grid md:grid-cols-2 gap-4 mb-8">
@@ -75,7 +88,9 @@ import coverImage from "@assets/alk-cover-2.webp";
           </video>
 
           <!-- Avatar Controls -->
-          <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+          <div
+            class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10"
+          >
             <button
               id="avatar-connect-btn"
               class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold shadow-lg"
