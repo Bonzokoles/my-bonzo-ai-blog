@@ -75,16 +75,16 @@ import coverImage from "@assets/alk-cover-2.webp";
           </video>
 
           <!-- Avatar Controls -->
-          <div class="absolute top-4 right-4 space-y-2">
+          <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
             <button
               id="avatar-connect-btn"
-              class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold shadow-lg"
+              class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold shadow-lg"
             >
               🎥 Uruchom Avatara
             </button>
             <button
               id="avatar-disconnect-btn"
-              class="hidden px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold shadow-lg"
+              class="hidden px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold shadow-lg"
             >
               🛑 Zatrzymaj
             </button>
@@ -688,7 +688,7 @@ import coverImage from "@assets/alk-cover-2.webp";
         sdp: { type: string; sdp: string };
         ice_servers: any[];
       };
-      
+
       console.log("HeyGen CREATE data:", data);
       avatarSessionId = data.session_id;
 
