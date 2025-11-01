@@ -29,7 +29,11 @@ export const POST: APIRoute = async ({ request }) => {
         const heygenApiKey = import.meta.env.HEYGEN_API_KEY;
         const cfAccountId = import.meta.env.CF_ACCOUNT_ID;
 
+        console.log('HEYGEN_API_KEY present:', !!heygenApiKey);
+        console.log('Action:', body.action);
+
         if (!heygenApiKey) {
+            console.error('HEYGEN_API_KEY is missing!');
             return new Response(
                 JSON.stringify({ error: 'HEYGEN_API_KEY not configured' }),
                 { status: 500, headers: { 'Content-Type': 'application/json' } }
@@ -59,9 +63,13 @@ export const POST: APIRoute = async ({ request }) => {
 
             if (!response.ok) {
                 const error = await response.text();
-                console.error('HeyGen create session error:', error);
+                console.error('HeyGen create session error:', response.status, error);
                 return new Response(
-                    JSON.stringify({ error: 'Failed to create avatar session' }),
+                    JSON.stringify({ 
+                        error: 'Failed to create avatar session', 
+                        details: error,
+                        status: response.status 
+                    }),
                     { status: 500, headers: { 'Content-Type': 'application/json' } }
                 );
             }
