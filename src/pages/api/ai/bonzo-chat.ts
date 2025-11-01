@@ -1,63 +1,33 @@
 import type { APIRoute } from 'astro';
 
-// Baza wiedzy o drzwiach PORTA
 const KNOWLEDGE_BASE = `
-PORTA - Katalog Drzwi Wewnętrznych
+MyBonzo AI Blog - Twój przewodnik po świecie sztucznej inteligencji
 
-1. PORTA FOCUS PREMIUM model 5.A - od 1033 PLN netto
-   - Wypełnienie: plaster miodu lub płyta wiórowa + płyta HDF
-   - Powierzchnia: trwała, odporna na ścieranie, matowa
-   - Szyba: szkło hartowane matowe 8mm (wersje przeszklone)
-   - Kolory: białe lakierowane lub farba akrylowa UV
-   - Okucia: zamki na klucz, blokada WC, wkładka patentowa, zawiasy trzyczęściowe
-
-2. PORTA FACTOR model 5 - od 629 PLN netto
-   - Design: minimalistyczny, biały z symetrycznym frezowaniem
-   - Wypełnienie: płyta wiórowa
-   - Zawiasy: 2-3 sztuki czopowe
-   - Zamki: klucz zwykły, blokada WC, wkładka patentowa
-   - Możliwość niestandardowych wymiarów
-
-3. PORTA DESIRE 5 - cena po kontakcie
-   - Płyta wiórowa otworowa + aluminiowe listwy dekoracyjne
-   - Powłoka: farba akrylowa UV
-   - Zawiasy: 3 Prime lub 2 zawiasy 3D
-   - Wymiary: 60-100cm szerokości
-   - Gwarancja: 2 lata
-
-4. PORTA ART DECO model 5 - cena po kontakcie
-   - Styl: art deco
-   - Wykończenie: lakierowane lub malowane
-   - Szerokości: 60-100cm
-   - Typ: przylgowe lub bezprzylgowe
-
-5. PORTA VERTE HOME model H.5 - cena po kontakcie
-   - Konstrukcja: ramiakowa z szybami matowymi 4mm
-   - Opcje: dwuskrzydłowe
-   - Kolory: szeroki wybór
-   - Trwała konstrukcja, estetyczne wykończenie
+TEMATYKA:
+- Najnowsze osiągnięcia w AI i machine learning
+- Praktyczne zastosowania AI w biznesie
+- Tutoriale i przykłady kodu
+- Recenzje narzędzi AI
+- Etyka i przyszłość sztucznej inteligencji
 
 KONTAKT:
-Sprzedawca: Norbert king bruce lee karate mistrz
-Adres: ul. Jacka niezbyt Mądrego 13
+Email: kontakt@mybonzo.pl
 Telefon: 790 645 410
-Dostępność: tylko po 23:00 w środę
 `;
 
-const SYSTEM_PROMPT = `Jesteś Bonzo – sprzedawca drzwi wewnętrznych marki PORTA.
+const SYSTEM_PROMPT = `Jesteś Bonzo – asystent AI bloga MyBonzo.
 
 OSOBOWOŚĆ:
 - Odpowiadasz po polsku, rzeczowo i konkretnie
 - Z lekkim sarkazmem i humorem (ale nie przesadzaj!)
-- Jesteś ekspertem od drzwi PORTA
-- Pomagasz klientom wybrać odpowiedni model
-- Znasz wszystkie szczegóły techniczne
+- Jesteś ekspertem od sztucznej inteligencji
+- Pomagasz użytkownikom znaleźć interesujące treści
+- Znasz najnowsze trendy w AI
 
 ZASADY:
-- Zawsze podawaj dokładne informacje z bazy wiedzy
-- Jeśli pytają o cenę, podaj ją (jeśli jest dostępna)
-- Proponuj konkretne modele dopasowane do potrzeb klienta
-- Jeśli chcą kupić, podaj dane kontaktowe Norberta
+- Zawsze podawaj dokładne informacje
+- Proponuj artykuły dopasowane do zainteresowań użytkownika
+- Jeśli nie wiesz czegoś, przyznaj się
 - Bądź pomocny, ale nie nachalny
 
 BAZA WIEDZY:
@@ -65,7 +35,7 @@ ${KNOWLEDGE_BASE}`;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { message } = await request.json();
+    const { message } = await request.json() as { message: string };
 
     if (!message) {
       return new Response(
@@ -113,43 +83,11 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    const data = await response.json();
+    const data = await response.json() as any;
     const reply = data.choices[0]?.message?.content || 'Przepraszam, nie mogę odpowiedzieć w tym momencie.';
 
-    // Generate voice with HeyGen
-    let audioUrl = null;
-    const heygenApiKey = import.meta.env.HEYGEN_API_KEY;
-    const heygenVoiceId = "30e127089cf14adfad2d8d2eed5e3efe"; // Your HeyGen voice ID
-
-    if (heygenApiKey) {
-      try {
-        const ttsResponse = await fetch(`https://api.heygen.com/v1/voice.create`, {
-          method: 'POST',
-          headers: {
-            'X-Api-Key': heygenApiKey,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            text: reply,
-            voice_id: heygenVoiceId,
-            language: 'pl-PL'
-          })
-        });
-
-        if (ttsResponse.ok) {
-          const audioArrayBuffer = await ttsResponse.arrayBuffer();
-          const audioBase64 = Buffer.from(audioArrayBuffer).toString('base64');
-          audioUrl = `data:audio/mp3;base64,${audioBase64}`;
-        } else {
-          console.error('HeyGen TTS error:', await ttsResponse.text());
-        }
-      } catch (ttsError) {
-        console.error('HeyGen TTS request failed:', ttsError);
-      }
-    }
-
     return new Response(
-      JSON.stringify({ reply, audioUrl }),
+      JSON.stringify({ reply }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
 

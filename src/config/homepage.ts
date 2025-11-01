@@ -22,12 +22,6 @@ export const MAIN_FEATURE_CARDS: FeatureCard[] = [
     description: 'Praktyczne przewodniki krok po kroku. Naucz się wykorzystywać AI w codziennym życiu i biznesie z naszymi szczegółowymi instrukcjami.',
     shadowSize: 'lg',
     iconName: 'ri:book-open-line'
-  },
-  {
-    title: 'Eksperymenty',
-    description: 'Laboratoria technologiczne i testy przyszłości. Bądź pierwszym, który pozna nadchodzące trendy w sztucznej inteligencji.',
-    shadowSize: 'lg',
-    iconName: 'ri:flask-line'
   }
 ];
 
