@@ -20,9 +20,10 @@ You are Bonzo, expert on PORTA doors. Knowledge base:
 export const POST: APIRoute = async ({ request }) => {
     try {
         const body = await request.json() as {
-            action: 'create' | 'talk' | 'close';
+            action: 'create' | 'start' | 'talk' | 'close';
             sessionId?: string;
             message?: string;
+            sdp?: string;
         };
 
         const heygenApiKey = import.meta.env.HEYGEN_API_KEY;
@@ -66,6 +67,7 @@ export const POST: APIRoute = async ({ request }) => {
             }
 
             const data = await response.json();
+            console.log('HeyGen CREATE response:', JSON.stringify(data, null, 2));
             return new Response(
                 JSON.stringify(data),
                 { status: 200, headers: { 'Content-Type': 'application/json' } }
