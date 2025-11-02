@@ -1,36 +1,202 @@
 ---
 import Layout from "@layouts/Layout.astro";
+
+const IMAGE_GEN_URL = "https://gemini-graph-dobre.pages.dev";
 ---
 
 <Layout
-    title="Projekt 3 - MyBonzo AI Lab"
-    description="Eksperymentalny projekt AI dla klienta"
+    title="Gemini Image Generator - MyBonzo AI Lab"
+    description="Generuj obrazy AI z Google Gemini - kreatywne AI studio"
 >
-    <div class="container mx-auto px-4 py-16">
-        <a
-            href="/eksperymenty"
-            class="text-blue-600 dark:text-blue-400 hover:underline mb-6 inline-block"
-        >
-            ← Powrót do Laboratorium
-        </a>
+    <div class="min-h-screen bg-gradient-linear">
+        <div class="container mx-auto px-4 py-8">
+            <!-- Breadcrumb -->
+            <nav class="text-sm mb-6">
+                <a href="/" class="text-theme-accent hover:underline">Home</a>
+                <span class="mx-2 text-theme-primary">/</span>
+                <a
+                    href="/eksperymenty"
+                    class="text-theme-accent hover:underline">Eksperymenty</a
+                >
+                <span class="mx-2 text-theme-primary">/</span>
+                <span class="text-theme-primary">Gemini Image Generator</span>
+            </nav>
 
-        <h1 class="text-4xl font-bold mb-4">🔬 Projekt 3</h1>
+            <!-- Header -->
+            <div class="mb-12 text-center">
+                <h1
+                    class="text-5xl md:text-6xl font-bold text-theme-accent mb-4"
+                >
+                    🎨 Gemini Image Generator
+                </h1>
+                <p class="text-xl text-theme-primary max-w-3xl mx-auto">
+                    Twórz unikalne obrazy z pomocą Google Gemini AI.
+                    Opisz co chcesz zobaczyć - AI zrobi resztę.
+                </p>
+            </div>
 
-        <div class="prose dark:prose-invert max-w-none">
-            <h2>Opis projektu</h2>
-            <p>
-                Ten projekt jest w trakcie przygotowania. Wkrótce zostanie
-                uruchomiony eksperyment AI dla klienta.
-            </p>
+            <!-- Features Grid -->
+            <div class="grid md:grid-cols-3 gap-6 mb-12">
+                <div
+                    class="bg-theme-primary p-6 border border-theme-primary hover:bg-theme-secondary transition-colors duration-300"
+                >
+                    <div class="text-4xl mb-4">🖼️</div>
+                    <h3 class="text-xl font-bold mb-2 text-theme-accent">
+                        AI Image Generation
+                    </h3>
+                    <p class="text-theme-primary">
+                        Twórz obrazy z tekstu - AI rozumie Twoje pomysły
+                    </p>
+                </div>
 
-            <h2>Status</h2>
-            <ul>
-                <li>📋 Planowanie</li>
-                <li>⏳ Oczekuje na implementację</li>
-            </ul>
+                <div
+                    class="bg-theme-primary p-6 border border-theme-primary hover:bg-theme-secondary transition-colors duration-300"
+                >
+                    <div class="text-4xl mb-4">🎨</div>
+                    <h3 class="text-xl font-bold mb-2 text-theme-accent">
+                        Kreacja bez granic
+                    </h3>
+                    <p class="text-theme-primary">
+                        Od prostych grafik po złożone kompozycje artystyczne
+                    </p>
+                </div>
 
-            <h2>Technologie</h2>
-            <p>Do uzupełnienia po ustaleniu zakresu projektu.</p>
+                <div
+                    class="bg-theme-primary p-6 border border-theme-primary hover:bg-theme-secondary transition-colors duration-300"
+                >
+                    <div class="text-4xl mb-4">🌈</div>
+                    <h3 class="text-xl font-bold mb-2 text-theme-accent">
+                        Theme Switcher
+                    </h3>
+                    <p class="text-theme-primary">
+                        14 tematów kolorystycznych - personalizuj interfejs
+                    </p>
+                </div>
+            </div>
+
+            <!-- Main App Container -->
+            <div
+                class="bg-theme-primary border-2 border-theme-accent p-8 mb-12"
+            >
+                <div class="mb-6 flex items-center justify-between">
+                    <h2 class="text-2xl font-bold text-theme-accent">
+                        🖌️ Creative Studio
+                    </h2>
+                    <div class="flex gap-4">
+                        <a
+                            href={IMAGE_GEN_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="bg-theme-accent text-theme-secondary px-6 py-2 font-semibold hover:bg-theme-secondary hover:text-theme-accent transition-colors border border-theme-primary"
+                        >
+                            Otwórz w nowym oknie →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Loading Animation -->
+                <div id="iframe-loader" class="text-center py-12">
+                    <div
+                        class="inline-block animate-spin h-12 w-12 border-4 border-theme-accent border-t-transparent"
+                        style="border-radius: 50%;"
+                    >
+                    </div>
+                    <p class="text-theme-primary mt-4">
+                        Ładowanie Image Generator...
+                    </p>
+                </div>
+
+                <!-- Iframe -->
+                <iframe
+                    id="image-gen-iframe"
+                    src={IMAGE_GEN_URL}
+                    class="w-full h-[800px] border-2 border-theme-primary opacity-0 transition-opacity duration-500"
+                    title="Gemini Image Generator"></iframe>
+            </div>
+
+            <!-- Info Section -->
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div
+                    class="bg-theme-primary p-6 border border-theme-primary hover:bg-theme-secondary transition-colors duration-300"
+                >
+                    <h3 class="text-2xl font-bold mb-4 text-theme-accent">
+                        📝 Jak używać?
+                    </h3>
+                    <ol
+                        class="list-decimal list-inside space-y-2 text-theme-primary"
+                    >
+                        <li>Wpisz dokładny opis tego co chcesz wygenerować</li>
+                        <li>Wybierz styl artystyczny (opcjonalnie)</li>
+                        <li>Kliknij "Generate" i poczekaj chwilę</li>
+                        <li>Pobierz lub udostępnij wygenerowany obraz</li>
+                        <li>Eksperymentuj z różnymi promptami</li>
+                    </ol>
+                </div>
+
+                <div
+                    class="bg-theme-primary p-6 border border-theme-primary hover:bg-theme-secondary transition-colors duration-300"
+                >
+                    <h3 class="text-2xl font-bold mb-4 text-theme-accent">
+                        ⚙️ Technologie
+                    </h3>
+                    <ul class="space-y-2 text-theme-primary">
+                        <li>
+                            <strong>Framework:</strong> Vite 6.2 + React 19
+                        </li>
+                        <li>
+                            <strong>AI Model:</strong> Google Gemini Pro Vision
+                        </li>
+                        <li><strong>UI:</strong> Lucide Icons</li>
+                        <li><strong>Styling:</strong> Tailwind CSS</li>
+                        <li><strong>Hosting:</strong> Cloudflare Pages</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Deployment Info -->
+            <div
+                class="bg-theme-accent text-theme-secondary p-6 border-2 border-theme-primary"
+            >
+                <h3 class="text-2xl font-bold mb-4">🚀 Status Deploymentu</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="font-semibold mb-2">Główna aplikacja:</p>
+                        <a
+                            href={IMAGE_GEN_URL}
+                            target="_blank"
+                            class="text-theme-primary hover:underline break-all"
+                        >
+                            {IMAGE_GEN_URL}
+                        </a>
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-2">Repozytorium GitHub:</p>
+                        <a
+                            href="https://github.com/Bonzokoles/GEMINI-graph-generate-dobre"
+                            target="_blank"
+                            class="text-theme-primary hover:underline"
+                        >
+                            github.com/Bonzokoles/GEMINI-graph-generate-dobre
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </Layout>
+
+<script>
+    // Hide loader when iframe loads
+    const iframe = document.getElementById(
+        "image-gen-iframe",
+    ) as HTMLIFrameElement;
+    const loader = document.getElementById("iframe-loader");
+
+    if (iframe && loader) {
+        iframe.onload = () => {
+            loader.style.display = "none";
+            iframe.classList.remove("opacity-0");
+            iframe.classList.add("opacity-100");
+        };
+    }
+</script>
