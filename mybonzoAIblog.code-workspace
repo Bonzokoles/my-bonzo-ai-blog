@@ -11,6 +11,12 @@
 		},
 		{
 			"path": "public/Browsers"
+		},
+		{
+			"path": "../AIBLOG"
+		},
+		{
+			"path": "../mybonzoAIBLOG_COMONENTS/01-ai-blog"
 		}
 	],
 	"settings": {
