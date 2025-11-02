@@ -1,0 +1,87 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// URL do wdrożonego AI Chat (zmień po deploymencie!)
+const CHAT_URL = "https://mybonzo-exp-ai-chat-main.pages.dev";
+---
+
+<Layout 
+    title="AI Chat - MyBonzo Experiment" 
+    description="Inteligentny chat AI z GPT-4, streamingiem i załącznikami"
+>
+    <div class="container mx-auto px-4 py-8">
+        <!-- Back link -->
+        <a 
+            href="/eksperymenty" 
+            class="text-blue-600 dark:text-blue-400 hover:underline mb-6 inline-block"
+        >
+            ← Powrót do Eksperymentów
+        </a>
+
+        <!-- Header -->
+        <h1 class="text-4xl font-bold mb-4">🤖 AI Chat Experiment</h1>
+        <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">
+            Chat z wieloma modelami AI. Wspiera streaming, role presets i załączniki.
+        </p>
+
+        <!-- Chat iframe -->
+        <div class="w-full h-[700px] bg-white dark:bg-gray-800 rounded-lg shadow-2xl overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+            <iframe 
+                src={CHAT_URL}
+                class="w-full h-full border-0"
+                title="MyBonzo AI Chat"
+                allow="clipboard-write"
+                loading="lazy"
+            ></iframe>
+        </div>
+
+        <!-- External link -->
+        <div class="mt-4 text-center">
+            <a 
+                href={CHAT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+                Otwórz w nowym oknie →
+            </a>
+        </div>
+
+        <!-- Info section -->
+        <div class="mt-12 grid md:grid-cols-2 gap-8">
+            <!-- Features -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
+                <h2 class="text-2xl font-bold mb-4">✨ Funkcje</h2>
+                <ul class="space-y-2 text-sm">
+                    <li>✓ Chat z GPT-4o i GPT-4o-mini</li>
+                    <li>✓ Tryb streamingowy (real-time)</li>
+                    <li>✓ 5 role presets</li>
+                    <li>✓ Załączniki plików tekstowych</li>
+                    <li>✓ Zapisywanie historii</li>
+                    <li>✓ Dark mode</li>
+                    <li>✓ Mobile responsive</li>
+                </ul>
+            </div>
+
+            <!-- Tech -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
+                <h2 class="text-2xl font-bold mb-4">🛠️ Technologie</h2>
+                <ul class="space-y-2 text-sm">
+                    <li><strong>Frontend:</strong> Astro + React</li>
+                    <li><strong>Backend:</strong> Cloudflare Pages Functions</li>
+                    <li><strong>AI:</strong> OpenAI GPT-4o/3.5</li>
+                    <li><strong>Hosting:</strong> Cloudflare Pages</li>
+                </ul>
+                <div class="mt-4">
+                    <a 
+                        href="https://github.com/Bonzokoles/bonzo-ai-chat"
+                        target="_blank"
+                        class="text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                        Zobacz kod na GitHub →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>

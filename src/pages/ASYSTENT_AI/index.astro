@@ -26,6 +26,36 @@ const description =
       </p>
     </div>
 
+    <!-- Wyróżniony CTA do AI Chat -->
+    <div class="mb-16 bg-gradient-to-r from-purple-600/10 to-blue-600/10 border-2 border-theme-accent rounded-none p-8 text-center">
+      <div class="inline-flex items-center gap-2 bg-theme-accent text-white px-4 py-1 rounded-full text-sm font-semibold mb-4">
+        <Icon name="ri:flashlight-line" class="text-lg" />
+        NOWOŚĆ - Eksperyment
+      </div>
+      <h3 class="text-3xl font-bold mb-4 text-theme-primary">
+        🤖 MyBonzo AI Chat - Teraz Dostępny!
+      </h3>
+      <p class="text-lg text-theme-primary opacity-90 mb-6 max-w-2xl mx-auto">
+        Wypróbuj nasz eksperymentalny AI Chat z GPT-4o i GPT-3.5. 
+        Streaming w czasie rzeczywistym, role presets, załączniki plików i więcej!
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <a
+          href="/eksperymenty/ai-chat"
+          class="px-8 py-4 bg-theme-accent text-white font-bold rounded-none hover:opacity-90 transition-all shadow-xl border border-gray-500 transform hover:scale-105"
+        >
+          <Icon name="ri:chat-3-line" class="inline-block mr-2" />
+          Uruchom AI Chat
+        </a>
+        <div class="flex gap-3 text-sm text-theme-primary opacity-80">
+          <span>✓ GPT-4o</span>
+          <span>✓ Streaming</span>
+          <span>✓ Role Presets</span>
+          <span>✓ Załączniki</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Główne funkcjonalności -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
       <Card
@@ -77,16 +107,22 @@ const description =
         Rozpocznij Pracę z Asystentem AI
       </h3>
       <p class="text-lg text-theme-primary opacity-80 mb-8 max-w-2xl mx-auto">
-        Gotowy na współpracę z najnowocześniejszym asystentem AI? MyBonzo Pro
-        oferuje pełny dostęp do wszystkich funkcji.
+        Wypróbuj nasz eksperymentalny AI Chat z GPT-4! Wspiera streaming, załączniki i wiele więcej.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <a
-          href="/pro"
+          href="/eksperymenty/ai-chat"
           class="px-8 py-4 bg-theme-accent text-white font-semibold rounded-none hover:opacity-90 transition-opacity shadow-lg border border-gray-500"
         >
           <Icon name="ri:robot-line" class="inline-block mr-2" />
-          Uruchom Asystenta AI
+          🚀 Wypróbuj AI Chat (Eksperyment)
+        </a>
+        <a
+          href="/pro"
+          class="px-8 py-4 border border-gray-500 bg-transparent text-theme-primary font-semibold rounded-none hover:bg-gray-900 hover:text-white transition-colors"
+        >
+          <Icon name="ri:star-line" class="inline-block mr-2" />
+          MyBonzo Pro
         </a>
         <a
           href="/blog"
