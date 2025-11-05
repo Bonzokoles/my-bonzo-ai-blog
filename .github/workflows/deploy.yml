@@ -246,6 +246,7 @@ jobs:
             done
             echo "❌ FAILED: $name after $max_attempts attempts (Final status: ${http_status:-'Unknown'})"
             echo "failed" > /tmp/test_result_$name
+            return 0  # Always return success - we handle failures via result files
           }
 
           # Test main site
