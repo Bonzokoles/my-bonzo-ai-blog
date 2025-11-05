@@ -1,27 +1,6 @@
 import type { APIRoute } from 'astro';
+import { withFeatureMiddleware } from '@/middleware/api-middleware';
 import { createHash } from 'crypto';
-
-// Simple rate limiter
-const rateLimiter = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT = 5; // requests per window
-const RATE_WINDOW = 300000; // 5 minutes
-
-function checkRateLimit(identifier: string): boolean {
-  const now = Date.now();
-  const record = rateLimiter.get(identifier);
-
-  if (!record || now > record.resetTime) {
-    rateLimiter.set(identifier, { count: 1, resetTime: now + RATE_WINDOW });
-    return true;
-  }
-
-  if (record.count >= RATE_LIMIT) {
-    return false;
-  }
-
-  record.count++;
-  return true;
-}
 
 // Generate unique hash for image content
 function generateImageHash(prompt: string, model: string, params: any): string {
@@ -44,69 +23,65 @@ interface ImageMetadata {
   r2Key: string;
 }
 
-export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
-  try {
-    const body = await request.json() as {
-      prompt?: string;
-      model?: string;
-      num_steps?: number;
-      guidance?: number;
-      strength?: number;
-    };
-    
-    const {
-      prompt,
-      model = '@cf/stabilityai/stable-diffusion-xl-base-1.0',
-      num_steps = 20,
-      guidance = 7.5,
-      strength = 1
-    } = body;
+export const POST: APIRoute = async (context) => {
+  return withFeatureMiddleware(
+    'ai-image-generation',
+    context,
+    'user',
+    async (ctx, requestContext) => {
+      try {
+        const body = await ctx.request.json() as {
+          prompt?: string;
+          model?: string;
+          num_steps?: number;
+          guidance?: number;
+          strength?: number;
+        };
 
-    // Validation
-    if (!prompt || typeof prompt !== 'string') {
-      return new Response(
-        JSON.stringify({ error: 'Valid prompt is required' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
+        const {
+          prompt,
+          model = '@cf/stabilityai/stable-diffusion-xl-base-1.0',
+          num_steps = 20,
+          guidance = 7.5,
+          strength = 1
+        } = body;
 
-    if (prompt.length > 500) {
-      return new Response(
-        JSON.stringify({ error: 'Prompt too long (max 500 characters)' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Basic moderation (simple keyword filter)
-    const bannedWords = ["nude", "blood", "gore"];
-    const lower = prompt.toLowerCase();
-    if (bannedWords.some((w) => lower.includes(w))) {
-      return new Response(
-        JSON.stringify({ error: 'Unsafe content' }),
-        { status: 403, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Rate limiting
-    const clientId = clientAddress || 'unknown';
-    if (!checkRateLimit(clientId)) {
-      return new Response(
-        JSON.stringify({
-          error: 'Rate limit exceeded. Please wait 5 minutes.',
-          retryAfter: 300
-        }),
-        {
-          status: 429,
-          headers: {
-            'Content-Type': 'application/json',
-            'Retry-After': '300'
-          }
+        // Validation
+        if (!prompt || typeof prompt !== 'string') {
+          return new Response(
+            JSON.stringify({
+              success: false,
+              error: 'Valid prompt is required'
+            }),
+            { status: 400, headers: { 'Content-Type': 'application/json' } }
+          );
         }
-      );
-    }
 
-  // Access Cloudflare AI
-  const env = (locals as any).runtime?.env;
+        if (prompt.length > 500) {
+          return new Response(
+            JSON.stringify({
+              success: false,
+              error: 'Prompt too long (max 500 characters)'
+            }),
+            { status: 400, headers: { 'Content-Type': 'application/json' } }
+          );
+        }
+
+        // Basic moderation (simple keyword filter)
+        const bannedWords = ["nude", "blood", "gore"];
+        const lower = prompt.toLowerCase();
+        if (bannedWords.some((w) => lower.includes(w))) {
+          return new Response(
+            JSON.stringify({
+              success: false,
+              error: 'Unsafe content detected'
+            }),
+            { status: 403, headers: { 'Content-Type': 'application/json' } }
+          );
+        }
+
+        // Access Cloudflare AI
+        const env = (ctx.locals as any).runtime?.env;
 
     // Optional AI moderation (best-effort, won't block on failure unless flagged)
     try {
@@ -313,50 +288,71 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
       expirationTtl: 86400 * 7 // 7 days
     });
 
-    return new Response(imageBuffer, {
-      headers: {
-        'Content-Type': 'image/png',
-        'X-Cache': 'MISS',
-        'X-Image-ID': imageHash,
-        'X-Translated': translatedPrompt !== prompt ? 'pl->en' : 'no',
-        'X-Created-At': metadata.createdAt.toString(),
-        'Cache-Control': 'public, max-age=3600'
-      }
-    });
+        return new Response(imageBuffer, {
+          headers: {
+            'Content-Type': 'image/png',
+            'X-Cache': 'MISS',
+            'X-Image-ID': imageHash,
+            'X-Translated': translatedPrompt !== prompt ? 'pl->en' : 'no',
+            'X-Created-At': metadata.createdAt.toString(),
+            'X-Feature-ID': 'ai-image-generation',
+            'Cache-Control': 'public, max-age=3600'
+          }
+        });
 
-  } catch (error) {
-    console.error('Image Generation Error:', error);
+      } catch (error) {
+        console.error('Image Generation Error:', error);
 
-    return new Response(
-      JSON.stringify({
-        error: 'Failed to generate image',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'Failed to generate image',
+            details: error instanceof Error ? error.message : 'Unknown error'
+          }),
+          {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
       }
-    );
-  }
+    }
+  );
 };
 
-export const GET: APIRoute = async () => {
-  return new Response(
-    JSON.stringify({
-      status: 'healthy',
-      service: 'AI Image Generation API',
-      models: [
-        '@cf/stabilityai/stable-diffusion-xl-base-1.0',
-        '@cf/bytedance/stable-diffusion-xl-lightning',
-        '@cf/lykon/dreamshaper-8-lcm'
-      ],
-      limits: {
-        rate: '5 requests per 5 minutes',
-        promptLength: 500,
-        numSteps: '1-50',
-        guidance: '1-20'
-      }
-    }),
-    { status: 200, headers: { 'Content-Type': 'application/json' } }
+export const GET: APIRoute = async (context) => {
+  return withFeatureMiddleware(
+    'ai-image-generation',
+    context,
+    'public',
+    async () => {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          info: {
+            service: 'AI Image Generation API',
+            models: [
+              '@cf/stabilityai/stable-diffusion-xl-base-1.0',
+              '@cf/bytedance/stable-diffusion-xl-lightning',
+              '@cf/lykon/dreamshaper-8-lcm'
+            ],
+            features: [
+              'Cloudflare Workers AI',
+              'Stable Diffusion XL',
+              'Automatic PL->EN translation',
+              'R2 storage + KV cache',
+              'Image deduplication',
+              'Content moderation'
+            ],
+            limits: {
+              rate: '5 requests per 5 minutes',
+              promptLength: 500,
+              numSteps: '1-50',
+              guidance: '1-20'
+            }
+          }
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
   );
 };
