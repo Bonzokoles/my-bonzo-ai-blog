@@ -106,23 +106,37 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
+          echo "🔍 Validating Cloudflare credentials..."
+
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "⚠️ Missing CLOUDFLARE_API_TOKEN - checking fallback options..."
-            if [ -f wrangler.toml ]; then
-              echo "✅ wrangler.toml found - checking for account_id"
-              if grep -q "account_id" wrangler.toml; then
-                echo "✅ Account ID found in wrangler.toml"
-              else
-                echo "❌ No account_id in wrangler.toml and no secrets configured"
-                exit 1
-              fi
-            else
-              echo "❌ No wrangler.toml found and no secrets configured"
-              exit 1
-            fi
-          else
-            echo "✅ Cloudflare credentials available"
+            echo ""
+            echo "❌ ERROR: Missing CLOUDFLARE_API_TOKEN"
+            echo ""
+            echo "📋 To fix this:"
+            echo "1. Go to: https://dash.cloudflare.com/profile/api-tokens"
+            echo "2. Create token with 'Edit Cloudflare Workers' permissions"
+            echo "3. Go to: https://github.com/${{ github.repository }}/settings/secrets/actions"
+            echo "4. Add secret: CLOUDFLARE_API_TOKEN with your token"
+            echo ""
+            exit 1
           fi
+
+          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo ""
+            echo "❌ ERROR: Missing CLOUDFLARE_ACCOUNT_ID"
+            echo ""
+            echo "📋 To fix this:"
+            echo "1. Go to: https://dash.cloudflare.com/"
+            echo "2. Copy your Account ID from the sidebar"
+            echo "3. Go to: https://github.com/${{ github.repository }}/settings/secrets/actions"
+            echo "4. Add secret: CLOUDFLARE_ACCOUNT_ID with your account ID"
+            echo ""
+            exit 1
+          fi
+
+          echo "✅ Cloudflare credentials configured"
+          echo "• API Token: ****${CLOUDFLARE_API_TOKEN: -4}"
+          echo "• Account ID: ${CLOUDFLARE_ACCOUNT_ID:0:8}...${CLOUDFLARE_ACCOUNT_ID: -4}"
 
       - name: Deploy to Cloudflare Pages
         env:
