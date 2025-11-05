@@ -4,7 +4,9 @@
 
 ### Generator Grafiki
 - [x] Zdeployowano nową wersję: https://ee304a89.gemini-ai-generator.pages.dev
-- [ ] Przetestować wszystkie funkcje:
+- [x] Status HTTP: 200 OK ✅
+- [x] Otwarty w przeglądarce do manualnych testów
+- [ ] Przetestować wszystkie funkcje (wymaga manualnej interakcji):
   - [ ] Generowanie Obrazów (różne aspect ratio)
   - [ ] Edycja Obrazów
   - [ ] Analiza Obrazów
@@ -15,7 +17,10 @@
 
 ### AI Chat
 - [x] Strona istnieje: https://mybonzoaiblog.pages.dev/system/ai-chat
-- [ ] Przetestować chat z różnymi modelami
+- [x] Status HTTP: 200 OK ✅
+- [x] Otwarty w przeglądarce do manualnych testów
+- [x] Modele zdefiniowane: Gemma 3 12B IT, Qwen QWQ 32B, Phi-2, OpenChat 3.5
+- [ ] Przetestować chat z różnymi modelami (wymaga manualnej interakcji)
 - [ ] Sprawdzić responsywność
 - [ ] Zweryfikować obsługę błędów API
 
@@ -29,13 +34,14 @@
 
 ### System Kontroli Funkcji
 - [x] Zmergowano FEATURE_CONTROL_SYSTEM
-- [ ] Przetestować `/api/features/health`
-- [ ] Przetestować `/api/features/validate`
+- [x] Przetestować `/api/features/health` - ❌ **500 ERROR - wymaga naprawy**
+- [x] Przetestować `/api/features/validate` - ❌ **500 ERROR - wymaga naprawy**
+- [ ] **NAPRAWIĆ**: Błędy 500 w feature control API (prawdopodobnie brakujące moduły w Cloudflare deployment)
 - [ ] Dodać feature flags do istniejących API endpoints
 - [ ] Dokumentacja użycia dla nowych funkcji
 
 ### API Endpoints
-- [ ] Naprawić `/api/ai/chat` - obecnie failuje w health checks
+- [x] Naprawić `/api/ai/chat` - ✅ **DZIAŁA** (200 OK, zwraca {"status":"healthy","timestamp":"..."})
 - [ ] Dodać rate limiting do API
 - [ ] Zaimplementować error tracking (Sentry?)
 - [ ] Dodać monitoring czasu odpowiedzi
