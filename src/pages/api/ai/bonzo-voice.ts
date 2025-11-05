@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { withFeatureMiddleware } from '@/middleware/api-middleware';
 
 // Baza wiedzy o drzwiach PORTA dla audio agenta
 const SYSTEM_INSTRUCTIONS = `Jesteś Bonzo – sprzedawca drzwi wewnętrznych marki PORTA.
@@ -51,67 +52,126 @@ Sprzedawca: Norbert
 Telefon: 790 645 410
 Dostępność: tylko po 23:00 w środę`;
 
-export const POST: APIRoute = async ({ request }) => {
-  try {
-    const apiKey = import.meta.env.OPENAI_API_KEY;
+export const POST: APIRoute = async (context) => {
+  return withFeatureMiddleware(
+    'ai-bonzo-voice',
+    context,
+    'user',
+    async (ctx, requestContext) => {
+      try {
+        // Get OpenAI API key from environment
+        const env = (ctx.locals as any)?.runtime?.env;
+        const apiKey =
+          env?.OPENAI_API_KEY ||
+          (typeof process !== 'undefined' ? process.env.OPENAI_API_KEY : undefined) ||
+          (import.meta as any).env?.OPENAI_API_KEY;
 
-    if (!apiKey) {
+        if (!apiKey) {
+          return new Response(
+            JSON.stringify({
+              success: false,
+              error: 'OpenAI API key not configured'
+            }),
+            { status: 500, headers: { 'Content-Type': 'application/json' } }
+          );
+        }
+
+        // Create ephemeral token for Realtime API
+        const response = await fetch('https://api.openai.com/v1/realtime/sessions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-realtime-preview-2024-12-17',
+            voice: 'echo', // Męski, przyjazny głos
+            instructions: SYSTEM_INSTRUCTIONS,
+            input_audio_transcription: {
+              model: 'whisper-1'
+            },
+            turn_detection: {
+              type: 'server_vad',
+              threshold: 0.5,
+              prefix_padding_ms: 300,
+              silence_duration_ms: 500
+            },
+            temperature: 0.7,
+            max_response_output_tokens: 500
+          })
+        });
+
+        if (!response.ok) {
+          const error = await response.text();
+          console.error('OpenAI Realtime API error:', error);
+          return new Response(
+            JSON.stringify({
+              success: false,
+              error: 'Failed to create voice session',
+              details: error
+            }),
+            { status: 500, headers: { 'Content-Type': 'application/json' } }
+          );
+        }
+
+        const session = await response.json();
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            data: {
+              client_secret: session.client_secret.value,
+              expires_at: session.client_secret.expires_at,
+              session_id: session.id
+            },
+            metadata: {
+              featureId: 'ai-bonzo-voice',
+              clientAddress: requestContext.clientAddress,
+              timestamp: requestContext.timestamp
+            }
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } }
+        );
+
+      } catch (error) {
+        console.error('Bonzo voice session error:', error);
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'Internal server error',
+            details: error instanceof Error ? error.message : 'Unknown error'
+          }),
+          { status: 500, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+  );
+};
+
+export const GET: APIRoute = async (context) => {
+  return withFeatureMiddleware(
+    'ai-bonzo-voice',
+    context,
+    'public',
+    async () => {
       return new Response(
-        JSON.stringify({ error: 'API configuration missing' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify({
+          success: true,
+          info: {
+            service: 'Bonzo Voice API',
+            model: 'gpt-4o-realtime-preview-2024-12-17',
+            voice: 'echo (male, friendly)',
+            features: [
+              'OpenAI Realtime API',
+              'Voice Activity Detection (VAD)',
+              'Whisper transcription',
+              'PORTA doors knowledge base'
+            ],
+            rateLimit: '10 requests per 5 minutes'
+          }
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
       );
     }
-
-    // Create ephemeral token for Realtime API
-    const response = await fetch('https://api.openai.com/v1/realtime/sessions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-realtime-preview-2024-12-17',
-        voice: 'echo', // Męski, przyjazny głos
-        instructions: SYSTEM_INSTRUCTIONS,
-        input_audio_transcription: {
-          model: 'whisper-1'
-        },
-        turn_detection: {
-          type: 'server_vad',
-          threshold: 0.5,
-          prefix_padding_ms: 300,
-          silence_duration_ms: 500
-        },
-        temperature: 0.7,
-        max_response_output_tokens: 500
-      })
-    });
-
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('OpenAI Realtime API error:', error);
-      return new Response(
-        JSON.stringify({ error: 'Failed to create session' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const session = await response.json();
-
-    return new Response(
-      JSON.stringify({
-        client_secret: session.client_secret.value,
-        expires_at: session.client_secret.expires_at,
-        session_id: session.id
-      }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
-    );
-
-  } catch (error) {
-    console.error('Bonzo voice session error:', error);
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
+  );
 };
