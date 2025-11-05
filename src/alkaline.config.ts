@@ -106,6 +106,10 @@ export const NAVIGATION: NavEntry[] = [
 		text: "AI Chat",
 	},
 	{
+		href: "https://gemini-ai-generator.pages.dev",
+		text: "Generator Grafiki",
+	},
+	{
 		href: "/system/media",
 		text: "Media",
 	},
