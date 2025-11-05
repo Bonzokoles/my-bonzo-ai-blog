@@ -259,7 +259,7 @@ jobs:
           fi
 
           # Test AI API health check - GET should return health status
-          test_endpoint "https://mybonzoaiblog.pages.dev/api/ai/chat" "AI_API_health"
+          test_endpoint "https://mybonzoaiblog.pages.dev/api/ai/chat" "AI_API_health" || true
           result=$(cat /tmp/test_result_AI_API_health 2>/dev/null || echo "failed")
           if [ "$result" = "success" ]; then
             success_count=$((success_count + 1))
@@ -269,7 +269,7 @@ jobs:
           fi
 
           # Test enhanced AI chat page
-          test_endpoint "https://mybonzoaiblog.pages.dev/system/ai-chat" "AI_Chat_Page"
+          test_endpoint "https://mybonzoaiblog.pages.dev/system/ai-chat" "AI_Chat_Page" || true
           result=$(cat /tmp/test_result_AI_Chat_Page 2>/dev/null || echo "failed")
           if [ "$result" = "success" ]; then
             success_count=$((success_count + 1))
