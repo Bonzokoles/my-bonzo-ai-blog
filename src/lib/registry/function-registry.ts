@@ -268,7 +268,7 @@ export const DEFAULT_FUNCTIONS: FunctionRegistryEntry[] = [
     }
   },
   {
-    id: 'ai-image-gen',
+    id: 'ai-image-generation',
     name: 'Image Generation',
     category: 'ai',
     endpoint: '/api/ai/generate-image',
