@@ -63,6 +63,23 @@ export const FEATURES: FeatureFlag[] = [
     }
   },
   {
+    id: 'ai-image-queue',
+    name: 'AI Image Generation Queue',
+    description: 'Queue-based image generation system',
+    status: 'enabled',
+    permissions: ['user', 'admin'],
+    rateLimit: {
+      requests: 10,
+      window: 300000, // 5 minutes
+      identifier: 'ip'
+    },
+    environments: ['development', 'staging', 'production'],
+    metadata: {
+      category: 'ai',
+      queueBased: true
+    }
+  },
+  {
     id: 'ai-chat-openai',
     name: 'OpenAI Chat',
     description: 'Chat using OpenAI models via gateway',
@@ -203,7 +220,7 @@ export const FEATURES: FeatureFlag[] = [
 
   // Blog Features
   {
-    id: 'blog-api',
+    id: 'blog-list',
     name: 'Blog API',
     description: 'CRUD operations for blog posts',
     status: 'enabled',
@@ -221,7 +238,7 @@ export const FEATURES: FeatureFlag[] = [
 
   // Container Features
   {
-    id: 'containers-management',
+    id: 'containers-manage',
     name: 'Container Management',
     description: 'Manage Docker/Kubernetes containers',
     status: 'disabled', // Disabled by default for security

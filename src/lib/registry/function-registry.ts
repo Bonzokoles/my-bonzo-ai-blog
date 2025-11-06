@@ -402,6 +402,25 @@ export const DEFAULT_FUNCTIONS: FunctionRegistryEntry[] = [
       tags: ['media', 'delete']
     }
   },
+  {
+    id: 'image-gallery',
+    name: 'Image Gallery',
+    category: 'media',
+    endpoint: '/api/ai/image-gallery',
+    method: 'GET',
+    enabled: true,
+    permissions: ['public', 'user', 'admin'],
+    rateLimit: {
+      requests: 50,
+      window: 60000,
+      identifier: 'ip'
+    },
+    metadata: {
+      description: 'Browse AI-generated image gallery',
+      version: '1.0.0',
+      tags: ['media', 'gallery', 'ai']
+    }
+  },
 
   // Blog Functions
   {
