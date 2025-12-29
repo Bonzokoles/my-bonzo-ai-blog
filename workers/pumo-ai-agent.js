@@ -22,7 +22,7 @@ export default {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${env.DEEPSEEK_API_KEY}` 
+          "Authorization": `Bearer ${env.DEEPSEEK_API_KEY}`
         },
         body: JSON.stringify({
           model: "deepseek-reasoner", // R1 Model
@@ -49,9 +49,9 @@ export default {
       const reply = data.choices[0].message.content;
 
       return new Response(JSON.stringify({ reply }), {
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*" 
+          "Access-Control-Allow-Origin": "*"
         }
       });
 
