@@ -1,0 +1,40 @@
+# Robots.txt dla MyBonzo AI Blog + Meble Pumo Guide
+# Wygenerowano automatycznie: 29 grudnia 2025
+
+User-agent: *
+Allow: /
+
+# Priorytet dla Meble Pumo content
+Allow: /pumo-guide/
+Allow: /pumo-guide/agent
+
+# Blokuj backupy i tymczasowe pliki
+Disallow: /backups/
+Disallow: /*.bat$
+Disallow: /*.md$
+Disallow: /THE_AGENT_DEV/
+
+# Specjalne boty AI
+User-agent: GPTBot
+Allow: /pumo-guide/
+Allow: /api/pumo-chat
+
+User-agent: ChatGPT-User
+Allow: /pumo-guide/
+Allow: /api/pumo-chat
+
+User-agent: CCBot
+Allow: /pumo-guide/
+
+User-agent: anthropic-ai
+Allow: /pumo-guide/
+
+User-agent: Claude-Web
+Allow: /pumo-guide/
+
+# Sitemaps
+Sitemap: https://mybonzoaiblog.pages.dev/sitemap-pumo.xml
+Sitemap: https://mybonzoaiblog.pages.dev/sitemap-0.xml
+
+# IndexNow key location
+# https://mybonzoaiblog.pages.dev/8f9a2d4e6b1c3a5d7e9f0a2b4c6d8e0f.txt
