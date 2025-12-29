@@ -13,6 +13,7 @@ pages_build_output_dir = "dist"
 # CF_ACCOUNT_ID = "your-cloudflare-account-id"
 # OPENAI_API_KEY = "your-openai-api-key"
 AI_GATEWAY_SLUG = "google_ai_gate"
+# DEEPSEEK_API_KEY will be set via wrangler secret or env vars
 
 # KV Namespaces - existing ones with proper bindings
 [[kv_namespaces]]
