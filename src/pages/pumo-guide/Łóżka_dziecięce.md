@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Łóżka"
+subcategory: "dziecięce"
+---
+
 # Łóżka dziecięce: Przewodnik Zakupowy 2023
 
 ### Wstęp

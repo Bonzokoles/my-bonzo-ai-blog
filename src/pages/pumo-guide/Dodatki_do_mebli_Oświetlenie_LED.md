@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Dodatki"
+subcategory: "do mebli Oświetlenie LED"
+---
+
 # Kompletny Przewodnik po E-commerce dotyczący Dodatków do Mebli/Oświetlenia LED
 
 ## Wprowadzenie

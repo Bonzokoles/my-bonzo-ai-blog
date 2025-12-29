@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Stoly"
+subcategory: "Stoły nierozkładane"
+---
+
 # Przewodnik E-Commerce: Stoły nierozkładane
 
 ## Solidne stoły do jadalni - jak wybrać najlepszy?

@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Lustra"
+subcategory: ""
+---
+
 # Kompleksowy Przewodnik po Lustrach dla E-Commerce
 
 ## Wprowadzenie

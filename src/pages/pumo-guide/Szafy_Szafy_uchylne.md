@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Szafy"
+subcategory: "Szafy uchylne"
+---
+
 # Kompleksowy Przewodnik po Szafach Uchylanych na 2025 rok
 
 ## Szafy uchylne: Przewodnik zakupowy od Meble Pumo

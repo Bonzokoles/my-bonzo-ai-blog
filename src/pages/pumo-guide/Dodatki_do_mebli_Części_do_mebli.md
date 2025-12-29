@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Dodatki"
+subcategory: "do mebli Części do mebli"
+---
+
 # Dodatki do mebli: Kompleksowy przewodnik e-commerce
 
 ## Wprowadzenie

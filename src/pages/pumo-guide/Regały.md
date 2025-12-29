@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Regały"
+subcategory: ""
+---
+
 # Przewodnik po E-Komersie dla Regałów
 
 ## Wprowadzenie

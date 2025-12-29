@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Zestawy"
+subcategory: "mebli Zestawy mebli kuchennych"
+---
+
 # Kompleksowy Przewodnik po Zestawach Mebli Kuchennych
 
 ### Wybór najlepszych zestawów mebli kuchennych

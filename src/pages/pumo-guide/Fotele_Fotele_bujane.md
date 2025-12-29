@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Fotele"
+subcategory: "Fotele bujane"
+---
+
 # Kompleksowy Przewodnik po Fotelach Bujanych
 
 ## Wstęp

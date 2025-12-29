@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Biurka"
+subcategory: "Biurka proste"
+---
+
 # Przewodnik po E-Commerce: Biurka proste
 
 ## Wprowadzenie

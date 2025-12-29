@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Fotele"
+subcategory: "Fotele rozkładane"
+---
+
 # Kompleksowy przewodnik po fotelach rozkładanych
 
 Zakup odpowiedniego fotela rozkładanego może być kluczowym elementem wyposażenia każdego domu. W poniższym przewodniku przedstawiamy najważniejsze informacje i porady dotyczące wyboru fotela rozkładanego oraz trzy rekomendowane modele w trzech różnych kategoriach cenowych.

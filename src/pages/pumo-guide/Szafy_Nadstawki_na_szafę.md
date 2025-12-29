@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Szafy"
+subcategory: "Nadstawki na szafę"
+---
+
 # Kompletny Przewodnik po Nadstawkach na Szafę — Szafy/Nadstawki na Szafę
 
 ## Wstęp

@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Sofy"
+subcategory: "i narożniki Sofy 3 osobowe"
+---
+
 # Przewodnik po Sofach i Narożnikach: Sofy 3-osobowe
 
 ## Wstęp

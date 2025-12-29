@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Półki"
+subcategory: "wiszące"
+---
+
 # Półki wiszące – Przewodnik E-commerce
 
 Półki wiszące są nie tylko praktycznym, ale również stylowym rozwiązaniem dla każdego wnętrza. Oferują one dodatkową przestrzeń do przechowywania, dekoracji i organizacji, jednocześnie dodając estetyki do naszych ścian. W naszym przewodniku znajdziesz najlepsze półki wiszące dostępne na rynku oraz cenne porady zakupowe.

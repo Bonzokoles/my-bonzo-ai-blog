@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Fotele"
+subcategory: "Fotele młodzieżowe"
+---
+
 # Fotele Młodzieżowe: Kompleksowy Przewodnik E-commerce 
 
 Szukanie idealnego fotela obrotowego dla młodzieży może być trudnym zadaniem, biorąc pod uwagę różnorodność dostępnych opcji. W naszym przewodniku znajdziesz szczegółowe informacje, porady eksperckie oraz rekomendacje najlepszych produktów dostępnych na rynku.

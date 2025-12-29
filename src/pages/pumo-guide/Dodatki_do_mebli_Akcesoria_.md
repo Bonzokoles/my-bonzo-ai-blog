@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Dodatki"
+subcategory: "do mebli Akcesoria "
+---
+
 # Dodatki do mebli/Akcesoria: Kompleksowy przewodnik po matach ochronnych pod krzesła
 
 ## Przewodnik E-commerce: Maty ochronne pod krzesła

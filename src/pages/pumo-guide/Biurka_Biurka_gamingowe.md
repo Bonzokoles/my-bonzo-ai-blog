@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Biurka"
+subcategory: "Biurka gamingowe"
+---
+
 # Biurka Gamingowe – Kompleksowy Przewodnik Zakupowy
 
 ## Wprowadzenie

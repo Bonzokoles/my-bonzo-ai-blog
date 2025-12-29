@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Toaletki"
+subcategory: "i konsole Toaletki"
+---
+
 # Najlepsze Toaletki z Lustrem do Twojego Domu - Kompletna Przewodnik
 
 Poszukujesz idealnej toaletki z lustrem, która łączy w sobie styl, funkcjonalność i dobrą jakość? W naszym przewodniku podpowiemy Ci, na co zwrócić uwagę podczas zakupu, a także przedstawimy najlepsze modele dostępne na rynku, dostosowane do różnych budżetów i potrzeb.

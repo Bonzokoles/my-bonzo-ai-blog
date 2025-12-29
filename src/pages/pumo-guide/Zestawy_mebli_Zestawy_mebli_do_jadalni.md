@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Zestawy"
+subcategory: "mebli Zestawy mebli do jadalni"
+---
+
 # Kompleksowy Przewodnik po Zestawach Mebli do Jadalni
 
 ## Kompleksowy Przewodnik po Zestawach Mebli do Jadalni

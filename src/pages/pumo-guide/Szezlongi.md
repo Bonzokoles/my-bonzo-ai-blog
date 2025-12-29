@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Szezlongi"
+subcategory: ""
+---
+
 # Kompleksowy Przewodnik Zakupowy: Szezlongi Marka Lily
 
 ## Wprowadzenie

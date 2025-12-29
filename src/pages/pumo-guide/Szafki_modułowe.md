@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Szafki"
+subcategory: "modułowe"
+---
+
 # Kompletny Przewodnik E-Commerce: Szafki Modułowe
 
 Szafki modułowe to idealne rozwiązanie dla osób, które cenią sobie wszechstronność, funkcjonalność oraz możliwość dopasowania mebli do indywidualnych potrzeb. W tym przewodniku przedstawimy bestsellery w trzech kategoriach cenowych oraz szczegółowo opiszemy, na co zwrócić uwagę przy wyborze odpowiedniej szafki modułowej.

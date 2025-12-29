@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Fotele"
+subcategory: "Fotele wypoczynkowe"
+---
+
 # Przewodnik po zakupie foteli wypoczynkowych
 
 Wybór odpowiedniego fotela wypoczynkowego może znacząco wpłynąć na komfort i styl Twojego wnętrza. W oparciu o dane, wyróżniliśmy trzy główne kategorie foteli: **fotele z podnóżkiem**, **fotele wypoczynkowe** oraz **fotele obrotowe**. Przygotowaliśmy szczegółowy przewodnik, który pomoże Ci dokonać najlepszego wyboru w zależności od Twoich potrzeb, preferencji i budżetu.

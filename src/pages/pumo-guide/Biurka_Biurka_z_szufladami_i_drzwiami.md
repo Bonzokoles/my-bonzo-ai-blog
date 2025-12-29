@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Biurka"
+subcategory: "Biurka z szufladami i drzwiami"
+---
+
 # Przewodnik Zakupowy: Biurka z Szufladami i Drzwiami
 
 ## Wybór najlepszego biurka: Na co zwrócić uwagę?

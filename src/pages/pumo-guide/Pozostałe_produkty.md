@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Pozostałe"
+subcategory: "produkty"
+---
+
 # Kompleksowy Przewodnik po Zakupach E-commerce: Pozostałe Produkty
 
 Zakup odpowiednich mebli do domu może być wyzwaniem, zwłaszcza gdy nasz budżet jest ograniczony, a oczekiwania wysokie. Dlatego przygotowaliśmy ten obszerny przewodnik, który pomoże ci dokonać najlepszego wyboru. W tym artykule omówimy trzy główne kategorie produktów: najlepszy stosunek jakości do ceny, najwyższa jakość i cena oraz najtańsza opcja.

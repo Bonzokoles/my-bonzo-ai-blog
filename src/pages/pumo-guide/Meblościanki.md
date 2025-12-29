@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Meblościanki"
+subcategory: ""
+---
+
 # Kompletny Przewodnik po Meblościankach
 
 ## Wstęp

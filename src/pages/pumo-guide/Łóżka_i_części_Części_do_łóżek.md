@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Łóżka"
+subcategory: "i części Części do łóżek"
+---
+
 # Przewodnik po E-Commerce: Łóżka i Części do Łóżek
 
 ### Wstęp

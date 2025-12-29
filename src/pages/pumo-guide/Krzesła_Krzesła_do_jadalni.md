@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Krzesła"
+subcategory: "Krzesła do jadalni"
+---
+
 # Przewodnik po krzesłach do jadalni 
 
 Wybór odpowiednich krzeseł do jadalni może być wyzwaniem. Wielość modeli, cen i materiałów może przyprawić o zawrót głowy. Dlatego przygotowaliśmy dla Ciebie kompleksowy przewodnik, który pomoże Ci dokonać trafnego wyboru. Znajdziesz tu nasze najlepsze rekomendacje oraz poradnik zakupowy, który odpowie na najczęstsze pytania i pomoże podjąć świadomą decyzję.

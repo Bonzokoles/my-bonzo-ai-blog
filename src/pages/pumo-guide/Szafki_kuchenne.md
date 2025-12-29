@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Szafki"
+subcategory: "kuchenne"
+---
+
 # Kompleksowy Poradnik Zakupowy: Szafki Kuchenne Vento
 
 Wybór odpowiednich szafek kuchennych jest kluczowy dla każdego remontu lub aranżacji kuchni. Jeśli planujesz zakupić szafki kuchenne z serii Vento, ten poradnik jest stworzony z myślą o Tobie. Poniżej znajdziesz najważniejsze informacje, porady i rekomendacje, które pomogą Ci podjąć najlepszą decyzję.

@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Witryny"
+subcategory: "i kredensy Witryny"
+---
+
 # Kompletna E-Commerce’owa Przewodnik dla Witryn Kuchennych i Kredensów
 
 ## Witryny Kuchenne – Kompleksowy Przewodnik Zakupowy

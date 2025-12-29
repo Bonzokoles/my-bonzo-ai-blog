@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Fotele"
+subcategory: "Fotele ogrodowe"
+---
+
 # Fotele ogrodowe rattanowe: Kompletny Przewodnik Zakupowy
 
 Szukasz idealnego fotela ogrodowego rattanowego, który połączy styl, komfort i funkcjonalność? W tym przewodniku omówimy trzy kategorie foteli ogrodowych dostępnych na rynku: najlepszy stosunek jakości do ceny, wybór premium oraz opcja budżetowa. Każda z tych opcji ma swoje unikalne cechy i charakterystyki, które pomogą Ci dokonać świadomego wyboru.

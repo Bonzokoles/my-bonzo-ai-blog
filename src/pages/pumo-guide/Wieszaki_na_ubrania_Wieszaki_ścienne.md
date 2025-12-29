@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Wieszaki"
+subcategory: "na ubrania Wieszaki ścienne"
+---
+
 # Przewodnik po Wieszakach na Ubrania/Wieszakach Ściennych
 
 ## Wstęp

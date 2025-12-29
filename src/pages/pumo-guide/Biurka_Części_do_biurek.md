@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Biurka"
+subcategory: "Części do biurek"
+---
+
 # Kompleksowy Przewodnik E-commerce po Biurkach i Częściach do Biurek
 
 ## Wstęp

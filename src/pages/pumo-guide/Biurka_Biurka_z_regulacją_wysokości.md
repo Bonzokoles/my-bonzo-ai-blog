@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Biurka"
+subcategory: "Biurka z regulacją wysokości"
+---
+
 # Biurka · Kompletny Przewodnik po E-commerce
 
 ## Wprowadzenie

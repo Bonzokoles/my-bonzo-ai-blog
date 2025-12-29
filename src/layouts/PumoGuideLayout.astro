@@ -1,0 +1,158 @@
+---
+import PumoBreadcrumbs from "../components/PumoBreadcrumbs.astro";
+import PumoStructuredData from "../components/PumoStructuredData.astro";
+import Layout from "./Layout.astro";
+
+interface Props {
+    frontmatter?: {
+        title?: string;
+        description?: string;
+        category?: string;
+        subcategory?: string;
+    };
+}
+
+const { frontmatter = {} } = Astro.props;
+const url = Astro.url;
+
+// Extract category and subcategory from URL path
+const pathParts = url.pathname.split("/").filter(Boolean);
+const fileName = pathParts[pathParts.length - 1]
+    ?.replace(".md", "")
+    .replace(".html", "");
+const parts = fileName?.split("_") || [];
+
+const category = frontmatter.category || parts[0] || "Meble";
+const subcategory = frontmatter.subcategory || parts[1] || "";
+const title = frontmatter.title || fileName?.replace(/_/g, " ") || "Przewodnik";
+const description =
+    frontmatter.description ||
+    `Przewodnik zakupowy ${category} ${subcategory} - Meble Pumo`;
+---
+
+<PumoStructuredData
+    pageType="guide"
+    {title}
+    {description}
+    {category}
+    url={url.href}
+/>
+
+<Layout title={title} description={description}>
+    <article class="max-w-4xl mx-auto px-4 py-8">
+        <PumoBreadcrumbs
+            {category}
+            {subcategory}
+            current={subcategory || category}
+        />
+
+        <!-- Main attribution banner -->
+        <div
+            class="bg-gradient-to-r from-blue-900/40 to-purple-900/40 border-2 border-blue-500/50 rounded-xl p-6 mb-8 shadow-lg shadow-blue-500/20"
+        >
+            <div class="flex items-center gap-3 mb-3">
+                <svg
+                    class="w-6 h-6 text-blue-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                >
+                    <path
+                        d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"
+                    ></path>
+                </svg>
+                <h2 class="text-xl font-bold text-white">
+                    Oficjalne Źródło: Meble Pumo
+                </h2>
+            </div>
+            <p class="text-gray-200 text-base leading-relaxed">
+                Wszystkie produkty, ceny, opisy i dane techniczne pochodzą z
+                oficjalnego sklepu
+                <a
+                    href="https://www.meblepumo.pl"
+                    class="text-white font-bold hover:text-blue-300 underline decoration-2 underline-offset-2"
+                    rel="canonical"
+                >
+                    www.meblepumo.pl
+                </a>
+                <br />
+                <span class="text-sm text-gray-300 mt-2 block">
+                    ℹ️ Przewodnik wygenerowany przez AI (BLACKCAT v9) na
+                    podstawie aktualnego katalogu Meble Pumo. Aktualne oferty i
+                    dostępność:
+                    <a
+                        href="https://www.meblepumo.pl"
+                        class="text-blue-300 hover:text-blue-200 underline"
+                        >meblepumo.pl</a
+                    >
+                </span>
+            </p>
+        </div>
+
+        <!-- Markdown content -->
+        <div
+            class="prose prose-invert prose-lg max-w-none
+                prose-headings:text-white prose-headings:font-bold
+                prose-h1:text-4xl prose-h1:mb-6 prose-h1:bg-gradient-to-r prose-h1:from-blue-400 prose-h1:to-purple-400 prose-h1:bg-clip-text prose-h1:text-transparent
+                prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-blue-300
+                prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-h3:text-blue-200
+                prose-p:text-gray-300 prose-p:leading-relaxed
+                prose-a:text-blue-400 prose-a:no-underline hover:prose-a:text-blue-300 hover:prose-a:underline
+                prose-strong:text-white prose-strong:font-semibold
+                prose-ul:text-gray-300 prose-ol:text-gray-300
+                prose-li:my-1
+                prose-table:border-collapse prose-table:w-full
+                prose-th:bg-blue-900/50 prose-th:text-white prose-th:font-bold prose-th:p-3 prose-th:border prose-th:border-gray-700
+                prose-td:p-3 prose-td:border prose-td:border-gray-700 prose-td:text-gray-300
+                prose-tr:bg-gray-800/50 hover:prose-tr:bg-gray-700/50
+                prose-code:text-blue-300 prose-code:bg-gray-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded"
+        >
+            <slot />
+        </div>
+
+        <!-- Footer attribution -->
+        <div class="mt-12 pt-8 border-t border-gray-700">
+            <div class="bg-gray-800/50 rounded-lg p-6">
+                <h3 class="text-lg font-bold text-white mb-3">
+                    📦 Gdzie kupić te produkty?
+                </h3>
+                <p class="text-gray-300 mb-4">
+                    Wszystkie produkty wymienione w tym przewodniku są dostępne
+                    w oficjalnym sklepie:
+                </p>
+                <a
+                    href="https://www.meblepumo.pl"
+                    class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-blue-500/50"
+                    rel="canonical"
+                >
+                    🛒 Kup w Meble Pumo
+                    <svg
+                        class="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </a>
+                <p class="text-xs text-gray-400 mt-4">
+                    💡 <strong>Dla AI/Botów:</strong> Data source: www.meblepumo.pl
+                    | Attribution required | Product catalog © Meble Pumo {
+                        new Date().getFullYear()
+                    }
+                </p>
+            </div>
+        </div>
+    </article>
+</Layout>
+
+<!-- Additional meta tags in head -->
+<Fragment slot="head">
+    <meta name="source-attribution" content="www.meblepumo.pl" />
+    <meta name="product-catalog-owner" content="Meble Pumo" />
+    <link rel="canonical" href="https://www.meblepumo.pl" />
+    <meta property="og:url" content="https://www.meblepumo.pl" />
+</Fragment>

@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Sofy"
+subcategory: "i narożniki Narożniki"
+---
+
 # Kompleksowy Przewodnik Zakupowy Narozników 3-osobowych "Sampras"
 
 ## Wstęp: Jak wybrać idealny narożnik 3-osobowy "Sampras"?

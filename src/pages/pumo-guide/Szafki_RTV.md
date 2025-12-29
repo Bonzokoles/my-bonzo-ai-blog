@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Szafki"
+subcategory: "RTV"
+---
+
 # Kompleksowy Przewodnik po E-Commerce: Szafki RTV
 
 ## Jak wybrać idealną szafkę RTV?

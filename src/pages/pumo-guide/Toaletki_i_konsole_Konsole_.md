@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Toaletki"
+subcategory: "i konsole Konsole "
+---
+
 # Przewodnik po zakupie: Toaletki i konsole
 
 Konsole to wyjątkowe meble, które mogą wprowadzić do twojego wnętrza elegancję, funkcjonalność oraz praktyczne rozwiązania. Dzięki zróżnicowanej ofercie cenowej, stylistycznej i gabarytowej, łatwo znajdziesz model dopasowany do twoich potrzeb. Przygotowaliśmy dla ciebie kompleksowy przewodnik zakupowy, który pomoże ci dokonać najlepszego wyboru.

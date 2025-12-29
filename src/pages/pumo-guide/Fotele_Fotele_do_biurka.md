@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Fotele"
+subcategory: "Fotele do biurka"
+---
+
 # Przewodnik Zakupowy: Fotele do Biurka
 
 Wybór odpowiedniego fotela do biurka jest kluczowy dla komfortu i zdrowia podczas pracy czy nauki. Dzięki dokładnej analizie danych z oferty sklepu Meble Pumo, przedstawiamy kompleksowy przewodnik zakupowy, który pomoże Ci wybrać najlepszy fotel dostosowany do Twoich potrzeb i budżetu.

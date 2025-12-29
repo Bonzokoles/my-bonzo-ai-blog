@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Stoly"
+subcategory: "Stoły ogrodowe"
+---
+
 # Kompleksowy przewodnik po stołach ogrodowych
 
 ## Wprowadzenie

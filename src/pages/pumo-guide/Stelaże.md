@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Stelaże"
+subcategory: ""
+---
+
 # Przewodnik Zakupowy: Stelaże do Łóżek Natura NV
 
 ## Wstęp

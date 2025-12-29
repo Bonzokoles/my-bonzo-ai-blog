@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Komody"
+subcategory: "Komody z szufladami"
+---
+
 # Kompleksowy przewodnik zakupowy: Komody z szufladami
 
 ## Wprowadzenie

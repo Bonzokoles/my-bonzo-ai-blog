@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Łóżka"
+subcategory: "i części Łóżka"
+---
+
 # Przewodnik po łóżkach i ich częściach: Jak wybrać idealne łóżko dla siebie?
 
 ## Najlepsze łóżka dostępne na rynku - Sklep Meble Pumo

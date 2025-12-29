@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Materace"
+subcategory: "Materace sprężynowe kieszeniowe"
+---
+
 # Kompleksowy Przewodnik Zakupowy: Materace Sprężynowe Kieszeniowe
 
 Jeśli planujesz zakup nowego materaca, warto zastanowić się nad materacami sprężynowymi kieszeniowymi. Dzięki swojej budowie i właściwościom, oferują one doskonałe wsparcie, komfort i trwałość. W tym przewodniku przeanalizujemy trzy główne kategorie tych materacy, podzielone na podstawie ceny i jakości: Value Choice (najlepszy stosunek jakości do ceny), Premium Choice (najwyższa jakość i wygoda) oraz Budget Choice (najtańsza opcja).

@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Stoly"
+subcategory: "Stoły rozkładane"
+---
+
 # Przewodnik po Stołach Rozkładanych – Jak Wybrać Idealny Model?
 
 ## Wstęp

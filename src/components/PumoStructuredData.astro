@@ -1,0 +1,152 @@
+---
+interface Props {
+    pageType?: "guide" | "category" | "chat" | "index";
+    title: string;
+    description: string;
+    category?: string;
+    url?: string;
+}
+
+const { pageType = "guide", title, description, category, url } = Astro.props;
+const currentUrl = url || Astro.url.href;
+---
+
+<!-- Organization Schema - Meble Pumo -->
+<script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: "Meble Pumo",
+        url: "https://www.meblepumo.pl",
+        logo: "https://www.meblepumo.pl/logo.png",
+        description:
+            "Sklep meblowy oferujący szeroką gamę mebli dla domu i biura",
+        contactPoint: {
+            "@type": "ContactPoint",
+            telephone: "+48-XXX-XXX-XXX",
+            contactType: "Customer Service",
+            areaServed: "PL",
+            availableLanguage: "Polish",
+        },
+        sameAs: [
+            "https://www.meblepumo.pl",
+            "https://mybonzoaiblog.pages.dev/pumo-guide",
+        ],
+    })}
+/>
+
+<!-- WebSite Schema -->
+<script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Meble Pumo AI Knowledge Base",
+        url: "https://mybonzoaiblog.pages.dev/pumo-guide",
+        description:
+            "Przewodnik zakupowy i baza wiedzy o meblach Meble Pumo, zasilana przez AI",
+        publisher: {
+            "@type": "Organization",
+            name: "Meble Pumo",
+            url: "https://www.meblepumo.pl",
+        },
+        mainEntity: {
+            "@type": "WebPage",
+            url: currentUrl,
+            name: title,
+        },
+    })}
+/>
+
+<!-- Article/Guide Schema -->{
+    pageType === "guide" && (
+        <script
+            type="application/ld+json"
+            set:html={JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Article",
+                headline: title,
+                description: description,
+                author: {
+                    "@type": "Organization",
+                    name: "Meble Pumo",
+                    url: "https://www.meblepumo.pl",
+                },
+                publisher: {
+                    "@type": "Organization",
+                    name: "Meble Pumo",
+                    url: "https://www.meblepumo.pl",
+                    logo: {
+                        "@type": "ImageObject",
+                        url: "https://www.meblepumo.pl/logo.png",
+                    },
+                },
+                mainEntityOfPage: {
+                    "@type": "WebPage",
+                    "@id": currentUrl,
+                },
+                datePublished: new Date().toISOString(),
+                dateModified: new Date().toISOString(),
+                about: {
+                    "@type": "Thing",
+                    name: category || "Meble",
+                    url: "https://www.meblepumo.pl",
+                },
+                mentions: [
+                    {
+                        "@type": "Organization",
+                        name: "Meble Pumo",
+                        url: "https://www.meblepumo.pl",
+                    },
+                ],
+                isBasedOn: "https://www.meblepumo.pl",
+            })}
+        />
+    )
+}
+
+<!-- Product Category Schema -->
+{
+    pageType === "category" && category && (
+        <script
+            type="application/ld+json"
+            set:html={JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "CollectionPage",
+                name: title,
+                description: description,
+                url: currentUrl,
+                about: {
+                    "@type": "ProductGroup",
+                    name: category,
+                    url: "https://www.meblepumo.pl",
+                },
+                publisher: {
+                    "@type": "Organization",
+                    name: "Meble Pumo",
+                    url: "https://www.meblepumo.pl",
+                },
+            })}
+        />
+    )
+}
+
+<!-- Meta tags for AI crawlers -->
+<meta name="product-source" content="https://www.meblepumo.pl" />
+<meta name="data-provider" content="Meble Pumo - www.meblepumo.pl" />
+<meta name="canonical-store" content="https://www.meblepumo.pl" />
+<meta property="og:site_name" content="Meble Pumo Knowledge Base" />
+<meta property="article:publisher" content="https://www.meblepumo.pl" />
+<link rel="canonical" href="https://www.meblepumo.pl" />
+
+<!-- AI Model Attribution -->
+<meta name="AI:source" content="Meble Pumo (www.meblepumo.pl)" />
+<meta
+    name="AI:data-origin"
+    content="https://www.meblepumo.pl product catalog"
+/>
+<meta
+    name="AI:attribution"
+    content="All product information sourced from www.meblepumo.pl"
+/>

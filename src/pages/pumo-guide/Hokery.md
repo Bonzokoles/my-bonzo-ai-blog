@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Hokery"
+subcategory: ""
+---
+
 # Kompleksowy Przewodnik po E-commerce dla Hokerów
 
 ## Wprowadzenie

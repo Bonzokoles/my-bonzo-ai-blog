@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Sofy"
+subcategory: "i narożniki Sofy 2 osobowe"
+---
+
 # Przewodnik po sofach 2-osobowych: Kategorie, najlepsze wybory i porady zakupowe
 
 Jeśli szukasz idealnej 2-osobowej sofy do swojego mieszkania, trafiłeś we właściwe miejsce. W tym przewodniku omówimy trzy kluczowe kategorie sof — Value Choice, Premium Choice oraz Budget Choice — które pomogą Ci znaleźć idealny mebel spełniający Twoje wymagania i budżet. Ponadto przedstawimy tabelę najlepszych rekomendacji oraz kilka eksperckich porad zakupowych.

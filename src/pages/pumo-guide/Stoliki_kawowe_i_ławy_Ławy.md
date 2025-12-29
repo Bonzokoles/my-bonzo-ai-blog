@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Stoliki"
+subcategory: "kawowe i ławy Ławy"
+---
+
 # Przewodnik po Zakupie Stolika Kawowego i Ław
 
 ## Wstęp - Jak Wybrać Idealny Stolik Kawowy?

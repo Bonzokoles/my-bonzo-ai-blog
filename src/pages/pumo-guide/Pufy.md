@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Pufy"
+subcategory: ""
+---
+
 # Kompleksowy Przewodnik Zakupowy dla Pufy
 
 Pufy to nie tylko stylowe, ale i funkcjonalne elementy wyposażenia wnętrz. To kompaktowe i wszechstronne meble, które mogą pełnić wiele funkcji, takich jak dodatkowe miejsce do siedzenia, schowki czy podnóżki. Dzięki różnorodności form, funkcji i stylów, pufy stają się coraz bardziej popularne w aranżacji nowoczesnych wnętrz. W tym przewodniku pomożemy Ci wybrać idealną pufę, dostosowaną do Twoich potrzeb i budżetu.

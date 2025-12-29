@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Krzesła"
+subcategory: "Krzesła ogrodowe"
+---
+
 # Krzesła ogrodowe – Kompleksowy przewodnik zakupowy
 
 Poszukujesz idealnych krzeseł ogrodowych, które zapewnią wygodę oraz stylowy wygląd Twojemu tarasowi? W tym przewodniku znajdziesz wszystko, co musisz wiedzieć, aby dokonać najlepszego wyboru. Przedstawiamy rekomendacje topowych produktów w różnych przedziałach cenowych, omawiamy kluczowe cechy, które warto wziąć pod uwagę, oraz udzielamy praktycznych porad zakupowych.

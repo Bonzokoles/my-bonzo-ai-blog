@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Komody"
+subcategory: "Komody z drzwiami"
+---
+
 # Przewodnik E-commerce: Komody/Komody z drzwiami
 
 ## Wstęp

@@ -1,0 +1,468 @@
+/*
+ * blog-theme.css
+ * Kolorystyka i style głównego bloga MyBonzo
+ * Do użycia w projektach AIBLOG (Q:\mybonzo\AIBLOG\*)
+ * Źródło: Q:\mybonzo\mybonzoAIblog\src\styles\
+ */
+
+/* ========================================
+   COLOR THEME VARIABLES
+   ======================================== */
+
+:root {
+    /* Light Mode (Default) */
+    --theme-primary: #1a1a2e;
+    --theme-secondary: #16213e;
+    --theme-accent: #0f3460;
+    --theme-accent-hover: #e94560;
+    --theme-text: #eaeaea;
+    --theme-text-muted: #a0a0a0;
+    --theme-bg-gradient-start: #1a1a2e;
+    --theme-bg-gradient-end: #16213e;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.16);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.25);
+
+    /* Border Radius */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+}
+
+html.dark {
+    /* Dark Mode */
+    --theme-primary: #0f0f23;
+    --theme-secondary: #1a1a2e;
+    --theme-accent: #e94560;
+    --theme-accent-hover: #ff6b6b;
+    --theme-text: #ffffff;
+    --theme-text-muted: #888888;
+    --theme-bg-gradient-start: #0f0f23;
+    --theme-bg-gradient-end: #1a1a2e;
+}
+
+/* ========================================
+   TYPOGRAPHY - THROLACON GRAFFITI FONT
+   ======================================== */
+
+@font-face {
+    font-family: 'ThrolaconTrial';
+    src: url('/fonts/Throlacon Trial.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Headers: Graffiti Style */
+h1,
+h2,
+h3,
+h4,
+h5,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5 {
+    font-family: 'ThrolaconTrial', Impact, 'Arial Black', sans-serif !important;
+    font-variant-ligatures: none;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    font-weight: normal !important;
+    text-shadow: 0 1px 6px rgba(18, 18, 18, 0.32), 2px 2px 0 rgba(51, 51, 51, 0.1);
+    color: var(--theme-accent);
+    line-height: 1.2;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+h1,
+.h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+}
+
+h2,
+.h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+}
+
+h3,
+.h3 {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+h4,
+.h4 {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+}
+
+h5,
+.h5 {
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+}
+
+/* Body Text */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    color: var(--theme-text);
+    background-color: var(--theme-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+p {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--theme-text);
+}
+
+/* Links */
+a {
+    color: var(--theme-accent);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--theme-accent-hover);
+    text-decoration: underline;
+}
+
+/* Code */
+code {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: var(--theme-secondary);
+    padding: 0.2rem 0.4rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    color: var(--theme-accent);
+}
+
+pre {
+    background-color: var(--theme-secondary);
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    font-size: 0.875rem;
+    color: var(--theme-text);
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Colors */
+.bg-theme-primary {
+    background-color: var(--theme-primary);
+}
+
+.bg-theme-secondary {
+    background-color: var(--theme-secondary);
+}
+
+.bg-theme-accent {
+    background-color: var(--theme-accent);
+}
+
+.text-theme-primary {
+    color: var(--theme-text);
+}
+
+.text-theme-secondary {
+    color: var(--theme-text-muted);
+}
+
+.text-theme-accent {
+    color: var(--theme-accent);
+}
+
+.text-theme-accent-hover {
+    color: var(--theme-accent-hover);
+}
+
+.border-theme-accent {
+    border-color: var(--theme-accent);
+}
+
+.border-theme-primary {
+    border-color: var(--theme-primary);
+}
+
+/* Gradients */
+.bg-gradient-primary {
+    background: linear-gradient(135deg,
+            var(--theme-bg-gradient-start) 0%,
+            var(--theme-bg-gradient-end) 100%);
+}
+
+.bg-gradient-accent {
+    background: linear-gradient(135deg,
+            var(--theme-accent) 0%,
+            var(--theme-accent-hover) 100%);
+}
+
+/* Shadows */
+.shadow-theme-sm {
+    box-shadow: var(--shadow-sm);
+}
+
+.shadow-theme-md {
+    box-shadow: var(--shadow-md);
+}
+
+.shadow-theme-lg {
+    box-shadow: var(--shadow-lg);
+}
+
+.shadow-theme-xl {
+    box-shadow: var(--shadow-xl);
+}
+
+/* Border Radius */
+.rounded-theme-sm {
+    border-radius: var(--radius-sm);
+}
+
+.rounded-theme-md {
+    border-radius: var(--radius-md);
+}
+
+.rounded-theme-lg {
+    border-radius: var(--radius-lg);
+}
+
+.rounded-theme-xl {
+    border-radius: var(--radius-xl);
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.6s ease-out;
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Hover Animations */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+}
+
+.hover-glow {
+    transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+    box-shadow: 0 0 20px var(--theme-accent);
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: var(--theme-accent);
+    color: var(--theme-text);
+    border: 2px solid var(--theme-accent);
+}
+
+.btn-primary:hover {
+    background-color: var(--theme-accent-hover);
+    border-color: var(--theme-accent-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--theme-accent);
+    border: 2px solid var(--theme-accent);
+}
+
+.btn-secondary:hover {
+    background-color: var(--theme-accent);
+    color: var(--theme-text);
+}
+
+/* ========================================
+   CARDS
+   ======================================== */
+
+.card {
+    background-color: var(--theme-secondary);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-4px);
+}
+
+.card-title {
+    font-family: 'ThrolaconTrial', Impact, sans-serif;
+    font-size: 1.5rem;
+    color: var(--theme-accent);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.card-content {
+    color: var(--theme-text);
+    line-height: 1.6;
+}
+
+/* ========================================
+   SCROLLBAR
+   ======================================== */
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--theme-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--theme-accent);
+    border-radius: 6px;
+    border: 2px solid var(--theme-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-accent-hover);
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--theme-accent) var(--theme-primary);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+
+    h1,
+    .h1 {
+        font-size: 2.5rem;
+    }
+
+    h2,
+    .h2 {
+        font-size: 2rem;
+    }
+
+    h3,
+    .h3 {
+        font-size: 1.75rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .card {
+        padding: 1rem;
+    }
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Focus Styles */
+*:focus-visible {
+    outline: 2px solid var(--theme-accent);
+    outline-offset: 2px;
+}

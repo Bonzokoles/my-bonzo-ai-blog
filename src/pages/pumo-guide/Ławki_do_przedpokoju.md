@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Ławki"
+subcategory: "do przedpokoju"
+---
+
 # Kompleksowy Przewodnik e-Commerce: Ławki do przedpokoju
 
 ## Wstęp

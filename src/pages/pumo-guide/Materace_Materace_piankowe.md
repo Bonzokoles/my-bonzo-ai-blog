@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Materace"
+subcategory: "Materace piankowe"
+---
+
 # Przewodnik zakupowy: Materace piankowe
 
 ## Wstęp

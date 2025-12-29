@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Wieszaki"
+subcategory: "na ubrania Wieszaki stojące"
+---
+
 # Kompletna Przewodnik po Wieszakach Stojących na Ubrania
 
 ## Wstęp

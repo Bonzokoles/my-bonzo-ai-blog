@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Kontenerki"
+subcategory: ""
+---
+
 # Przewodnik po E-commerce: Kontenerki pod Biurko
 
 ## Wstęp

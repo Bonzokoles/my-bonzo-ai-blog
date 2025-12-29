@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Biurka"
+subcategory: "Biurka narożne"
+---
+
 # Przewodnik po Biurkach Narożnych i z Szufladami: Kompleksowy Poradnik dla Kupujących
 
 W dzisiejszych czasach wybór idealnego biurka jest kluczowy dla efektywnej pracy w domu oraz w biurze. W tym przewodniku przedstawimy najlepsze biurka narożne oraz z szufladami, wykorzystując dane z różnych analiz, aby pomóc Ci dokonać najlepszego wyboru.

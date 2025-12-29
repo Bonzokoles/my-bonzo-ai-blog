@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Stoliki"
+subcategory: "kawowe i ławy Ławostoły"
+---
+
 # Przewodnik Zakupowy: Ławostoły i Stoliki Kawowe
 
 ## Wstęp

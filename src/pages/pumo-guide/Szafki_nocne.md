@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Szafki"
+subcategory: "nocne"
+---
+
 # Kompleksowy przewodnik e-commerce: Szafki nocne
 
 ## Wprowadzenie

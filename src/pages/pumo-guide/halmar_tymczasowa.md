@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "halmar"
+subcategory: "tymczasowa"
+---
+
 # Kompletna Przewodnik po E-commerce dla "Halmar Tymczasowa"
 
 ## Wstęp

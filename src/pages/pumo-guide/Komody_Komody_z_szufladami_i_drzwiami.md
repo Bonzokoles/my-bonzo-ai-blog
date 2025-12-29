@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Komody"
+subcategory: "Komody z szufladami i drzwiami"
+---
+
 # Komody/Komody z szufladami i drzwiami – Kompleksowy Przewodnik Zakupowy
 
 Komody z szufladami i drzwiami to wszechstronne i funkcjonalne meble, które doskonale sprawdzają się w różnych pomieszczeniach, od salonu, przez sypialnię, po pokój dziecka. W tym przewodniku omówimy kluczowe aspekty wyboru odpowiedniej komody, przedstawimy najlepsze propozycje w różnych kategoriach oraz podzielimy się eksperckimi poradami zakupowymi.

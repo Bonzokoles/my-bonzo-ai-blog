@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Szafki"
+subcategory: "na buty"
+---
+
 # Kompleksowy Przewodnik Zakupowy: Szafki na Buty
 
 ## Wprowadzenie

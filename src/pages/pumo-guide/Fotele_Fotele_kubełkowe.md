@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Fotele"
+subcategory: "Fotele kubełkowe"
+---
+
 # Fotele kubełkowe tapicerowane – Przewodnik po zakupach
 
 ## Najlepsze fotele kubełkowe tapicerowane na rynku

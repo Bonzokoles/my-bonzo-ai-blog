@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Łóżka"
+subcategory: "i części Stelaże do łóżek"
+---
+
 # Kompleksowy Przewodnik e-Commerce: Łóżka i Części/Stelaże do Łóżek
 
 Jeśli szukasz idealnego stelaża do łóżka, który spełni Twoje wymagania pod względem komfortu, jakości i ceny, to jesteś w dobrym miejscu! W naszym przewodniku znajdziesz szczegółowe informacje na temat wyboru najlepszego stelaża do łóżka oraz rekomendacje najlepszych produktów dostępnych na rynku.

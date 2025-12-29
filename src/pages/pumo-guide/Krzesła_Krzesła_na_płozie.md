@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Krzesła"
+subcategory: "Krzesła na płozie"
+---
+
 # Przewodnik po krzesłach na płozie
 
 Krzesła na płozie to doskonały wybór dla osób ceniących nowoczesny design i niebanalną estetykę. W naszym przewodniku znajdziesz najważniejsze informacje oraz praktyczne porady, które pomogą Ci dokonać najlepszego wyboru zgodnie z Twoimi potrzebami i budżetem.

@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/PumoGuideLayout.astro
+category: "Stoliki"
+subcategory: "kawowe i ławy Stoliki kawowe"
+---
+
 # Stolik kawowy: Przewodnik zakupowy
 
 Wybór idealnego stolika kawowego może być wyzwaniem, biorąc pod uwagę szeroki wybór dostępnych na rynku modeli. Ten przewodnik pomoże Ci zdecydować, który stolik kawowy najlepiej odpowiada Twoim potrzebom i budżetowi.
