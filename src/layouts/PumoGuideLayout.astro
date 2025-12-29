@@ -1,5 +1,6 @@
 ---
 import PumoBreadcrumbs from "../components/PumoBreadcrumbs.astro";
+import PumoEnhancedSEO from "../components/PumoEnhancedSEO.astro";
 import PumoStructuredData from "../components/PumoStructuredData.astro";
 import Layout from "./Layout.astro";
 
@@ -31,11 +32,20 @@ const description =
 ---
 
 <PumoStructuredData
-    pageType="guide"
+    pageType="category"
     {title}
     {description}
     {category}
+    productCount={50}
     url={url.href}
+/>
+
+<PumoEnhancedSEO
+    pageType="category"
+    {title}
+    {description}
+    {category}
+    productCount={50}
 />
 
 <Layout title={title} description={description}>
