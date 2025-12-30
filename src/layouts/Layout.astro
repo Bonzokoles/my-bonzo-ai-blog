@@ -14,8 +14,8 @@ import SocialMeta from "@components/Astro/head/SocialMeta.astro";
 import BackToTop from "@components/Astro/BackToTop.astro";
 import Footer from "@components/Astro/Footer.astro";
 import Nav from "@components/Astro/Nav.astro";
-import Title from "@components/Astro/Title.astro";
 import QuickAccessWidget from "@components/Astro/QuickAccessWidget.astro";
+import Title from "@components/Astro/Title.astro";
 
 import logo from "@assets/logo.png";
 
@@ -31,6 +31,7 @@ interface Props {
   faviconSrc?: string;
   showTitleBackground?: boolean;
   class?: string | undefined;
+  lang?: string;
 }
 
 const {
@@ -45,6 +46,7 @@ const {
   publishedTime = "",
   modifiedTime = "",
   class: className = "",
+  lang = "pl",
 } = Astro.props;
 
 const metaTags = [
@@ -55,6 +57,10 @@ const metaTags = [
     name: "robots",
     content: `index, ${SITE.disableIndexing ? "noindex, nofollow" : "index, follow"}`,
   },
+  // GEO TAGS FOR POLAND TARGETING
+  { name: "geo.region", content: "PL" },
+  { name: "geo.position", content: "52.237049;21.017532" },
+  { name: "ICBM", content: "52.237049, 21.017532" },
 ];
 const fonts = SITE.fonts || [];
 const options = {
@@ -65,14 +71,19 @@ const options = {
 const headerLogo = typeof logo === "undefined" ? null : logo; // guard against no logo
 ---
 
-<html lang="en">
+<html lang={lang}>
   <head>
     <!-- Bing Webmaster Verification -->
     <meta name="msvalidate.01" content="610D2A75B0BD3CE029E40BEF8B91F851" />
-    
+
     <!-- RSS Feed -->
-    <link rel="alternate" type="application/rss+xml" title="AI Blog - Przewodnik po Meblach Pumo" href="/rss.xml" />
-    
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="AI Blog - Przewodnik po Meblach Pumo"
+      href="/rss.xml"
+    />
+
     <DynamicMetaTags metaTags={metaTags} />
     <GoogleFonts fonts={fonts} />
     <SocialMeta
