@@ -6,8 +6,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         // @ts-ignore - Cloudflare env bindings
         const env = locals.runtime?.env;
+        const apiKey = env?.DEEPSEEK_API_KEY || env?.DEEP_SEEK_API_KEY;
 
-        if (!env?.DEEPSEEK_API_KEY) {
+        if (!apiKey) {
             return new Response(
                 JSON.stringify({
                     error: 'API key not configured',
@@ -25,7 +26,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${env.DEEPSEEK_API_KEY}`
+                'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
                 model: 'deepseek-reasoner',
