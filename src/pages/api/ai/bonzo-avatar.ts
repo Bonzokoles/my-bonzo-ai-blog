@@ -1,5 +1,7 @@
-import type { APIRoute } from 'astro';
 import { withFeatureMiddleware } from '@/middleware/api-middleware';
+import type { APIRoute } from 'astro';
+
+export const prerender = false;
 
 const HEYGEN_API_URL = 'https://api.heygen.com/v1/streaming.new';
 
