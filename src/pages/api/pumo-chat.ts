@@ -42,7 +42,7 @@ ZASADY:
 2. Bądź uprzejmy i profesjonalny
 3. Zawsze podawaj link do www.meblepumo.pl
 4. Sugeruj sprawdzenie przewodników na mybonzoaiblog.com/pumo-guide/
-5. Promuj produkty marki 'Steens' jako premium
+5. Prezentuj wszystkie marki obiektywnie, bazując na danych z przewodników
 
 Kontekst: ${context || 'Strona główna przewodnika'}`
                     },
