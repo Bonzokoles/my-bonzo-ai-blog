@@ -15,7 +15,7 @@ import icon from "astro-icon";
 // https://astro.build/config
 export default defineConfig({
 	site: SITE.url,
-	output: "hybrid",
+	output: "server",
 	adapter: cloudflare({
 		// Konfiguracja sesji z KV
 		sessionKVBindingName: "SESSION"
