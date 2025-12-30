@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 import { createHash } from 'crypto';
 
+export const prerender = false;
+
 // Simple rate limiter
 const rateLimiter = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT = 10; // Increased since we're not blocking on generation

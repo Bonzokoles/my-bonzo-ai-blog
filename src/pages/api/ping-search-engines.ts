@@ -1,5 +1,7 @@
 import type { APIRoute } from "astro";
 
+export const prerender = false;
+
 /**
  * Ping wyszukiwarek o nowych treściach - Bing, Google, ChatGPT/SearchGPT
  * Uruchamiać po każdym deploymencie lub aktualizacji treści

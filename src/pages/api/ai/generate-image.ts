@@ -2,6 +2,8 @@ import type { APIRoute } from 'astro';
 import { withFeatureMiddleware } from '@/middleware/api-middleware';
 import { createHash } from 'crypto';
 
+export const prerender = false;
+
 // Generate unique hash for image content
 function generateImageHash(prompt: string, model: string, params: any): string {
   const hashInput = `${prompt}:${model}:${JSON.stringify(params)}`;

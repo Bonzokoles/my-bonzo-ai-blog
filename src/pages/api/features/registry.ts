@@ -8,6 +8,8 @@ import { withFeatureMiddleware } from '@/middleware/api-middleware';
 import { getFunctionRegistry } from '@/lib/registry/function-registry';
 import { getFeatureManager } from '@/middleware/api-middleware';
 
+export const prerender = false;
+
 export const GET: APIRoute = async (context) => {
   return withFeatureMiddleware(
     'health-check', // Using health-check feature for registry access

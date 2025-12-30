@@ -1,5 +1,7 @@
 import type { APIRoute } from "astro";
 
+export const prerender = false;
+
 /**
  * IndexNow API - Automatyczne powiadamianie Bing, Yandex o nowych/zaktualizowanych stronach
  * Dokumentacja: https://www.indexnow.org/documentation

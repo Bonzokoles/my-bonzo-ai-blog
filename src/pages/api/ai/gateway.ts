@@ -1,5 +1,7 @@
 import type { APIRoute } from 'astro';
 
+export const prerender = false;
+
 // ========== Constants ==========
 const CLOUDFLARE_AI_GATEWAY_BASE = 'https://gateway.ai.cloudflare.com/v1';
 

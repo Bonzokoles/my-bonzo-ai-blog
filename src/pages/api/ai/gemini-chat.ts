@@ -1,5 +1,7 @@
 import type { APIRoute } from 'astro';
 
+export const prerender = false;
+
 /**
  * Gemini AI Chat API
  * Google Gemini multi-modal chat with PORTA doors knowledge base

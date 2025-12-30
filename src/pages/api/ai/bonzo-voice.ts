@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 import { withFeatureMiddleware } from '@/middleware/api-middleware';
 
+export const prerender = false;
+
 // Baza wiedzy o drzwiach PORTA dla audio agenta
 const SYSTEM_INSTRUCTIONS = `Jesteś Bonzo – sprzedawca drzwi wewnętrznych marki PORTA.
 

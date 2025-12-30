@@ -1,3 +1,5 @@
+
+export const prerender = false;
 // Astro API endpoint for Cloudflare Images upload
 // Proxies to the Worker's CF Images endpoint
 

@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 import { createOpenAIGateway, type OpenAIChatRequest } from '../../../lib/openai-gateway';
 
+export const prerender = false;
+
 // Simple rate limiter
 const rateLimiter = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT = 20; // requests per window

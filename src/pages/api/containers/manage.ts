@@ -1,5 +1,7 @@
 import type { APIRoute } from 'astro';
 
+export const prerender = false;
+
 interface ContainerRequest {
   action: string;
   target: 'docker' | 'kubernetes' | 'k8s';

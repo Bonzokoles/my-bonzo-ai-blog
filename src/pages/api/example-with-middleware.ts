@@ -6,6 +6,8 @@
 import type { APIRoute } from 'astro';
 import { withFeatureMiddleware } from '@/middleware/api-middleware';
 
+export const prerender = false;
+
 /**
  * Example: AI Chat endpoint with middleware
  *

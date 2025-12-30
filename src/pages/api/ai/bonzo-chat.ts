@@ -1,5 +1,7 @@
 import type { APIRoute } from 'astro';
 
+export const prerender = false;
+
 const KNOWLEDGE_BASE = `
 MyBonzo AI Blog - Twój przewodnik po świecie sztucznej inteligencji
 

@@ -12,6 +12,8 @@
 
 import type { APIRoute } from 'astro';
 
+export const prerender = false;
+
 // ========== Types ==========
 interface ChatRequest {
   prompt: string;

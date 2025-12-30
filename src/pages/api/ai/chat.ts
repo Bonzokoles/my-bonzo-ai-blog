@@ -1,6 +1,8 @@
 import { CHAT_MODELS, DEFAULT_CHAT_MODEL } from '@/config/ai-chat-models';
 import type { APIRoute } from 'astro';
 
+export const prerender = false;
+
 // MCP Integration
 interface MCPTool {
   name: string;

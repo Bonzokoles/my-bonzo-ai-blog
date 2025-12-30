@@ -1,5 +1,7 @@
 import type { APIRoute } from 'astro';
 
+export const prerender = false;
+
 // Proxy API endpoint for blog operations
 // This endpoint forwards requests to our Cloudflare Worker
 
