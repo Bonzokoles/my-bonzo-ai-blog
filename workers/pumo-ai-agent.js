@@ -22,7 +22,7 @@ export default {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${env.DEEPSEEK_API_KEY}`
+          "Authorization": `Bearer ${env.DEEP_SEEK_API_KEY}`
         },
         body: JSON.stringify({
           model: "deepseek-reasoner", // R1 Model
