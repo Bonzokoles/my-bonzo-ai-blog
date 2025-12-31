@@ -179,6 +179,10 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     const temperature = Math.max(0, Math.min(body.temperature ?? 0.7, 1));
     const maxTokens = Math.min(body.max_tokens ?? 1024, 2048);
 
+    // Determine provider from model ID
+    const isOpenRouter = selectedModel.includes('/') && !selectedModel.startsWith('@cf/');
+    console.log('🔍 Provider:', isOpenRouter ? 'OpenRouter' : 'Cloudflare');
+
     // Rate limiting
     const clientId = clientAddress || 'unknown';
     if (!checkRateLimit(clientId)) {
@@ -251,7 +255,57 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     console.log('🔑 CF API Token:', !!cfApiToken);
     console.log('📄 Selected Model:', selectedModel);
 
-    if (env?.AI) {
+    // OpenRouter API handling
+    if (isOpenRouter) {
+      console.log('🌐 Using OpenRouter API...');
+      
+      const openRouterKey = 
+        (env?.OPENROUTER_API_KEY as string | undefined) ??
+        (typeof process !== 'undefined' ? process.env.OPENROUTER_API_KEY : undefined) ??
+        ((import.meta as any).env?.OPENROUTER_API_KEY as string | undefined);
+
+      if (!openRouterKey) {
+        return new Response(
+          JSON.stringify({
+            error: 'OpenRouter API key not configured. Please add OPENROUTER_API_KEY to Cloudflare secrets.'
+          }),
+          { status: 500, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const openRouterMessages = messages.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }));
+
+      const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${openRouterKey}`,
+          'HTTP-Referer': 'https://mybonzo.ai',
+          'X-Title': 'MyBonzo AI Chat'
+        },
+        body: JSON.stringify({
+          model: selectedModel,
+          messages: openRouterMessages,
+          temperature,
+          max_tokens: maxTokens
+        })
+      });
+
+      if (!resp.ok) {
+        const errText = await resp.text().catch(() => '');
+        console.error('❌ OpenRouter error:', errText);
+        throw new Error(`OpenRouter API error ${resp.status}: ${errText || 'unknown'}`);
+      }
+
+      const json = await resp.json() as any;
+      responseText = json.choices?.[0]?.message?.content || '';
+      console.log('✅ OpenRouter response received, length:', responseText.length);
+    }
+    // Cloudflare AI handling
+    else if (env?.AI) {
       console.log('✅ Using AI binding...');
       const aiResponse = (await env.AI.run(selectedModel, {
         messages,
