@@ -4,43 +4,45 @@
  * Refactored to use component-based architecture and SSR data loading
  * Reduced from 490 lines to ~150 lines (-69%)
  */
-import Layout from '@layouts/Layout.astro';
-import PageHeader from '@components/Astro/PageHeader.astro';
-import HeroSection from '@components/features/HeroSection.astro';
-import FeaturesSection from '@components/features/FeaturesSection.astro';
-import BlogSection from '@components/features/BlogSection.astro';
+import PageHeader from "@components/Astro/PageHeader.astro";
+import BlogSection from "@components/features/BlogSection.astro";
+import FeaturesSection from "@components/features/FeaturesSection.astro";
+import HeroSection from "@components/features/HeroSection.astro";
+import Layout from "@layouts/Layout.astro";
 
-import { Icon } from 'astro-icon/components';
-import { Image } from 'astro:assets';
-import Bing from '@assets/bing.jpg';
-import coverImage from '@assets/alk-cover-2.webp';
-import Card from '@components/Astro/Card.astro';
+import coverImage from "@assets/alk-cover-2.webp";
+import Bing from "@assets/bing.jpg";
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
 
 // Configuration imports
-import { NAVIGATION_SECTIONS } from '@/config/navigation';
 import {
+  HOMEPAGE_METADATA,
   MAIN_FEATURE_CARDS,
   SPEED_FEATURE_CARDS,
-  HOMEPAGE_METADATA
-} from '@/config/homepage';
-import { PRO_CONFIG } from '@/config/site';
+} from "@/config/homepage";
+import { NAVIGATION_SECTIONS } from "@/config/navigation";
+import { PRO_CONFIG } from "@/config/site";
 
 // SSR data loading
-import { getHomepageBlogPosts } from '@/lib/homepage-data';
+import { getHomepageBlogPosts } from "@/lib/homepage-data";
 
 // Import styles
-import '@/styles/pages/index.css';
+import "@/styles/pages/index.css";
 
 // Fetch blog posts at build time (SSR/SSG)
 const blogPosts = await getHomepageBlogPosts();
 
 // Theme options
 const options = {
-  'rounded-theme': true
+  "rounded-theme": true,
 };
 ---
 
-<Layout title={HOMEPAGE_METADATA.title} description={HOMEPAGE_METADATA.description}>
+<Layout
+  title={HOMEPAGE_METADATA.title}
+  description={HOMEPAGE_METADATA.description}
+>
   <PageHeader
     heading={HOMEPAGE_METADATA.heading}
     description={HOMEPAGE_METADATA.description}
@@ -59,46 +61,54 @@ const options = {
   />
 
   <!-- Meble Pumo Feature Video (WHITECAT Generated) -->
-  <section class="w-full py-16 bg-gradient-to-b from-theme-primary/5 to-transparent">
+  <section
+    class="w-full py-16 bg-gradient-to-b from-theme-primary/5 to-transparent"
+  >
     <div class="container mx-auto px-4">
       <div class="max-w-5xl mx-auto text-center mb-8">
         <h2 class="text-3xl lg:text-4xl font-bold text-theme-primary mb-4">
           🎬 WHITECAT v1.0 w Akcji: Meble Pumo AI Assistant
         </h2>
         <p class="text-lg text-theme-primary/80 max-w-3xl mx-auto">
-          Zobacz jak nasz system WHITECAT (3-layer MOA: DeepSeek + Claude + GPT-4) 
-          generuje inteligentne odpowiedzi dla 2500 produktów Meble Pumo w czasie rzeczywistym.
+          Zobacz jak nasz system WHITECAT (3-layer MOA: DeepSeek + Claude +
+          GPT-4) generuje inteligentne odpowiedzi dla 2500 produktów Meble Pumo
+          w czasie rzeczywistym.
         </p>
       </div>
-      
+
       <div class="max-w-4xl mx-auto">
-        <div class="relative aspect-video bg-gray-900 border border-theme-accent/30 shadow-2xl shadow-theme-accent/20">
+        <div
+          class="relative aspect-video bg-gray-900 border border-theme-accent/30 shadow-2xl shadow-theme-accent/20"
+        >
           <video
             id="pumoPresentationVideo"
             class="w-full h-full object-contain"
             controls
             preload="metadata"
           >
-            <source src="/Agent_video_Pippit_20251231072136.mp4" type="video/mp4" />
+            <source
+              src="https://pub-ec47f213b171463d9502f5562213f837.r2.dev/Agent_video_Pippit_20251231072136.mp4"
+              type="video/mp4"
+            />
             Twoja przeglądarka nie obsługuje odtwarzania wideo HTML5.
           </video>
         </div>
-        
+
         <div class="mt-6 flex flex-wrap justify-center gap-4">
-          <a 
-            href="/pumo-guide/" 
+          <a
+            href="/pumo-guide/"
             class="px-6 py-3 bg-theme-accent text-white font-semibold hover:opacity-90 transition-opacity border border-gray-500"
           >
             📚 Zobacz 63 Przewodniki Meble Pumo
           </a>
-          <a 
-            href="/blog/whitecat-case-study-roi-2025/" 
+          <a
+            href="/blog/whitecat-case-study-roi-2025/"
             class="px-6 py-3 bg-transparent text-theme-primary border border-theme-accent font-semibold hover:bg-theme-accent hover:text-white transition-colors"
           >
             📊 Case Study: ROI 54x
           </a>
-          <a 
-            href="/blog/rag-moa-ecommerce-2025/" 
+          <a
+            href="/blog/rag-moa-ecommerce-2025/"
             class="px-6 py-3 bg-transparent text-theme-primary border border-theme-accent font-semibold hover:bg-theme-accent hover:text-white transition-colors"
           >
             🔬 Jak Działa 3-Layer MOA
@@ -108,57 +118,105 @@ const options = {
         <!-- Additional Videos Grid -->
         <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="bg-theme-primary/5 p-4 border border-theme-accent/20">
-            <video class="w-full aspect-video object-cover mb-3" controls preload="none">
-              <source src="/Poprawka_i_gotowe_wideo.mp4" type="video/mp4" />
+            <video
+              class="w-full aspect-video object-cover mb-3"
+              controls
+              preload="none"
+            >
+              <source
+                src="https://pub-ec47f213b171463d9502f5562213f837.r2.dev/Poprawka_i_gotowe_wideo.mp4"
+                type="video/mp4"
+              />
             </video>
-            <p class="text-sm text-theme-primary/70 text-center">Demo: Poprawki AI w czasie rzeczywistym</p>
+            <p class="text-sm text-theme-primary/70 text-center">
+              Demo: Poprawki AI w czasie rzeczywistym
+            </p>
           </div>
-          
+
           <div class="bg-theme-primary/5 p-4 border border-theme-accent/20">
-            <video class="w-full aspect-video object-cover mb-3" controls preload="none">
-              <source src="/videonr333.mp4" type="video/mp4" />
+            <video
+              class="w-full aspect-video object-cover mb-3"
+              controls
+              preload="none"
+            >
+              <source
+                src="https://pub-ec47f213b171463d9502f5562213f837.r2.dev/videonr333.mp4"
+                type="video/mp4"
+              />
             </video>
-            <p class="text-sm text-theme-primary/70 text-center">Video #333: Advanced Features</p>
+            <p class="text-sm text-theme-primary/70 text-center">
+              Video #333: Advanced Features
+            </p>
           </div>
-          
+
           <div class="bg-theme-primary/5 p-4 border border-theme-accent/20">
-            <video class="w-full aspect-video object-cover mb-3" controls preload="none">
-              <source src="/202512310711.mp4" type="video/mp4" />
+            <video
+              class="w-full aspect-video object-cover mb-3"
+              controls
+              preload="none"
+            >
+              <source
+                src="https://pub-ec47f213b171463d9502f5562213f837.r2.dev/202512310711.mp4"
+                type="video/mp4"
+              />
             </video>
-            <p class="text-sm text-theme-primary/70 text-center">Quick Demo: System Overview</p>
+            <p class="text-sm text-theme-primary/70 text-center">
+              Quick Demo: System Overview
+            </p>
           </div>
         </div>
       </div>
 
       <!-- Stats Section -->
-      <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-        <div class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30">
+      <div
+        class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
+      >
+        <div
+          class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30"
+        >
           <div class="text-3xl font-bold text-theme-accent mb-2">2500</div>
-          <div class="text-sm text-theme-primary/70">Produktów Przetworzonych</div>
+          <div class="text-sm text-theme-primary/70">
+            Produktów Przetworzonych
+          </div>
         </div>
-        <div class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30">
+        <div
+          class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30"
+        >
           <div class="text-3xl font-bold text-theme-accent mb-2">24h</div>
-          <div class="text-sm text-theme-primary/70">Czas Generacji (vs 180h)</div>
+          <div class="text-sm text-theme-primary/70">
+            Czas Generacji (vs 180h)
+          </div>
         </div>
-        <div class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30">
+        <div
+          class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30"
+        >
           <div class="text-3xl font-bold text-theme-accent mb-2">68%</div>
           <div class="text-sm text-theme-primary/70">AI Citation Rate</div>
         </div>
-        <div class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30">
+        <div
+          class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30"
+        >
           <div class="text-3xl font-bold text-theme-accent mb-2">54x</div>
-          <div class="text-sm text-theme-primary/70">ROI (500 vs 27,800 PLN)</div>
+          <div class="text-sm text-theme-primary/70">
+            ROI (500 vs 27,800 PLN)
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Main Feature Cards -->
-  <FeaturesSection cards={MAIN_FEATURE_CARDS} className="mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-4 mt-14 mb-16 lg:mt-0 lg:justify-between lg:flex-nowrap lg:p-5 build-in" />
+  <FeaturesSection
+    cards={MAIN_FEATURE_CARDS}
+    className="mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-4 mt-14 mb-16 lg:mt-0 lg:justify-between lg:flex-nowrap lg:p-5 build-in"
+  />
 
   <!-- AI dla Wszystkich Section -->
   <section class="flex flex-col items-center justify-center mt-6 mb-48 fade-in">
     <h2 class="graffiti-footer">AI DLA WSZYSTKICH</h2>
-    <p class="text-xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-2xl lg:leading-relaxed">
+    <p
+      class="text-xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-2xl lg:leading-relaxed"
+    >
       Sztuczna inteligencja nie musi być skomplikowana. MyBonzo AI Blog łączy
       zaawansowane technologie z prostotą użytkowania, bo przyszłość powinna być
       dostępna dla każdego, niezależnie od poziomu technicznego.
@@ -166,23 +224,38 @@ const options = {
   </section>
 
   <!-- Speed Feature Cards -->
-  <FeaturesSection cards={SPEED_FEATURE_CARDS} className="mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-4 mt-8 mb-16 lg:justify-between lg:flex-nowrap lg:p-5 build-in" />
+  <FeaturesSection
+    cards={SPEED_FEATURE_CARDS}
+    className="mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-4 mt-8 mb-16 lg:justify-between lg:flex-nowrap lg:p-5 build-in"
+  />
 
   <!-- Blog Posts Section (SSR) -->
   <BlogSection posts={blogPosts} />
 
   <!-- Stworzone dla Ciebie Section -->
   <section class="flex flex-col items-center justify-center mt-16 mb-0 fade-in">
-    <h2 class:list={["bg-theme-accent text-theme-secondary p-5 text-center mb-8 lg:w-auto", options]}>
+    <h2
+      class:list={[
+        "bg-theme-accent text-theme-secondary p-5 text-center mb-8 lg:w-auto",
+        options,
+      ]}
+    >
       Stworzone dla Ciebie
     </h2>
-    <p class="text-2xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-2xl lg:leading-relaxed tracking-wide mt-6 mb-48">
+    <p
+      class="text-2xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-2xl lg:leading-relaxed tracking-wide mt-6 mb-48"
+    >
       Niezależnie od tego czy jesteś początkujący czy ekspertem, MyBonzo AI Blog
       dostarcza narzędzia i wiedzę na odpowiednim poziomie. Rozwijaj swoje
       umiejętności AI w tempie które Ci odpowiada.
     </p>
     <a href="/blog" class="no-underline group group-hover:cursor-pointer">
-      <div class:list={["text-xl tracking-wide bg-theme-primary text-theme-primary text-center shadow-sm shadow-theme-primary border-2 mb-4 group-hover:bg-theme-secondary group-hover:text-theme-accent group-hover:shadow-none transition-all duration-300 ease-in-out lg:text-2xl lg:tracking-wider", options]}>
+      <div
+        class:list={[
+          "text-xl tracking-wide bg-theme-primary text-theme-primary text-center shadow-sm shadow-theme-primary border-2 mb-4 group-hover:bg-theme-secondary group-hover:text-theme-accent group-hover:shadow-none transition-all duration-300 ease-in-out lg:text-2xl lg:tracking-wider",
+          options,
+        ]}
+      >
         <div class="mt-0">
           <Icon name="ri:article-line" height="150" width="300" class="mb-5" />
           <p class="p-4 group-hover:text-theme-accent">Rozpocznij Czytanie</p>
@@ -210,7 +283,10 @@ const options = {
     <div class="container mx-auto px-4">
       <p class="text-lg">
         <strong>{PRO_CONFIG.ctaText}</strong>
-        <a href={PRO_CONFIG.ctaUrl} style="color:#2a6de9; text-decoration:underline; font-weight: 600;">
+        <a
+          href={PRO_CONFIG.ctaUrl}
+          style="color:#2a6de9; text-decoration:underline; font-weight: 600;"
+        >
           {PRO_CONFIG.ctaLinkText}
         </a>
       </p>
