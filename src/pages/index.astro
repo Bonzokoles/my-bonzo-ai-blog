@@ -58,6 +58,100 @@ const options = {
     sections={NAVIGATION_SECTIONS}
   />
 
+  <!-- Meble Pumo Feature Video (WHITECAT Generated) -->
+  <section class="w-full py-16 bg-gradient-to-b from-theme-primary/5 to-transparent">
+    <div class="container mx-auto px-4">
+      <div class="max-w-5xl mx-auto text-center mb-8">
+        <h2 class="text-3xl lg:text-4xl font-bold text-theme-primary mb-4">
+          🎬 WHITECAT v1.0 w Akcji: Meble Pumo AI Assistant
+        </h2>
+        <p class="text-lg text-theme-primary/80 max-w-3xl mx-auto">
+          Zobacz jak nasz system WHITECAT (3-layer MOA: DeepSeek + Claude + GPT-4) 
+          generuje inteligentne odpowiedzi dla 2500 produktów Meble Pumo w czasie rzeczywistym.
+        </p>
+      </div>
+      
+      <div class="max-w-4xl mx-auto">
+        <div class="relative aspect-video bg-gray-900 border border-theme-accent/30 shadow-2xl shadow-theme-accent/20">
+          <video
+            id="pumoPresentationVideo"
+            class="w-full h-full object-contain"
+            controls
+            preload="metadata"
+          >
+            <source src="/Agent_video_Pippit_20251231072136.mp4" type="video/mp4" />
+            Twoja przeglądarka nie obsługuje odtwarzania wideo HTML5.
+          </video>
+        </div>
+        
+        <div class="mt-6 flex flex-wrap justify-center gap-4">
+          <a 
+            href="/pumo-guide/" 
+            class="px-6 py-3 bg-theme-accent text-white font-semibold hover:opacity-90 transition-opacity border border-gray-500"
+          >
+            📚 Zobacz 63 Przewodniki Meble Pumo
+          </a>
+          <a 
+            href="/blog/whitecat-case-study-roi-2025/" 
+            class="px-6 py-3 bg-transparent text-theme-primary border border-theme-accent font-semibold hover:bg-theme-accent hover:text-white transition-colors"
+          >
+            📊 Case Study: ROI 54x
+          </a>
+          <a 
+            href="/blog/rag-moa-ecommerce-2025/" 
+            class="px-6 py-3 bg-transparent text-theme-primary border border-theme-accent font-semibold hover:bg-theme-accent hover:text-white transition-colors"
+          >
+            🔬 Jak Działa 3-Layer MOA
+          </a>
+        </div>
+
+        <!-- Additional Videos Grid -->
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-theme-primary/5 p-4 border border-theme-accent/20">
+            <video class="w-full aspect-video object-cover mb-3" controls preload="none">
+              <source src="/Poprawka_i_gotowe_wideo.mp4" type="video/mp4" />
+            </video>
+            <p class="text-sm text-theme-primary/70 text-center">Demo: Poprawki AI w czasie rzeczywistym</p>
+          </div>
+          
+          <div class="bg-theme-primary/5 p-4 border border-theme-accent/20">
+            <video class="w-full aspect-video object-cover mb-3" controls preload="none">
+              <source src="/videonr333.mp4" type="video/mp4" />
+            </video>
+            <p class="text-sm text-theme-primary/70 text-center">Video #333: Advanced Features</p>
+          </div>
+          
+          <div class="bg-theme-primary/5 p-4 border border-theme-accent/20">
+            <video class="w-full aspect-video object-cover mb-3" controls preload="none">
+              <source src="/202512310711.mp4" type="video/mp4" />
+            </video>
+            <p class="text-sm text-theme-primary/70 text-center">Quick Demo: System Overview</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+        <div class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30">
+          <div class="text-3xl font-bold text-theme-accent mb-2">2500</div>
+          <div class="text-sm text-theme-primary/70">Produktów Przetworzonych</div>
+        </div>
+        <div class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30">
+          <div class="text-3xl font-bold text-theme-accent mb-2">24h</div>
+          <div class="text-sm text-theme-primary/70">Czas Generacji (vs 180h)</div>
+        </div>
+        <div class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30">
+          <div class="text-3xl font-bold text-theme-accent mb-2">68%</div>
+          <div class="text-sm text-theme-primary/70">AI Citation Rate</div>
+        </div>
+        <div class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30">
+          <div class="text-3xl font-bold text-theme-accent mb-2">54x</div>
+          <div class="text-sm text-theme-primary/70">ROI (500 vs 27,800 PLN)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Main Feature Cards -->
   <FeaturesSection cards={MAIN_FEATURE_CARDS} className="mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-4 mt-14 mb-16 lg:mt-0 lg:justify-between lg:flex-nowrap lg:p-5 build-in" />
 
