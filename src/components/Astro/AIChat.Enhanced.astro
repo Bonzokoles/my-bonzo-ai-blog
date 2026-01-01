@@ -804,11 +804,27 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     setProcessing(true);
     addTypingIndicator();
 
-    const useStreaming = config.enableStreaming && (streamingEnabledCheckbox && 'checked' in streamingEnabledCheckbox && streamingEnabledCheckbox.checked);
+    // Check if selected model is OpenRouter (contains '/' but not '@cf/')
+    const selectedModelId = (modelSelect && 'value' in modelSelect) ? String(modelSelect.value) : '@cf/google/gemma-3-12b-it';
+    const isOpenRouterModel = selectedModelId.includes('/') && !selectedModelId.startsWith('@cf/');
+    
+    // Disable streaming for OpenRouter models (not supported yet)
+    const streamingAvailable = !isOpenRouterModel;
+    const useStreaming = streamingAvailable && config.enableStreaming && (streamingEnabledCheckbox && 'checked' in streamingEnabledCheckbox && streamingEnabledCheckbox.checked);
+    
+    console.log('🔧 [AI Chat] Model:', selectedModelId);
+    console.log('🔧 [AI Chat] Is OpenRouter:', isOpenRouterModel);
+    console.log('🔧 [AI Chat] Streaming available:', streamingAvailable);
     console.log('🔧 [AI Chat] Streaming mode:', useStreaming);
 
     try {
       console.log('🎬 [AI Chat] Starting request...');
+      
+      // Notify user if streaming was disabled for OpenRouter
+      if (isOpenRouterModel && streamingEnabledCheckbox && 'checked' in streamingEnabledCheckbox && streamingEnabledCheckbox.checked) {
+        updateStatus('Streaming wyłączony dla modeli OpenRouter - używam trybu normalnego');
+      }
+      
       if (useStreaming) {
         console.log('📡 [AI Chat] Using streaming response');
         await handleStreamingResponse(prompt);

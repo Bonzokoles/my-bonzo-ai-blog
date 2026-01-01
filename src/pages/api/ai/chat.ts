@@ -182,6 +182,7 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     // Determine provider from model ID
     const isOpenRouter = selectedModel.includes('/') && !selectedModel.startsWith('@cf/');
     console.log('🔍 Provider:', isOpenRouter ? 'OpenRouter' : 'Cloudflare');
+    console.log('🔍 Model ID:', selectedModel);
 
     // Rate limiting
     const clientId = clientAddress || 'unknown';
@@ -258,13 +259,18 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     // OpenRouter API handling
     if (isOpenRouter) {
       console.log('🌐 Using OpenRouter API...');
+      console.log('🔑 Looking for OPENROUTER_API_KEY...');
 
       const openRouterKey =
         (env?.OPENROUTER_API_KEY as string | undefined) ??
         (typeof process !== 'undefined' ? process.env.OPENROUTER_API_KEY : undefined) ??
         ((import.meta as any).env?.OPENROUTER_API_KEY as string | undefined);
 
+      console.log('🔑 OpenRouter key found:', !!openRouterKey);
+      console.log('🔑 Key length:', openRouterKey?.length || 0);
+
       if (!openRouterKey) {
+        console.error('❌ OPENROUTER_API_KEY not found in env');
         return new Response(
           JSON.stringify({
             error: 'OpenRouter API key not configured. Please add OPENROUTER_API_KEY to Cloudflare secrets.'
@@ -277,6 +283,13 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
         role: msg.role,
         content: msg.content
       }));
+
+      console.log('📤 Sending to OpenRouter:', {
+        model: selectedModel,
+        messageCount: openRouterMessages.length,
+        temperature,
+        max_tokens: maxTokens
+      });
 
       const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
