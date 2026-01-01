@@ -27,7 +27,7 @@ const MCP_TOOLS: MCPTool[] = [
     name: "sequential_thinking",
     description: "Break down complex problems into sequential steps",
     inputSchema: {
-      type: "object", 
+      type: "object",
       properties: {
         problem: { type: "string", description: "Complex problem to analyze" }
       },
@@ -73,7 +73,7 @@ async function callMCPTool(toolName: string, args: any): Promise<string> {
       case 'search_context7_docs':
         // Simulate Context7 documentation search
         return `Znaleziono dokumentację dla: ${args.query}. MCP Context7 jest aktywny i gotowy do użycia.`;
-      
+
       case 'sequential_thinking':
         // Simulate sequential thinking process
         return `Analiza problemu: ${args.problem}
@@ -82,7 +82,7 @@ async function callMCPTool(toolName: string, args: any): Promise<string> {
 3. Sekwencyjne rozwiązanie
 4. Integracja wyników
 MCP Sequential Thinking Server jest aktywny.`;
-      
+
       default:
         return `Nieznane narzędzie MCP: ${toolName}`;
     }
@@ -258,8 +258,8 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     // OpenRouter API handling
     if (isOpenRouter) {
       console.log('🌐 Using OpenRouter API...');
-      
-      const openRouterKey = 
+
+      const openRouterKey =
         (env?.OPENROUTER_API_KEY as string | undefined) ??
         (typeof process !== 'undefined' ? process.env.OPENROUTER_API_KEY : undefined) ??
         ((import.meta as any).env?.OPENROUTER_API_KEY as string | undefined);
@@ -317,8 +317,8 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
         typeof aiResponse === 'string'
           ? aiResponse
           : typeof (aiResponse as any)?.response === 'string'
-          ? (aiResponse as any).response
-          : '';
+            ? (aiResponse as any).response
+            : '';
       console.log('🎯 AI Response received, length:', responseText.length);
     } else if (cfAccountId && cfApiToken) {
       console.log('🌐 Using REST API fallback...');
@@ -400,7 +400,7 @@ export const GET: APIRoute = async ({ url, locals }) => {
   const env = (runtime as any)?.env as any;
   const prompt = url.searchParams.get('prompt');
   const mcpStatus = url.searchParams.get('mcp-status');
-  
+
   // MCP Status check
   if (mcpStatus === 'true') {
     return new Response(
@@ -419,11 +419,11 @@ export const GET: APIRoute = async ({ url, locals }) => {
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   }
-  
+
   // Health check endpoint - return status if no prompt
   if (!prompt) {
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         status: 'healthy',
         timestamp: new Date().toISOString(),
         mcp_enabled: true
