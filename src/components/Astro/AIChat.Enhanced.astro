@@ -200,18 +200,14 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
   </div>
 </div>
 
-<script type="application/json" id="model-options-data">
-  {JSON.stringify(modelOptions)}
-</script>
+<script type="application/json" id="model-options-data" set:html={JSON.stringify(modelOptions)}></script>
 
-<script type="application/json" id="chat-config">
-  {JSON.stringify({
-    enablePersistence,
-    enableHistorySidebar,
-    enableStreaming,
-    maxLength
-  })}
-</script>
+<script type="application/json" id="chat-config" set:html={JSON.stringify({
+  enablePersistence,
+  enableHistorySidebar,
+  enableStreaming,
+  maxLength
+})}></script>
 
 <script>
   // ========== Enhanced AI Chat JavaScript ==========
@@ -252,14 +248,35 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
   const streamingEnabledCheckbox = document.getElementById('streaming-enabled');
 
   // ========== Configuration ==========
-  const config = configElement ? JSON.parse(configElement.textContent || '{}') : {
+  let config = {
     enablePersistence: true,
     enableHistorySidebar: true,
     enableStreaming: true,
     maxLength: 800
   };
+  
+  try {
+    if (configElement?.textContent) {
+      const parsed = JSON.parse(configElement.textContent);
+      console.log('✅ [Config] Parsed successfully:', parsed);
+      config = parsed;
+    }
+  } catch (err) {
+    console.error('❌ [Config] JSON parse error:', err);
+    console.error('❌ [Config] Raw content:', configElement?.textContent);
+  }
 
-  const modelOptions = modelDataElement ? JSON.parse(modelDataElement.textContent || '[]') : [];
+  let modelOptions = [];
+  try {
+    if (modelDataElement?.textContent) {
+      const parsed = JSON.parse(modelDataElement.textContent);
+      console.log('✅ [Models] Parsed successfully, count:', parsed.length);
+      modelOptions = parsed;
+    }
+  } catch (err) {
+    console.error('❌ [Models] JSON parse error:', err);
+    console.error('❌ [Models] Raw content:', modelDataElement?.textContent);
+  }
 
   // ========== State Management ==========
   let currentConversation = null;
