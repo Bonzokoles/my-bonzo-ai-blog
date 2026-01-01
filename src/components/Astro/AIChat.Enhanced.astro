@@ -758,8 +758,11 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
   // ========== Message Handling ==========
   async function handleSubmit(event) {
     console.log('🚀 [AI Chat] Form submit triggered');
+    console.log('🔍 [AI Chat] Event type:', event.type, 'Target:', event.target);
     event.preventDefault();
     event.stopPropagation();
+    
+    console.log('🔍 [AI Chat] State check - isProcessing:', isProcessing, 'input:', !!input, 'conversation:', !!currentConversation);
     
     if (isProcessing || !input || !currentConversation) {
       console.log('❌ [AI Chat] Submit blocked - processing:', isProcessing, 'input:', !!input, 'conversation:', !!currentConversation);
@@ -785,18 +788,27 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     addTypingIndicator();
 
     const useStreaming = config.enableStreaming && (streamingEnabledCheckbox && 'checked' in streamingEnabledCheckbox && streamingEnabledCheckbox.checked);
+    console.log('🔧 [AI Chat] Streaming mode:', useStreaming);
 
     try {
+      console.log('🎬 [AI Chat] Starting request...');
       if (useStreaming) {
+        console.log('📡 [AI Chat] Using streaming response');
         await handleStreamingResponse(prompt);
       } else {
+        console.log('📡 [AI Chat] Using normal response');
         await handleNormalResponse(prompt);
       }
 
+      console.log('✅ [AI Chat] Request completed successfully');
       updateConversationTitle();
       saveConversations();
     } catch (error) {
-      console.error('AI chat error:', error);
+      console.error('💥 [AI Chat] Error caught:', error);
+      console.error('💥 [AI Chat] Error name:', error.name);
+      console.error('💥 [AI Chat] Error message:', error.message);
+      console.error('💥 [AI Chat] Error stack:', error.stack);
+      
       const errorMessage = {
         role: 'ai',
         content: 'Nie udało się uzyskać odpowiedzi z serwera AI. Spróbuj ponownie za chwilę albo zmień model.',
@@ -807,10 +819,12 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
       currentConversation.messages.push(errorMessage);
       updateStatus('Wystąpił błąd podczas komunikacji z AI.');
     } finally {
+      console.log('🧹 [AI Chat] Finally block - cleaning up');
       removeTypingIndicator();
       setProcessing(false);
       if (input && 'value' in input) input.value = '';
       updateCharCount();
+      console.log('✅ [AI Chat] Cleanup complete');
     }
   }
 
@@ -1220,13 +1234,18 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
   }
 
   function setProcessing(state) {
+    console.log('⚙️ [setProcessing] state:', state);
     isProcessing = state;
     if (sendButton && 'disabled' in sendButton) {
       sendButton.disabled = state;
       sendButton.textContent = state ? 'Czekaj...' : 'Wyślij';
+      console.log('🔘 [setProcessing] Button state:', state ? 'disabled' : 'enabled');
     }
     if (input && 'disabled' in input) input.disabled = state;
-    if (loading && 'hidden' in loading) loading.hidden = !state;
+    if (loading && 'hidden' in loading) {
+      loading.hidden = !state;
+      console.log('🔄 [setProcessing] Loading spinner:', state ? 'visible' : 'hidden');
+    }
   }
 
   function updateStatus(message) {
