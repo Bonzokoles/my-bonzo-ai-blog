@@ -829,8 +829,15 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     const provider = providerSelect?.value || 'cloudflare';
     console.log('🎯 [handleNormalResponse] Provider:', provider, 'Select element:', !!providerSelect);
 
-    const endpoint = provider === 'openai' ? '/api/ai/chat-openai' : '/api/ai/chat';
-    console.log(`🌐 [AI Chat] Making API request to ${endpoint} (provider: ${provider})`);
+    // Determine endpoint based on model - OpenRouter models go to /api/ai/chat
+    const selectedModelId = (modelSelect && 'value' in modelSelect) ? String(modelSelect.value) : '@cf/google/gemma-3-12b-it';
+    const isOpenRouterModel = selectedModelId.includes('/') && !selectedModelId.startsWith('@cf/');
+    
+    const endpoint = provider === 'openai' 
+      ? '/api/ai/chat-openai' 
+      : '/api/ai/chat'; // Both Cloudflare and OpenRouter use this endpoint
+    
+    console.log(`🌐 [AI Chat] Making API request to ${endpoint} (provider: ${provider}, model: ${selectedModelId}, isOpenRouter: ${isOpenRouterModel})`);
 
     const requestBody = provider === 'openai'
       ? {
@@ -852,51 +859,65 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
 
     console.log('📦 [AI Chat] Request body:', requestBody);
 
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestBody)
-    });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
 
-    console.log('📡 [AI Chat] Response status:', response.status, response.statusText);
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+        signal: controller.signal
+      });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ [AI Chat] Response error:', errorText);
-      throw new Error(`Serwer zwrócił kod ${response.status}: ${errorText}`);
-    }
+      clearTimeout(timeoutId);
+      console.log('📡 [AI Chat] Response status:', response.status, response.statusText);
 
-    const data = await response.json();
-    console.log('📥 [AI Chat] Response data:', data);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ [AI Chat] Response error:', errorText);
+        throw new Error(`Serwer zwrócił kod ${response.status}: ${errorText}`);
+      }
 
-    let aiContent = '';
-    let isCached = false;
+      const data = await response.json();
+      console.log('📥 [AI Chat] Response data:', data);
 
-    if (provider === 'openai' && data?.choices?.[0]?.message?.content) {
-      aiContent = data.choices[0].message.content;
-      isCached = false;
-      console.log('✅ [AI Chat] OpenAI response extracted');
-    } else if (data?.response) {
-      aiContent = data.response;
-      isCached = Boolean(data.cached);
-      console.log('✅ [AI Chat] Cloudflare response extracted', { cached: isCached });
-    } else {
-      console.error('❌ [AI Chat] Unexpected response format:', data);
-    }
+      let aiContent = '';
+      let isCached = false;
 
-    if (aiContent) {
-      console.log('✅ [AI Chat] AI content received, length:', aiContent.length);
-      const aiMessage = {
-        role: 'ai',
-        content: aiContent,
-        cached: isCached,
-        timestamp: Date.now()
-      };
-      addMessage(aiMessage);
-      currentConversation.messages.push(aiMessage);
-      history.push({ role: 'assistant', content: aiContent, timestamp: aiMessage.timestamp });
-    } else {
-      throw new Error('Pusta odpowiedź z API.');
+      if (provider === 'openai' && data?.choices?.[0]?.message?.content) {
+        aiContent = data.choices[0].message.content;
+        isCached = false;
+        console.log('✅ [AI Chat] OpenAI response extracted');
+      } else if (data?.response) {
+        aiContent = data.response;
+        isCached = Boolean(data.cached);
+        console.log('✅ [AI Chat] Cloudflare response extracted', { cached: isCached });
+      } else {
+        console.error('❌ [AI Chat] Unexpected response format:', data);
+      }
+
+      if (aiContent) {
+        console.log('✅ [AI Chat] AI content received, length:', aiContent.length);
+        const aiMessage = {
+          role: 'ai',
+          content: aiContent,
+          cached: isCached,
+          timestamp: Date.now()
+        };
+        addMessage(aiMessage);
+        currentConversation.messages.push(aiMessage);
+        history.push({ role: 'assistant', content: aiContent, timestamp: aiMessage.timestamp });
+      } else {
+        throw new Error('Pusta odpowiedź z API.');
+      }
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      if (fetchError.name === 'AbortError') {
+        console.error('❌ [AI Chat] Request timeout after 60s');
+        throw new Error('Zapytanie przekroczyło limit czasu (60s). Spróbuj ponownie.');
+      }
+      throw fetchError;
     }
   }
 
