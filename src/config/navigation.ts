@@ -41,9 +41,9 @@ export const NAVIGATION_SECTIONS: NavigationSection[] = [
     description: 'Kultura i technologia razem'
   },
   {
-    href: '/ASYSTENT_AI',
-    label: 'Asystent AI',
-    description: 'Twój osobisty asystent AI'
+    href: '/system/ai-chat',
+    label: 'AI Chat',
+    description: 'Rozmawiaj z asystentem AI MyBonzo'
   },
   {
     href: '/GENERATOR_GRAFIKI',

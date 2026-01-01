@@ -126,7 +126,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
     </div>
 
     <!-- Chat Form -->
-    <form id="chat-form" class="ai-chat-form">
+    <form id="chat-form" class="ai-chat-form" onsubmit="return false;">
       <div class="ai-chat-input">
         <textarea
           id="chat-input"
@@ -215,6 +215,7 @@ const resolvedDefaultMeta = modelOptions.find((model) => model.id === resolvedDe
 
 <script>
   // ========== Enhanced AI Chat JavaScript ==========
+  console.log('🎬 [AI Chat] Script loaded');
 
   // ========== DOM Element References ==========
   const modelDataElement = document.getElementById('model-options-data');
