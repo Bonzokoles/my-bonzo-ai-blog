@@ -1,0 +1,219 @@
+---
+export const prerender = true;
+import Layout from "../layouts/Layout.astro";
+
+const title = "RAG Chat - MyBonzo AI Assistant";
+const description =
+    "AI-powered chatbot z dostępem do bazy wiedzy Pumo Guide. Pytaj o meble, porównuj, szukaj najlepszych opcji.";
+---
+
+<Layout {title} {description}>
+    <div class="max-w-4xl mx-auto px-4 py-12">
+        <h1
+            class="text-5xl font-black text-center mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
+        >
+            🛡️ MyBonzo RAG Chatbot
+        </h1>
+        <p class="text-center text-gray-400 mb-12 text-lg">
+            AI asystent z dostępem do 65+ przewodników Meble Pumo
+        </p>
+
+        <!-- Chat Input -->
+        <div
+            class="bg-white/5 backdrop-blur-xl p-8 rounded-3xl border border-white/20 mb-8 shadow-2xl"
+        >
+            <div class="flex flex-col gap-4">
+                <input
+                    id="question"
+                    type="text"
+                    placeholder="Jakie sofy narożnikowe polecasz? Porównaj biurka gamingowe..."
+                    class="w-full bg-white/10 border border-white/30 rounded-2xl px-6 py-4 text-xl text-white placeholder-white/50 focus:outline-none focus:border-blue-400 focus:bg-white/15 transition-all"
+                    onkeydown="if(event.key==='Enter') askRAG()"
+                />
+                <button
+                    onclick="askRAG()"
+                    class="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl font-bold text-white hover:from-emerald-600 hover:shadow-2xl transition-all transform hover:scale-105"
+                >
+                    🚀 Pytaj AI
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="loading" class="hidden text-center mb-8">
+            <div
+                class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"
+            >
+            </div>
+            <p class="mt-4 text-gray-400">AI analizuje bazę wiedzy...</p>
+        </div>
+
+        <!-- Answer -->
+        <div
+            id="answer"
+            class="hidden bg-gradient-to-br from-blue-900/30 to-purple-900/30 backdrop-blur-xl p-8 rounded-3xl border border-blue-500/30 mb-8 shadow-2xl"
+        >
+            <h3 class="text-2xl font-bold mb-4 text-blue-400">
+                💡 Odpowiedź AI:
+            </h3>
+            <div
+                id="answer-text"
+                class="prose prose-invert prose-lg max-w-none"
+            >
+            </div>
+        </div>
+
+        <!-- Sources -->
+        <div
+            id="sources"
+            class="hidden bg-white/5 backdrop-blur-xl p-8 rounded-3xl border border-white/20 shadow-2xl"
+        >
+            <h3 class="text-2xl font-bold mb-6 text-purple-400">
+                📚 Źródła wiedzy:
+            </h3>
+            <div id="sources-list" class="space-y-3"></div>
+        </div>
+
+        <!-- Example Questions -->
+        <div
+            class="mt-12 bg-white/5 backdrop-blur-xl p-6 rounded-2xl border border-white/10"
+        >
+            <h4 class="text-lg font-bold mb-4 text-gray-300">
+                💡 Przykładowe pytania:
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button
+                    onclick="setQuestion('Jakie sofy narożnikowe polecasz do małego mieszkania?')"
+                    class="text-left p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors text-sm text-gray-300"
+                >
+                    Sofy narożnikowe dla małego mieszkania
+                </button>
+                <button
+                    onclick="setQuestion('Porównaj biurka gamingowe z regulacją wysokości')"
+                    class="text-left p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors text-sm text-gray-300"
+                >
+                    Biurka gamingowe z regulacją wysokości
+                </button>
+                <button
+                    onclick="setQuestion('Jakie fotele do biurka są najwygodniejsze?')"
+                    class="text-left p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors text-sm text-gray-300"
+                >
+                    Najwygodniejsze fotele do biurka
+                </button>
+                <button
+                    onclick="setQuestion('Materiały używane w meblach Pumo - jakość vs cena')"
+                    class="text-left p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors text-sm text-gray-300"
+                >
+                    Materiały w meblach Pumo
+                </button>
+            </div>
+        </div>
+
+        <!-- Info Box -->
+        <div
+            class="mt-8 p-6 bg-yellow-900/20 border border-yellow-600/30 rounded-2xl"
+        >
+            <p class="text-sm text-yellow-200">
+                <strong>ℹ️ Status:</strong> RAG chatbot w trybie DEVELOPMENT. Worker
+                Michael endpoint: <code class="bg-black/30 px-2 py-1 rounded"
+                    >https://jimbo-angels-worker.stolarnia-ams.workers.dev/orchestrate</code
+                >
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const WORKER_URL =
+            "https://jimbo-angels-worker.stolarnia-ams.workers.dev/orchestrate";
+
+        function setQuestion(q) {
+            document.getElementById("question").value = q;
+        }
+
+        async function askRAG() {
+            const question = document.getElementById("question").value.trim();
+            if (!question) {
+                alert("Wpisz pytanie!");
+                return;
+            }
+
+            // Show loading
+            document.getElementById("loading").classList.remove("hidden");
+            document.getElementById("answer").classList.add("hidden");
+            document.getElementById("sources").classList.add("hidden");
+
+            try {
+                const response = await fetch(WORKER_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        query: question,
+                        namespace: "pumo-blog",
+                        topK: 5,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(
+                        `HTTP ${response.status}: ${response.statusText}`,
+                    );
+                }
+
+                const data = await response.json();
+
+                // Hide loading
+                document.getElementById("loading").classList.add("hidden");
+
+                // Show answer
+                const answerDiv = document.getElementById("answer");
+                const answerText = document.getElementById("answer-text");
+                answerText.innerHTML = data.answer || "Brak odpowiedzi od AI.";
+                answerDiv.classList.remove("hidden");
+
+                // Show sources
+                if (data.sources && data.sources.length > 0) {
+                    const sourcesDiv = document.getElementById("sources");
+                    const sourcesList = document.getElementById("sources-list");
+
+                    const sourcesHtml = data.sources
+                        .map(
+                            (source, idx) => `
+            <div class="p-4 bg-gradient-to-r from-purple-900/40 to-blue-900/40 rounded-xl border border-purple-500/20 hover:border-purple-400/40 transition-all">
+              <div class="flex items-start justify-between mb-2">
+                <span class="text-sm font-bold text-purple-300">Źródło ${idx + 1}</span>
+                <span class="text-xs bg-blue-500/20 px-3 py-1 rounded-full text-blue-300">
+                  Score: ${(source.score || 0).toFixed(3)}
+                </span>
+              </div>
+              <p class="text-sm text-gray-300 mb-2">${source.text?.substring(0, 200) || "Brak tekstu"}...</p>
+              ${source.metadata?.url ? `<a href="${source.metadata.url}" target="_blank" class="text-blue-400 hover:text-blue-300 text-sm underline">→ Czytaj więcej</a>` : ""}
+            </div>
+          `,
+                        )
+                        .join("");
+
+                    sourcesList.innerHTML = sourcesHtml;
+                    sourcesDiv.classList.remove("hidden");
+                }
+            } catch (error) {
+                document.getElementById("loading").classList.add("hidden");
+
+                const answerDiv = document.getElementById("answer");
+                const answerText = document.getElementById("answer-text");
+                answerText.innerHTML = `
+          <div class="bg-red-900/30 border border-red-500/50 rounded-xl p-6">
+            <p class="font-bold text-red-400 mb-2">❌ Błąd połączenia z RAG Worker:</p>
+            <pre class="text-sm text-red-300">${error.message}</pre>
+            <p class="mt-4 text-sm text-gray-400">
+              Worker Michael może być niedostępny. Sprawdź: 
+              <a href="https://jimbo-angels-worker.stolarnia-ams.workers.dev/health" target="_blank" class="text-blue-400 underline">Health Check</a>
+            </p>
+          </div>
+        `;
+                answerDiv.classList.remove("hidden");
+            }
+        }
+    </script>
+</Layout>
