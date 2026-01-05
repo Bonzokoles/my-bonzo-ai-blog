@@ -137,12 +137,16 @@ const description =
                 return;
             }
 
+            console.log("[RAG] Starting request with question:", question);
+
             // Show loading
             document.getElementById("loading").classList.remove("hidden");
             document.getElementById("answer").classList.add("hidden");
             document.getElementById("sources").classList.add("hidden");
 
             try {
+                console.log("[RAG] Fetching from Worker:", WORKER_URL);
+
                 const response = await fetch(WORKER_URL, {
                     method: "POST",
                     headers: {
@@ -155,6 +159,8 @@ const description =
                     }),
                 });
 
+                console.log("[RAG] Response status:", response.status);
+
                 if (!response.ok) {
                     throw new Error(
                         `HTTP ${response.status}: ${response.statusText}`,
@@ -162,6 +168,7 @@ const description =
                 }
 
                 const data = await response.json();
+                console.log("[RAG] Response data:", data);
 
                 // Hide loading
                 document.getElementById("loading").classList.add("hidden");
@@ -198,6 +205,8 @@ const description =
                     sourcesDiv.classList.remove("hidden");
                 }
             } catch (error) {
+                console.error("[RAG] Error:", error);
+
                 document.getElementById("loading").classList.add("hidden");
 
                 const answerDiv = document.getElementById("answer");
