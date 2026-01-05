@@ -3,7 +3,7 @@
  * Central configuration for all application features
  */
 
-import type { FeatureFlag, Environment } from '@/Types/features';
+import type { Environment, FeatureFlag } from '@/Types/features';
 
 /**
  * Get current environment
@@ -96,6 +96,26 @@ export const FEATURES: FeatureFlag[] = [
     metadata: {
       category: 'ai',
       provider: 'google'
+    }
+  },
+  {
+    id: 'ai-rag-chat',
+    name: 'RAG Chat',
+    description: 'AI chat with RAG (Retrieval Augmented Generation) using vectorized knowledge base',
+    status: 'enabled',
+    permissions: ['public', 'user', 'admin'],
+    rateLimit: {
+      requests: 10,
+      window: 60000,
+      identifier: 'ip'
+    },
+    environments: ['development', 'staging', 'production'],
+    dependencies: ['ai-chat'],
+    metadata: {
+      category: 'ai',
+      provider: 'worker-michael',
+      vectorize: true,
+      cacheable: true
     }
   },
   {

@@ -318,4 +318,143 @@ docs: dodaj Copilot instructions + przenies pliki planistyczne z public/
 
 ---
 
+## 🔧 POPRAWKI TECHNICZNE - Session 2
+
+### ❌ Problemy znalezione podczas analizy kodu RAG:
+
+1. **TypeScript errors w `/api/rag-chat.ts`**:
+   - Brak typowania dla `request.json()` → `unknown`
+   - Spread operator na nieznany typ
+   - Brak interface dla RAGRequest/RAGResponse
+
+2. **Problemy architektoniczne**:
+   - Frontend bezpośrednio wywołuje Worker Michael (omija rate limiting)
+   - Brak cachowania odpowiedzi
+   - Duplikacja: `agent.astro` i `rag.astro` (2 różne chaty)
+   - Agent.astro wywołuje nieistniejący `/api/pumo-chat`
+
+### ✅ Wprowadzone naprawy:
+
+#### 1. **TypeScript w RAG API** (`src/pages/api/rag-chat.ts`)
+
+```typescript
+// DODANO:
+interface RAGRequest {
+    query: string;
+    namespace?: string;
+    topK?: number;
+}
+
+interface RAGResponse {
+    answer?: string;
+    sources?: Array<{
+        text: string;
+        score: number;
+        metadata?: Record<string, unknown>;
+    }>;
+}
+
+// Poprawiono typowanie:
+const body = await request.json() as RAGRequest;
+const data = await response.json() as RAGResponse;
+
+// Zmieniono spread na explicit fields:
+return new Response(
+    JSON.stringify({
+        success: true,
+        answer: data.answer,
+        sources: data.sources,
+        metadata: { namespace, topK, timestamp }
+    })
+);
+```
+
+#### 2. **Frontend routing** (`src/pages/rag.astro`)
+
+**PRZED** (bezpośrednie wywołanie Workera):
+```javascript
+const WORKER_URL = 'https://jimbo-angels-worker...';
+await fetch(WORKER_URL, { ... });
+```
+
+**PO** (przez API proxy):
+```typescript
+const API_URL = "/api/rag-chat";
+await fetch(API_URL, { ... });
+```
+
+**Korzyści**:
+- ✅ Centralizacja requestów
+- ✅ Łatwiejsze dodanie middleware (rate limiting, auth)
+- ✅ Możliwość cachowania w przyszłości
+- ✅ Lepsze error handling
+
+#### 3. **TypeScript w client script**
+
+```typescript
+// Dodano typy dla DOM elements
+const questionInput = document.getElementById("question") as HTMLInputElement;
+
+// Dodano interface dla response
+const data = await response.json() as {
+    answer?: string;
+    sources?: Array<{
+        text: string;
+        score: number;
+        metadata?: { url?: string };
+    }>;
+};
+
+// Poprawiono error handling
+error instanceof Error ? error.message : 'Unknown error'
+```
+
+### 📊 Wyniki naprawy:
+
+- ✅ **0 błędów TypeScript** w `rag-chat.ts`
+- ✅ **0 błędów TypeScript** w `rag.astro`
+- ✅ Frontend używa `/api/rag-chat` zamiast bezpośredniego Workera
+- ✅ Gotowe do dodania Feature Control middleware
+- ✅ Gotowe do dodania KV cachowania
+
+### 🚀 Następne kroki (TODO):
+
+1. **Dodać Feature Control do RAG API**:
+   ```typescript
+   export const POST: APIRoute = async (context) => {
+     return withFeatureMiddleware('ai-rag-chat', context, 'public',
+       async (ctx, requestContext) => {
+         // Current code here
+       }
+     );
+   };
+   ```
+
+2. **Dodać KV cache**:
+   ```typescript
+   const cacheKey = `rag:${query}:${namespace}`;
+   const cached = await env.CACHE.get(cacheKey);
+   if (cached) return cached;
+   // ... fetch from Worker
+   await env.CACHE.put(cacheKey, response, { expirationTtl: 3600 });
+   ```
+
+3. **Rozwiązać duplikację**: Zdecydować co z `pumo-guide/agent.astro`
+   - Opcja A: Usunąć agent.astro (używać tylko /rag)
+   - Opcja B: Przekierować agent.astro → /rag
+   - Opcja C: Stworzyć `/api/pumo-chat` dla agent.astro
+
+4. **Rate limiting dla Worker Michael**:
+   - Worker może być przeciążony przez wiele requestów
+   - Dodać opóźnienie między requestami (500ms)
+   - Dodać queue system dla peak traffic
+
+---
+
+**Data poprawek**: 5 stycznia 2026 (Session 2)  
+**Czas naprawy**: ~10 minut  
+**Status**: ✅ **POPRAWIONO** - Gotowe do deploy
+
+---
+
 *Dokumentacja wygenerowana automatycznie podczas sesji z AI assistant.*
