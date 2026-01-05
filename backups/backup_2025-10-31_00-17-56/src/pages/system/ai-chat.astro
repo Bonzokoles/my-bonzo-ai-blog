@@ -1,0 +1,151 @@
+---
+import AIChat from '@components/Astro/AIChat.Enhanced.astro';
+import PageHeader from '@components/Astro/PageHeader.astro';
+import Layout from '@layouts/Layout.astro';
+import { CHAT_MODELS } from '@/config/ai-chat-models';
+---
+
+<Layout title="AI Chat Enhanced | MyBonzo AI Blog">
+  <PageHeader
+    heading="Asystent AI MyBonzo - Enhanced"
+    description="Rozmawiaj z naszym zaawansowanym agentem AI z pelnym wsparciem dla Streaming, MCP Tools, AI Gateway i Export. Zadawaj pytania o automatyzacje, narzedzia sztucznej inteligencji i rozwiazania biznesowe w jezzyku polskim."
+  />
+
+  <div class="ai-chat-page-shell">
+    <AIChat
+      maxLength={900}
+      enableStreaming={true}
+      enableMCPTools={true}
+      enableGateway={true}
+    />
+
+    <section class="ai-chat-info-card">
+      <h3>Przykladowe pytania</h3>
+      <ul>
+        <li>Jakie narzedzia AI polecacie do tworzenia tresci marketingowych?</li>
+        <li>Wyjasnij prostymi slowami, czym jest uczenie maszynowe.</li>
+        <li>Pomoz mi dobrac model AI do analizy danych finansowych.</li>
+        <li>Jak zautomatyzowac obsluge klienta w malej firmie?</li>
+        <li>Jakie sa najnowsze trendy w sztucznej inteligencji?</li>
+      </ul>
+    </section>
+
+    <section class="ai-chat-info-card">
+      <h3>Dostepne modele Cloudflare</h3>
+      <p>
+        Wybierz model, ktory najlepiej pasuje do twojej rozmowy. Domyslnie aktywna jest Gemma 3 12B IT,
+        ale w kazdej chwili mozesz przelaczyc sie na inny wariant.
+      </p>
+      <ul>
+        {
+          CHAT_MODELS.map((model) => (
+            <li>
+              <strong>{model.label}</strong>
+              <span>{model.description}</span>
+              {
+                model.usageHint && (
+                  <em>{model.usageHint}</em>
+                )
+              }
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="ai-chat-info-card">
+      <h3>✨ Nowe funkcje Enhanced</h3>
+      <ul>
+        <li><strong>🔄 Streaming</strong> - Odpowiedzi w czasie rzeczywistym, slowo po slowie</li>
+        <li><strong>🧠 MCP Tools</strong> - Context7, Sequential Thinking, Filesystem, Memory</li>
+        <li><strong>🚀 AI Gateway</strong> - Cloudflare Gateway z cache i analytics</li>
+        <li><strong>📤 Export</strong> - Zapisz cala konwersacje do JSON</li>
+        <li><strong>📊 Status Badges</strong> - Zobacz na zywo aktywne funkcje</li>
+        <li><strong>💾 Cache Indicator</strong> - Sprawdz, czy odpowiedz pochodzi z cache</li>
+      </ul>
+    </section>
+
+    <section class="ai-chat-info-card">
+      <h3>Wskazowki uzytkowe</h3>
+      <ul>
+        <li>Piszesz po polsku? Model automatycznie odpowiada w tym samym jezyku.</li>
+        <li>Potrzebujesz analizy krok po kroku? Wyprobuj Qwen QWQ 32B.</li>
+        <li>Chcesz szybkiej odpowiedzi? Lekki Phi-2 odpowiada niemal natychmiast.</li>
+        <li>Stawiasz na naturalna rozmowe? Wybierz OpenChat 3.5.</li>
+        <li>Uzyj przelacznikow aby wylacz/wlacz funkcje (Streaming, Gateway, MCP).</li>
+        <li>Kliknij przycisk MCP, aby zobaczyc dostepne narzedzia AI.</li>
+        <li>Eksportuj konwersacje przyciskiem Export dla pozniejszego uzycia.</li>
+      </ul>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .ai-chat-page-shell {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .ai-chat-info-card {
+    border-radius: 1.5rem;
+    padding: 2rem;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 35%, transparent);
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--color-background) 88%, transparent) 0%, rgba(0, 0, 0, 0.05) 100%);
+    box-shadow: 0 25px 50px rgba(8, 10, 18, 0.12);
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .ai-chat-info-card h3 {
+    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+    margin: 0;
+    color: var(--color-accent);
+  }
+
+  .ai-chat-info-card p {
+    margin: 0;
+    color: color-mix(in srgb, var(--color-text) 80%, var(--color-background) 20%);
+    line-height: 1.65;
+  }
+
+  .ai-chat-info-card ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: 0.65rem;
+    color: color-mix(in srgb, var(--color-text) 85%, var(--color-background) 15%);
+    line-height: 1.6;
+  }
+
+  .ai-chat-info-card li {
+    position: relative;
+  }
+
+  .ai-chat-info-card li strong {
+    display: block;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--color-accent) 85%, var(--color-background) 15%);
+  }
+
+  .ai-chat-info-card li span {
+    display: block;
+    margin-top: 0.25rem;
+  }
+
+  .ai-chat-info-card li em {
+    display: block;
+    margin-top: 0.25rem;
+    font-style: normal;
+    color: color-mix(in srgb, var(--color-accent) 75%, var(--color-background) 25%);
+  }
+
+  @media (max-width: 640px) {
+    .ai-chat-info-card {
+      padding: 1.5rem;
+    }
+  }
+</style>

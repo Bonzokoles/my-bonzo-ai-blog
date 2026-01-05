@@ -1,0 +1,324 @@
+---
+// Quick Access Widget - Floating AI Tools Shortcuts
+---
+
+<div id="quickAccessWidget" class="widget-container widget-hidden">
+  <div class="widget-header">
+    <span class="widget-title">🚀 Szybki Dostęp</span>
+    <button id="widgetClose" class="widget-close-btn" title="Zamknij">×</button>
+  </div>
+
+  <div class="widget-content">
+    <div class="widget-section">
+      <h4 class="widget-section-title">Popularne</h4>
+      <a href="https://chat.openai.com" target="_blank" rel="noopener noreferrer" class="widget-link">
+        <span class="widget-icon">💬</span>
+        <span class="widget-link-text">ChatGPT</span>
+      </a>
+      <a href="https://claude.ai" target="_blank" rel="noopener noreferrer" class="widget-link">
+        <span class="widget-icon">🤖</span>
+        <span class="widget-link-text">Claude</span>
+      </a>
+      <a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer" class="widget-link">
+        <span class="widget-icon">✨</span>
+        <span class="widget-link-text">Gemini</span>
+      </a>
+    </div>
+
+    <div class="widget-section">
+      <h4 class="widget-section-title">Narzędzia</h4>
+      <a href="/ai-tools" class="widget-link">
+        <span class="widget-icon">🛠️</span>
+        <span class="widget-link-text">Dashboard</span>
+      </a>
+      <a href="/system/advanced-ai-assistant" class="widget-link">
+        <span class="widget-icon">🤖</span>
+        <span class="widget-link-text">AI Asystent Pro</span>
+      </a>
+      <a href="/system/ai-image-generator" class="widget-link">
+        <span class="widget-icon">🎨</span>
+        <span class="widget-link-text">Generator Grafiki</span>
+      </a>
+      <a href="/rozpoznawanie-mowy" class="widget-link">
+        <span class="widget-icon">🎤</span>
+        <span class="widget-link-text">Rozpoznawanie</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<button id="widgetToggle" class="widget-toggle-btn" title="Szybki dostęp do narzędzi AI">
+  🚀
+</button>
+
+<style>
+  .widget-toggle-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 60px;
+    height: 60px;
+    border: 2px solid #6b7280;
+    background: white;
+    color: var(--color-text, #1f2937);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .widget-toggle-btn:hover {
+    border-color: var(--color-accent, #2563eb);
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
+  }
+
+  .widget-container {
+    position: fixed;
+    bottom: 6rem;
+    right: 2rem;
+    width: 280px;
+    background: white;
+    border: 2px solid #6b7280;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .widget-container.widget-hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+  }
+
+  .widget-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 2px solid #6b7280;
+    background: transparent;
+  }
+
+  .widget-title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-text, #1f2937);
+  }
+
+  .widget-close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .widget-close-btn:hover {
+    color: var(--color-accent, #2563eb);
+    transform: scale(1.2);
+  }
+
+  .widget-content {
+    padding: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .widget-section {
+    margin-bottom: 1rem;
+  }
+
+  .widget-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .widget-section-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent, #2563eb);
+    margin-bottom: 0.5rem;
+  }
+
+  .widget-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+    color: var(--color-text, #1f2937);
+    transition: all 0.2s ease;
+  }
+
+  .widget-link:last-child {
+    margin-bottom: 0;
+  }
+
+  .widget-link:hover {
+    border-color: var(--color-accent, #2563eb);
+    background: rgba(37, 99, 235, 0.05);
+    transform: translateX(-2px);
+  }
+
+  .widget-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  .widget-link-text {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  /* Dark Mode */
+  @media (prefers-color-scheme: dark) {
+    .widget-toggle-btn {
+      background: #1f2937;
+      border-color: #4b5563;
+      color: #f3f4f6;
+    }
+
+    .widget-container {
+      background: #1f2937;
+      border-color: #4b5563;
+    }
+
+    .widget-header {
+      border-bottom-color: #4b5563;
+    }
+
+    .widget-title {
+      color: #f3f4f6;
+    }
+
+    .widget-close-btn {
+      color: #9ca3af;
+    }
+
+    .widget-section-title {
+      color: #60a5fa;
+    }
+
+    .widget-link {
+      border-color: #374151;
+      color: #f3f4f6;
+    }
+
+    .widget-link:hover {
+      border-color: #60a5fa;
+      background: rgba(96, 165, 250, 0.1);
+    }
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .widget-toggle-btn {
+      bottom: 1rem;
+      right: 1rem;
+      width: 50px;
+      height: 50px;
+      font-size: 1.25rem;
+    }
+
+    .widget-container {
+      bottom: 5rem;
+      right: 1rem;
+      width: calc(100vw - 2rem);
+      max-width: 280px;
+    }
+  }
+
+  /* Scrollbar Styling */
+  .widget-content::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .widget-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .widget-content::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 0;
+  }
+
+  .widget-content::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .widget-content::-webkit-scrollbar-thumb {
+      background: #4b5563;
+    }
+
+    .widget-content::-webkit-scrollbar-thumb:hover {
+      background: #6b7280;
+    }
+  }
+</style>
+
+<script>
+  const WIDGET_STATE_KEY = 'quick-access-widget-state';
+
+  const widgetToggle = document.getElementById('widgetToggle');
+  const widgetContainer = document.getElementById('quickAccessWidget');
+  const widgetClose = document.getElementById('widgetClose');
+
+  // Load saved state
+  const savedState = localStorage.getItem(WIDGET_STATE_KEY);
+  if (savedState === 'open') {
+    widgetContainer?.classList.remove('widget-hidden');
+  }
+
+  // Toggle widget
+  widgetToggle?.addEventListener('click', () => {
+    const isHidden = widgetContainer?.classList.contains('widget-hidden');
+
+    if (isHidden) {
+      widgetContainer?.classList.remove('widget-hidden');
+      localStorage.setItem(WIDGET_STATE_KEY, 'open');
+    } else {
+      widgetContainer?.classList.add('widget-hidden');
+      localStorage.setItem(WIDGET_STATE_KEY, 'closed');
+    }
+  });
+
+  // Close widget
+  widgetClose?.addEventListener('click', () => {
+    widgetContainer?.classList.add('widget-hidden');
+    localStorage.setItem(WIDGET_STATE_KEY, 'closed');
+  });
+
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (
+      !widgetContainer?.contains(target) &&
+      !widgetToggle?.contains(target) &&
+      !widgetContainer?.classList.contains('widget-hidden')
+    ) {
+      widgetContainer?.classList.add('widget-hidden');
+      localStorage.setItem(WIDGET_STATE_KEY, 'closed');
+    }
+  });
+
+  // Close on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !widgetContainer?.classList.contains('widget-hidden')) {
+      widgetContainer?.classList.add('widget-hidden');
+      localStorage.setItem(WIDGET_STATE_KEY, 'closed');
+    }
+  });
+</script>
