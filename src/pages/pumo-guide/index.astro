@@ -20,8 +20,9 @@ const categories = allGuides.map((post, index) => ({
 <PumoStructuredData pageType="index" {title} {description} />
 
 <Layout {title} {description}>
-  <!-- ItemList Schema for AI Crawlers - INSIDE HEAD -->
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify({
+  <!-- HARDCODED ItemList Schema - Emergency Fix -->
+  <script slot="head" type="application/ld+json">
+  {
     "@context": "https://schema.org",
     "@type": ["ItemList", "Article"],
     "headline": "Meble Pumo AI Guide 2026 - 50+ Kategorii",
@@ -37,16 +38,17 @@ const categories = allGuides.map((post, index) => ({
       "url": "https://www.meblepumo.pl"
     },
     "datePublished": "2026-01-05",
-    "dateModified": new Date().toISOString(),
-    "numberOfItems": categories.length,
-    "itemListElement": categories.map(cat => ({
-      "@type": "ListItem",
-      "position": cat.position,
-      "name": cat.name,
-      "url": cat.url
-    }))
-  })} />
-  
+    "numberOfItems": 50,
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Biurka gamingowe", "url": "https://www.mybonzoaiblog.com/pumo-guide/Biurka_Biurka_gamingowe"},
+      {"@type": "ListItem", "position": 2, "name": "Fotele kubełkowe", "url": "https://www.mybonzoaiblog.com/pumo-guide/Fotele_Fotele_kubełkowe"},
+      {"@type": "ListItem", "position": 3, "name": "Biurka narożne", "url": "https://www.mybonzoaiblog.com/pumo-guide/Biurka_Biurka_narożne"},
+      {"@type": "ListItem", "position": 4, "name": "Sofy narożniki", "url": "https://www.mybonzoaiblog.com/pumo-guide/Sofy_Narożniki"},
+      {"@type": "ListItem", "position": 5, "name": "Fotele wypoczynkowe", "url": "https://www.mybonzoaiblog.com/pumo-guide/Fotele_Fotele_wypoczynkowe"}
+    ]
+  }
+  </script>
+
   <!-- Inline CSS for Grid (Emergency Fallback) -->
   <style slot="head">
     .category-grid-pumo {
