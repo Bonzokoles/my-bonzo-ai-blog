@@ -4,14 +4,81 @@ import PumoBreadcrumbs from "../../components/PumoBreadcrumbs.astro";
 import PumoStructuredData from "../../components/PumoStructuredData.astro";
 import Layout from "../../layouts/Layout.astro";
 
-const title = "Meble Pumo AI Guide - Inteligentny Przewodnik";
+const title = "Meble Pumo AI Guide 2026 | 50+ Kategorii - Kompletny Katalog";
 const description =
-  "Kompletna baza wiedzy o meblach, wygenerowana przez sztuczną inteligencję dla Meble Pumo.";
+  "Pełny przewodnik po 50+ kategoriach Meble Pumo. AI-powered baza wiedzy z analizami cen, rekomendacjami i specyfikacjami. WHITECAT v1.0 case study.";
+
+// Pobierz wszystkie kategorie dla ItemList schema
+const allGuides = await Astro.glob("./*.md");
+const categories = allGuides.map((post, index) => ({
+  position: index + 1,
+  name: post.url.split("/").pop().replace(/_/g, " ").replace(".md", ""),
+  url: `https://www.mybonzoaiblog.com${post.url}`,
+}));
 ---
 
 <PumoStructuredData pageType="index" {title} {description} />
 
+<!-- ItemList Schema for AI Crawlers -->
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": ["ItemList", "Article"],
+    headline: "Meble Pumo AI Guide 2026 - 50+ Kategorii",
+    description:
+      "Kompletny katalog Meble Pumo z przewodnikami AI SEO dla każdej kategorii produktowej.",
+    author: {
+      "@type": "Organization",
+      name: "MyBonzo AI",
+      url: "https://www.mybonzoaiblog.com",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Meble Pumo",
+      url: "https://www.meblepumo.pl",
+    },
+    datePublished: "2026-01-05",
+    dateModified: new Date().toISOString(),
+    numberOfItems: categories.length,
+    itemListElement: categories.map((cat) => ({
+      "@type": "ListItem",
+      position: cat.position,
+      name: cat.name,
+      url: cat.url,
+    })),
+  })}
+/>
+
 <Layout {title} {description}>
+  <!-- Enhanced Meta Tags for AI Crawlers -->
+  <meta slot="head" property="og:type" content="website" />
+  <meta
+    slot="head"
+    property="og:title"
+    content="Meble Pumo AI Guide 2026 | 50+ Kategorii"
+  />
+  <meta
+    slot="head"
+    property="og:description"
+    content="50+ kategorii z przewodnikami zakupowymi. AI-powered content by WHITECAT v1.0."
+  />
+  <meta
+    slot="head"
+    property="og:url"
+    content="https://www.mybonzoaiblog.com/pumo-guide/"
+  />
+  <meta
+    slot="head"
+    name="keywords"
+    content="meble pumo, przewodnik zakupowy, AI SEO, katalog mebli, biurka gamingowe, fotele kubełkowe"
+  />
+  <meta
+    slot="head"
+    name="robots"
+    content="index, follow, max-snippet:-1, max-image-preview:large"
+  />
+
   <div class="max-w-4xl mx-auto px-4 py-8">
     <PumoBreadcrumbs current="Przewodnik AI" />
     <h1
@@ -91,27 +158,32 @@ const description =
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {/* Lista kategorii generowana automatycznie przez Astro glob */}
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+    >
+      {/* Lista kategorii z ulepszonym stylem */}
       {
-        await Astro.glob("./*.md").then((posts) =>
-          posts.map((post) => (
-            <a href={post.url} class="block group">
-              <div class="p-6 bg-gray-800 rounded-xl border border-gray-700 hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20">
-                <h2 class="text-xl font-semibold mb-2 group-hover:text-blue-400 transition-colors">
-                  {post.url
-                    .split("/")
-                    .pop()
-                    .replace(/_/g, " ")
-                    .replace(".md", "")}
-                </h2>
-                <span class="text-sm text-gray-400">
-                  Zobacz przewodnik &rarr;
-                </span>
-              </div>
+        allGuides.map((post) => {
+          const categoryName = post.url
+            .split("/")
+            .pop()
+            .replace(/_/g, " ")
+            .replace(".md", "");
+
+          return (
+            <a
+              href={post.url}
+              class="block group p-6 bg-gradient-to-br from-purple-900/40 to-blue-900/40 border border-purple-500/30 rounded-xl hover:border-blue-400 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 transform hover:-translate-y-1"
+            >
+              <h3 class="text-lg font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">
+                {categoryName}
+              </h3>
+              <p class="text-sm text-gray-400 group-hover:text-gray-300">
+                → Przewodnik AI SEO
+              </p>
             </a>
-          )),
-        )
+          );
+        })
       }
     </div>
 
