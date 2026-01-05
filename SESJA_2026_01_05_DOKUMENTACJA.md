@@ -457,4 +457,82 @@ error instanceof Error ? error.message : 'Unknown error'
 
 ---
 
+## 🤖 ARCHITEKTURA RAG SYSTEMU
+
+### Stack technologiczny:
+
+#### **Worker Michael** (Cloudflare Worker)
+- **URL**: `https://jimbo-angels-worker.stolarnia-ams.workers.dev/orchestrate`
+- **Framework**: Hono (lightweight web framework)
+- **Deployment**: Cloudflare Workers
+
+#### **Model AI**: 🚀 **Grok 4.1 Fast** (x-ai/grok-4.1-fast)
+- **Provider**: OpenRouter API
+- **Typ**: Chat completion
+- **Szybkość**: Fast variant (zoptymalizowany pod kątem latencji)
+- **Context**: RAG-enhanced (vectorized knowledge base)
+
+#### **Embedding Model**: 📊 **BGE Small EN v1.5**
+- **Model**: `@cf/baai/bge-small-en-v1.5`
+- **Provider**: Cloudflare AI
+- **Wymiary**: 384 dimensions
+- **Zastosowanie**: Query + document embeddings
+
+#### **Vector Database**: 🗄️ **Cloudflare Vectorize**
+- **Binding**: `VECTOR_INDEX`
+- **Index**: `rag-blog-index`
+- **Search**: Top-K similarity (default: 5 results)
+- **Metadata**: Text + URL dla sources
+
+#### **KV Cache**: ⚡ **Cloudflare KV**
+- **Binding**: `CACHE`
+- **TTL**: 1 hour (3600s)
+- **Key format**: `rag:{namespace}:{query}`
+- **Headers**: `X-Cache: HIT/MISS`
+
+### Workflow RAG Query:
+
+```
+User Query → /api/rag-chat (Astro API)
+    ↓
+Feature Control Middleware
+    ↓ (rate limit check)
+KV Cache Check
+    ↓ (cache miss)
+Worker Michael (jimbo-angels-worker.stolarnia-ams.workers.dev)
+    ↓
+1. Embedding (BGE Small EN v1.5)
+    ↓
+2. Vectorize Search (top-5 matches)
+    ↓
+3. Context Assembly
+    ↓
+4. OpenRouter API (Grok 4.1 Fast)
+    ↓
+Response + Sources
+    ↓
+Cache Write (1h TTL)
+    ↓
+Return to User
+```
+
+### Dlaczego Grok 4.1 Fast?
+
+- ✅ **Szybkość**: Optimized for low latency
+- ✅ **Jakość**: High-quality responses z RAG context
+- ✅ **Koszt**: Competitive pricing przez OpenRouter
+- ✅ **Dostępność**: 24/7 przez OpenRouter API
+- ✅ **Context window**: Large enough dla RAG context
+
+### Performance metrics (target):
+
+- **Cache HIT**: < 50ms response time
+- **Cache MISS**: < 2s total time
+  - Embedding: ~200ms
+  - Vectorize: ~100ms
+  - Grok API: ~1-1.5s
+- **Rate limit**: 10 requests/min per IP
+
+---
+
 *Dokumentacja wygenerowana automatycznie podczas sesji z AI assistant.*
