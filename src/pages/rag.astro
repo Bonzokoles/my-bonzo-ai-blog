@@ -114,24 +114,29 @@ const description =
             class="mt-8 p-6 bg-yellow-900/20 border border-yellow-600/30 rounded-2xl"
         >
             <p class="text-sm text-yellow-200">
-                <strong>ℹ️ Status:</strong> RAG chatbot w trybie DEVELOPMENT. Worker
-                Michael endpoint: <code class="bg-black/30 px-2 py-1 rounded"
-                    >https://jimbo-angels-worker.stolarnia-ams.workers.dev/orchestrate</code
-                >
+                <strong>ℹ️ Status:</strong> RAG chatbot w trybie DEVELOPMENT. API:
+                <code class="bg-black/30 px-2 py-1 rounded">/api/rag-chat</code> →
+                Worker Michael
             </p>
         </div>
     </div>
 
     <script>
-        const WORKER_URL =
-            "https://jimbo-angels-worker.stolarnia-ams.workers.dev/orchestrate";
+        // Use local API proxy instead of direct Worker call
+        const API_URL = "/api/rag-chat";
 
-        function setQuestion(q) {
-            document.getElementById("question").value = q;
+        function setQuestion(q: string) {
+            const questionInput = document.getElementById(
+                "question",
+            ) as HTMLInputElement;
+            if (questionInput) questionInput.value = q;
         }
 
         async function askRAG() {
-            const question = document.getElementById("question").value.trim();
+            const questionInput = document.getElementById(
+                "question",
+            ) as HTMLInputElement;
+            const question = questionInput?.value.trim();
             if (!question) {
                 alert("Wpisz pytanie!");
                 return;
@@ -140,14 +145,14 @@ const description =
             console.log("[RAG] Starting request with question:", question);
 
             // Show loading
-            document.getElementById("loading").classList.remove("hidden");
-            document.getElementById("answer").classList.add("hidden");
-            document.getElementById("sources").classList.add("hidden");
+            document.getElementById("loading")?.classList.remove("hidden");
+            document.getElementById("answer")?.classList.add("hidden");
+            document.getElementById("sources")?.classList.add("hidden");
 
             try {
-                console.log("[RAG] Fetching from Worker:", WORKER_URL);
+                console.log("[RAG] Fetching from API:", API_URL);
 
-                const response = await fetch(WORKER_URL, {
+                const response = await fetch(API_URL, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -167,17 +172,27 @@ const description =
                     );
                 }
 
-                const data = await response.json();
+                const data = (await response.json()) as {
+                    answer?: string;
+                    sources?: Array<{
+                        text: string;
+                        score: number;
+                        metadata?: { url?: string };
+                    }>;
+                };
                 console.log("[RAG] Response data:", data);
 
                 // Hide loading
-                document.getElementById("loading").classList.add("hidden");
+                document.getElementById("loading")?.classList.add("hidden");
 
                 // Show answer
                 const answerDiv = document.getElementById("answer");
                 const answerText = document.getElementById("answer-text");
-                answerText.innerHTML = data.answer || "Brak odpowiedzi od AI.";
-                answerDiv.classList.remove("hidden");
+                if (answerText) {
+                    answerText.innerHTML =
+                        data.answer || "Brak odpowiedzi od AI.";
+                }
+                answerDiv?.classList.remove("hidden");
 
                 // Show sources
                 if (data.sources && data.sources.length > 0) {
@@ -186,7 +201,7 @@ const description =
 
                     const sourcesHtml = data.sources
                         .map(
-                            (source, idx) => `
+                            (source: any, idx: number) => `
             <div class="p-4 bg-gradient-to-r from-purple-900/40 to-blue-900/40 rounded-xl border border-purple-500/20 hover:border-purple-400/40 transition-all">
               <div class="flex items-start justify-between mb-2">
                 <span class="text-sm font-bold text-purple-300">Źródło ${idx + 1}</span>
@@ -201,27 +216,30 @@ const description =
                         )
                         .join("");
 
-                    sourcesList.innerHTML = sourcesHtml;
-                    sourcesDiv.classList.remove("hidden");
+                    if (sourcesList) {
+                        sourcesList.innerHTML = sourcesHtml;
+                    }
+                    sourcesDiv?.classList.remove("hidden");
                 }
             } catch (error) {
                 console.error("[RAG] Error:", error);
 
-                document.getElementById("loading").classList.add("hidden");
+                document.getElementById("loading")?.classList.add("hidden");
 
                 const answerDiv = document.getElementById("answer");
                 const answerText = document.getElementById("answer-text");
-                answerText.innerHTML = `
+                if (answerText) {
+                    answerText.innerHTML = `
           <div class="bg-red-900/30 border border-red-500/50 rounded-xl p-6">
-            <p class="font-bold text-red-400 mb-2">❌ Błąd połączenia z RAG Worker:</p>
-            <pre class="text-sm text-red-300">${error.message}</pre>
+            <p class="font-bold text-red-400 mb-2">❌ Błąd połączenia z RAG:</p>
+            <pre class="text-sm text-red-300">${error instanceof Error ? error.message : "Unknown error"}</pre>
             <p class="mt-4 text-sm text-gray-400">
-              Worker Michael może być niedostępny. Sprawdź: 
-              <a href="https://jimbo-angels-worker.stolarnia-ams.workers.dev/health" target="_blank" class="text-blue-400 underline">Health Check</a>
+              API może być niedostępny. Spróbuj ponownie za chwilę.
             </p>
           </div>
         `;
-                answerDiv.classList.remove("hidden");
+                }
+                answerDiv?.classList.remove("hidden");
             }
         }
     </script>
