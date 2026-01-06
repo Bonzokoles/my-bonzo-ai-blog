@@ -30,6 +30,10 @@ preview_id = "139be3a08d7940eea1de297b0ac22e59"
 [ai]
 binding = "AI"
 
+[[vectorize]]
+binding = "VECTORIZE_INDEX"
+index_name = "mybonzo-index"
+
 # R2 Buckets - Media storage
 # Note: Create these buckets in Cloudflare dashboard before deployment
 # wrangler r2 bucket create mybonzo-media
