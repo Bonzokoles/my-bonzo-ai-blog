@@ -2,7 +2,7 @@
 title: "Quick Zen install + profile switcher enable (Linux/macOS)"
 description: " Intro
 Zen Browser, a Firefox-based powerhouse, fuses Arc-inspired UI with emerging AI integrations via Firefox Labs. It's not yet dethroning Chrome—l..."
-pubDatetime: 2026-01-07T13:50:03.532735
+pubDatetime: 2026-01-07T23:29:31.489145
 tags: ["AI", "Cloudflare", "Automation"]
 heroImage: "https://jimbo-angels-worker.stolarnia-ams.workers.dev/blog/images/2026-01/zen-browser-ai-driven-firefox-fork-or-chrome-killer-a-devops-engineers-no-bs-take.png"
 alt: "Cover image for Quick Zen install + profile switcher enable (Linux/macOS)"
