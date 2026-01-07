@@ -211,3 +211,13 @@ Maintain consistency across themes by using similar naming conventions and struc
 Example: Always define the same set of properties for each theme, except options which are, of course, optional.
 
 */
+
+.theme-ultra {
+	--color-background: #07090f;
+	--color-gradient: #05070c;
+	--color-text: #e7ecff;
+	--color-accent: #6aa6ff;
+	--color-accent-alt: #7cffb2;
+	--color-shadow: rgba(0, 0, 0, .65);
+	--border-radius: 0rem;
+}

@@ -227,6 +227,23 @@
 
 
 
+/* Ultra Theme 3D Effects */
+.theme-ultra body {
+  perspective: 1200px;
+}
+
+.theme-ultra .ultra-stage {
+  transform-style: preserve-3d;
+}
+
+.theme-ultra .ultra-panel {
+  transition: transform 0.3s ease;
+}
+
+.theme-ultra .ultra-panel:hover {
+  transform: translateZ(14px) rotateX(.8deg) rotateY(-.8deg);
+}
+
 /* accessibility */
 @media (prefers-reduced-motion: reduce) {
 	*,

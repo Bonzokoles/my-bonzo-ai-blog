@@ -341,3 +341,29 @@ The 'prose' section is used to style markdown content.
 		transform: skewY(-2deg) rotate(-3deg);
 	}
 }
+/* Ultra Theme Overrides */
+.theme-ultra * {
+  border-radius: 0 !important;
+}
+
+.theme-ultra h1,
+.theme-ultra h2,
+.theme-ultra h3,
+.theme-ultra h4,
+.theme-ultra h5,
+.theme-ultra h6 {
+  font-family: 'Courier New', 'Lucida Console', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ultra-side {
+  position: sticky;
+  top: 20px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+.ultra-muted {
+  opacity: 0.7;
+}

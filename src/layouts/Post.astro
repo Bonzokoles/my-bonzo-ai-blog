@@ -21,8 +21,6 @@ interface Props {
 
 const { class: className, collectionName, postId } = Astro.props;
 
-const options = { "rounded-theme": true };
-
 const entry:
   | CollectionEntry<(typeof COLLECTION_NAMES_LIST)[number]>
   | undefined = await getEntry(collectionName, String(postId));
@@ -40,10 +38,10 @@ const { Content } = await render(entry);
 <Layout
   title={entry.data.title}
   description={entry.data.description}
-  class="capitalize"
+  class="theme-ultra capitalize"
 >
-  <section class="mt-0 mb-2">
-    <article class:list={["prose", className]}>
+  <section class="mt-0 mb-2 ultra-stage">
+    <article class:list={["prose ultra-panel", className]}>
       {entry.data.subtitle && <p class="h2">{entry.data.subtitle}</p>}
 
       {
@@ -51,10 +49,7 @@ const { Content } = await render(entry);
           <Image
             src={entry.data.cover.src}
             alt={entry.data.cover.alt || entry.data.title}
-            class:list={[
-              "w-full h-auto max-h-[25rem] object-cover my-4",
-              options,
-            ]}
+            class="w-full h-auto max-h-[25rem] object-cover my-4"
             width={600}
           />
         )

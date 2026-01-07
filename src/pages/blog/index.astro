@@ -19,14 +19,15 @@ const recentPosts = posts
 <Layout
   title="Blog"
   description="Najnowsze artykuły o AI, poradniki i praktyczne rozwiązania dla domu"
+  class="theme-ultra"
 >
   <BackgroundPattern />
 
-  <section class="py-16">
+  <section class="py-16 ultra-stage">
     <div class="max-w-6xl mx-auto px-4">
       <div class="text-center mb-12">
         <h1 class="text-4xl font-bold mb-4">MyBonzo AI Blog</h1>
-        <p class="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+        <p class="text-lg max-w-2xl mx-auto ultra-muted">
           Praktyczne porady, narzędzia AI i rozwiązania dla całej rodziny. Bez
           technicznego żargonu - po prostu działa!
         </p>
@@ -35,7 +36,7 @@ const recentPosts = posts
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {
           recentPosts.map((post) => (
-            <article class="border border-gray-500 bg-transparent rounded-none overflow-hidden hover:border-blue-400 hover:bg-gray-900 hover:shadow transition-colors">
+            <article class="ultra-panel border border-gray-500 bg-transparent overflow-hidden hover:border-blue-400 hover:bg-gray-900 hover:shadow transition-colors">
               {post.data.image && (
                 <div class="aspect-video bg-gray-200 dark:bg-gray-700">
                   <img

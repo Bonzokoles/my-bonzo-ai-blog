@@ -63,9 +63,6 @@ const metaTags = [
   { name: "ICBM", content: "52.237049, 21.017532" },
 ];
 const fonts = SITE.fonts || [];
-const options = {
-  "rounded-theme": true,
-};
 
 // @ts-ignore
 const headerLogo = typeof logo === "undefined" ? null : logo; // guard against no logo
@@ -100,7 +97,7 @@ const headerLogo = typeof logo === "undefined" ? null : logo; // guard against n
     <ClientRouter />
     {/*<ResourceLinks />*/}
   </head>
-  <body class:list={[options, className]}>
+  <body class:list={[className]}>
     <div class="flex flex-col min-h-screen mt-0 pt-0">
       {
         headerLogo ? (
