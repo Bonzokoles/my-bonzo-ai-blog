@@ -6,7 +6,7 @@ export async function onRequest({ locals, request }, next) {
       try {
           // Call the Worker (Michael)
           // URL should be your deployed worker URL
-          const ragResponse = await fetch('https://jimbo-angels.YOUR_SUBDOMAIN.workers.dev/orchestrate', {
+          const ragResponse = await fetch('https://jimbo-angels-worker.stolarnia-ams.workers.dev/orchestrate', {
             method: 'POST',
             body: JSON.stringify({topic: new URL(request.url).pathname})
           });
