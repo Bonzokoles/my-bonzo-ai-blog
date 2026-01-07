@@ -9,6 +9,56 @@ The 'prose' section is used to style markdown content.
 @import "./themes.css";
 @import "./animations.css";
 
+/* === AI/SCI-FI COLOR PALETTE === */
+:root {
+  /* Primary AI Colors */
+  --ai-cyan: #00f0ff;
+  --ai-magenta: #ff00ff;
+  --ai-electric-blue: #0066ff;
+  --ai-neon-green: #00ff88;
+  --ai-purple: #9d00ff;
+  
+  /* Background Layers */
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-tertiary: #1a1a2e;
+  
+  /* Accent Gradients */
+  --gradient-ai-primary: linear-gradient(135deg, var(--ai-cyan) 0%, var(--ai-magenta) 100%);
+  --gradient-ai-secondary: linear-gradient(135deg, var(--ai-electric-blue) 0%, var(--ai-purple) 100%);
+  --gradient-holographic: linear-gradient(135deg, var(--ai-cyan) 0%, var(--ai-electric-blue) 25%, var(--ai-purple) 50%, var(--ai-magenta) 75%, var(--ai-cyan) 100%);
+  
+  /* Glow Effects */
+  --glow-cyan: 0 0 20px var(--ai-cyan);
+  --glow-magenta: 0 0 20px var(--ai-magenta);
+  --glow-purple: 0 0 30px var(--ai-purple);
+  
+  /* Glassmorphism */
+  --glass-bg: rgba(18, 18, 26, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: blur(10px);
+  
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #b8b8d1;
+  --text-accent: var(--ai-cyan);
+}
+
+/* Base Utility Classes */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+.cyber-grid {
+  background-image: 
+    linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
 /* Graffiti Font - Throlacon Trial */
 @font-face {
 	font-family: 'ThrolaconTrial';

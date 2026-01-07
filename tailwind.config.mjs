@@ -1,8 +1,8 @@
 // Tailwind config -> https://v3.tailwindcss.com/docs/theme
 
 /** @type {import('tailwindcss').Config} */
-import defaultTheme from "tailwindcss/defaultTheme";
 import colors from "tailwindcss/colors";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
 	content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
@@ -172,6 +172,44 @@ export default {
 			screen: "100vh",
 		},
 		extend: {
+			colors: {
+				ai: {
+					cyan: '#00f0ff',
+					magenta: '#ff00ff',
+					blue: '#0066ff',
+					green: '#00ff88',
+					purple: '#9d00ff',
+				},
+				bg: {
+					primary: '#0a0a0f',
+					secondary: '#12121a',
+					tertiary: '#1a1a2e',
+				}
+			},
+			backgroundImage: {
+				'gradient-ai': 'linear-gradient(135deg, #00f0ff 0%, #ff00ff 100%)',
+				'gradient-holographic': 'linear-gradient(135deg, #00f0ff 0%, #0066ff 25%, #9d00ff 50%, #ff00ff 75%, #00f0ff 100%)',
+			},
+			boxShadow: {
+				'glow-cyan': '0 0 20px #00f0ff',
+				'glow-magenta': '0 0 20px #ff00ff',
+				'glow-lg': '0 0 30px rgba(0, 240, 255, 0.5)',
+			},
+			animation: {
+				'float': 'float 6s ease-in-out infinite',
+				'glow': 'glow 2s ease-in-out infinite alternate',
+				'glitch': 'glitch 1s linear infinite',
+			},
+			keyframes: {
+				float: {
+					'0%, 100%': { transform: 'translateY(0px)' },
+					'50%': { transform: 'translateY(-20px)' },
+				},
+				glow: {
+					'from': { boxShadow: '0 0 10px #00f0ff' },
+					'to': { boxShadow: '0 0 30px #ff00ff' },
+				},
+			},
 			borderRadius: {
 				theme: "var(--border-radius)",
 			},
