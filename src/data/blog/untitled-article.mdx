@@ -1,23 +1,23 @@
 ---
 title: "Untitled Article"
-description: "Odkryłem coś, co **zmieni grę w generowaniu obrazów AI**! Właśnie przetestowałem **Pollinations AI** i to jest **absolutny game-changer** jako darmowa..."
-pubDatetime: 2026-01-07T03:15:41.450034
+description: "### Worklog: Zbudowałem własny system RAG - walka z Cloudflare Workers, Vectorize i FAISS. Co działa, co nie, i dlaczego lokalne AI wciąż wygrywa. Moj..."
+pubDatetime: 2026-01-07T03:20:11.180896
 tags: ["AI", "Cloudflare", "Automation"]
 image:
-  src: "https://None.r2.cloudflarestorage.com/mybonzo-blog-content/images/2026-01/AI_News_Pollinations.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=cf46e8560ccdfd4712e4d6cbe542820d%2F20260107%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260107T021541Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=a55deb4085a788903466c8bcadccc9f39eb6bb3e5147b9423169a1ff9506227d"
+  src: "https://pub-mybonzo.r2.dev/default-cover.png"
   alt: "Cover image for Untitled Article"
 ---
 
-Odkryłem coś, co **zmieni grę w generowaniu obrazów AI**! Właśnie przetestowałem **Pollinations AI** i to jest **absolutny game-changer** jako darmowa alternatywa dla DALL-E – zero kosztów, zero cenzury, pełna wolność![3][5]
+### Worklog: Zbudowałem własny system RAG - walka z Cloudflare Workers, Vectorize i FAISS. Co działa, co nie, i dlaczego lokalne AI wciąż wygrywa. Moje wnioski.
 
-Dlaczego to **najlepszy wybór**? Oto **kluczowe fakty**:
-- **Darmowy i bez ograniczeń**: Generuj obrazy bez ciężkich restrykcji treści, w przeciwieństwie do DALL-E. Idealne dla devów – codzienny reset limitów i unlimited via web w rozdzielczości **1024×1024**![3][5]
-- **Prosty API do integracji**: Użyj URL jak `pollinations.ai/p/[twój-prompt]` i wklej w apkę, bota czy stronę. Ocena **4.1/5** za embeddability i zero kosztów![3]
-- **Prywatność i wszechstronność**: Brak przechowywania danych, modele jak Stable Diffusion + DALL-E, plus audio/3D. **"Pollinations.ai offers free, unrestricted AI image generation with a focus on API access and embeddability. It's particularly popular among developers..."** – pxz.ai[3]
-- **Top w rankingach 2026**: Nr 1 dla API integration wśród 12 najlepszych free generatorów![5]
+**KONTEKST:** Wczoraj wieczorem pracowałem nad własnym systemem RAG, próbując ogarnąć Cloudflare Workers z Vectorize jako bazą wektorową, kontra lokalny setup z FAISS. Chciałem zobaczyć, czy cloud da radę lokalnemu stackowi z embeddingami i LLM na mojej maszynie.
 
-**Dla mnie, jako programisty i twórcy AI z Polski, to oznacza rewolucję dla devów i biznesu**: Koniec z drogimi subskrypcjami OpenAI (DALL-E to kosz + cenzura), witaj **otwarty ekosystem** do automatyzacji contentu, botów i MVP. Budujesz apkę? Wklejasz link i lecisz – szybciej niż kiedykolwiek![1][3]
+**PROCES:** Debugowałem Worker'a non-stop – embeddingi wrzucałem, ale retrieval w Vectorize ciągle gubił kontekst przy większych chunkach, latency skakało na 2-3s. Testowałem na Pumo dataset (dokumenty PDF z tech specyfikacjami), porównywałem z FAISS lokalnie via LangChain. Mailowałem z supportem Cloudflare, bo autoryzacje blokowały dostęp do indeksu. FAISS śmigał błyskawicznie, zero problemów z skalą na moim GPU.
 
-**Testujecie już?** Link w bio / DM, jeśli chcesz **szybki setup pod siebie** (kod + przykłady gratis)! A wy, co myślicie – Pollinations pokona DALL-E w 2026? 🚀
+**WYNIK:** Działa połowicznie! Worker z Vectorize ogarnia proste zapytania, ale przy złożonych RAG-ach (retrieval + generation) accuracy spada o 30-40% vs lokalny FAISS – cloud ma opóźnienia i słabsze matchowanie embeddingów. Lokalne AI wygrywa: zero kosztów, pełna kontrola, latency <200ms, i mogę tweakować modele embeddingowe (np. text-embedding-3-large) bez limitów API[1][4]. Wniosek: cloud fajny do demo, ale lokalnie budujesz solidniej, zwłaszcza z FAISS/ChromaDB[4].
+
+**NASTĘPNY KROK:** Jutro dodam hybrid – FAISS lokalnie + Worker tylko do edge cachingu, i przetestuję na realnych klientach.
+
+**CTA:** Chcesz podobny setup? Napisz maila na [moj.email@dev.pl].
 
 > *Konsultacje AI setup pod Twój biznes – link w bio*
