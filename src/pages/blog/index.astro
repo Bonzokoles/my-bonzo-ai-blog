@@ -1,6 +1,8 @@
 ---
 import Link from "@components/Astro/Link.astro";
 import BackgroundPattern from "@components/elements/BackgroundPattern.astro";
+import UltraSidebar from "@components/ultra/UltraSidebar.astro";
+import UltraTopbar from "@components/ultra/UltraTopbar.astro";
 import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
 
@@ -12,8 +14,14 @@ const recentPosts = posts
     (a, b) =>
       new Date(b.data.pubDatetime).getTime() -
       new Date(a.data.pubDatetime).getTime(),
-  )
-  .slice(0, 6);
+  );
+
+const displayPosts = recentPosts.slice(0, 10);
+const stats = {
+  posts: posts.length,
+  categories: [...new Set(posts.flatMap((p) => p.data.tags || []))].length,
+  views: 127,
+};
 ---
 
 <Layout
@@ -21,115 +29,137 @@ const recentPosts = posts
   description="Najnowsze artykuły o AI, poradniki i praktyczne rozwiązania dla domu"
   class="theme-ultra"
 >
+  <UltraTopbar />
   <BackgroundPattern />
 
-  <section class="py-16 ultra-stage">
-    <div class="max-w-6xl mx-auto px-4">
-      <!-- Featured Post Panel (jak w 1.HTML) -->
-      {
-        recentPosts[0] && (
-          <div class="ultra-panel p-6 mb-8">
-            <div class="flex flex-col md:flex-row gap-6 items-start">
-              <div class="flex-1">
-                <div class="ultra-kicker mb-2">FEATURED // SYSTEM LOG</div>
-                <h2 class="text-3xl font-bold mb-3">
-                  {recentPosts[0].data.title}
-                </h2>
-                <p class="text-lg ultra-muted mb-4">
-                  {recentPosts[0].data.description}
-                </p>
-                <div class="flex flex-wrap gap-2">
-                  {recentPosts[0].data.tags?.slice(0, 3).map((tag) => (
-                    <span class="ultra-tag">{tag}</span>
-                  ))}
+  <section class="py-8 ultra-stage">
+    <div class="max-w-7xl mx-auto px-4">
+      <!-- Ultra Grid: Main + Sidebar -->
+      <div class="ultra-grid">
+        <!-- Main Content -->
+        <main>
+          <!-- Featured Post Panel -->
+          {
+            displayPosts[0] && (
+              <div class="ultra-panel p-6 mb-6">
+                <div class="flex flex-col md:flex-row gap-6 items-start">
+                  <div class="flex-1">
+                    <div class="ultra-kicker mb-2">FEATURED // SYSTEM LOG</div>
+                    <h2 class="text-3xl font-bold mb-3">
+                      {displayPosts[0].data.title}
+                    </h2>
+                    <p class="text-lg ultra-muted mb-4">
+                      {displayPosts[0].data.description}
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                      {displayPosts[0].data.tags?.slice(0, 3).map((tag) => (
+                        <span class="ultra-tag">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div class="ultra-meta">
+                    <div class="ultra-chip">
+                      <span class="ultra-dot" />
+                      <span>LIVE</span>
+                    </div>
+                    <div class="text-xs">
+                      {new Date(
+                        displayPosts[0].data.pubDatetime,
+                      ).toLocaleDateString("pl-PL")}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="ultra-meta">
-                <div class="ultra-chip">
-                  <span class="ultra-dot" />
-                  <span>LIVE</span>
-                </div>
-                <div class="text-xs">
-                  {new Date(recentPosts[0].data.pubDatetime).toLocaleDateString(
-                    "pl-PL",
-                  )}
-                </div>
+            )
+          }
+
+          <!-- Post List -->
+          <div class="ultra-panel">
+            <div class="ultra-panel-h p-4 border-b border-gray-700">
+              <div>
+                <div class="ultra-kicker">RECENT POSTS</div>
+                <h1 class="text-2xl font-bold mt-2">Najnowsze Artykuły</h1>
               </div>
             </div>
+
+            <div class="posts">
+              {
+                displayPosts.slice(1).map((post) => (
+                  <article class="ultra-post">
+                    <div class="ultra-thumb">
+                      {post.data.image ? (
+                        <img
+                          src={post.data.image.src}
+                          alt={post.data.image.alt || post.data.title}
+                        />
+                      ) : null}
+                    </div>
+
+                    <div>
+                      <h3>
+                        <a href={`/blog/${post.id}`}>{post.data.title}</a>
+                      </h3>
+                      <p>{post.data.description}</p>
+
+                      <div class="row">
+                        <time datetime={post.data.pubDatetime}>
+                          {new Date(post.data.pubDatetime).toLocaleDateString(
+                            "pl-PL",
+                          )}
+                        </time>
+                        {post.data.tags?.slice(0, 2).map((tag) => (
+                          <span class="ultra-tag">{tag}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </article>
+                ))
+              }
+            </div>
           </div>
-        )
-      }
 
-      <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold mb-4">MyBonzo AI Blog</h1>
-        <p class="text-lg max-w-2xl mx-auto ultra-muted">
-          Praktyczne porady, narzędzia AI i rozwiązania dla całej rodziny. Bez
-          technicznego żargonu - po prostu działa!
-        </p>
-      </div>
+          <div class="text-center mt-8">
+            <Link
+              href="/blog/1"
+              text="Zobacz wszystkie artykuły →"
+              class="ultra-btn px-6 py-3"
+            />
+          </div>
+        </main>
 
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {
-          recentPosts.slice(1).map((post) => (
-            <article class="ultra-panel border border-gray-500 bg-transparent overflow-hidden hover:border-blue-400 hover:bg-gray-900 hover:shadow transition-colors">
-              {post.data.image && (
-                <div class="aspect-video bg-gray-200 dark:bg-gray-700">
-                  <img
-                    src={post.data.image.src}
-                    alt={post.data.image.alt || post.data.title}
-                    class="w-full h-full object-cover"
-                  />
+        <!-- Sidebar -->
+        <UltraSidebar stats={stats}>
+          <div class="space-y-3">
+            {
+              recentPosts.slice(0, 3).map((post) => (
+                <div class="ultra-kv">
+                  <a href={`/blog/${post.id}`} class="text-xs line-clamp-1">
+                    {post.data.title}
+                  </a>
                 </div>
-              )}
-
-              <div class="p-6">
-                <div class="flex flex-wrap gap-2 mb-3">
-                  {post.data.tags?.slice(0, 2).map((tag) => (
-                    <span class="px-2 py-1 bg-blue-600 text-white text-xs rounded-none font-semibold tracking-wide uppercase">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                <h3 class="text-xl font-semibold mb-2 line-clamp-2 text-theme-primary">
-                  {post.data.title}
-                </h3>
-
-                <p class="text-theme-primary opacity-80 text-sm mb-3 line-clamp-3">
-                  {post.data.description}
-                </p>
-
-                <div class="flex justify-between items-center text-sm text-theme-primary opacity-70 mb-4">
-                  <time datetime={post.data.pubDatetime}>
-                    {new Date(post.data.pubDatetime).toLocaleDateString(
-                      "pl-PL",
-                    )}
-                  </time>
-                  {post.data.isFeatured && (
-                    <span class="px-2 py-1 bg-yellow-600 text-white text-xs rounded-none font-semibold">
-                      Wyróżniony
-                    </span>
-                  )}
-                </div>
-
-                <Link
-                  href={`/blog/${post.id}`}
-                  text="Czytaj więcej →"
-                  class="text-theme-primary font-semibold hover:text-white transition-colors"
-                />
-              </div>
-            </article>
-          ))
-        }
-      </div>
-
-      <div class="text-center mt-12">
-        <Link
-          href="/blog/1"
-          text="Zobacz wszystkie artykuły"
-          class="bg-theme-accent text-white px-6 py-3 rounded-none font-semibold hover:opacity-90 transition-opacity border border-gray-500"
-        />
+              ))
+            }
+          </div>
+        </UltraSidebar>
       </div>
     </div>
   </section>
 </Layout>
+
+)}
+
+<Link
+  href={`/blog/${post.id}`}
+  text="Czytaj więcej →"
+  class="text-theme-primary font-semibold hover:text-white transition-colors"
+/>
+
+)) }
+
+<div class="text-center mt-12">
+  <Link
+    href="/blog/1"
+    text="Zobacz wszystkie artykuły"
+    class="bg-theme-accent text-white px-6 py-3 rounded-none font-semibold hover:opacity-90 transition-opacity border border-gray-500"
+  />
+</div>

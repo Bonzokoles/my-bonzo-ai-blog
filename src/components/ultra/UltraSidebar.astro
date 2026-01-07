@@ -1,0 +1,48 @@
+---
+/**
+ * Ultra Theme Sidebar - metadane i statystyki
+ */
+interface Props {
+    stats?: {
+        posts?: number;
+        categories?: number;
+        views?: number;
+    };
+}
+
+const { stats = { posts: 0, categories: 0, views: 0 } } = Astro.props;
+---
+
+<aside class="ultra-side">
+    <!-- Status Box -->
+    <div class="ultra-panel ultra-box">
+        <h4>SYSTEM STATUS</h4>
+        <div class="ultra-kv">
+            <span class="k">STATUS</span>
+            <span class="v">
+                <span class="ultra-chip">
+                    <span class="ultra-dot"></span>
+                    ONLINE
+                </span>
+            </span>
+        </div>
+        <div class="ultra-kv">
+            <span class="k">POSTS</span>
+            <span class="v">{stats.posts}</span>
+        </div>
+        <div class="ultra-kv">
+            <span class="k">CATEGORIES</span>
+            <span class="v">{stats.categories}</span>
+        </div>
+        <div class="ultra-kv">
+            <span class="k">VIEWS</span>
+            <span class="v">{stats.views}K</span>
+        </div>
+    </div>
+
+    <!-- Recent Posts -->
+    <div class="ultra-panel ultra-box">
+        <h4>RECENT ACTIVITY</h4>
+        <slot />
+    </div>
+</aside>
