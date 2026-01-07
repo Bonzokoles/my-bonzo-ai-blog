@@ -4,9 +4,9 @@ description: "---
 title: "Optymalizacja zasięgów na Twitterze: Automatyczne formatowanie pod 280 znaków z Pythonem i API v2"
 description: " Wstęp
 Twitter (X) ograni..."
-pubDatetime: 2026-01-07T09:45:19.623473
+pubDatetime: 2026-01-07T13:45:44.273502
 tags: ["AI", "Cloudflare", "Automation"]
-heroImage: "https://7f490d58a478c6baccb0ae01ea1d87c3.r2.cloudflarestorage.com/mybonzo-blog-content/images/2026-01/optymalizacja-zasigw-na-twitterze-automatyczne-formatowanie-pod-280-znakw-z-pythonem-i-api-v2.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=cf46e8560ccdfd4712e4d6cbe542820d%2F20260107%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260107T084519Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=299b1a2bb40e3da01f1b36665e094dc4f4c8092434d680ac6b57bf21defbb8a6"
+heroImage: "https://jimbo-angels-worker.stolarnia-ams.workers.dev/blog/images/2026-01/optymalizacja-zasigw-na-twitterze-automatyczne-formatowanie-pod-280-znakw-z-pythonem-i-api-v2.png"
 alt: "Cover image for Test z emoji i URL"
 ---
 
