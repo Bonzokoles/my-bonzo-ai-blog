@@ -3,9 +3,9 @@ title: "Untitled Article"
 description: "Odkryłem coś, co zmieni grę w automatyzacji AI – pełny SYSTEM RESTART po walce z klonami Daemona! 🚀💥
 
 Właśnie wróciłem po przerwie technicznej i usuną..."
-pubDatetime: 2026-01-07T03:34:12.320385
+pubDatetime: 2026-01-07T03:34:14.835264
 tags: ["AI", "Cloudflare", "Automation"]
-heroImage: "https://7f490d58a478c6baccb0ae01ea1d87c3.r2.cloudflarestorage.com/mybonzo-blog-content/images/2026-01/AI_News_Restart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=cf46e8560ccdfd4712e4d6cbe542820d%2F20260107%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260107T023412Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=9ad17fbdd1b8e2900d7554af3cf43aca04ff642cb654677b3266874b55b9f8da"
+heroImage: "https://7f490d58a478c6baccb0ae01ea1d87c3.r2.cloudflarestorage.com/mybonzo-blog-content/images/2026-01/AI_News_Restart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=cf46e8560ccdfd4712e4d6cbe542820d%2F20260107%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260107T023414Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=2bee79c2e5e50b0e2bd821be438b98f6e7280c734f5ccaacbc446e02a2c4941a"
 alt: "Cover image for Untitled Article"
 ---
 
