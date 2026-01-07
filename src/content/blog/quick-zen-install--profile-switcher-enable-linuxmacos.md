@@ -1,23 +1,11 @@
 ---
 title: "Quick Zen install + profile switcher enable (Linux/macOS)"
-description: "---
-title: "Zen Browser: AI-Driven Firefox Fork or Chrome Killer? A DevOps Engineer's No-BS Take"
-description: " Intro
-Zen Browser, a Firefox-based po..."
-pubDatetime: 2026-01-07T09:45:19.636467
-tags: ["AI", "Cloudflare", "Automation"]
-heroImage: "https://7f490d58a478c6baccb0ae01ea1d87c3.r2.cloudflarestorage.com/mybonzo-blog-content/images/2026-01/zen-browser-ai-driven-firefox-fork-or-chrome-killer-a-devops-engineers-no-bs-take.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=cf46e8560ccdfd4712e4d6cbe542820d%2F20260107%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260107T084519Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=49fb07576f9ee43184fdd1e19d2af30cef9c442a0fce1207151488add8ead218"
-alt: "Cover image for Quick Zen install + profile switcher enable (Linux/macOS)"
----
-
----
-title: "**Zen Browser: AI-Driven Firefox Fork or Chrome Killer? A DevOps Engineer's No-BS Take**"
 description: " Intro
 Zen Browser, a Firefox-based powerhouse, fuses Arc-inspired UI with emerging AI integrations via Firefox Labs. It's not yet dethroning Chrome—l..."
-pubDatetime: 2026-01-07T03:31:59.074912
+pubDatetime: 2026-01-07T13:50:03.532735
 tags: ["AI", "Cloudflare", "Automation"]
-heroImage: "https://pub-mybonzo.r2.dev/default-cover.png"
-alt: "Cover image for **Zen Browser: AI-Driven Firefox Fork or Chrome Killer? A DevOps Engineer's No-BS Take**"
+heroImage: "https://jimbo-angels-worker.stolarnia-ams.workers.dev/blog/images/2026-01/zen-browser-ai-driven-firefox-fork-or-chrome-killer-a-devops-engineers-no-bs-take.png"
+alt: "Cover image for Quick Zen install + profile switcher enable (Linux/macOS)"
 ---
 
 ## **Intro**
