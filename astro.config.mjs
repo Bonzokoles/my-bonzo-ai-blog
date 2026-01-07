@@ -15,16 +15,16 @@ import icon from "astro-icon";
 // https://astro.build/config
 export default defineConfig({
 	site: SITE.url,
-	output: "static",
+	output: "server",
 	adapter: cloudflare({
 		// Konfiguracja sesji z KV
 		sessionKVBindingName: "SESSION"
 	}),
-	
+
 	// Optymalizacje obrazów 
 	image: {
-		service: { 
-			entrypoint: "astro/assets/services/sharp", 
+		service: {
+			entrypoint: "astro/assets/services/sharp",
 			config: {
 				limitInputPixels: false, // Pozwala na większe obrazy
 			}
@@ -52,19 +52,19 @@ export default defineConfig({
 	markdown: {
 		shikiConfig: SITE.shikiConfig,
 	},
-	
+
 	// Integracje z optymalizacjami
 	integrations: [
 		mdx({
 			optimize: true, // Optymalizacja MDX dla szybszego renderowania
 			ignoreElementNames: ['custom-component'] // Ignoruj custom komponenty
-		}), 
-		tailwind(), 
-		sitemap(), 
-		robotsTxt(robotsConfig), 
+		}),
+		tailwind(),
+		sitemap(),
+		robotsTxt(robotsConfig),
 		icon()
 	],
-	
+
 	// Vite optymalizacje
 	vite: {
 		css: {
