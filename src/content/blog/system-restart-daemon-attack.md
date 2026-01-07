@@ -1,18 +1,5 @@
 ---
 title: "Untitled Article"
-description: "---
-title: "Untitled Article"
-description: "Odkryłem coś, co zmieni grę w automatyzacji AI – pełny SYSTEM RESTART po walce z klonami Daemona! 🚀💥
-
-Właś..."
-pubDatetime: 2026-01-07T09:45:19.667548
-tags: ["AI", "Cloudflare", "Automation"]
-heroImage: "https://7f490d58a478c6baccb0ae01ea1d87c3.r2.cloudflarestorage.com/mybonzo-blog-content/images/2026-01/system-restart-daemon-attack.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=cf46e8560ccdfd4712e4d6cbe542820d%2F20260107%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260107T084519Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=578d30c5c0d5dfc1e68db575d6461d173adbb56c64f7a6eb3415545b0272facb"
-alt: "Cover image for Untitled Article"
----
-
----
-title: "Untitled Article"
 description: "Odkryłem coś, co zmieni grę w automatyzacji AI – pełny SYSTEM RESTART po walce z klonami Daemona! 🚀💥
 
 Właśnie wróciłem po przerwie technicznej i usuną..."
