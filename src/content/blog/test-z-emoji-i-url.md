@@ -2,7 +2,7 @@
 title: "Test z emoji i URL"
 description: " Wstęp
 Twitter (X) ogranicza tweety do 280 znaków – przekroczenie blokuje publikację. Jako Senior DevOps Engineer, zmarnowałem godziny na ręczne cięci..."
-pubDatetime: 2026-01-07T23:16:00.126839
+pubDatetime: 2026-01-07T23:29:22.260142
 tags: ["AI", "Cloudflare", "Automation"]
 heroImage: "https://jimbo-angels-worker.stolarnia-ams.workers.dev/blog/images/2026-01/optymalizacja-zasigw-na-twitterze-automatyczne-formatowanie-pod-280-znakw-z-pythonem-i-api-v2.png"
 alt: "Cover image for Test z emoji i URL"
