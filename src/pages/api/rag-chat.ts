@@ -23,7 +23,7 @@ interface RAGResponse {
     [key: string]: unknown;
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     try {
         const body = await request.json() as RAGRequest;
         const { query, namespace = 'pumo-blog', topK = 5 } = body;
@@ -34,28 +34,74 @@ export const POST: APIRoute = async ({ request }) => {
             return new Response(JSON.stringify({ error: 'Missing query' }), { status: 400 });
         }
 
-        // Direct fetch to Worker Michael
-        const response = await fetch(WORKER_URL, {
+        // @ts-ignore
+        const env = locals.runtime?.env || process.env;
+        const apiKey = env?.DEEPSEEK_API_KEY || env?.DEEP_SEEK_API_KEY;
+
+        if (!apiKey) {
+             console.error('[RAG API] Missing API Key');
+             // Fallback response if no key (dev mode safety)
+             return new Response(JSON.stringify({
+                success: true,
+                answer: "System RAG jest w trybie offline (brak klucza API). Proszę sprawdzić konfigurację.",
+                sources: []
+            }), { status: 200 });
+        }
+
+        // DeepSeek Call
+        const response = await fetch('https://api.deepseek.com/chat/completions', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query, namespace, topK })
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'deepseek-reasoner',
+                messages: [
+                    {
+                        role: 'system',
+                        content: `Jesteś Inteligentnym Asystentem RAG dla bloga MyBonzo AI i Meble Pumo.
+                        
+Kontekst: Użytkownik pyta o meble lub technologie AI.
+Twoim zadaniem jest udzielenie pomocnej, merytorycznej odpowiedzi.
+
+Jeśli pytanie dotyczy mebli, kieruj do poradników na mybonzoaiblog.com/pumo-guide.
+Jeśli pytanie dotyczy AI, odpowiadaj zgodnie z wiedzą o sztucznej inteligencji.
+
+Bądź zwięzły i konkretny.`
+                    },
+                    {
+                        role: 'user',
+                        content: query
+                    }
+                ],
+                stream: false
+            })
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error('[RAG API] Worker Error:', response.status, errorText);
-            return new Response(JSON.stringify({ error: `Worker error: ${response.status}` }), {
-                status: response.status
-            });
+            const err = await response.text();
+             console.error('[RAG API] DeepSeek Error:', err);
+             throw new Error(`DeepSeek API error: ${response.status}`);
         }
 
-        const data = await response.json() as RAGResponse;
+        const data = await response.json();
+        const answer = data.choices?.[0]?.message?.content || "Przepraszam, nie potrafię teraz odpowiedzieć.";
+
+        // Mock sources for now since we bypassed the Vector DB Worker
+        const sources = [
+            {
+                text: "Wiedza ogólna AI & Meble Pumo",
+                score: 1.0,
+                metadata: { url: "https://mybonzoaiblog.com/pumo-guide" }
+            }
+        ];
         
         return new Response(JSON.stringify({
             success: true,
-            answer: data.answer,
-            sources: data.sources,
-            metadata: { namespace, timestamp: new Date().toISOString() }
+            answer: answer,
+            sources: sources, // Return mock sources to satisfy frontend types
+            metadata: { namespace, timestamp: new Date().toISOString(), provider: "deepseek-direct" }
         }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
