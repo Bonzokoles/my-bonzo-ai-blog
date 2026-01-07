@@ -4,7 +4,7 @@ description: "---
 title: "Optymalizacja zasięgów na Twitterze: Automatyczne formatowanie pod 280 znaków z Pythonem i API v2"
 description: " Wstęp
 Twitter (X) ograni..."
-pubDatetime: 2026-01-07T13:45:44.273502
+pubDatetime: 2026-01-07T13:48:53.235292
 tags: ["AI", "Cloudflare", "Automation"]
 heroImage: "https://jimbo-angels-worker.stolarnia-ams.workers.dev/blog/images/2026-01/optymalizacja-zasigw-na-twitterze-automatyczne-formatowanie-pod-280-znakw-z-pythonem-i-api-v2.png"
 alt: "Cover image for Test z emoji i URL"

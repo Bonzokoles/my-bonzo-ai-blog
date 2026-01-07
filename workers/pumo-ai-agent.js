@@ -12,6 +12,33 @@ export default {
       });
     }
 
+    const url = new URL(request.url);
+
+    // Serve Images from R2
+    if (request.method === "GET" && url.pathname.startsWith("/blog/images/")) {
+      try {
+        const key = url.pathname.substring(1); // Remove leading slash
+        const object = await env.R2_BUCKET.get(key);
+
+        if (!object) {
+          return new Response("Image not found", { status: 404 });
+        }
+
+        const headers = new Headers();
+        object.writeHttpMetadata(headers);
+        headers.set("etag", object.httpEtag);
+        // Default content type if missing
+        if (!headers.get("content-type")) {
+            if (key.endsWith(".png")) headers.set("content-type", "image/png");
+            if (key.endsWith(".jpg")) headers.set("content-type", "image/jpeg");
+        }
+
+        return new Response(object.body, { headers });
+      } catch (e) {
+        return new Response(`Error fetching image: ${e.message}`, { status: 500 });
+      }
+    }
+
     if (request.method !== "POST") return new Response("Method not allowed", { status: 405 });
 
     try {

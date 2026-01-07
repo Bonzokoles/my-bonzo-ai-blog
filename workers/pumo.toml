@@ -1,0 +1,10 @@
+name = "jimbo-angels-worker"
+main = "pumo-ai-agent.js"
+compatibility_date = "2024-04-05"
+
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "mybonzo-blog-content"
+
+[vars]
+DEEPSEEK_API_KEY = "sk-bfff2d5518cf40b3a4924968bdce43c5"
