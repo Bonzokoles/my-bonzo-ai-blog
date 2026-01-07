@@ -11,10 +11,10 @@ The 'prose' section is used to style markdown content.
 
 /* Graffiti Font - Throlacon Trial */
 @font-face {
-	font-family: 'ThrolaconTrial';
-	src: url('/fonts/Throlacon Trial.ttf') format('truetype');
-	font-weight: normal;
-	font-style: normal;
+  font-family: 'ThrolaconTrial';
+  src: url('/fonts/Throlacon Trial.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @tailwind base;
@@ -34,22 +34,12 @@ The 'prose' section is used to style markdown content.
 		@apply min-h-[100svh] w-full max-w-[1680px];
 	}
 
-	/* Ultra Theme Body Background (1.HTML style) */
-	.theme-ultra body {
-		background:
-			radial-gradient(900px 600px at 20% 0%, rgba(124, 255, 178, 0.10), transparent 55%),
-			radial-gradient(900px 600px at 90% 10%, rgba(106, 166, 255, 0.10), transparent 55%),
-			linear-gradient(180deg, var(--color-background), var(--color-gradient) 65%);
-	}
-
 	section {
-		@apply my-16 mx-auto w-full p-2;
-		/* 256px - 4rem top/bottom margin */
+		@apply my-16 mx-auto w-full p-2; /* 256px - 4rem top/bottom margin */
 	}
 
 	article {
-		@apply my-8 p-1;
-		/* 128px - 2rem top/bottom margin */
+		@apply my-8 p-1; /* 128px - 2rem top/bottom margin */
 	}
 
 	div {
@@ -63,26 +53,16 @@ The 'prose' section is used to style markdown content.
 
 	span {
 		/* Inline elements */
-		margin: 0;
-		/* No disruption to text flow */
+		margin: 0; /* No disruption to text flow */
 		padding: 0;
-		display: inline;
-		/* Ensure inline behavior */
+		display: inline; /* Ensure inline behavior */
 	}
 
 	/** Typography **/
-
+	
 	/* Global Graffiti Headers Font */
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	.h1,
-	.h2,
-	.h3,
-	.h4,
-	.h5 {
+	h1, h2, h3, h4, h5,
+	.h1, .h2, .h3, .h4, .h5 {
 		font-family: 'ThrolaconTrial', Impact, 'Arial Black', sans-serif !important;
 		font-variant-ligatures: none;
 		text-transform: uppercase;
@@ -90,7 +70,7 @@ The 'prose' section is used to style markdown content.
 		font-weight: normal !important;
 		text-shadow: 0 1px 6px #12121232, 2px 2px 0 #3331;
 	}
-
+	
 	h1,
 	h2,
 	h3,
@@ -182,7 +162,7 @@ The 'prose' section is used to style markdown content.
 		@apply break-words;
 	}
 
-	pre>code {
+	pre > code {
 		@apply whitespace-pre;
 		display: inline;
 	}
@@ -231,7 +211,7 @@ The 'prose' section is used to style markdown content.
 
 @layer components {
 	.prose {
-		@apply text-theme-primary text-lg leading-relaxed md:m-auto;
+		@apply text-theme-primary text-lg  leading-relaxed md:m-auto;
 	}
 
 	.prose h1,
@@ -271,7 +251,7 @@ The 'prose' section is used to style markdown content.
 
 	.prose h5,
 	.prose .h5 {
-		@apply text-lg text-theme-primary mb-1 font-mono uppercase;
+		@apply text-lg text-theme-primary  mb-1 font-mono uppercase;
 	}
 
 	.prose h6,
@@ -319,8 +299,7 @@ The 'prose' section is used to style markdown content.
 	}
 
 	.prose strong:not(h1 strong, h2 strong, h3 strong, h4 strong, h5 strong, h6 strong) {
-		@apply text-theme-primary font-semibold relative tracking-wider;
-		/* Changed to font-semibold and font-sans for readability */
+		@apply text-theme-primary font-semibold relative tracking-wider; /* Changed to font-semibold and font-sans for readability */
 	}
 
 	.prose ::selection {
@@ -334,26 +313,21 @@ The 'prose' section is used to style markdown content.
 	.is-title {
 		@apply text-5xl font-bold font-serif text-transparent bg-clip-text md:text-6xl lg:tracking-widest lg:leading-normal;
 	}
-
 	.is-title-alt {
 		@apply text-5xl font-bold font-serif bg-theme-secondary text-theme-secondary md:text-6xl lg:tracking-widest lg:leading-normal;
 	}
-
 	.focused {
 		@apply outline-2 outline-offset-1 focus-visible:no-underline focus-visible:outline-dashed;
 	}
-
 	.disabled {
 		@apply pointer-events-none opacity-50 no-underline;
 	}
-
+	
 	/* Graffiti Style for "AI DLA WSZYSTKICH" */
 	.graffiti-footer {
 		font-family: 'ThrolaconTrial', Impact, 'Arial Black', sans-serif;
-		color: #ffec58;
-		/* jaskrawy żółty */
-		font-size: 5.3rem;
-		/* Zwiększone o 100% z 2.65rem */
+		color: #ffec58; /* jaskrawy żółty */
+		font-size: 5.3rem; /* Zwiększone o 100% z 2.65rem */
 		letter-spacing: -0.03em;
 		text-shadow:
 			0 4px 24px #000,
@@ -368,122 +342,55 @@ The 'prose' section is used to style markdown content.
 	}
 }
 
-/* Ultra Theme Overrides */
+/* =====================
+   ULTRA THEME OVERRIDES
+   ===================== */
+
+/* ULTRA: 0 rounding everywhere (hard rule) */
 .theme-ultra * {
-	border-radius: 0 !important;
+  border-radius: 0 !important;
 }
 
+/* ULTRA: readable headings (no graffiti) */
 .theme-ultra h1,
 .theme-ultra h2,
 .theme-ultra h3,
 .theme-ultra h4,
 .theme-ultra h5,
 .theme-ultra h6 {
-	font-family: 'Courier New', 'Lucida Console', monospace;
-	text-transform: uppercase;
-	letter-spacing: 0.05em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+  text-transform: none;
+  letter-spacing: .02em;
+  text-shadow: none;
+  transform: none;
 }
 
+/* ULTRA: muted text helper */
+.theme-ultra .ultra-muted { color: rgba(231,236,255,.72); }
+
+/* ULTRA: sticky, scrollable right column (desktop) */
 .ultra-side {
-	position: sticky;
-	top: 20px;
-	max-height: calc(100vh - 40px);
-	overflow-y: auto;
+  position: sticky;
+  top: 104px;
+  align-self: start;
+  max-height: calc(100vh - 120px);
+  overflow: auto;
+  padding-right: 6px;
 }
 
-.ultra-muted {
-	opacity: 0.7;
+.ultra-side::-webkit-scrollbar { width: 10px; }
+.ultra-side::-webkit-scrollbar-track { background: rgba(27,37,66,.25); }
+.ultra-side::-webkit-scrollbar-thumb {
+  background: rgba(106,166,255,.25);
+  border: 1px solid rgba(27,37,66,.55);
 }
+.ultra-side::-webkit-scrollbar-thumb:hover { background: rgba(124,255,178,.22); }
 
-/* Ultra Theme - Panel Components (z 1.HTML) */
-.theme-ultra .ultra-panel {
-	border: 1px solid rgba(27, 37, 66, 0.85);
-	background: linear-gradient(180deg, rgba(11, 15, 26, 0.92), rgba(9, 13, 23, 0.72));
-	box-shadow: 0 0 0 1px rgba(231, 236, 255, 0.06), 0 18px 50px rgba(0, 0, 0, 0.55);
-	position: relative;
-	overflow: hidden;
-}
-
-.theme-ultra .ultra-panel::before {
-	content: "";
-	position: absolute;
-	inset: -2px;
-	background:
-		linear-gradient(90deg, rgba(106, 166, 255, 0.08), transparent 45%),
-		radial-gradient(520px 160px at 10% 0%, rgba(124, 255, 178, 0.10), transparent 60%);
-	pointer-events: none;
-}
-
-.theme-ultra .ultra-panel>* {
-	position: relative;
-}
-
-/* Ultra Grid Layout */
-.theme-ultra .ultra-grid {
-	display: grid;
-	grid-template-columns: 1.25fr 0.75fr;
-	gap: 16px;
-	margin-top: 16px;
-}
-
-@media (max-width: 980px) {
-	.theme-ultra .ultra-grid {
-		grid-template-columns: 1fr;
-	}
-}
-
-/* Ultra Kicker (nagłówki kategorii) */
-.theme-ultra .ultra-kicker {
-	font-family: var(--font-mono, monospace);
-	font-size: 11px;
-	font-weight: 800;
-	letter-spacing: 1.4px;
-	color: var(--color-text);
-	opacity: 0.6;
-	text-transform: uppercase;
-}
-
-/* Ultra Chip */
-.theme-ultra .ultra-chip {
-	border: 1px solid rgba(27, 37, 66, 0.85);
-	padding: 6px 8px;
-	display: inline-flex;
-	gap: 8px;
-	align-items: center;
-	font-family: var(--font-mono, monospace);
-	font-size: 11px;
-	color: var(--color-text);
-	opacity: 0.8;
-}
-
-.theme-ultra .ultra-dot {
-	width: 8px;
-	height: 8px;
-	background: var(--color-accent-alt, #7cffb2);
-	box-shadow: 0 0 16px rgba(124, 255, 178, 0.25);
-}
-
-/* Ultra Tag */
-.theme-ultra .ultra-tag {
-	border: 1px solid rgba(27, 37, 66, 0.8);
-	padding: 4px 6px;
-	font-family: var(--font-mono, monospace);
-	font-size: 11px;
-	color: var(--color-text);
-	opacity: 0.7;
-	text-transform: uppercase;
-}
-
-/* Ultra Meta (metadane w panelu) */
-.theme-ultra .ultra-meta {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	align-items: flex-end;
-	text-align: right;
-	min-width: 220px;
-	font-family: var(--font-mono, monospace);
-	color: var(--color-text);
-	opacity: 0.7;
-	font-size: 11px;
+@media (max-width: 980px){
+  .ultra-side{
+    position: static;
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
 }

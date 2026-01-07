@@ -32,16 +32,18 @@ const {
   class: className,
 } = Astro.props;
 
-const options = { "rounded-theme": true };
-
 const sortedPosts = posts?.sort(
   (a: any, b: any) =>
     new Date(b.data?.pubDatetime || 0).valueOf() -
-    new Date(a.data?.pubDatetime || 0).valueOf()
+    new Date(a.data?.pubDatetime || 0).valueOf(),
 );
 ---
 
-<Layout title={title} description={description} class={className}>
+<Layout
+  title={title}
+  description={description}
+  class:list={["theme-ultra", className]}
+>
   {subtitle && <Heading text={subtitle} showHeadingBackground />}
   {
     subtitle?.toLowerCase() !== "blog examples" && (

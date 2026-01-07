@@ -11,58 +11,24 @@ const recentPosts = posts
   .sort(
     (a, b) =>
       new Date(b.data.pubDatetime).getTime() -
-      new Date(a.data.pubDatetime).getTime(),
+      new Date(a.data.pubDatetime).getTime()
   )
   .slice(0, 6);
 ---
 
 <Layout
+  class="theme-ultra"
   title="Blog"
   description="Najnowsze artykuły o AI, poradniki i praktyczne rozwiązania dla domu"
-  class="theme-ultra"
 >
   <BackgroundPattern />
 
-  <section class="py-16 ultra-stage">
+  <div class="ultra-stage">
+  <section class="py-16 ultra-panel">
     <div class="max-w-6xl mx-auto px-4">
-      <!-- Featured Post Panel (jak w 1.HTML) -->
-      {
-        recentPosts[0] && (
-          <div class="ultra-panel p-6 mb-8">
-            <div class="flex flex-col md:flex-row gap-6 items-start">
-              <div class="flex-1">
-                <div class="ultra-kicker mb-2">FEATURED // SYSTEM LOG</div>
-                <h2 class="text-3xl font-bold mb-3">
-                  {recentPosts[0].data.title}
-                </h2>
-                <p class="text-lg ultra-muted mb-4">
-                  {recentPosts[0].data.description}
-                </p>
-                <div class="flex flex-wrap gap-2">
-                  {recentPosts[0].data.tags?.slice(0, 3).map((tag) => (
-                    <span class="ultra-tag">{tag}</span>
-                  ))}
-                </div>
-              </div>
-              <div class="ultra-meta">
-                <div class="ultra-chip">
-                  <span class="ultra-dot" />
-                  <span>LIVE</span>
-                </div>
-                <div class="text-xs">
-                  {new Date(recentPosts[0].data.pubDatetime).toLocaleDateString(
-                    "pl-PL",
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )
-      }
-
       <div class="text-center mb-12">
         <h1 class="text-4xl font-bold mb-4">MyBonzo AI Blog</h1>
-        <p class="text-lg max-w-2xl mx-auto ultra-muted">
+        <p class="text-lg ultra-muted max-w-2xl mx-auto">
           Praktyczne porady, narzędzia AI i rozwiązania dla całej rodziny. Bez
           technicznego żargonu - po prostu działa!
         </p>
@@ -70,8 +36,8 @@ const recentPosts = posts
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {
-          recentPosts.slice(1).map((post) => (
-            <article class="ultra-panel border border-gray-500 bg-transparent overflow-hidden hover:border-blue-400 hover:bg-gray-900 hover:shadow transition-colors">
+          recentPosts.map((post) => (
+            <article class="border border-gray-500 bg-transparent rounded-none overflow-hidden hover:border-blue-400 hover:bg-gray-900 hover:shadow transition-colors">
               {post.data.image && (
                 <div class="aspect-video bg-gray-200 dark:bg-gray-700">
                   <img
@@ -102,7 +68,7 @@ const recentPosts = posts
                 <div class="flex justify-between items-center text-sm text-theme-primary opacity-70 mb-4">
                   <time datetime={post.data.pubDatetime}>
                     {new Date(post.data.pubDatetime).toLocaleDateString(
-                      "pl-PL",
+                      "pl-PL"
                     )}
                   </time>
                   {post.data.isFeatured && (
@@ -132,4 +98,5 @@ const recentPosts = posts
       </div>
     </div>
   </section>
+  </div>
 </Layout>

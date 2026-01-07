@@ -32,16 +32,12 @@ import "@/styles/pages/index.css";
 
 // Fetch blog posts at build time (SSR/SSG)
 const blogPosts = await getHomepageBlogPosts();
-
-// Theme options
-const options = {
-  "rounded-theme": true,
-};
 ---
 
 <Layout
   title={HOMEPAGE_METADATA.title}
   description={HOMEPAGE_METADATA.description}
+  class="theme-ultra"
 >
   <PageHeader
     heading={HOMEPAGE_METADATA.heading}
@@ -408,10 +404,7 @@ const options = {
   <!-- Stworzone dla Ciebie Section -->
   <section class="flex flex-col items-center justify-center mt-16 mb-0 fade-in">
     <h2
-      class:list={[
-        "bg-theme-accent text-theme-secondary p-5 text-center mb-8 lg:w-auto",
-        options,
-      ]}
+      class="bg-theme-accent text-theme-secondary p-5 text-center mb-8 lg:w-auto"
     >
       Stworzone dla Ciebie
     </h2>
@@ -424,10 +417,7 @@ const options = {
     </p>
     <a href="/blog" class="no-underline group group-hover:cursor-pointer">
       <div
-        class:list={[
-          "text-xl tracking-wide bg-theme-primary text-theme-primary text-center shadow-sm shadow-theme-primary border-2 mb-4 group-hover:bg-theme-secondary group-hover:text-theme-accent group-hover:shadow-none transition-all duration-300 ease-in-out lg:text-2xl lg:tracking-wider",
-          options,
-        ]}
+        class="text-xl tracking-wide bg-theme-primary text-theme-primary text-center shadow-sm shadow-theme-primary border-2 mb-4 group-hover:bg-theme-secondary group-hover:text-theme-accent group-hover:shadow-none transition-all duration-300 ease-in-out lg:text-2xl lg:tracking-wider"
       >
         <div class="mt-0">
           <Icon name="ri:article-line" height="150" width="300" class="mb-5" />
@@ -443,7 +433,7 @@ const options = {
       <Image
         src={Bing}
         alt="a quote from Chandler Bing from Friends. Hard work never killed anybody, but why take a chance?"
-        class:list={["shadow-md shadow-theme-primary", options]}
+        class="shadow-md shadow-theme-primary"
         loading="lazy"
         width={750}
         format="webp"

@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <title>JIMBO // BLOG</title>
+  <meta name="description" content="Nowoczesny blog w stylu sci-fi, ultra-computer, ciemny i czytelny." />
+
+  <style>
+    /* =========================
+       SCI-FI ULTRA-COMPUTER THEME
+       Zero rounded corners. Readable.
+       ========================= */
+
+    :root{
+      --bg: #07090f;
+      --bg2:#05070c;
+      --panel:#0b0f1a;
+      --panel2:#090d17;
+      --text:#e7ecff;
+      --muted:#9aa6c7;
+      --faint:#6b7696;
+      --line:#1b2542;
+      --hot:#7cffb2;    /* neon green */
+      --cold:#6aa6ff;   /* neon blue */
+      --warn:#ffd166;   /* amber */
+      --bad:#ff4d6d;    /* red/pink */
+      --shadow: 0 0 0 1px rgba(231,236,255,.06), 0 18px 50px rgba(0,0,0,.55);
+
+      --maxw: 1120px;
+      --lh: 1.65;
+      --fs: 16px;
+      --fs-sm: 13px;
+      --fs-lg: 18px;
+      --fs-xl: 28px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+
+      --focus: 0 0 0 2px var(--cold), 0 0 0 4px rgba(106,166,255,.25);
+    }
+
+    /* Light mode (opcjonalnie) */
+    [data-theme="light"]{
+      --bg:#f6f7fb;
+      --bg2:#ffffff;
+      --panel:#ffffff;
+      --panel2:#f1f3fb;
+      --text:#101325;
+      --muted:#3f4a73;
+      --faint:#66709a;
+      --line:#d7deff;
+      --shadow: 0 0 0 1px rgba(16,19,37,.08), 0 18px 50px rgba(16,19,37,.12);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font: var(--fs)/var(--lh) var(--sans);
+      background:
+        radial-gradient(900px 600px at 20% 0%, rgba(124,255,178,.10), transparent 55%),
+        radial-gradient(900px 600px at 90% 10%, rgba(106,166,255,.10), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2) 65%);
+      color:var(--text);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    a{color:inherit}
+    a:hover{color:var(--hot)}
+    ::selection{background: rgba(124,255,178,.25)}
+
+    /* Zero rounding, ever */
+    *{border-radius:0 !important}
+
+    .skip{
+      position:absolute; left:-9999px; top:8px;
+      background:var(--panel); color:var(--text);
+      border:1px solid var(--line);
+      padding:10px 12px;
+      font-family:var(--mono);
+      z-index:9999;
+    }
+    .skip:focus{left:8px; box-shadow: var(--focus); outline:none}
+
+    .wrap{
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 18px 16px 60px;
+    }
+
+    /* ======= Topbar ======= */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(11,15,26,.88), rgba(7,9,15,.62));
+      border-bottom: 1px solid rgba(27,37,66,.8);
+    }
+    [data-theme="light"] .topbar{
+      background: linear-gradient(180deg, rgba(255,255,255,.88), rgba(246,247,251,.62));
+      border-bottom: 1px solid rgba(215,222,255,.9);
+    }
+
+    .toprow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 12px 16px;
+    }
+
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      min-width: 240px;
+    }
+    .sigil{
+      width: 26px; height: 26px;
+      border: 1px solid rgba(231,236,255,.16);
+      background:
+        repeating-linear-gradient(90deg,
+          rgba(124,255,178,.35) 0px,
+          rgba(124,255,178,.35) 1px,
+          transparent 1px,
+          transparent 5px
+        ),
+        radial-gradient(18px 18px at 30% 35%, rgba(106,166,255,.55), transparent 60%);
+      box-shadow: 0 0 0 1px rgba(231,236,255,.06);
+    }
+    .brand h1{
+      margin:0;
+      font: 700 13px/1.2 var(--mono);
+      letter-spacing: 1.2px;
+    }
+    .brand .sub{
+      margin-top:2px;
+      font: 600 11px/1.2 var(--mono);
+      letter-spacing: 0.6px;
+      color: var(--muted);
+    }
+
+    .nav{
+      display:flex;
+      gap: 14px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+    .nav a{
+      text-decoration:none;
+      font: 700 12px/1 var(--mono);
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      padding: 8px 10px;
+      border: 1px solid transparent;
+    }
+    .nav a:hover{
+      color: var(--text);
+      border-color: rgba(106,166,255,.35);
+    }
+
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 240px;
+      justify-content:flex-end;
+    }
+    .btn{
+      appearance:none;
+      background: transparent;
+      border: 1px solid rgba(27,37,66,.9);
+      color: var(--text);
+      padding: 9px 10px;
+      font: 700 12px/1 var(--mono);
+      letter-spacing: 0.6px;
+      cursor:pointer;
+    }
+    .btn:hover{border-color: rgba(124,255,178,.45); color: var(--hot)}
+    .btn:focus{outline:none; box-shadow: var(--focus)}
+    .search{
+      width: 220px;
+      border: 1px solid rgba(27,37,66,.9);
+      background: rgba(11,15,26,.55);
+      color: var(--text);
+      padding: 9px 10px;
+      font: 600 12px/1 var(--mono);
+      letter-spacing: 0.2px;
+    }
+    [data-theme="light"] .search{
+      background: rgba(255,255,255,.75);
+    }
+    .search::placeholder{color: rgba(154,166,199,.9)}
+    .search:focus{outline:none; box-shadow: var(--focus); border-color: rgba(106,166,255,.65)}
+
+    /* ======= Layout ======= */
+    .grid{
+      display:grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns: 1fr}
+      .actions{min-width:auto}
+      .brand{min-width:auto}
+      .search{width: 160px}
+    }
+    @media (max-width: 560px){
+      .toprow{flex-wrap:wrap}
+      .actions{justify-content:flex-start; width:100%}
+      .search{width: 100%}
+    }
+
+    /* ======= Panels ======= */
+    .panel{
+      border: 1px solid rgba(27,37,66,.85);
+      background: linear-gradient(180deg, rgba(11,15,26,.92), rgba(9,13,23,.72));
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    [data-theme="light"] .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(241,243,251,.72));
+    }
+    .panel::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        linear-gradient(90deg, rgba(106,166,255,.08), transparent 45%),
+        radial-gradient(520px 160px at 10% 0%, rgba(124,255,178,.10), transparent 60%);
+      pointer-events:none;
+    }
+    .panel > *{position:relative}
+
+    .panel-h{
+      border-bottom: 1px solid rgba(27,37,66,.7);
+      padding: 14px 14px 12px;
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      justify-content:space-between;
+    }
+    .panel-h .kicker{
+      font: 800 11px/1 var(--mono);
+      letter-spacing: 1.4px;
+      color: var(--muted);
+    }
+    .panel-h h2{
+      margin: 6px 0 0;
+      font: 900 var(--fs-xl)/1.15 var(--mono);
+      letter-spacing: 0.4px;
+    }
+    .panel-h p{
+      margin: 8px 0 0;
+      color: var(--muted);
+      max-width: 68ch;
+      font-size: var(--fs-lg);
+    }
+
+    .meta{
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+      align-items:flex-end;
+      text-align:right;
+      min-width: 220px;
+      font-family: var(--mono);
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .chip{
+      border: 1px solid rgba(27,37,66,.85);
+      padding: 6px 8px;
+      display:inline-flex;
+      gap: 8px;
+      align-items:center;
+    }
+    .dot{
+      width:8px;height:8px;
+      background: var(--hot);
+      box-shadow: 0 0 16px rgba(124,255,178,.25);
+    }
+
+    /* ======= Article list ======= */
+    .posts{padding: 10px 0 0}
+    .post{
+      display:grid;
+      grid-template-columns: 180px 1fr;
+      gap: 14px;
+      padding: 14px;
+      border-top: 1px solid rgba(27,37,66,.55);
+    }
+    @media (max-width: 740px){
+      .post{grid-template-columns: 1fr}
+    }
+
+    .thumb{
+      border: 1px solid rgba(27,37,66,.75);
+      background:
+        linear-gradient(135deg, rgba(106,166,255,.22), transparent 45%),
+        repeating-linear-gradient(90deg, rgba(124,255,178,.18) 0px, rgba(124,255,178,.18) 1px, transparent 1px, transparent 6px);
+      height: 110px;
+      position:relative;
+      overflow:hidden;
+    }
+    .thumb::after{
+      content:"";
+      position:absolute;
+      left:-20%;
+      top:0;
+      width:40%;
+      height:100%;
+      background: linear-gradient(90deg, transparent, rgba(231,236,255,.08), transparent);
+      transform: skewX(-18deg);
+      animation: sweep 4.5s linear infinite;
+      opacity:.8;
+    }
+    @keyframes sweep{
+      0%{transform: translateX(-120%) skewX(-18deg)}
+      100%{transform: translateX(420%) skewX(-18deg)}
+    }
+    @media (prefers-reduced-motion: reduce){
+      .thumb::after{animation:none}
+    }
+
+    .post h3{
+      margin:0;
+      font: 900 16px/1.25 var(--mono);
+      letter-spacing: 0.2px;
+    }
+    .post p{
+      margin:8px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .post .row{
+      margin-top: 10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      align-items:center;
+      color: var(--faint);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .tag{
+      border: 1px solid rgba(27,37,66,.8);
+      padding: 4px 6px;
+      color: var(--muted);
+    }
+    .post a{
+      text-decoration:none;
+      border-bottom: 1px solid rgba(106,166,255,.35);
+      padding-bottom: 2px;
+    }
+    .post a:hover{border-bottom-color: rgba(124,255,178,.55)}
+
+    /* ======= Sidebar ======= */
+    .side{
+      display:flex;
+      flex-direction:column;
+      gap: 16px;
+    }
+    .box{padding: 14px}
+    .box h4{
+      margin:0 0 10px;
+      font: 900 12px/1 var(--mono);
+      letter-spacing: 1.2px;
+      color: var(--muted);
+    }
+    .kv{
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 8px 0;
+      border-top: 1px solid rgba(27,37,66,.45);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    .kv:first-of-type{border-top:none}
+    .kv .k{color: var(--muted)}
+    .kv .v{color: var(--text)}
+    .mono{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ======= Footer ======= */
+    footer{
+      margin-top: 18px;
+      border-top: 1px solid rgba(27,37,66,.7);
+      padding: 14px 0 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+
+    /* ======= Accessibility / focus ======= */
+    button, input, a { outline: none; }
+    a:focus, button:focus, input:focus { box-shadow: var(--focus); }
+
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#content">SKIP → CONTENT</a>
+
+  <header class="topbar" role="banner">
+    <div class="toprow">
+      <div class="brand">
+        <div class="sigil" aria-hidden="true"></div>
+        <div>
+          <h1>JIMBO // BLOG</h1>
+          <div class="sub">SCI-FI / ULTRA-COMPUTER / DARK</div>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Główna nawigacja">
+        <a href="#posts">POSTS</a>
+        <a href="#tags">TAGS</a>
+        <a href="#about">ABOUT</a>
+        <a href="#contact">CONTACT</a>
+      </nav>
+
+      <div class="actions">
+        <input class="search" id="search" type="search" placeholder="SEARCH // wpisz..." aria-label="Szukaj" />
+        <button class="btn" id="themeBtn" type="button">THEME</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" id="content" role="main">
+    <section class="panel" aria-label="Wyróżniony wpis">
+      <div class="panel-h">
+        <div>
+          <div class="kicker">FEATURED // SYSTEM LOG</div>
+          <h2>Jak zbudować RAG, który nie kłamie i nie krzyczy</h2>
+          <p>
+            Minimalny zestaw metryk, pipeline i sanity-checki. Styl: zimny ekran, gorące dane.
+          </p>
+        </div>
+        <div class="meta">
+          <div class="chip"><span class="dot"></span><span>STATUS: LIVE</span></div>
+          <div>DATE: <span id="today"></span></div>
+          <div>LATENCY: 1.2s (avg)</div>
+        </div>
+      </div>
+
+      <div class="posts" id="posts">
+        <article class="post">
+          <div class="thumb" aria-hidden="true"></div>
+          <div>
+            <h3><a href="#">Pipeline RAG: Raphael → Gabriel → Uriel (bez teatru)</a></h3>
+            <p>Jak rozbić proces na etapy, gdzie mierzyć latency i jak nie wpaść w “ładne wykresy bez sensu”.</p>
+            <div class="row">
+              <span>2026-01-07</span>
+              <span class="tag">RAG</span>
+              <span class="tag">ARCH</span>
+              <span class="tag">OPS</span>
+              <span>READ: 6 min</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="post">
+          <div class="thumb" aria-hidden="true"></div>
+          <div>
+            <h3><a href="#">SQLite jako pamięć operacyjna systemu (checkpointy)</a></h3>
+            <p>Praktyczny pattern: JSON blobs + timestamps + “ostatni znany dobry stan” jako warstwa bezpieczeństwa.</p>
+            <div class="row">
+              <span>2026-01-05</span>
+              <span class="tag">SQLITE</span>
+              <span class="tag">STATE</span>
+              <span class="tag">LANGGRAPH</span>
+              <span>READ: 8 min</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="post">
+          <div class="thumb" aria-hidden="true"></div>
+          <div>
+            <h3><a href="#">Monitoring GPU bez bajerów: co ma znaczenie</a></h3>
+            <p>VRAM, temp, power, throttle. Reszta to kosmetyka. Progi alertów, które nie robią z Ciebie strażaka 24/7.</p>
+            <div class="row">
+              <span>2026-01-02</span>
+              <span class="tag">GPU</span>
+              <span class="tag">ALERTS</span>
+              <span class="tag">FAISS</span>
+              <span>READ: 5 min</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="grid" aria-label="Treść i sidebar">
+      <section class="panel" id="about">
+        <div class="box">
+          <h4>ABOUT // MANIFEST</h4>
+          <p style="margin:0;color:var(--muted);max-width:72ch">
+            Ten blog ma wyglądać jak konsola i czytać się jak dobry raport: prosto, jasno, bez cukru.
+            Zero zaokrągleń, bo świat i tak jest wystarczająco miękki. 😉
+          </p>
+
+          <div style="margin-top:14px;border-top:1px solid rgba(27,37,66,.55);padding-top:14px">
+            <h4 id="tags">TAGS // INDEX</h4>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <span class="tag">RAG</span>
+              <span class="tag">AGENTS</span>
+              <span class="tag">OPS</span>
+              <span class="tag">MONITORING</span>
+              <span class="tag">FAISS</span>
+              <span class="tag">SQLITE</span>
+              <span class="tag">AUTOMATION</span>
+              <span class="tag">SYSTEMS</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="side" aria-label="Sidebar">
+        <section class="panel">
+          <div class="box">
+            <h4>SYSTEM // SNAPSHOT</h4>
+            <div class="kv"><span class="k">MODE</span><span class="v">PRODUCTION</span></div>
+            <div class="kv"><span class="k">PIPELINE</span><span class="v">STABLE</span></div>
+            <div class="kv"><span class="k">ALERTS</span><span class="v">0</span></div>
+            <div class="kv"><span class="k">BUILD</span><span class="v">R1</span></div>
+            <p class="mono" style="margin:12px 0 0">
+              Możesz tu wpiąć realne metryki z backendu (FastAPI/WS) i mieć “status bar” jak w panelu kontrolnym.
+            </p>
+          </div>
+        </section>
+
+        <section class="panel" id="contact">
+          <div class="box">
+            <h4>CONTACT // LINK</h4>
+            <p class="mono" style="margin:0">
+              Email/Discord/Linki — wstaw swoje.
+            </p>
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+              <a href="#" class="mono">mail: you@domain</a>
+              <a href="#" class="mono">github: @you</a>
+              <a href="#" class="mono">rss: /feed.xml</a>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <footer role="contentinfo">
+      <span>© <span id="year"></span> JIMBO // BLOG</span>
+      <span>NO ROUNDING • HIGH SIGNAL • LOW NOISE</span>
+    </footer>
+  </main>
+
+  <script>
+    // Minimal JS: date + theme toggle + simple filter for posts (demo)
+    const root = document.documentElement;
+    const btn = document.getElementById("themeBtn");
+    const today = new Date();
+
+    document.getElementById("year").textContent = String(today.getFullYear());
+    document.getElementById("today").textContent = today.toISOString().slice(0,10);
+
+    // theme persistence
+    const saved = localStorage.getItem("theme");
+    if (saved) root.setAttribute("data-theme", saved);
+
+    btn.addEventListener("click", () => {
+      const cur = root.getAttribute("data-theme");
+      const next = cur === "light" ? "" : "light";
+      if (next) root.setAttribute("data-theme", next);
+      else root.removeAttribute("data-theme");
+      localStorage.setItem("theme", next || "");
+    });
+
+    // simple search filter (client-side)
+    const search = document.getElementById("search");
+    const posts = Array.from(document.querySelectorAll(".post"));
+    search.addEventListener("input", () => {
+      const q = search.value.trim().toLowerCase();
+      posts.forEach(p => {
+        const text = p.innerText.toLowerCase();
+        p.style.display = text.includes(q) ? "" : "none";
+      });
+    });
+  </script>
+</body>
+</html>

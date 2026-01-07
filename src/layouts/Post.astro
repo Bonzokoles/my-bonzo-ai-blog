@@ -5,12 +5,12 @@ import type { CollectionEntry } from "astro:content";
 
 import { COLLECTION_NAMES_LIST } from "src/alkaline.config";
 
-import { getEntry, render } from "astro:content";
 import { Image } from "astro:assets";
+import { getEntry, render } from "astro:content";
 
-import Layout from "@layouts/Layout.astro";
-import Tags from "@components/Astro/Tags.astro";
 import Author from "@components/Astro/Author.astro";
+import Tags from "@components/Astro/Tags.astro";
+import Layout from "@layouts/Layout.astro";
 
 interface Props {
   collectionName: (typeof COLLECTION_NAMES_LIST)[number];
