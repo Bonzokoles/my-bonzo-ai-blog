@@ -14,7 +14,7 @@ import type { Author, Blog, NavEntry, Site, Socials } from "./types/types";
 export const socials: Socials[] = [
 	{
 		platform: "email",
-		url: "kontakt@mybonzo.com",
+		url: "JimBoZen@proton.me",
 	},
 	{
 		platform: "web",
@@ -31,7 +31,7 @@ export const AUTHORS: Author[] = [
 		id: 1,
 		name: "Redakcja MyBonzo",
 		socials: socials,
-		email: 'kontakt@mybonzo.com'
+		email: 'JimBoZen@proton.me'
 	}
 ]
 

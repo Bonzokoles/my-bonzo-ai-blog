@@ -1,6 +1,7 @@
 ---
-import type { ImageMetadata } from "astro";
+import logo from "@assets/bonzo_logo_new.png";
 import PatternBackground from "@components/Astro/utils/PatternBackground.astro";
+import type { ImageMetadata } from "astro";
 import Image from "astro/components/Image.astro";
 
 /* Component for rendering page headers with optional image and background pattern.
@@ -84,17 +85,29 @@ const {
 			{ "lg:w-full lg:mb-12": !image },
 		]}
 	>
-		<h2
-			class:list={[
-				"font-display text-6xl font-medium tracking-wide [text-wrap:balance] lg:text-7xl",
-				{ "build-in": animate },
-			]}
-		>
-			{heading}
-		</h2>
+		<!-- Logo + Heading Container -->
+		<div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-2">
+			<div class="shrink-0 p-2 border-2 border-theme-accent bg-black/20 backdrop-blur-sm">
+				<Image 
+					src={logo} 
+					alt="Logo" 
+					class="w-32 h-32 object-contain rounded-none invert opacity-90"
+				/>
+			</div>
+			
+			<h2
+				class:list={[
+					"font-display text-5xl md:text-6xl font-medium tracking-wide [text-wrap:balance] lg:text-7xl text-center md:text-left",
+					{ "build-in": animate },
+				]}
+			>
+				{heading}
+			</h2>
+		</div>
+
 		<p
 			class:list={[
-				"mt-4 text-xl leading-relaxed tracking-wide text-theme-primary lg:text-2xl 2xl:leading-loose",
+				"mt-4 text-xl leading-relaxed tracking-wide text-theme-primary lg:text-2xl 2xl:leading-loose text-center md:text-left",
 				{ "build-in": animate },
 			]}
 		>

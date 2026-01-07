@@ -1,77 +1,66 @@
 ---
-/* Component for rendering a consistent footer across pages.
- *
- * Props:
- * - title?: string - Website title (defaults to SITE.title)
- * - author?: string - Optional author name for attribution
- * - portfolio?: string - Optional portfolio URL for author
- * - class?: string - Additional CSS classes
- *
- * Example usage:
- * <Footer
- *   title="My Website"
- *   author="John Doe"
- *   portfolio="https://johndoe.com"
- *   class="my-custom-footer"
- * />
- *
- * Notes:
- * - Displays copyright information with current year
- * - Optional author attribution with portfolio link
- * - Uses Link component for external portfolio links
- * - Responsive layout with container constraints
- * - Customizable through class prop
- */
+// Component for rendering a consistent footer across pages.
+// UPDATED: Now featuring a massive full-width logo/badge at the bottom.
 
-import { SITE } from "src/alkaline.config";
-
+import logo from "@assets/bonzo_logo_new.png"; // Używamy logo.png jako "małego znaczka" do powiększenia
 import Link from "@components/Astro/Link.astro";
+import { Image } from "astro:assets";
+import { SITE } from "src/alkaline.config";
 import SocialsCloud from "./SocialsCloud.astro";
 
-
 interface Props {
-	// Website title, defaults to SITE.title //
 	title?: string | undefined;
-	// Optional author name for attribution //
 	author?: string | undefined;
-	// Optional portfolio URL for author //
 	portfolio?: string | undefined;
-	// Optional CSS classes //
 	class?: string | undefined;
 }
 
 const { title = SITE.title, author, portfolio, class: className }: Props = Astro.props;
 ---
 
-<footer class:list={["mt-auto mb-0 pb-0", className]}>
-	<div class="container mx-auto px-4 pt-8 p-0">
-		<p class="text-center text-sm">
-			&copy; {new Date().getFullYear()}
-			{title}. All rights reserved.
-		</p>
-		{
-			author && (
-				<p class="text-center text-sm">
-					Made with{" "}
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="inline-block"
-						width="16"
-						height="16"
-						viewBox="0 0 24 24"
-						fill="currentColor"
-						stroke="none"
-						aria-hidden="true"
-					>
-						<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-					</svg>{" "}
-					by{" "}
-					{portfolio ? <Link href={portfolio} text={author} external hideIcon/> : author}
+<footer class:list={["mt-auto mb-0 pb-0 relative overflow-hidden", className]}>
+	<!-- Full Width Massive Logo Background -->
+	<div class="absolute inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden">
+		<!-- Powiększony znaczek (logo) na całą szerokość - white/inverted for dark mode -->
+		<Image 
+			src={logo} 
+			alt="" 
+			class="w-full h-auto min-w-[100%] object-cover opacity-40"
+		/>
+	</div>
+
+	<!-- Content -->
+	<div class="relative z-10 container mx-auto px-4 py-12">
+		
+		<!-- Górna część stopki: Wielki napis BONZO -->
+		<div class="w-full text-center mb-10 border-b border-theme-accent/20 pb-10">
+			<h2 class="text-[15vw] leading-none font-black text-transparent bg-clip-text bg-gradient-to-r from-theme-primary/10 via-theme-accent/20 to-theme-primary/10 select-none font-mono tracking-tighter">
+				BONZO_AI
+			</h2>
+		</div>
+
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+			<div>
+				<h3 class="text-xl font-bold text-theme-accent mb-4">MyBonzo AI Blog</h3>
+				<p class="text-sm text-theme-primary/70 max-w-xs mx-auto md:mx-0">
+					Centrum wiedzy o sztucznej inteligencji. Przyszłość w Twoich rękach.
 				</p>
-				<p class="text-center text-sm">
-				 <SocialsCloud socials={SITE.socials} class="opacity-80"/>
+			</div>
+			
+			<div class="flex flex-col items-center justify-center">
+				<SocialsCloud socials={SITE.socials} class="opacity-80"/>
+			</div>
+
+			<div class="flex flex-col items-center md:items-end justify-center">
+				<p class="text-sm">
+					&copy; {new Date().getFullYear()} {title}
 				</p>
-			)
-		}
+				{author && (
+					<p class="text-xs mt-2 opacity-60">
+						Created by {portfolio ? <Link href={portfolio} text={author} external hideIcon class="hover:text-theme-accent transition-colors"/> : author}
+					</p>
+				)}
+			</div>
+		</div>
 	</div>
 </footer>
