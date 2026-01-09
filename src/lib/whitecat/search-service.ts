@@ -18,6 +18,11 @@ export class SearchService {
   }
 
   private async semanticSearch(query: SearchQuery): Promise<SearchResult[]> {
+    if (!this.env.AI || !this.env.VECTORIZE_INDEX) {
+        console.warn('⚠️ Semantic search not available (missing AI/VECTORIZE), returning empty results');
+        return [];
+    }
+
     const embedding = await this.env.AI.run('@cf/baai/bge-base-en-v1.5', {
       text: query.query
     });
