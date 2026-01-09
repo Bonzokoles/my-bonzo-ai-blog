@@ -1,10 +1,25 @@
+import { getProductManager, type Product } from './product-manager-d1';
 import { SitemapSync } from './sitemap-sync';
 
-// ... (keep interface GuideMetadata)
+interface GuideMetadata {
+    title: string;
+    description: string;
+    category: string;
+    slug: string;
+    products: Product[];
+    generated_at: string;
+    seo: {
+        keywords: string[];
+        schema: any;
+    };
+}
 
 export class WhitecatGuideGenerator {
     private productManager: any;
-    // ...
+
+    constructor(private env?: any) {
+        this.productManager = getProductManager(env);
+    }
 
     /**
      * Generuje przewodnik dla kategorii produktów

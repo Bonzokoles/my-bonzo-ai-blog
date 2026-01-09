@@ -1,5 +1,5 @@
 export class PumoTracker {
-    private endpoint = 'https://pumo-chunk-processor.stolarnia-ams.workers.dev/api/track';
+    private endpoint = '/api/analytics/event';
     private clientId: string;
 
     constructor() {
@@ -29,18 +29,20 @@ export class PumoTracker {
 
         try {
             // Non-blocking fetch (fire and forget)
+            const urlParams = new URLSearchParams(window.location.search);
+            
             fetch(this.endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    name: eventName,
+                    event: eventName,
+                    category: params.category,
+                    product_id: params.product_id,
+                    utm_campaign: params.utm_campaign || urlParams.get('utm_campaign') || null,
+                    // Additional context for debugging/expansion (not currently saved to DB columns but useful payload)
                     client_id: this.clientId,
-                    params: {
-                        ...params,
-                        url: window.location.href,
-                        referrer: document.referrer,
-                        timestamp: new Date().toISOString()
-                    }
+                    url: window.location.href,
+                    timestamp: new Date().toISOString()
                 })
             }).catch(err => console.debug('Tracker fail:', err));
         } catch (e) {
