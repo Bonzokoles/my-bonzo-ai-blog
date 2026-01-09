@@ -1,29 +1,10 @@
-/**
- * Guide Generator - System generowania przewodników zakupowych z UTM tracking
- * Integracja z WHITECAT operation i produktami Meble Pumo
- */
+import { SitemapSync } from './sitemap-sync';
 
-import { getProductManager, type Product } from './product-manager-d1';
-
-interface GuideMetadata {
-    title: string;
-    description: string;
-    category: string;
-    slug: string;
-    products: Product[];
-    generated_at: string;
-    seo: {
-        keywords: string[];
-        schema: any;
-    };
-}
+// ... (keep interface GuideMetadata)
 
 export class WhitecatGuideGenerator {
     private productManager: any;
-
-    constructor(private env?: any) {
-        this.productManager = getProductManager(env);
-    }
+    // ...
 
     /**
      * Generuje przewodnik dla kategorii produktów
@@ -36,10 +17,28 @@ export class WhitecatGuideGenerator {
         console.log(`📝 Generating guide for category: ${category}`);
 
         // Pobierz produkty z kategorii
-        const products = await this.productManager.getTopProductsInCategory(category, 10);
-
-        if (products.length === 0) {
+        const originalProducts = await this.productManager.getTopProductsInCategory(category, 10);
+        
+        if (originalProducts.length === 0) {
             throw new Error(`No products found for category: ${category}`);
+        }
+
+        // Add Tracking
+        let products = originalProducts;
+        if (this.env && this.env.DB) {
+             const sitemapSync = new SitemapSync(this.env);
+             console.log(`🔗 Injecting tracked URLs for category: ${category}`);
+             
+             products = await Promise.all(originalProducts.map(async (p: Product) => {
+                 const trackedUrl = await sitemapSync.generateTrackedUrl(
+                     p.id, 
+                     `guide_${this.slugify(category)}`,
+                     'ai_guide'
+                 );
+                 return { ...p, tracked_url: trackedUrl };
+             }));
+        } else {
+             console.warn('⚠️ No environment/DB for tracking injection');
         }
 
         // Metadata przewodnika
