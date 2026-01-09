@@ -86,41 +86,42 @@ class PumoAPIClient {
             console.error('❌ Pumo XML Feed fetch error:', error);
             throw error;
         }
+    }
 
-    async getAllProducts(): Promise < PumoAPIProduct[] > {
-            console.log('🚀 Starting full product sync from Pumo API...');
+    async getAllProducts(): Promise<PumoAPIProduct[]> {
+        console.log('🚀 Starting full product sync from Pumo API...');
 
-            const allProducts: PumoAPIProduct[] = [];
-            let page = 1;
-            let hasMore = true;
-            const perPage = 100;
+        const allProducts: PumoAPIProduct[] = [];
+        let page = 1;
+        let hasMore = true;
+        const perPage = 100;
 
-            while(hasMore) {
-                try {
-                    const response = await this.fetchProductsPage(page, perPage);
+        while (hasMore) {
+            try {
+                const response = await this.fetchProductsPage(page, perPage);
 
-                    allProducts.push(...response.products);
+                allProducts.push(...response.products);
 
-                    console.log(`✅ Page ${page}: ${response.products.length} products (total: ${allProducts.length}/${response.total})`);
+                console.log(`✅ Page ${page}: ${response.products.length} products (total: ${allProducts.length}/${response.total})`);
 
-                    hasMore = response.has_more;
-                    page++;
+                hasMore = response.has_more;
+                page++;
 
-                    // Rate limiting - 100ms delay
-                    if (hasMore) {
-                        await new Promise(resolve => setTimeout(resolve, 100));
-                    }
-
-                } catch (error) {
-                    console.error(`❌ Failed to fetch page ${page}:`, error);
-                    throw error;
+                // Rate limiting - 100ms delay
+                if (hasMore) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
                 }
+
+            } catch (error) {
+                console.error(`❌ Failed to fetch page ${page}:`, error);
+                throw error;
             }
+        }
 
         console.log(`✅ Total products fetched from API: ${allProducts.length}`);
-            return allProducts;
-        }
+        return allProducts;
     }
+}
 
 function transformPumoProduct(product: PumoAPIProduct): any {
     // Transform Pumo API product to our internal format

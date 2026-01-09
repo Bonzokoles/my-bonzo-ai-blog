@@ -4,7 +4,7 @@ export interface Env {
   CACHE: KVNamespace;
   AI: any;
   ALLOWED_ORIGINS: string;
-  
+
   // APIs
   ANTHROPIC_API_KEY?: string;
   OPENAI_API_KEY?: string;

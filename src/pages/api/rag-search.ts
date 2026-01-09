@@ -3,9 +3,9 @@
  * Semantic search przez Vectorize + Cloudflare AI
  */
 
-import type { APIRoute } from 'astro';
 import { SearchService } from '@/lib/whitecat/search-service';
 import { withFeatureMiddleware } from '@/middleware/api-middleware';
+import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async (context) => {
     return withFeatureMiddleware(
@@ -33,7 +33,7 @@ export const GET: APIRoute = async (context) => {
 
             try {
                 const searchService = new SearchService(env);
-                
+
                 const results = await searchService.search({
                     query: query.trim(),
                     mode: mode as 'semantic' | 'hybrid' | 'keyword',
@@ -65,7 +65,7 @@ export const GET: APIRoute = async (context) => {
 
             } catch (error: any) {
                 console.error('RAG Search Error:', error);
-                
+
                 return new Response(JSON.stringify({
                     success: false,
                     error: 'Search failed',

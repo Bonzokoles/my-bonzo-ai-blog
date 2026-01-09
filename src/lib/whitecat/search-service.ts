@@ -1,7 +1,7 @@
-import { SearchQuery, SearchResult, PumoProduct, Env } from './whitecat-types';
+import { Env, PumoProduct, SearchQuery, SearchResult } from './whitecat-types';
 
 export class SearchService {
-  constructor(private env: Env) {}
+  constructor(private env: Env) { }
 
   async search(query: SearchQuery): Promise<SearchResult[]> {
     console.log(`🔍 Search: "${query.query}" (mode: ${query.mode || 'hybrid'})`);
@@ -47,7 +47,7 @@ export class SearchService {
 
   private async keywordSearch(query: SearchQuery): Promise<SearchResult[]> {
     const searchTerms = query.query.toLowerCase().split(' ');
-    const conditions = searchTerms.map(() => 
+    const conditions = searchTerms.map(() =>
       '(LOWER(name) LIKE ? OR LOWER(description) LIKE ? OR LOWER(category) LIKE ?)'
     ).join(' AND ');
 
