@@ -4,6 +4,9 @@ export interface Env {
   CACHE: KVNamespace;
   AI: any;
   ALLOWED_ORIGINS: string;
+
+  // Dashboard config
+  DASHBOARD_API_BASE?: string;
   
   // APIs
   ANTHROPIC_API_KEY?: string;
@@ -11,6 +14,8 @@ export interface Env {
   DKIM_PRIVATE_KEY?: string;
   GA4_MEASUREMENT_ID?: string;
   GA4_API_SECRET?: string;
+  GA4_PROPERTY_ID?: string;
+  GA4_SERVICE_ACCOUNT_JSON?: string;
 
   // Pumo API Config
   PUMO_API_BASE_URL?: string;

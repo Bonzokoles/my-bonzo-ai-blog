@@ -1,6 +1,14 @@
-name = "pumo-chunk-processor"
+name = "jimbo-like-pumo-api"
 main = "src/index.ts"
 compatibility_date = "2026-01-08"
+
+# Keep workers.dev enabled as a fallback URL
+workers_dev = true
+
+# Custom domain route (Cloudflare DNS zone: jimbolikepumo.dev)
+routes = [
+  { pattern = "api.jimbolikepumo.dev/*", zone_name = "jimbolikepumo.dev" }
+]
 
 # D1 Database
 [[d1_databases]]
@@ -26,6 +34,8 @@ binding = "AI"
 [vars]
 ALLOWED_ORIGINS = "https://www.mybonzoaiblog.com,http://localhost:4656"
 PUMO_API_BASE_URL = "https://api.meblepumo.pl/v1"
+DASHBOARD_API_BASE = ""
+GA4_PROPERTY_ID = ""
 
 # Cron triggers - Daily at 3 AM CET
 [triggers]
@@ -37,6 +47,7 @@ crons = ["0 3 * * *"]
 # - DKIM_PRIVATE_KEY
 # - GA4_MEASUREMENT_ID
 # - GA4_API_SECRET
+# - GA4_SERVICE_ACCOUNT_JSON
 # - PUMO_API_KEY
 # - PUMO_PRODUCTS_API_KEY
 # - PUMO_ORDERS_API_KEY

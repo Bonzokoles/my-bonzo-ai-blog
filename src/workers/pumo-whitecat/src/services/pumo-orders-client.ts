@@ -39,6 +39,20 @@ export class PumoOrdersClient {
     this.apiKey = env.PUMO_ORDERS_API_KEY || env.PUMO_API_KEY || '';
   }
 
+  private buildHeaders(extra?: Record<string, string>): Record<string, string> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    if (this.apiKey) {
+      headers['X-API-KEY'] = this.apiKey;
+      headers['Authorization'] = `Bearer ${this.apiKey}`;
+    }
+
+    return { ...headers, ...(extra || {}) };
+  }
+
   async getOrders(params?: {
     status?: string;
     since?: string;
@@ -66,10 +80,7 @@ export class PumoOrdersClient {
 
       const response = await fetch(url, {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json'
-        }
+        headers: this.buildHeaders()
       });
 
       if (!response.ok) {
@@ -99,10 +110,7 @@ export class PumoOrdersClient {
       
       const response = await fetch(url, {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json'
-        }
+        headers: this.buildHeaders()
       });
 
       if (!response.ok) {

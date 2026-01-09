@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JIMBO Libraries Viewer</title>
+    <link rel="icon" type="image/x-icon" href="dashboards/favicon/favicon.ico">
+    <link rel="apple-touch-icon" href="dashboards/favicon/apple-touch-icon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at 50% 50%, #0b0f1a 0%, #05070c 100%);
+            color: #e7ecff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(135deg, rgba(11, 15, 26, 0.95) 0%, rgba(9, 13, 23, 0.95) 100%);
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            font-size: 12px;
+            background: rgba(124, 255, 178, 0.1);
+            border: 1px solid #7cffb2;
+            color: #7cffb2;
+            cursor: pointer;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(124, 255, 178, 0.2);
+            transform: translateX(-2px);
+        }
+
+        h1 {
+            color: #7cffb2;
+            font-size: 42px;
+            text-shadow: 0 0 20px rgba(124, 255, 178, 0.5);
+            margin-top: 10px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: rgba(11, 15, 26, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #7cffb2;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            color: #7cffb2;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            color: #9aa6c7;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .search-box {
+            margin-bottom: 30px;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            background: rgba(11, 15, 26, 0.6);
+            border: 2px solid #7cffb2;
+            border-radius: 8px;
+            color: #e7ecff;
+            backdrop-filter: blur(10px);
+        }
+
+        outline: none;
+        }
+
+        #searchInput:focus {
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+        }
+
+        .category {
+            margin-bottom: 40px;
+        }
+
+        .category-header {
+            background: #0f1419;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-left: 4px solid #4ade80;
+        }
+
+        .category-header:hover {
+            background: #1a1f2e;
+        }
+
+        .category-name {
+            font-size: 20px;
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        .category-count {
+            background: #4ade80;
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 15px;
+        }
+
+        .library-item {
+            background: #0f1419;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #00d9ff33;
+            transition: all 0.3s;
+        }
+
+        .library-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 217, 255, 0.2);
+            border-color: #00d9ff;
+        }
+
+        .item-title {
+            color: #00d9ff;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .item-description {
+            color: #aaa;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .item-url {
+            display: inline-block;
+            color: #4ade80;
+            text-decoration: none;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .item-url:hover {
+            text-decoration: underline;
+        }
+
+        .item-meta {
+            color: #666;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #00d9ff;
+            font-size: 18px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .agents-section {
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 2px solid #4ade80;
+        }
+
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .agent-card {
+            background: #0f1419;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #fbbf24;
+            transition: all 0.3s;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(251, 191, 36, 0.2);
+        }
+
+        .agent-name {
+            color: #fbbf24;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .agent-stats {
+            color: #aaa;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .data-flow {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 2px solid #00d9ff33;
+        }
+
+        .flow-title {
+            color: #00d9ff;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .flow-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flow-node {
+            background: #0f1419;
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 2px solid #00d9ff;
+            color: #00d9ff;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .flow-arrow {
+            color: #4ade80;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <button class="back-btn" onclick="window.location.href='UNIFIED_OPERATIONS_DASHBOARD.html'">← BACK TO
+                UNIFIED OPS</button>
+            <h1>📚 JIMBO LIBRARIES</h1>
+            <p style="color: #9aa6c7; margin-top: 10px;">Przeglądanie zebranych materiałów</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-value" id="totalCategories">0</div>
+                <div class="stat-label">Kategorii</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="totalItems">0</div>
+                <div class="stat-label">Materiałów</div>
+            </div>
+            <div class="stat-box" style="border-left-color: #4ade80;">
+                <div class="stat-value" style="color: #4ade80;" id="status">LOADING</div>
+                <div class="stat-label">Status</div>
+            </div>
+            <div class="stat-box" style="border-left-color: #fbbf24;">
+                <div class="stat-value" style="color: #fbbf24;" id="agentsActive">0</div>
+                <div class="stat-label">Agentów Aktywnych</div>
+            </div>
+        </div>
+
+        <!-- Przepływ danych -->
+        <div class="data-flow">
+            <div class="flow-title">🔄 Przepływ Danych</div>
+            <div class="flow-diagram">
+                <div class="flow-node">🤖 Agenci ZBYCHU</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node">🔍 Brave Search API</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node">💾 LIBRARIES/</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node">🌐 Flask Server</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node">📊 Dashboard</div>
+            </div>
+        </div>
+
+        <!-- Sekcja agentów -->
+        <div class="agents-section">
+            <h2 style="color: #4ade80; margin-bottom: 10px;">🤖 Aktywni Agenci</h2>
+            <p style="color: #aaa; font-size: 14px; margin-bottom: 20px;">Zbierają materiały z różnych kategorii</p>
+            <div class="agents-grid" id="agentsGrid"></div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Szukaj w bibliotekach... (Ctrl+F)">
+        </div>
+
+        <div id="librariesContainer" class="loading">
+            Ładowanie bibliotek...
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:6030';
+        let allLibraries = {};
+        let filteredLibraries = {};
+        let agentsData = [];
+
+        // Load all data
+        async function loadAllData() {
+            await Promise.all([
+                loadLibraries(),
+                loadAgents(),
+                loadSystemStats()
+            ]);
+        }
+
+        // Load libraries from API
+        async function loadLibraries() {
+            try {
+                const response = await fetch(BASE_URL + '/api/libraries');
+                const data = await response.json();
+                allLibraries = data;
+                filteredLibraries = data;
+                renderLibraries();
+                updateStats();
+            } catch (error) {
+                document.getElementById('librariesContainer').innerHTML =
+                    '<div class="empty">❌ Błąd ładowania bibliotek: ' + error.message + '</div>';
+            }
+        }
+
+        // Load agents data
+        async function loadAgents() {
+            try {
+                const response = await fetch(BASE_URL + '/api/agents');
+                agentsData = await response.json();
+                renderAgents();
+            } catch (error) {
+                console.error('Błąd ładowania agentów:', error);
+            }
+        }
+
+        // Load system stats
+        async function loadSystemStats() {
+            try {
+                const response = await fetch(BASE_URL + '/api/system-stats');
+                const data = await response.json();
+                document.getElementById('agentsActive').textContent = data.agents_active || 0;
+            } catch (error) {
+                console.error('Błąd ładowania statystyk:', error);
+            }
+        }
+
+        // Render agents
+        function renderAgents() {
+            const container = document.getElementById('agentsGrid');
+
+            if (agentsData.length === 0) {
+                container.innerHTML = '<div class="empty">Brak aktywnych agentów</div>';
+                return;
+            }
+
+            const html = agentsData.map(agent => {
+                const stats = agent.stats || {};
+                return `
+                    <div class="agent-card">
+                        <div class="agent-name">${agent.agent_id || 'Unknown'}</div>
+                        <div class="agent-stats">
+                            📂 Kategoria: ${agent.category || 'N/A'}<br>
+                            📊 Zapytań: ${stats.total_queries || 0}<br>
+                            ✅ Zebranych: ${stats.items_collected || 0}<br>
+                            💾 Zapisanych: ${stats.items_saved || 0}<br>
+                            🔄 Pominiętych duplikatów: ${stats.duplicates_skipped || 0}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        // Render libraries
+        function renderLibraries() {
+            const container = document.getElementById('librariesContainer');
+
+            if (Object.keys(filteredLibraries).length === 0) {
+                container.innerHTML = '<div class="empty">Brak wyników</div>';
+                return;
+            }
+
+            let html = '';
+
+            for (const [category, items] of Object.entries(filteredLibraries)) {
+                if (items.length === 0) continue;
+
+                html += `
+                    <div class="category">
+                        <div class="category-header" onclick="toggleCategory('${category}')">
+                            <span class="category-name">${category.replace(/_/g, ' ')}</span>
+                            <span class="category-count">${items.length}</span>
+                        </div>
+                        <div class="items-grid" id="cat-${category}">
+                            ${items.map(item => `
+                                <div class="library-item">
+                                    <div class="item-title">${item.title || 'Bez tytułu'}</div>
+                                    <div class="item-description">${item.description || ''}</div>
+                                    <a href="${item.url}" target="_blank" class="item-url">🔗 Otwórz link</a>
+                                    <div class="item-meta">
+                                        ${item.collected_at ? new Date(item.collected_at).toLocaleString('pl') : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html || '<div class="empty">Brak bibliotek</div>';
+        }
+
+        // Update stats
+        function updateStats() {
+            const categories = Object.keys(allLibraries).length;
+            const total = Object.values(allLibraries).reduce((sum, items) => sum + items.length, 0);
+
+            document.getElementById('totalCategories').textContent = categories;
+            document.getElementById('totalItems').textContent = total;
+            document.getElementById('status').textContent = total > 0 ? 'ACTIVE' : 'EMPTY';
+        }
+
+        // Search functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+
+                if (!query) {
+                    filteredLibraries = allLibraries;
+                } else {
+                    filteredLibraries = {};
+
+                    for (const [category, items] of Object.entries(allLibraries)) {
+                        const filtered = items.filter(item => {
+                            const text = `${item.title} ${item.description} ${item.url}`.toLowerCase();
+                            return text.includes(query);
+                        });
+
+                        if (filtered.length > 0) {
+                            filteredLibraries[category] = filtered;
+                        }
+                    }
+                }
+
+                renderLibraries();
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && (e.key === 'f' || e.key === 's')) {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                }
+            });
+
+            // Load on page load
+            loadAllData();
+
+            // Auto-refresh every 30s
+            setInterval(loadAgents, 30000);
+            setInterval(loadSystemStats, 30000);
+        });
+
+        // Toggle category
+        function toggleCategory(category) {
+            const element = document.getElementById('cat-' + category);
+            if (element.style.display === 'none') {
+                element.style.display = 'grid';
+            } else {
+                element.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>

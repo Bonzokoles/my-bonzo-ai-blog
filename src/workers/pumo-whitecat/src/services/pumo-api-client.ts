@@ -25,8 +25,26 @@ export class PumoAPIClient {
     };
   }
 
+  private buildHeaders(extra?: Record<string, string>): Record<string, string> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    if (this.config.apiKey) {
+      headers['X-API-KEY'] = this.config.apiKey;
+      headers['Authorization'] = `Bearer ${this.config.apiKey}`;
+    }
+
+    return { ...headers, ...(extra || {}) };
+  }
+
   async getAllProducts(): Promise<PumoProduct[]> {
     console.log('📡 Fetching all products from Pumo API...');
+
+    if (!this.config.apiKey) {
+      throw new Error('PUMO_API_KEY missing (configure secret for this worker environment)');
+    }
     
     const allProducts: PumoProduct[] = [];
     let page = 1;
@@ -69,11 +87,7 @@ export class PumoAPIClient {
     try {
       const response = await fetch(url, {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${this.config.apiKey}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
+        headers: this.buildHeaders(),
         signal: controller.signal
       });
 
@@ -113,10 +127,7 @@ export class PumoAPIClient {
       
       const response = await fetch(url, {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${this.config.apiKey}`,
-          'Content-Type': 'application/json'
-        }
+        headers: this.buildHeaders({ 'Accept': 'application/json' })
       });
 
       if (!response.ok) {
@@ -143,10 +154,7 @@ export class PumoAPIClient {
       
       const response = await fetch(url, {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${this.config.apiKey}`,
-          'Content-Type': 'application/json'
-        }
+        headers: this.buildHeaders({ 'Accept': 'application/json' })
       });
 
       if (!response.ok) {
@@ -197,10 +205,7 @@ export class PumoAPIClient {
       
       const response = await fetch(url, {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${this.config.apiKey}`,
-          'Content-Type': 'application/json'
-        }
+        headers: this.buildHeaders({ 'Accept': 'application/json' })
       });
 
       if (response.ok) {

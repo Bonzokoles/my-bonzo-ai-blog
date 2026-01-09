@@ -1,0 +1,342 @@
+{
+    "api": {
+        "baseUrl": "https://pumo-chunk-processor.stolarnia-ams.workers.dev",
+        "version": "v1",
+        "timeout": 30000,
+        "retryAttempts": 3,
+        "retryDelay": 1000,
+        "headers": {
+            "Content-Type": "application/json",
+            "User-Agent": "PUMO-Diagnosis-Hub/1.0",
+            "Accept": "application/json"
+        }
+    },
+    "endpoints": {
+        "health": {
+            "path": "/api/health",
+            "method": "GET",
+            "cache": 60,
+            "description": "System health check"
+        },
+        "products": {
+            "path": "/api/products",
+            "method": "GET",
+            "cache": 300,
+            "description": "Product catalog access",
+            "parameters": {
+                "limit": "number (max: 1000)",
+                "offset": "number",
+                "category": "string",
+                "search": "string",
+                "sortBy": "name|price|rating|created",
+                "sortOrder": "asc|desc",
+                "inStock": "boolean"
+            }
+        },
+        "product": {
+            "path": "/api/products/{id}",
+            "method": "GET",
+            "cache": 600,
+            "description": "Single product details"
+        },
+        "categories": {
+            "path": "/api/categories",
+            "method": "GET",
+            "cache": 3600,
+            "description": "Product categories list"
+        },
+        "search": {
+            "path": "/api/search",
+            "method": "GET",
+            "cache": 180,
+            "description": "Product search with filters",
+            "parameters": {
+                "q": "string (required)",
+                "limit": "number (max: 100)",
+                "category": "string",
+                "minPrice": "number",
+                "maxPrice": "number",
+                "inStock": "boolean"
+            }
+        },
+        "metrics": {
+            "path": "/api/metrics",
+            "method": "GET",
+            "cache": 300,
+            "description": "System metrics and analytics",
+            "parameters": {
+                "period": "hour|day|week|month",
+                "category": "string",
+                "detailed": "boolean"
+            }
+        },
+        "sync": {
+            "path": "/api/sync",
+            "methods": [
+                "GET",
+                "POST",
+                "PUT"
+            ],
+            "cache": 0,
+            "description": "Data synchronization control",
+            "get": {
+                "description": "Get sync status"
+            },
+            "post": {
+                "description": "Trigger sync operation",
+                "parameters": {
+                    "force": "boolean",
+                    "categories": "array",
+                    "dryRun": "boolean"
+                }
+            },
+            "put": {
+                "description": "Update sync configuration"
+            }
+        },
+        "export": {
+            "path": "/api/export",
+            "method": "GET",
+            "cache": 0,
+            "description": "Data export in various formats",
+            "parameters": {
+                "format": "json|csv|xlsx",
+                "type": "products|categories|analytics",
+                "filter": "object"
+            }
+        },
+        "analytics": {
+            "path": "/api/analytics",
+            "method": "GET",
+            "cache": 900,
+            "description": "Advanced analytics and reports",
+            "parameters": {
+                "report": "queries|performance|trends|geographic",
+                "period": "day|week|month|quarter",
+                "granularity": "hour|day|week"
+            }
+        }
+    },
+    "authentication": {
+        "type": "none",
+        "description": "Currently no authentication required for read operations"
+    },
+    "rateLimits": {
+        "default": {
+            "requests": 1000,
+            "window": 3600,
+            "identifier": "ip"
+        },
+        "search": {
+            "requests": 100,
+            "window": 300,
+            "identifier": "ip"
+        },
+        "export": {
+            "requests": 10,
+            "window": 3600,
+            "identifier": "ip"
+        },
+        "sync": {
+            "requests": 5,
+            "window": 300,
+            "identifier": "ip"
+        }
+    },
+    "errorCodes": {
+        "1000": "Generic API error",
+        "1001": "Invalid request parameters",
+        "1002": "Authentication required",
+        "1003": "Insufficient permissions",
+        "1004": "Rate limit exceeded",
+        "1005": "Resource not found",
+        "1006": "Service temporarily unavailable",
+        "1007": "Invalid data format",
+        "1008": "Sync operation in progress",
+        "1009": "Export operation failed",
+        "1010": "Database connection error"
+    },
+    "responseFormats": {
+        "success": {
+            "structure": {
+                "success": "boolean",
+                "data": "object|array",
+                "meta": {
+                    "timestamp": "ISO string",
+                    "requestId": "string",
+                    "executionTime": "number (ms)"
+                }
+            }
+        },
+        "error": {
+            "structure": {
+                "success": "boolean (false)",
+                "error": {
+                    "code": "number",
+                    "message": "string",
+                    "details": "object (optional)"
+                },
+                "meta": {
+                    "timestamp": "ISO string",
+                    "requestId": "string"
+                }
+            }
+        },
+        "paginated": {
+            "structure": {
+                "success": "boolean",
+                "data": "array",
+                "pagination": {
+                    "total": "number",
+                    "page": "number",
+                    "limit": "number",
+                    "hasNext": "boolean",
+                    "hasPrev": "boolean"
+                },
+                "meta": "object"
+            }
+        }
+    },
+    "caching": {
+        "enabled": true,
+        "defaultTtl": 300,
+        "strategy": "cache-first",
+        "keyPrefix": "pumo-api:",
+        "headers": {
+            "Cache-Control": "public, max-age={ttl}",
+            "ETag": "enabled",
+            "Last-Modified": "enabled"
+        }
+    },
+    "monitoring": {
+        "healthCheck": {
+            "enabled": true,
+            "interval": 60,
+            "endpoints": [
+                "health",
+                "metrics"
+            ],
+            "alertThreshold": 3
+        },
+        "logging": {
+            "enabled": true,
+            "level": "info",
+            "include": [
+                "requests",
+                "errors",
+                "performance"
+            ],
+            "exclude": [
+                "debug"
+            ]
+        },
+        "metrics": {
+            "enabled": true,
+            "collect": [
+                "requests",
+                "response_time",
+                "errors",
+                "cache_hits"
+            ],
+            "aggregation": "1m,5m,1h,1d"
+        }
+    },
+    "features": {
+        "search": {
+            "enabled": true,
+            "fuzzyMatching": true,
+            "autocomplete": true,
+            "suggestions": true,
+            "maxResults": 100
+        },
+        "analytics": {
+            "enabled": true,
+            "realtime": true,
+            "retention": "90d",
+            "anonymization": true
+        },
+        "export": {
+            "enabled": true,
+            "formats": [
+                "json",
+                "csv",
+                "xlsx"
+            ],
+            "maxRecords": 10000,
+            "compression": "gzip"
+        },
+        "notifications": {
+            "enabled": true,
+            "channels": [
+                "email",
+                "webhook"
+            ],
+            "events": [
+                "sync_complete",
+                "sync_error",
+                "api_error"
+            ]
+        }
+    },
+    "development": {
+        "mockData": {
+            "enabled": true,
+            "fallbackOnError": true,
+            "delay": 0
+        },
+        "debugging": {
+            "verboseLogging": false,
+            "includeStack": false,
+            "logRequests": true
+        }
+    },
+    "cloudflare": {
+        "workers": {
+            "name": "pumo-chunk-processor",
+            "environment": "production",
+            "zone": "stolarnia-ams.workers.dev"
+        },
+        "d1": {
+            "database": "pumo-main",
+            "binding": "DB"
+        },
+        "kv": {
+            "cache": "CACHE",
+            "session": "SESSION"
+        },
+        "r2": {
+            "media": "MEDIA_BUCKET"
+        },
+        "ai": {
+            "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+            "binding": "AI"
+        }
+    },
+    "integrations": {
+        "meblepumo": {
+            "enabled": true,
+            "syncInterval": "6h",
+            "xmlFeedUrl": "https://www.meblepumo.pl/xml/products.xml",
+            "apiKey": "required_for_advanced_features"
+        },
+        "whitecat": {
+            "enabled": true,
+            "trackingEnabled": true,
+            "revenueAttribution": true,
+            "utmParameters": [
+                "source",
+                "medium",
+                "campaign",
+                "term",
+                "content"
+            ]
+        }
+    },
+    "version": "1.0.0",
+    "lastUpdated": "2025-01-01T12:00:00.000Z",
+    "documentation": {
+        "url": "https://docs.meblepumo.pl/api",
+        "swagger": "https://pumo-chunk-processor.stolarnia-ams.workers.dev/docs",
+        "postman": "https://documenter.getpostman.com/view/pumo-api"
+    }
+}

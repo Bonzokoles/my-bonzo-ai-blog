@@ -41,9 +41,12 @@
 		},
 		{
 			"path": "../../JIMBO_UNIFIED_CONTROL_hub/LIBRARIES/CONTROL_CENTER/MEBLEPUMO_INTEL"
+		},
+		{
+			"path": "../../JIMBO_UNIFIELD_FATPROJECTS_hub/favicon"
 		}
 	],
 	"settings": {
-		"powershell.cwd": "mybonzoAIblog"
+		"powershell.cwd": "my-bonzo-ai-blog"
 	}
 }

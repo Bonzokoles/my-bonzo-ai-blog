@@ -1,0 +1,321 @@
+/* JIMBO UNIFIED ANIMATIONS - SMOOTH TRANSITIONS & EFFECTS */
+
+/* Fade in animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Pulse effect */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 10px rgba(0, 236, 255, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(0, 236, 255, 0.4);
+    }
+}
+
+/* Loading spinner */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Chart animations */
+@keyframes chartFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Button hover animations */
+.btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Card hover effects */
+.metric-card,
+.chart-panel,
+.export-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.metric-card:hover,
+.chart-panel:hover,
+.export-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
+}
+
+/* AI panel glow effect */
+.ai-panel {
+    transition: all 0.3s ease;
+}
+
+.ai-panel:hover {
+    box-shadow: 0 0 30px rgba(0, 236, 255, 0.2);
+}
+
+/* Text typing effect */
+@keyframes typing {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink {
+
+    0%,
+    50% {
+        border-color: transparent;
+    }
+
+    51%,
+    100% {
+        border-color: var(--accent-primary);
+    }
+}
+
+.typing-text {
+    overflow: hidden;
+    border-right: 2px solid var(--accent-primary);
+    white-space: nowrap;
+    animation: typing 3s steps(30) infinite, blink 1s infinite;
+}
+
+/* Page load animations */
+.hero-section {
+    animation: fadeIn 0.8s ease;
+}
+
+.metrics-grid>.metric-card {
+    animation: slideUp 0.6s ease;
+}
+
+.metrics-grid>.metric-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.metrics-grid>.metric-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.metrics-grid>.metric-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.metrics-grid>.metric-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.charts-grid>.chart-panel {
+    animation: chartFadeIn 0.8s ease;
+}
+
+.charts-grid>.chart-panel:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.charts-grid>.chart-panel:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.ai-section {
+    animation: slideIn 0.8s ease 0.6s both;
+}
+
+.activity-panel {
+    animation: fadeIn 0.6s ease 0.8s both;
+}
+
+/* Activity feed items slide in */
+.activity-item {
+    animation: slideIn 0.5s ease;
+    transform-origin: left center;
+}
+
+.activity-item:nth-child(odd) {
+    animation-delay: 0.1s;
+}
+
+.activity-item:nth-child(even) {
+    animation-delay: 0.2s;
+}
+
+/* Loading states */
+.loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 236, 255, 0.2), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+/* Spinner component */
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(0, 236, 255, 0.3);
+    border-top: 2px solid var(--accent-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Metric value count up animation */
+.metric-value {
+    animation: fadeIn 0.6s ease;
+}
+
+.metric-value.counting {
+    animation: pulse 0.5s ease;
+}
+
+/* Success/Error states */
+@keyframes successPulse {
+    0% {
+        background-color: var(--accent-success);
+    }
+
+    50% {
+        background-color: rgba(0, 255, 136, 0.5);
+    }
+
+    100% {
+        background-color: var(--accent-success);
+    }
+}
+
+@keyframes errorPulse {
+    0% {
+        background-color: var(--accent-error);
+    }
+
+    50% {
+        background-color: rgba(255, 68, 68, 0.5);
+    }
+
+    100% {
+        background-color: var(--accent-error);
+    }
+}
+
+.success-state {
+    animation: successPulse 1s ease-in-out 3;
+}
+
+.error-state {
+    animation: errorPulse 1s ease-in-out 3;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Focus states for accessibility */
+.btn:focus,
+.metric-card:focus,
+.export-card:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* Mobile animation optimizations */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

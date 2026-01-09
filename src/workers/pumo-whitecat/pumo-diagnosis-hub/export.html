@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>PUMO EXPORT DASHBOARD // JIMBO UNIFIED</title>
+    <meta name="description" content="Export and reporting interface for PUMO analytics" />
+
+    <!-- Enhanced Favicon Support -->
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
+    <link rel="manifest" href="assets/images/site.webmanifest">
+    <meta name="theme-color" content="#0b0b12">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="assets/css/theme.css">
+</head>
+
+<body>
+    <!-- TOP BAR -->
+    <header class="topbar" role="banner">
+        <div class="toprow">
+            <div class="brand">
+                <div class="sigil" aria-hidden="true">
+                    <img src="assets/images/bonzo-logo.png" alt="Bonzo Logo" class="brand-logo">
+                </div>
+                <div>
+                    <h1>PUMO EXPORT</h1>
+                    <div class="sub">REPORTING DASHBOARD</div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn back-btn" onclick="window.location.href='index.html'" type="button">← BACK</button>
+                <button class="btn" id="downloadReport" type="button">📊 DOWNLOAD</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="container" role="main">
+        <div class="export-section">
+            <h2>Export & Reports</h2>
+
+            <div class="export-options">
+                <div class="export-card">
+                    <h3>📈 Analytics Report</h3>
+                    <p>Complete analytics data with charts and metrics</p>
+                    <button class="btn btn-export" onclick="exportAnalytics()">Export JSON</button>
+                </div>
+
+                <div class="export-card">
+                    <h3>🛒 Products Report</h3>
+                    <p>Full product catalog with categories and status</p>
+                    <button class="btn btn-export" onclick="exportProducts()">Export CSV</button>
+                </div>
+
+                <div class="export-card">
+                    <h3>🤖 AI Insights</h3>
+                    <p>AI-generated analysis and recommendations</p>
+                    <button class="btn btn-export" onclick="exportAiInsights()">Export PDF</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        PUMO EXPORT DASHBOARD © 2026 | JIMBO UNIFIED
+    </footer>
+
+    <script>
+        function exportAnalytics() {
+            console.log('Exporting analytics...');
+            // TODO: Implement analytics export
+        }
+
+        function exportProducts() {
+            console.log('Exporting products...');
+            // TODO: Implement products export
+        }
+
+        function exportAiInsights() {
+            console.log('Exporting AI insights...');
+            // TODO: Implement AI insights export
+        }
+    </script>
+</body>
+
+</html>

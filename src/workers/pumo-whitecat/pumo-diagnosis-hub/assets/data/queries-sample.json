@@ -1,0 +1,286 @@
+{
+    "recentQueries": [
+        {
+            "id": "q001",
+            "query": "szafa do sypialni biała",
+            "timestamp": "2025-01-01T11:45:23.000Z",
+            "status": "success",
+            "responseTime": 234,
+            "resultsCount": 45,
+            "category": "furniture",
+            "userAgent": "Mozilla/5.0...",
+            "ip": "192.168.1.100",
+            "convertedProductId": 1256
+        },
+        {
+            "id": "q002",
+            "query": "stół dębowy 160cm",
+            "timestamp": "2025-01-01T11:44:17.000Z",
+            "status": "success",
+            "responseTime": 189,
+            "resultsCount": 23,
+            "category": "furniture",
+            "userAgent": "Mozilla/5.0...",
+            "ip": "10.0.0.15",
+            "convertedProductId": 2134
+        },
+        {
+            "id": "q003",
+            "query": "lampa wisząca LED kuchnia",
+            "timestamp": "2025-01-01T11:43:05.000Z",
+            "status": "success",
+            "responseTime": 156,
+            "resultsCount": 67,
+            "category": "lighting",
+            "userAgent": "Mozilla/5.0...",
+            "ip": "172.16.0.5",
+            "convertedProductId": null
+        },
+        {
+            "id": "q004",
+            "query": "komoda ikea hemnes",
+            "timestamp": "2025-01-01T11:42:33.000Z",
+            "status": "timeout",
+            "responseTime": 5000,
+            "resultsCount": 0,
+            "category": "storage",
+            "userAgent": "Mozilla/5.0...",
+            "ip": "192.168.1.200",
+            "convertedProductId": null
+        },
+        {
+            "id": "q005",
+            "query": "krzesło biurowe ergonomiczne",
+            "timestamp": "2025-01-01T11:41:48.000Z",
+            "status": "success",
+            "responseTime": 267,
+            "resultsCount": 34,
+            "category": "furniture",
+            "userAgent": "Mozilla/5.0...",
+            "ip": "10.0.0.25",
+            "convertedProductId": 3456
+        }
+    ],
+    "popularQueries": [
+        {
+            "query": "szafa",
+            "count": 1250,
+            "conversionRate": 12.4
+        },
+        {
+            "query": "stół",
+            "count": 980,
+            "conversionRate": 15.6
+        },
+        {
+            "query": "lampa",
+            "count": 845,
+            "conversionRate": 9.8
+        },
+        {
+            "query": "komoda",
+            "count": 723,
+            "conversionRate": 11.2
+        },
+        {
+            "query": "krzesło",
+            "count": 689,
+            "conversionRate": 13.8
+        },
+        {
+            "query": "łóżko",
+            "count": 612,
+            "conversionRate": 14.2
+        },
+        {
+            "query": "regał",
+            "count": 567,
+            "conversionRate": 8.9
+        },
+        {
+            "query": "sofa",
+            "count": 534,
+            "conversionRate": 16.7
+        },
+        {
+            "query": "biurko",
+            "count": 489,
+            "conversionRate": 10.5
+        },
+        {
+            "query": "szafka",
+            "count": 445,
+            "conversionRate": 9.1
+        }
+    ],
+    "categoryQueries": {
+        "furniture": {
+            "totalQueries": 8450,
+            "topQueries": [
+                "szafa",
+                "stół",
+                "krzesło",
+                "łóżko",
+                "sofa"
+            ],
+            "avgResponseTime": 245,
+            "conversionRate": 13.2
+        },
+        "lighting": {
+            "totalQueries": 3200,
+            "topQueries": [
+                "lampa",
+                "żyrandol",
+                "kinkiet",
+                "oświetlenie",
+                "led"
+            ],
+            "avgResponseTime": 189,
+            "conversionRate": 9.8
+        },
+        "storage": {
+            "totalQueries": 2850,
+            "topQueries": [
+                "komoda",
+                "regał",
+                "szafka",
+                "organizery",
+                "przechowywanie"
+            ],
+            "avgResponseTime": 198,
+            "conversionRate": 11.5
+        },
+        "decor": {
+            "totalQueries": 1920,
+            "topQueries": [
+                "obraz",
+                "wazon",
+                "poduszka",
+                "dywan",
+                "lustro"
+            ],
+            "avgResponseTime": 156,
+            "conversionRate": 7.4
+        }
+    },
+    "failedQueries": [
+        {
+            "query": "abcdefghijk",
+            "count": 23,
+            "lastSeen": "2025-01-01T11:30:00.000Z",
+            "errorType": "no_results"
+        },
+        {
+            "query": "test123",
+            "count": 18,
+            "lastSeen": "2025-01-01T10:45:00.000Z",
+            "errorType": "invalid_query"
+        },
+        {
+            "query": "",
+            "count": 45,
+            "lastSeen": "2025-01-01T11:20:00.000Z",
+            "errorType": "empty_query"
+        }
+    ],
+    "geographicData": {
+        "topCities": [
+            {
+                "city": "Warszawa",
+                "queries": 2450,
+                "conversions": 245
+            },
+            {
+                "city": "Kraków",
+                "queries": 1890,
+                "conversions": 201
+            },
+            {
+                "city": "Gdańsk",
+                "queries": 1234,
+                "conversions": 156
+            },
+            {
+                "city": "Wrocław",
+                "queries": 1156,
+                "conversions": 134
+            },
+            {
+                "city": "Poznań",
+                "queries": 998,
+                "conversions": 112
+            }
+        ],
+        "topRegions": [
+            {
+                "region": "Mazowieckie",
+                "queries": 3450,
+                "conversions": 389
+            },
+            {
+                "region": "Małopolskie",
+                "queries": 2340,
+                "conversions": 267
+            },
+            {
+                "region": "Pomorskie",
+                "queries": 1890,
+                "conversions": 198
+            },
+            {
+                "region": "Dolnośląskie",
+                "queries": 1567,
+                "conversions": 176
+            }
+        ]
+    },
+    "timePatterns": {
+        "peakHours": [
+            {
+                "hour": 8,
+                "queries": 1650,
+                "conversionRate": 14.2
+            },
+            {
+                "hour": 14,
+                "queries": 1420,
+                "conversionRate": 12.8
+            },
+            {
+                "hour": 20,
+                "queries": 1380,
+                "conversionRate": 15.6
+            }
+        ],
+        "weeklyPattern": {
+            "monday": {
+                "queries": 2100,
+                "conversions": 231
+            },
+            "tuesday": {
+                "queries": 2450,
+                "conversions": 294
+            },
+            "wednesday": {
+                "queries": 2380,
+                "conversions": 286
+            },
+            "thursday": {
+                "queries": 2290,
+                "conversions": 275
+            },
+            "friday": {
+                "queries": 2150,
+                "conversions": 247
+            },
+            "saturday": {
+                "queries": 1890,
+                "conversions": 208
+            },
+            "sunday": {
+                "queries": 1740,
+                "conversions": 192
+            }
+        }
+    }
+}

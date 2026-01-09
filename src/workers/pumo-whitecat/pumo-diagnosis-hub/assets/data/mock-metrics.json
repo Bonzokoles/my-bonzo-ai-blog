@@ -1,0 +1,261 @@
+{
+    "metrics": {
+        "timestamp": "2025-01-01T12:00:00.000Z",
+        "totalProducts": 2560,
+        "activeQueries": 847,
+        "successRate": 94.2,
+        "dailyVolume": 15420,
+        "weeklyGrowth": 12.5,
+        "monthlyGrowth": 45.3,
+        "categories": 68,
+        "averageResponseTime": 245,
+        "cacheHitRate": 78.2,
+        "errorRate": 1.8,
+        "uptime": 99.8
+    },
+    "dailyStats": [
+        {
+            "date": "2024-12-26",
+            "queries": 12400,
+            "success": 92.5,
+            "errors": 930
+        },
+        {
+            "date": "2024-12-27",
+            "queries": 13200,
+            "success": 94.2,
+            "errors": 765
+        },
+        {
+            "date": "2024-12-28",
+            "queries": 11800,
+            "success": 91.8,
+            "errors": 967
+        },
+        {
+            "date": "2024-12-29",
+            "queries": 14500,
+            "success": 95.1,
+            "errors": 711
+        },
+        {
+            "date": "2024-12-30",
+            "queries": 15420,
+            "success": 94.2,
+            "errors": 894
+        },
+        {
+            "date": "2024-12-31",
+            "queries": 13900,
+            "success": 93.7,
+            "errors": 876
+        },
+        {
+            "date": "2025-01-01",
+            "queries": 16200,
+            "success": 96.3,
+            "errors": 599
+        }
+    ],
+    "hourlyPerformance": [
+        {
+            "hour": "00:00",
+            "responseTime": 245,
+            "requests": 820,
+            "errors": 12
+        },
+        {
+            "hour": "01:00",
+            "responseTime": 280,
+            "requests": 950,
+            "errors": 18
+        },
+        {
+            "hour": "02:00",
+            "responseTime": 198,
+            "requests": 1200,
+            "errors": 8
+        },
+        {
+            "hour": "03:00",
+            "responseTime": 320,
+            "requests": 890,
+            "errors": 22
+        },
+        {
+            "hour": "04:00",
+            "responseTime": 156,
+            "requests": 1450,
+            "errors": 5
+        },
+        {
+            "hour": "05:00",
+            "responseTime": 234,
+            "requests": 1320,
+            "errors": 14
+        },
+        {
+            "hour": "06:00",
+            "responseTime": 289,
+            "requests": 980,
+            "errors": 19
+        },
+        {
+            "hour": "07:00",
+            "responseTime": 178,
+            "requests": 1180,
+            "errors": 7
+        },
+        {
+            "hour": "08:00",
+            "responseTime": 345,
+            "requests": 1650,
+            "errors": 31
+        },
+        {
+            "hour": "09:00",
+            "responseTime": 201,
+            "requests": 1420,
+            "errors": 11
+        },
+        {
+            "hour": "10:00",
+            "responseTime": 267,
+            "requests": 1280,
+            "errors": 16
+        },
+        {
+            "hour": "11:00",
+            "responseTime": 223,
+            "requests": 1380,
+            "errors": 12
+        }
+    ],
+    "categoryDistribution": [
+        {
+            "name": "Meble",
+            "slug": "furniture",
+            "count": 520,
+            "percentage": 20.3,
+            "growth": 15.2
+        },
+        {
+            "name": "Oświetlenie",
+            "slug": "lighting",
+            "count": 380,
+            "percentage": 14.8,
+            "growth": 8.7
+        },
+        {
+            "name": "Przechowywanie",
+            "slug": "storage",
+            "count": 290,
+            "percentage": 11.3,
+            "growth": 12.1
+        },
+        {
+            "name": "Dekoracje",
+            "slug": "decor",
+            "count": 410,
+            "percentage": 16.0,
+            "growth": 6.8
+        },
+        {
+            "name": "Kuchnia",
+            "slug": "kitchen",
+            "count": 350,
+            "percentage": 13.7,
+            "growth": 9.4
+        },
+        {
+            "name": "Sypialnia",
+            "slug": "bedroom",
+            "count": 315,
+            "percentage": 12.3,
+            "growth": 7.2
+        },
+        {
+            "name": "Inne",
+            "slug": "other",
+            "count": 295,
+            "percentage": 11.6,
+            "growth": 3.9
+        }
+    ],
+    "topProducts": [
+        {
+            "id": 1,
+            "name": "Szafa IKEA MALM",
+            "category": "furniture",
+            "queries": 1250,
+            "conversions": 89
+        },
+        {
+            "id": 2,
+            "name": "Stół dębowy rustical",
+            "category": "furniture",
+            "queries": 980,
+            "conversions": 76
+        },
+        {
+            "id": 3,
+            "name": "Lampa wisząca LED",
+            "category": "lighting",
+            "queries": 845,
+            "conversions": 62
+        },
+        {
+            "id": 4,
+            "name": "Komoda z szufladami",
+            "category": "storage",
+            "queries": 723,
+            "conversions": 55
+        },
+        {
+            "id": 5,
+            "name": "Fotel biurowy ergonomiczny",
+            "category": "furniture",
+            "queries": 689,
+            "conversions": 48
+        }
+    ],
+    "systemHealth": {
+        "database": {
+            "status": "healthy",
+            "connections": 45,
+            "responseTime": 12
+        },
+        "cache": {
+            "status": "healthy",
+            "hitRate": 78.2,
+            "size": "2.1GB"
+        },
+        "api": {
+            "status": "healthy",
+            "requests": 15420,
+            "errors": 278
+        },
+        "workers": {
+            "status": "healthy",
+            "active": 12,
+            "queue": 0
+        }
+    },
+    "alerts": [
+        {
+            "level": "info",
+            "message": "Daily backup completed successfully",
+            "timestamp": "2025-01-01T06:00:00.000Z"
+        },
+        {
+            "level": "warning",
+            "message": "Cache hit rate below 80% threshold",
+            "timestamp": "2025-01-01T10:30:00.000Z"
+        },
+        {
+            "level": "info",
+            "message": "Product sync completed: 156 items updated",
+            "timestamp": "2025-01-01T11:45:00.000Z"
+        }
+    ]
+}

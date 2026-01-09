@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>JIMBO THE PUMO // DIAGNOSIS HUB</title>
+    <meta name="description" content="AI-powered analytics and diagnostic dashboard for Meble Pumo operations" />
+
+    <!-- Enhanced Favicon Support -->
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="manifest" href="assets/images/site.webmanifest">
+    <meta name="theme-color" content="#0b0b12">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="assets/css/theme.css">
+
+    <!-- Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <!-- TOP BAR -->
+    <header class="topbar" role="banner">
+        <div class="toprow">
+            <div class="brand">
+                <div class="sigil" aria-hidden="true">
+                    <img src="assets/images/bonzo-logo.png" alt="Bonzo Logo" class="brand-logo">
+                </div>
+                <div>
+                    <h1>JIMBO THE PUMO</h1>
+                    <div class="sub">DIAGNOSIS HUB</div>
+                </div>
+            </div>
+
+            <div class="status-bar" role="status" aria-live="polite">
+                <div class="stat">
+                    <span class="dot" id="statusDot"></span>
+                    <span>STATUS: <strong id="status">LOADING</strong></span>
+                </div>
+                <div class="stat">
+                    <span>API: <strong id="apiStatus">CONNECTING</strong></span>
+                </div>
+                <div class="stat">
+                    <span>LIVE: <strong id="liveCount">0</strong></span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn" id="themeToggle" type="button">🌙 DARK</button>
+                <button class="btn" id="exportBtn" type="button"
+                    onclick="window.location.href='export.html'">EXPORT</button>
+                <button class="btn" id="refreshBtn" type="button">REFRESH</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="container" role="main">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <img src="assets/images/pumo-icon.png" alt="PUMO Icon" class="hero-icon">
+            <h2 class="hero-title">PUMO ANALYTICS COMMAND CENTER</h2>
+            <p class="hero-subtitle">Real-time diagnostics & AI-powered insights</p>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="metrics-grid" id="metricsGrid">
+            <div class="metric-card">
+                <div class="metric-label">Total Products</div>
+                <div class="metric-value" id="totalProducts">--</div>
+                <div class="metric-change" id="productsChange">--</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Active Categories</div>
+                <div class="metric-value" id="activeCategories">--</div>
+                <div class="metric-change" id="categoriesChange">--</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">API Requests (24h)</div>
+                <div class="metric-value" id="apiRequests24h">--</div>
+                <div class="metric-change" id="requestsChange">--</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Response Time</div>
+                <div class="metric-value" id="avgResponseTime">--</div>
+                <div class="metric-change" id="responseChange">--</div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-grid">
+            <div class="chart-panel">
+                <h3>Daily Analytics</h3>
+                <canvas id="dailyChart" width="400" height="200"></canvas>
+            </div>
+
+            <div class="chart-panel">
+                <h3>Category Distribution</h3>
+                <canvas id="categoryChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- AI Analyst Section -->
+        <div class="ai-section">
+            <div class="ai-panel">
+                <h3>🤖 AI ANALYST</h3>
+                <div class="ai-status" id="aiStatus">Ready for analysis...</div>
+                <button class="btn btn-ai" id="generateAnalysis">GENERATE ANALYSIS</button>
+                <div class="ai-output" id="aiOutput"></div>
+            </div>
+        </div>
+
+        <!-- Live Activity -->
+        <div class="activity-panel">
+            <h3>🔴 Live Activity</h3>
+            <div class="activity-feed" id="activityFeed">
+                <div class="activity-item">System initialized successfully</div>
+                <div class="activity-item">Database connection established</div>
+                <div class="activity-item">Analytics engine started</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        JIMBO THE PUMO DIAGNOSIS HUB © 2026 | Powered by AI Analytics
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/charts.js"></script>
+    <script src="assets/js/ai-analyst.js"></script>
+    <script src="assets/js/pumo-api.js"></script>
+</body>
+
+</html>
