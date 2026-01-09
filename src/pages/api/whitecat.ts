@@ -6,6 +6,24 @@ import { getGuideGenerator } from '@/lib/whitecat/guide-generator';
 import { getProductManager } from '@/lib/whitecat/product-manager-d1';
 import type { APIRoute } from 'astro';
 
+/**
+ * Build product URL with UTM tracking
+ */
+function buildProductUrl(baseUrl: string, utmParams: Record<string, string>): string {
+    if (!baseUrl) return '';
+
+    try {
+        const url = new URL(baseUrl);
+        Object.entries(utmParams).forEach(([key, value]) => {
+            url.searchParams.set(key, value);
+        });
+        return url.toString();
+    } catch (error) {
+        console.error('Error building URL:', error);
+        return baseUrl;
+    }
+}
+
 export const GET: APIRoute = async (context) => {
     try {
         const url = new URL(context.request.url);
@@ -67,12 +85,25 @@ export const GET: APIRoute = async (context) => {
 
                 const products = await productManager.getProductsByCategory(category);
 
+                // Enrich products with UTM tracking URLs
+                const enrichedProducts = products.map((product: any) => ({
+                    ...product,
+                    url: buildProductUrl(product.real_url || product.url, {
+                        utm_source: 'mybonzo',
+                        utm_medium: 'whitecat',
+                        utm_campaign: 'category_browse',
+                        utm_content: product.id?.toString() || 'unknown'
+                    }),
+                    originalUrl: product.real_url || product.url
+                }));
+
                 return new Response(JSON.stringify({
                     success: true,
                     data: {
                         category,
-                        products,
-                        total: products.length
+                        products: enrichedProducts,
+                        total: enrichedProducts.length,
+                        utm_tracking: true
                     }
                 }), {
                     status: 200,
@@ -93,12 +124,26 @@ export const GET: APIRoute = async (context) => {
 
                 const products = await productManager.searchProducts(query, 10);
 
+                // Enrich products with UTM tracking URLs
+                const enrichedProducts = products.map((product: any) => ({
+                    ...product,
+                    url: buildProductUrl(product.real_url || product.url, {
+                        utm_source: 'mybonzo',
+                        utm_medium: 'whitecat',
+                        utm_campaign: 'search_results',
+                        utm_term: query,
+                        utm_content: product.id?.toString() || 'unknown'
+                    }),
+                    originalUrl: product.real_url || product.url
+                }));
+
                 return new Response(JSON.stringify({
                     success: true,
                     data: {
                         query,
-                        products,
-                        total: products.length
+                        products: enrichedProducts,
+                        total: enrichedProducts.length,
+                        utm_tracking: true
                     }
                 }), {
                     status: 200,
@@ -133,9 +178,47 @@ export const POST: APIRoute = async (context) => {
         const env = runtime?.env;
 
         const body = await context.request.json();
-        const { action, category, data } = body;
+        const { action, category, query, data } = body;
 
         switch (action) {
+            case 'search': {
+                if (!query) {
+                    return new Response(JSON.stringify({
+                        success: false,
+                        error: 'Query parameter required for search'
+                    }), { status: 400 });
+                }
+
+                const productManager = getProductManager(env);
+                const products = await productManager.searchProducts(query, 20);
+
+                // Enrich products with UTM tracking URLs
+                const enrichedProducts = products.map((product: any) => ({
+                    ...product,
+                    url: buildProductUrl(product.real_url || product.url, {
+                        utm_source: 'mybonzo',
+                        utm_medium: 'whitecat',
+                        utm_campaign: 'post_search',
+                        utm_term: query,
+                        utm_content: product.id?.toString() || 'unknown'
+                    }),
+                    originalUrl: product.real_url || product.url
+                }));
+
+                return new Response(JSON.stringify({
+                    success: true,
+                    data: {
+                        query,
+                        products: enrichedProducts,
+                        total: enrichedProducts.length,
+                        utm_tracking: true
+                    }
+                }), {
+                    status: 200,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
+
             case 'generate-guide': {
                 const generator = getGuideGenerator(env);
                 const guide = await generator.generateCategoryGuide(category);
