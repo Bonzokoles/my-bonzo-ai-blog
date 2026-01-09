@@ -35,4 +35,4 @@ jobs:
 
     - name: Health Check
       run: |
-        curl -f https://mybonzoaiblog.com/api/health || echo "Health check warning"
+        curl -f https://mybonzoaiblog.pages.dev/api/health || echo "Health check warning"

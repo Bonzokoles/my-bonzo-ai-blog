@@ -9,7 +9,7 @@ const paths = [
 console.log('🔄 Starting prefetch sequence...');
 
 Promise.all(paths.map(path => {
-  const url = `https://mybonzoaiblog.com${path}`;
+  const url = `https://mybonzoaiblog.pages.dev${path}`;
   console.log(`📡 Fetching: ${url}`);
   return fetch(url, { method: 'HEAD' })
     .then(res => {
