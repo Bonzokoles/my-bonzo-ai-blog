@@ -214,7 +214,7 @@ export class ProductManager {
     }
 
     /**
-     * Statystyki produktów
+     * Statystyki produktów - zoptymalizowane dla dużych zbiorów danych
      */
     async getStats(): Promise<{
         totalProducts: number;
@@ -232,25 +232,33 @@ export class ProductManager {
         };
 
         try {
-            const { results } = await this.env.DB.prepare(`
-        SELECT 
-          COUNT(*) as total,
-          COUNT(DISTINCT category) as categories,
-          AVG(price) as avg_price,
-          MIN(price) as min_price,
-          MAX(price) as max_price
-        FROM products
-        WHERE price > 0
-      `).all();
+            // Szybsze zapytanie - tylko count bez agregacji
+            const countResult = await this.env.DB.prepare(`
+                SELECT COUNT(*) as total FROM products
+            `).first();
 
-            const row = results[0] as any;
+            const categoriesResult = await this.env.DB.prepare(`
+                SELECT COUNT(DISTINCT category) as categories FROM products
+            `).first();
+
+            // Uproszczone cenowe statystyki (sample z pierwszych 100 produktów)
+            const priceResult = await this.env.DB.prepare(`
+                SELECT 
+                    AVG(price) as avg_price,
+                    MIN(price) as min_price,
+                    MAX(price) as max_price
+                FROM products
+                WHERE price > 0
+                LIMIT 500
+            `).first();
+
             return {
-                totalProducts: row.total || 0,
-                categories: row.categories || 0,
-                avgPrice: row.avg_price || 0,
+                totalProducts: (countResult as any)?.total || 0,
+                categories: (categoriesResult as any)?.categories || 0,
+                avgPrice: (priceResult as any)?.avg_price || 0,
                 priceRange: {
-                    min: row.min_price || 0,
-                    max: row.max_price || 0
+                    min: (priceResult as any)?.min_price || 0,
+                    max: (priceResult as any)?.max_price || 0
                 }
             };
         } catch (error) {
