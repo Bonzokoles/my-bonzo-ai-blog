@@ -1,5 +1,34 @@
 import { getProductManager, type Product } from './product-manager-d1';
-import { SitemapSync } from './sitemap-sync';
+
+/**
+ * Build product URL with UTM tracking
+ */
+function buildProductUrl(baseUrl: string, utmParams: Record<string, string>): string {
+    if (!baseUrl) return '';
+
+    try {
+        const url = new URL(baseUrl);
+        Object.entries(utmParams).forEach(([key, value]) => {
+            url.searchParams.set(key, value);
+        });
+        return url.toString();
+    } catch (error) {
+        console.error('Error building URL:', error);
+        return baseUrl;
+    }
+}
+
+/**
+ * Slugify text for URL-safe strings
+ */
+function slugify(text: string): string {
+    return text
+        .toLowerCase()
+        .replace(/[^a-z0-9 -]/g, '')
+        .replace(/\s+/g, '_')
+        .replace(/-+/g, '_')
+        .trim();
+}
 
 interface GuideMetadata {
     title: string;
@@ -31,36 +60,32 @@ export class WhitecatGuideGenerator {
     }> {
         console.log(`📝 Generating guide for category: ${category}`);
 
-        // Pobierz produkty z kategorii
+        // Pobierz produkty z kategorii z URL-ami
         const originalProducts = await this.productManager.getTopProductsInCategory(category, 10);
-        
+
         if (originalProducts.length === 0) {
             throw new Error(`No products found for category: ${category}`);
         }
 
-        // Add Tracking
-        let products = originalProducts;
-        if (this.env && this.env.DB) {
-             const sitemapSync = new SitemapSync(this.env);
-             console.log(`🔗 Injecting tracked URLs for category: ${category}`);
-             
-             products = await Promise.all(originalProducts.map(async (p: Product) => {
-                 const trackedUrl = await sitemapSync.generateTrackedUrl(
-                     p.id, 
-                     `guide_${this.slugify(category)}`,
-                     'ai_guide'
-                 );
-                 return { ...p, tracked_url: trackedUrl };
-             }));
-        } else {
-             console.warn('⚠️ No environment/DB for tracking injection');
-        }
+        // Enrich products with UTM tracking URLs
+        const products = originalProducts.map((product: Product) => ({
+            ...product,
+            tracked_url: buildProductUrl(product.real_url || product.url, {
+                utm_source: 'mybonzo',
+                utm_medium: 'guide',
+                utm_campaign: slugify(category),
+                utm_content: product.id?.toString() || 'unknown'
+            }),
+            originalUrl: product.real_url || product.url
+        }));
+
+        console.log(`🔗 Enriched ${products.length} products with UTM tracking for category: ${category}`);
 
         // Metadata przewodnika
-        const slug = this.slugify(category);
+        const slug = slugify(category);
         const metadata: GuideMetadata = {
             title: `${category} - Przewodnik Zakupowy 2025`,
-            description: `Kompletny przewodnik zakupowy ${category.toLowerCase()}. Porównanie najlepszych produktów, ceny, opinie i rekomendacje.`,
+            description: `Kompletny przewodnik zakupowy ${category.toLowerCase()}. Porównanie najlepszych produktów, ceny, opinie i rekomendacje z UTM tracking.`,
             category,
             slug,
             products,
@@ -173,7 +198,7 @@ products: ${metadata.products.length}
 generated: true
 utm_source: "mybonzo"
 utm_medium: "ai_guide"
-utm_campaign: "buying_guide_${this.slugify(metadata.category)}"
+utm_campaign: "buying_guide_${slugify(metadata.category)}"
 schema: ${JSON.stringify(metadata.seo.schema, null, 2)}
 qualityScore: 95
 dataIntegrity: "high"
