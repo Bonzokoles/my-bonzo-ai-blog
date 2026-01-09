@@ -8,6 +8,7 @@ export interface Env {
   // APIs
   ANTHROPIC_API_KEY?: string;
   OPENAI_API_KEY?: string;
+  GEMINI_API_KEY?: string;
   DKIM_PRIVATE_KEY?: string;
   GA4_MEASUREMENT_ID?: string;
   GA4_API_SECRET?: string;

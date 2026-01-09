@@ -1,4 +1,4 @@
-import { getLinkEnrichmentService } from '@/lib/whitecat/link-enrichment';
+import { getProductExtractor } from '@/lib/whitecat/product-extractor';
 import type { APIRoute } from 'astro';
 
 export const prerender = false;
@@ -24,37 +24,21 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // 1. RAG: Search for products in The_whitecat Worker
+        // 1. GEMINI FLASH: Extract products from query and enrich with URLs
         let productContext = '';
         try {
-            const searchResponse = await fetch('https://pumo-chunk-processor.stolarnia-ams.workers.dev/api/search', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    query: query,
-                    limit: 5,
-                    threshold: 0.6 // Semantic similarity threshold
-                })
-            });
-
-            if (searchResponse.ok) {
-                const searchData: any = await searchResponse.json();
-                if (searchData.success && searchData.data && searchData.data.length > 0) {
-                    productContext = "ZNALTEZIONE PRODUKTY W BAZIE SKLEPU:\n" + 
-                        searchData.data.map((p: any) => 
-                            `- ${p.name} (Cena: ${p.price} zł): ${p.description?.substring(0, 150)}... [Link: ${p.link}]`
-                        ).join("\n") + "\n\n";
-                    
-                    console.log(`RAG: Found ${searchData.data.length} products for context.`);
-                } else {
-                    console.log('RAG: No matching products found.');
-                }
+            const extractor = getProductExtractor(env);
+            const enrichedProducts = await extractor.extractAndEnrich(query);
+            
+            if (enrichedProducts.length > 0) {
+                productContext = extractor.formatAsContext(enrichedProducts);
+                console.log(`[Gemini Extractor] Found ${enrichedProducts.length} products with tracked URLs`);
             } else {
-                console.warn('RAG: Search worker returned error:', searchResponse.status);
+                console.log('[Gemini Extractor] No products extracted from query');
             }
         } catch (err) {
-            console.error('RAG: Fetch error:', err);
-            // Continue without context if RAG fails
+            console.error('[Gemini Extractor] Extraction error:', err);
+            // Continue without context if extraction fails
         }
 
         // 2. DeepSeek R1 API Call with RAG Context
@@ -108,32 +92,9 @@ Kontekst strony: ${context || 'Strona główna przewodnika'}`
         }
 
         const data = await response.json();
-        let reply = data.choices?.[0]?.message?.content || 'Brak odpowiedzi';
+        const reply = data.choices?.[0]?.message?.content || 'Brak odpowiedzi';
 
-        // ENHANCEMENT: Enrich response with clickable product links
-        if (env) {
-            try {
-                const linkService = getLinkEnrichmentService(env);
-                reply = await linkService.enrichWithProductLinks(reply);
-                console.log('[PumoChat] Link enrichment applied');
-            } catch (enrichError) {
-                console.error('[PumoChat] Link enrichment failed:', enrichError);
-                // Continue with original reply if enrichment fails
-            }
-            
-            // POST-PROCESS: Add UTM to existing meblepumo.pl markdown links
-            reply = reply.replace(
-                /\[([^\]]+)\]\((https?:\/\/(?:www\.)?meblepumo\.pl\/[^)]+)\)/g,
-                (match, text, url) => {
-                    // Only add UTM if not already present
-                    if (url.includes('utm_source')) return match;
-                    
-                    const separator = url.includes('?') ? '&' : '?';
-                    const utmParams = `utm_source=mybonzo&utm_medium=rag_chat&utm_campaign=chat_assistant`;
-                    return `[${text}](${url}${separator}${utmParams})`;
-                }
-            );
-        }
+        // NOTE: No post-processing needed! Gemini extractor already injected tracked URLs into context
 
         return new Response(
             JSON.stringify({ reply }),
