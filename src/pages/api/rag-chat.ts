@@ -1,7 +1,9 @@
 /**
  * RAG Chat API Endpoint
  * Proxy do Worker Michael z feature control i KV caching
+ * Enhanced with product link enrichment
  */
+import { getLinkEnrichmentService } from '@/lib/whitecat/link-enrichment';
 import type { APIRoute } from 'astro';
 
 const WORKER_URL = 'https://jimbo-angels-worker.stolarnia-ams.workers.dev/orchestrate';
@@ -57,14 +59,29 @@ export const POST: APIRoute = async ({ request, locals }) => {
         // Log partial response for debug
         console.log('[RAG API] Worker success. Answer length:', data.answer?.length);
 
+        // ENHANCEMENT: Enrich response with product links
+        let enrichedAnswer = data.answer || '';
+        if (env && data.answer) {
+            try {
+                const linkService = getLinkEnrichmentService(env);
+                enrichedAnswer = await linkService.enrichWithProductLinks(data.answer);
+                console.log('[RAG API] Link enrichment applied');
+            } catch (enrichError) {
+                console.error('[RAG API] Link enrichment failed:', enrichError);
+                // Fallback to original answer if enrichment fails
+                enrichedAnswer = data.answer;
+            }
+        }
+
         return new Response(JSON.stringify({
             success: true,
-            answer: data.answer,
+            answer: enrichedAnswer,
             sources: data.sources || [],
             metadata: { 
                 namespace, 
                 timestamp: new Date().toISOString(),
-                provider: "cloud-worker" 
+                provider: "cloud-worker",
+                links_enriched: enrichedAnswer !== data.answer
             }
         }), {
             status: 200,
