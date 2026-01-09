@@ -406,7 +406,7 @@ export const DEFAULT_FUNCTIONS: FunctionRegistryEntry[] = [
     id: 'image-gallery',
     name: 'Image Gallery',
     category: 'media',
-    endpoint: '/api/ai/image-gallery',
+    endpoint: '/api/media/gallery',
     method: 'GET',
     enabled: true,
     permissions: ['public', 'user', 'admin'],
