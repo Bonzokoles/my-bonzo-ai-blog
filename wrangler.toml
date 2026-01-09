@@ -5,10 +5,6 @@ pages_build_output_dir = "dist"
 
 # Account ID will be set via CLOUDFLARE_ACCOUNT_ID env var
 
-# Pages Configuration
-[pages]
-build_output_dir = "dist"
-
 # D1 Databases - explicitly for Pages
 [[d1_databases]]
 binding = "DB"
