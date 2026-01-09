@@ -153,6 +153,48 @@ export const FEATURES: FeatureFlag[] = [
     }
   },
 
+  // WHITECAT Integration
+  {
+    id: 'whitecat-guides',
+    name: 'WHITECAT Buying Guides',
+    description: 'AI-generated buying guides with UTM tracking and revenue attribution',
+    status: 'enabled',
+    permissions: ['public', 'user', 'admin'],
+    rateLimit: {
+      requests: 20,
+      window: 60000,
+      identifier: 'ip'
+    },
+    environments: ['development', 'staging', 'production'],
+    dependencies: ['ai-chat'],
+    metadata: {
+      category: 'guides',
+      provider: 'whitecat',
+      utm_tracking: true,
+      revenue_attribution: true,
+      products: 2560,
+      categories: 68
+    }
+  },
+  {
+    id: 'whitecat-products',
+    name: 'Product Manager',
+    description: 'Product data management with UTM tracking for Meble Pumo integration',
+    status: 'enabled',
+    permissions: ['public', 'user', 'admin'],
+    rateLimit: {
+      requests: 50,
+      window: 60000,
+      identifier: 'ip'
+    },
+    environments: ['development', 'staging', 'production'],
+    metadata: {
+      category: 'products',
+      provider: 'whitecat',
+      data_source: 'xml_feeds'
+    }
+  },
+
   // Media Features
   {
     id: 'media-upload',

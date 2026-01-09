@@ -26,6 +26,20 @@ binding = "CACHE"
 id = "cce469bb54d142ebbbce4287e450daec"
 preview_id = "139be3a08d7940eea1de297b0ac22e59"
 
+# D1 Database - WHITECAT Products + RAG System
+[[d1_databases]]
+binding = "DB"
+database_name = "jimbo-rag-db"
+database_id = "90fe9b43-f8a4-4e78-94c5-c44aff4012e9"
+remote = true
+
+# D1 Database - Additional products storage (future use)
+[[d1_databases]]
+binding = "PUMO_DB"
+database_name = "pumo_products"
+database_id = "9534ef30-4ccd-4e90-9efc-7ddd2f9935cc"
+remote = true
+
 # AI binding with remote access for local dev
 [ai]
 binding = "AI"

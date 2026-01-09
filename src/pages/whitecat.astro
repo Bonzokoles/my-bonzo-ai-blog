@@ -1,0 +1,410 @@
+---
+title: "WHITECAT - Przewodniki Zakupowe AI";
+description: "System generowania przewodników zakupowych z UTM tracking i analizą revenue attribution";
+// Auto-deployment test - 9 stycznia 2026
+---
+
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-4">🐱 WHITECAT Integration</h1>
+            <p class="text-xl text-gray-600 dark:text-gray-300">
+                AI Przewodniki Zakupowe z UTM Tracking
+            </p>
+        </div>
+
+        <!-- Stats Dashboard -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold mb-4">📊 Statystyki Systemu</h2>
+            <div id="stats-container">
+                <div class="animate-pulse">
+                    <div class="h-4 bg-gray-300 rounded w-1/2 mb-2"></div>
+                    <div class="h-4 bg-gray-300 rounded w-1/3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Categories -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold mb-4">
+                    📂 Kategorie Produktów
+                </h3>
+                <select
+                    id="category-select"
+                    class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 mb-4"
+                >
+                    <option value="">Ładowanie kategorii...</option>
+                </select>
+                <div class="space-y-2">
+                    <button
+                        id="load-products"
+                        class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+                    >
+                        📦 Pokaż Produkty
+                    </button>
+                    <button
+                        id="generate-guide"
+                        class="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+                    >
+                        📝 Generuj Przewodnik
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold mb-4">🔍 Wyszukiwanie</h3>
+                <div class="space-y-2">
+                    <input
+                        type="text"
+                        id="search-input"
+                        placeholder="Wyszukaj produkty..."
+                        class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+                    />
+                    <button
+                        id="search-products"
+                        class="w-full bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700"
+                    >
+                        🔍 Szukaj
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+            <h3 class="text-xl font-semibold mb-4">📄 Wyniki</h3>
+            <div id="results-container">
+                <p class="text-gray-500 dark:text-gray-400">
+                    Wybierz kategorię lub wyszukaj produkty aby zobaczyć wyniki.
+                </p>
+            </div>
+        </div>
+
+        <!-- Generator All Guides -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <h3 class="text-xl font-semibold mb-4">⚡ Generuj Wszystkie</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-4">
+                Wygeneruj przewodniki dla wszystkich 68 kategorii produktów.
+            </p>
+            <button
+                id="generate-all"
+                class="bg-red-600 text-white py-2 px-6 rounded hover:bg-red-700"
+            >
+                🚀 Generuj Wszystkie Przewodniki
+            </button>
+            <div id="generation-status" class="mt-4 hidden">
+                <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded">
+                    <p class="font-semibold">Generowanie w toku...</p>
+                    <div
+                        class="mt-2 bg-gray-200 dark:bg-gray-700 rounded-full h-2"
+                    >
+                        <div
+                            class="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                            style="width: 0%"
+                            id="progress-bar"
+                        >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // API Functions
+    async function apiCall(endpoint, options = {}) {
+        try {
+            const response = await fetch(endpoint, {
+                ...options,
+                headers: {
+                    "Content-Type": "application/json",
+                    ...options.headers,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(
+                    `HTTP ${response.status}: ${response.statusText}`,
+                );
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("API Call failed:", error);
+            throw error;
+        }
+    }
+
+    // Load stats on page load
+    document.addEventListener("DOMContentLoaded", async () => {
+        try {
+            const stats = await apiCall("/api/whitecat?action=stats");
+            const statsContainer = document.getElementById("stats-container");
+
+            if (stats.success) {
+                statsContainer.innerHTML = `
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-blue-600">${stats.data.products.totalProducts}</div>
+              <div class="text-sm text-gray-600">Produktów</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-green-600">${stats.data.products.categories}</div>
+              <div class="text-sm text-gray-600">Kategorii</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-purple-600">${stats.data.guides.totalCategories}</div>
+              <div class="text-sm text-gray-600">Przewodników</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-orange-600">${Math.round(stats.data.products.avgPrice)} PLN</div>
+              <div class="text-sm text-gray-600">Średnia cena</div>
+            </div>
+          </div>
+          <div class="mt-4 text-sm text-gray-600">
+            <p><strong>System:</strong> ${stats.data.system} v${stats.data.version}</p>
+            <p><strong>Zakres cen:</strong> ${stats.data.products.priceRange.min} - ${stats.data.products.priceRange.max} PLN</p>
+          </div>
+        `;
+            }
+        } catch (error) {
+            console.error("Failed to load stats:", error);
+            document.getElementById("stats-container").innerHTML = `
+        <div class="text-red-600">Błąd ładowania statystyk: ${error.message}</div>
+      `;
+        }
+
+        // Load categories
+        try {
+            const categories = await apiCall("/api/whitecat?action=categories");
+            const select = document.getElementById("category-select");
+
+            if (categories.success) {
+                select.innerHTML =
+                    '<option value="">Wybierz kategorię...</option>';
+                categories.data.categories.forEach((category) => {
+                    const option = document.createElement("option");
+                    option.value = category;
+                    option.textContent = category;
+                    select.appendChild(option);
+                });
+            }
+        } catch (error) {
+            console.error("Failed to load categories:", error);
+        }
+    });
+
+    // Event Listeners
+    document
+        .getElementById("load-products")
+        .addEventListener("click", async () => {
+            const category = document.getElementById("category-select").value;
+            if (!category) {
+                alert("Wybierz kategorię");
+                return;
+            }
+
+            try {
+                const products = await apiCall(
+                    `/api/whitecat?action=products&category=${encodeURIComponent(category)}`,
+                );
+                const container = document.getElementById("results-container");
+
+                if (products.success && products.data.products.length > 0) {
+                    container.innerHTML = `
+          <h4 class="font-semibold mb-3">Produkty w kategorii: ${category}</h4>
+          <div class="space-y-3">
+            ${products.data.products
+                .slice(0, 10)
+                .map(
+                    (product) => `
+              <div class="border rounded p-3">
+                <div class="font-semibold">${product.name}</div>
+                <div class="text-sm text-gray-600">
+                  Cena: <strong>${product.price} PLN</strong> | 
+                  Producent: ${product.manufacturer}
+                </div>
+                <div class="mt-2">
+                  <a href="${product.tracked_url}" target="_blank" 
+                     class="text-blue-600 hover:underline text-sm">
+                    👉 Zobacz produkt (UTM tracked)
+                  </a>
+                </div>
+              </div>
+            `,
+                )
+                .join("")}
+          </div>
+          <div class="mt-4 text-sm text-gray-500">
+            Pokazano ${Math.min(10, products.data.products.length)} z ${products.data.total} produktów
+          </div>
+        `;
+                } else {
+                    container.innerHTML = `<div class="text-gray-500">Brak produktów w tej kategorii</div>`;
+                }
+            } catch (error) {
+                document.getElementById("results-container").innerHTML = `
+        <div class="text-red-600">Błąd: ${error.message}</div>
+      `;
+            }
+        });
+
+    document
+        .getElementById("generate-guide")
+        .addEventListener("click", async () => {
+            const category = document.getElementById("category-select").value;
+            if (!category) {
+                alert("Wybierz kategorię");
+                return;
+            }
+
+            try {
+                const container = document.getElementById("results-container");
+                container.innerHTML =
+                    '<div class="text-blue-600">Generowanie przewodnika...</div>';
+
+                const guide = await apiCall(
+                    `/api/whitecat?action=guide&category=${encodeURIComponent(category)}`,
+                );
+
+                if (guide.success) {
+                    const metadata = guide.data.guide.metadata;
+                    container.innerHTML = `
+          <h4 class="font-semibold mb-3">✅ Przewodnik wygenerowany: ${metadata.title}</h4>
+          <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded mb-4">
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div><strong>Kategoria:</strong> ${metadata.category}</div>
+              <div><strong>Produktów:</strong> ${metadata.products.length}</div>
+              <div><strong>Slug:</strong> ${metadata.slug}</div>
+              <div><strong>Generated:</strong> ${new Date(metadata.generated_at).toLocaleString()}</div>
+            </div>
+          </div>
+          <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded">
+            <h5 class="font-semibold mb-2">Top 3 produkty:</h5>
+            ${metadata.products
+                .slice(0, 3)
+                .map(
+                    (product, i) => `
+              <div class="mb-2">
+                ${i + 1}. <a href="${product.tracked_url}" target="_blank" class="text-blue-600 hover:underline">
+                  ${product.name}
+                </a> - ${product.price} PLN
+              </div>
+            `,
+                )
+                .join("")}
+          </div>
+        `;
+                }
+            } catch (error) {
+                document.getElementById("results-container").innerHTML = `
+        <div class="text-red-600">Błąd generowania: ${error.message}</div>
+      `;
+            }
+        });
+
+    document
+        .getElementById("search-products")
+        .addEventListener("click", async () => {
+            const query = document.getElementById("search-input").value.trim();
+            if (!query) {
+                alert("Wpisz zapytanie");
+                return;
+            }
+
+            try {
+                const results = await apiCall(
+                    `/api/whitecat?action=search&query=${encodeURIComponent(query)}`,
+                );
+                const container = document.getElementById("results-container");
+
+                if (results.success && results.data.products.length > 0) {
+                    container.innerHTML = `
+          <h4 class="font-semibold mb-3">Wyniki wyszukiwania: "${query}"</h4>
+          <div class="space-y-3">
+            ${results.data.products
+                .map(
+                    (product) => `
+              <div class="border rounded p-3">
+                <div class="font-semibold">${product.name}</div>
+                <div class="text-sm text-gray-600">
+                  ${product.category} | ${product.price} PLN | ${product.manufacturer}
+                </div>
+                <div class="mt-2">
+                  <a href="${product.tracked_url}" target="_blank" 
+                     class="text-blue-600 hover:underline text-sm">
+                    👉 Zobacz produkt
+                  </a>
+                </div>
+              </div>
+            `,
+                )
+                .join("")}
+          </div>
+        `;
+                } else {
+                    container.innerHTML = `<div class="text-gray-500">Brak wyników dla "${query}"</div>`;
+                }
+            } catch (error) {
+                document.getElementById("results-container").innerHTML = `
+        <div class="text-red-600">Błąd wyszukiwania: ${error.message}</div>
+      `;
+            }
+        });
+
+    document
+        .getElementById("generate-all")
+        .addEventListener("click", async () => {
+            if (
+                !confirm(
+                    "Czy na pewno chcesz wygenerować wszystkie przewodniki? To może zająć kilka minut.",
+                )
+            ) {
+                return;
+            }
+
+            try {
+                const button = document.getElementById("generate-all");
+                const status = document.getElementById("generation-status");
+
+                button.disabled = true;
+                button.textContent = "Generowanie...";
+                status.classList.remove("hidden");
+
+                const result = await apiCall(
+                    "/api/whitecat?action=generate-all",
+                );
+
+                if (result.success) {
+                    status.innerHTML = `
+          <div class="bg-green-100 dark:bg-green-900 p-4 rounded">
+            <p class="font-semibold text-green-800 dark:text-green-200">
+              ✅ Wygenerowano ${result.data.total} przewodników
+            </p>
+            <div class="mt-2 text-sm text-green-700 dark:text-green-300">
+              Ścieżki: ${result.data.paths.slice(0, 5).join(", ")}
+              ${result.data.paths.length > 5 ? "..." : ""}
+            </div>
+          </div>
+        `;
+                }
+            } catch (error) {
+                document.getElementById("generation-status").innerHTML = `
+        <div class="bg-red-100 dark:bg-red-900 p-4 rounded">
+          <p class="font-semibold text-red-800 dark:text-red-200">
+            ❌ Błąd: ${error.message}
+          </p>
+        </div>
+      `;
+            } finally {
+                const button = document.getElementById("generate-all");
+                button.disabled = false;
+                button.textContent = "🚀 Generuj Wszystkie Przewodniki";
+            }
+        });
+</script>
