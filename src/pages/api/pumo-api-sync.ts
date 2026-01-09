@@ -37,15 +37,16 @@ class PumoAPIClient {
     private timeout: number;
 
     constructor(env: any) {
-        this.baseUrl = env.PUMO_API_BASE_URL || 'https://api.meblepumo.pl/v1';
+        this.baseUrl = env.PUMO_API_BASE_URL || 'https://www.meblepumo.pl';
         this.apiKey = env.PUMO_API_KEY || '';
         this.timeout = 30000;
     }
 
     async fetchProductsPage(page: number, perPage: number = 100): Promise<PumoAPIResponse> {
-        const url = `${this.baseUrl}/products?page=${page}&per_page=${perPage}`;
+        const url = `${this.baseUrl}/xml/products.xml`;
 
-        console.log(`📡 Fetching Pumo API: ${url}`);
+        console.log(`📡 Fetching Pumo XML Feed: ${url}`);
+        console.log(`🔑 Using API key: ${this.apiKey?.substring(0, 10)}...`);
 
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), this.timeout);
@@ -55,8 +56,8 @@ class PumoAPIClient {
                 method: 'GET',
                 headers: {
                     'X-API-KEY': this.apiKey,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
+                    'Content-Type': 'application/xml',
+                    'Accept': 'application/xml',
                     'User-Agent': 'MyBonzo-AI-Blog/1.0 (https://mybonzoaiblog.com)'
                 },
                 signal: controller.signal
@@ -65,60 +66,61 @@ class PumoAPIClient {
             clearTimeout(timeout);
 
             if (!response.ok) {
-                throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                throw new Error(`XML Feed Error: ${response.status} ${response.statusText}`);
             }
 
-            const data = await response.json();
+            const xmlText = await response.text();
+            console.log(`✅ XML Feed response length: ${xmlText.length} characters`);
 
+            // For now, return mock data - XML parsing will be added later
             return {
-                products: data.products || [],
-                total: data.total || 0,
-                page: data.page || page,
-                per_page: data.per_page || perPage,
-                has_more: data.has_more || false
+                products: [], // TODO: Parse XML
+                total: 0,
+                page: 1,
+                per_page: 1000,
+                has_more: false
             };
 
         } catch (error: any) {
             clearTimeout(timeout);
-            console.error('❌ Pumo API fetch error:', error);
+            console.error('❌ Pumo XML Feed fetch error:', error);
             throw error;
         }
-    }
 
-    async getAllProducts(): Promise<PumoAPIProduct[]> {
-        console.log('🚀 Starting full product sync from Pumo API...');
+    async getAllProducts(): Promise < PumoAPIProduct[] > {
+            console.log('🚀 Starting full product sync from Pumo API...');
 
-        const allProducts: PumoAPIProduct[] = [];
-        let page = 1;
-        let hasMore = true;
-        const perPage = 100;
+            const allProducts: PumoAPIProduct[] = [];
+            let page = 1;
+            let hasMore = true;
+            const perPage = 100;
 
-        while (hasMore) {
-            try {
-                const response = await this.fetchProductsPage(page, perPage);
+            while(hasMore) {
+                try {
+                    const response = await this.fetchProductsPage(page, perPage);
 
-                allProducts.push(...response.products);
+                    allProducts.push(...response.products);
 
-                console.log(`✅ Page ${page}: ${response.products.length} products (total: ${allProducts.length}/${response.total})`);
+                    console.log(`✅ Page ${page}: ${response.products.length} products (total: ${allProducts.length}/${response.total})`);
 
-                hasMore = response.has_more;
-                page++;
+                    hasMore = response.has_more;
+                    page++;
 
-                // Rate limiting - 100ms delay
-                if (hasMore) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
+                    // Rate limiting - 100ms delay
+                    if (hasMore) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+
+                } catch (error) {
+                    console.error(`❌ Failed to fetch page ${page}:`, error);
+                    throw error;
                 }
-
-            } catch (error) {
-                console.error(`❌ Failed to fetch page ${page}:`, error);
-                throw error;
             }
-        }
 
         console.log(`✅ Total products fetched from API: ${allProducts.length}`);
-        return allProducts;
+            return allProducts;
+        }
     }
-}
 
 function transformPumoProduct(product: PumoAPIProduct): any {
     // Transform Pumo API product to our internal format
