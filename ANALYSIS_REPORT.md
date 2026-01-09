@@ -325,7 +325,7 @@ You SHOULD see:
     "totalFeatures": 14,
     "totalFunctions": 13,
     "errors": 1,
-    "warnings": 2-3,
+    "warnings": 3,
     "info": 1-2
   },
   "issues": [
