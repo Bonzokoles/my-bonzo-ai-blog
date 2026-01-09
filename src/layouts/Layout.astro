@@ -126,5 +126,29 @@ const headerLogo = typeof logo === "undefined" ? null : logo; // guard against n
     </div>
     <BackToTop />
     <QuickAccessWidget />
+    <QuickAccessWidget />
+    
+    <!-- Global Pumo Analytics Tracker -->
+    <script>
+      import { pumoTracker } from "../lib/pumo-tracker";
+
+      document.addEventListener('click', (e) => {
+        const target = (e.target as Element).closest('a');
+        if (target && target.href) {
+          // Track shop clicks
+          if (target.href.includes('meblepumo.pl')) {
+            pumoTracker.trackClick({
+              id: 'shop_link',
+              name: target.innerText || target.getAttribute('title') || 'Shop Link',
+              url: target.href
+            });
+          }
+          // Track guide clicks (internal)
+          else if (target.href.includes('/pumo-guide/')) {
+            pumoTracker.trackGuideView(target.pathname, target.innerText);
+          }
+        }
+      });
+    </script>
   </body>
 </html>

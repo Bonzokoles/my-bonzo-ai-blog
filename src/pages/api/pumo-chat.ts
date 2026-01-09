@@ -23,7 +23,40 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // DeepSeek R1 API Call
+        // 1. RAG: Search for products in The_whitecat Worker
+        let productContext = '';
+        try {
+            const searchResponse = await fetch('https://pumo-chunk-processor.stolarnia-ams.workers.dev/api/search', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    query: query,
+                    limit: 5,
+                    threshold: 0.6 // Semantic similarity threshold
+                })
+            });
+
+            if (searchResponse.ok) {
+                const searchData: any = await searchResponse.json();
+                if (searchData.success && searchData.data && searchData.data.length > 0) {
+                    productContext = "ZNALTEZIONE PRODUKTY W BAZIE SKLEPU:\n" + 
+                        searchData.data.map((p: any) => 
+                            `- ${p.name} (Cena: ${p.price} zł): ${p.description?.substring(0, 150)}... [Link: ${p.link}]`
+                        ).join("\n") + "\n\n";
+                    
+                    console.log(`RAG: Found ${searchData.data.length} products for context.`);
+                } else {
+                    console.log('RAG: No matching products found.');
+                }
+            } else {
+                console.warn('RAG: Search worker returned error:', searchResponse.status);
+            }
+        } catch (err) {
+            console.error('RAG: Fetch error:', err);
+            // Continue without context if RAG fails
+        }
+
+        // 2. DeepSeek R1 API Call with RAG Context
         const response = await fetch('https://api.deepseek.com/chat/completions', {
             method: 'POST',
             headers: {
@@ -38,13 +71,16 @@ export const POST: APIRoute = async ({ request, locals }) => {
                         content: `Jesteś Inteligentnym Asystentem Sklepu Meble Pumo (www.meblepumo.pl). 
             
 ZASADY:
-1. Opieraj się na kontekście i wiedzy o meblarstwie
-2. Bądź uprzejmy i profesjonalny
-3. Zawsze podawaj link do www.meblepumo.pl
-4. Sugeruj sprawdzenie przewodników na mybonzoaiblog.com/pumo-guide/
-5. Prezentuj wszystkie marki obiektywnie, bazując na danych z przewodników
+1. Opieraj się na dostarczonym KONTEKŚCIE PRODUKTOWYM. Jeśli produkt jest na liście, poleć go.
+2. Bądź uprzejmy i profesjonalny.
+3. Jeśli polecasz produkt, ZAWSZE podawaj jego cenę i link z kontekstu.
+4. Jeśli nie ma produktu w kontekście, zaproś ogólnie na stronę główną lub do kategorii.
+5. Nie zmyślaj produktów, których nie ma w bazie.
 
-Kontekst: ${context || 'Strona główna przewodnika'}`
+KONTEKST PRODUKTOWY Z BAZY DANYCH:
+${productContext}
+
+Kontekst strony: ${context || 'Strona główna przewodnika'}`
                     },
                     {
                         role: 'user',
