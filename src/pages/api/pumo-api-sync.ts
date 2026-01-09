@@ -1,6 +1,6 @@
 /**
  * Meble Pumo API Sync System
- * Automatyczna synchronizacja produktów z API Meble Pumo zamiast scrapingu
+ * Automatyczna synchronizacja produktów z XML feed Meble Pumo
  */
 
 import { getProductManager } from '@/lib/whitecat/product-manager-d1';

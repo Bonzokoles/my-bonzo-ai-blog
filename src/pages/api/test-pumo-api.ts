@@ -1,6 +1,6 @@
 /**
- * Test Meble Pumo API Connection
- * Quick test endpoint to verify API key and connection
+ * Test Meble Pumo XML Feed Connection
+ * Quick test endpoint to verify XML feed access
  */
 
 import type { APIRoute } from 'astro';
@@ -56,10 +56,10 @@ export const GET: APIRoute = async (context) => {
 
         const xmlData = await response.text();
         console.log(`✅ XML Feed Response length: ${xmlData.length} characters`);
-        
+
         // Quick XML validation
         const hasProducts = xmlData.includes('<product>') || xmlData.includes('<item>');
-        
+
         return new Response(JSON.stringify({
             success: true,
             data: {
