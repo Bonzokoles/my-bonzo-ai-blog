@@ -166,7 +166,6 @@ export const FEATURES: FeatureFlag[] = [
       identifier: 'ip'
     },
     environments: ['development', 'staging', 'production'],
-    dependencies: ['ai-chat'],
     metadata: {
       category: 'guides',
       provider: 'whitecat',
