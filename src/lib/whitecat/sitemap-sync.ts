@@ -10,6 +10,11 @@ export class SitemapSync {
 
   async syncProductUrls(): Promise<{ updated: number, total: number }> {
     console.log('🗺️ Starting Sitemap Sync...');
+
+    if (!(await this.checkRateLimit('meblepumo'))) {
+        console.warn('🚦 Rate limit exceeded for today. Skipping sync.');
+        return { updated: 0, total: 0 };
+    }
     
     // 1. Fetch sitemap index
     const sitemapIndexUrl = `${this.baseUrl}/sitemap.xml.gz`;
@@ -140,5 +145,30 @@ export class SitemapSync {
     }
     
     return products;
+  }
+  private async checkRateLimit(store: string): Promise<boolean> {
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Check current count
+    const { results } = await this.env.DB.prepare(`
+      SELECT COUNT(*) as calls 
+      FROM rate_limits 
+      WHERE store = ? AND date = ?
+    `).bind(store, today).all();
+    
+    const count = (results[0] as any).calls as number;
+    
+    if (count >= 10) {
+      console.warn(`⏳ Rate limit reached: ${count}/10 for ${store} today`);
+      return false;
+    }
+    
+    // Increment count
+    await this.env.DB.prepare(`
+      INSERT INTO rate_limits (store, date) VALUES (?, ?)
+    `).bind(store, today).run();
+    
+    console.log(`✅ Rate limit check pass: ${count + 1}/10 for ${store}`);
+    return true;
   }
 }
