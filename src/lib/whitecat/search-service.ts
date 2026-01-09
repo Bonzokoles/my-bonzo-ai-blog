@@ -1,4 +1,4 @@
-import { Env, PumoProduct, SearchQuery, SearchResult } from './whitecat-types';
+import type { Env, PumoProduct, SearchQuery, SearchResult } from './whitecat-types';
 
 export class SearchService {
   constructor(private env: Env) { }
@@ -56,7 +56,7 @@ export class SearchService {
       '(LOWER(name) LIKE ? OR LOWER(description) LIKE ? OR LOWER(category) LIKE ?)'
     ).join(' AND ');
 
-    const bindings = searchTerms.flatMap(term => {
+    const bindings: any[] = searchTerms.flatMap(term => {
       const pattern = `%${term}%`;
       return [pattern, pattern, pattern];
     });
@@ -89,11 +89,14 @@ export class SearchService {
 
     const { results } = await this.env.DB.prepare(sql).bind(...bindings).all();
 
-    return results.map(r => ({
-      product: r as PumoProduct,
-      score: this.calculateKeywordScore(r as PumoProduct, searchTerms),
-      match_type: 'keyword' as const
-    }));
+    return results.map(r => {
+      const product = this.mapRowToProduct(r);
+      return {
+        product,
+        score: this.calculateKeywordScore(product, searchTerms),
+        match_type: 'keyword' as const
+      };
+    });
   }
 
   private async hybridSearch(query: SearchQuery): Promise<SearchResult[]> {
@@ -135,7 +138,19 @@ export class SearchService {
       'SELECT * FROM products WHERE id = ?'
     ).bind(id).all();
 
-    return results.length > 0 ? results[0] as PumoProduct : null;
+    if (results.length === 0) return null;
+
+    const row = results[0] as any;
+    return this.mapRowToProduct(row);
+  }
+
+  private mapRowToProduct(row: any): PumoProduct {
+      const baseUrl = row.real_url || row.url;
+      return {
+          ...row,
+          url: baseUrl, // Use real_url if available
+          tracked_url: this.generateTrackedUrl(baseUrl, row.category)
+      } as PumoProduct;
   }
 
   private matchesFilters(product: PumoProduct, filters?: SearchQuery['filters']): boolean {
@@ -171,5 +186,24 @@ export class SearchService {
     });
 
     return score;
+  }
+
+  private generateTrackedUrl(url: string, category: string): string {
+    if (!url) return '';
+    if (url.includes('utm_source')) return url; // Already tracked
+
+    const categorySlug = (category || 'general')
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '_')
+        .replace(/^-+|-+$/g, '');
+
+    const utmParams = new URLSearchParams({
+        utm_source: 'mybonzo',
+        utm_medium: 'rag_search',
+        utm_campaign: `rag_context_${categorySlug}`
+    });
+
+    return `${url}${url.includes('?') ? '&' : '?'}${utmParams.toString()}`;
   }
 }

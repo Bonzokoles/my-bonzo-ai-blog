@@ -82,6 +82,7 @@ export const GET: APIRoute = async (context) => {
                     category: r.product.category,
                     price: r.product.price,
                     url: r.product.url,
+                    tracked_url: r.product.tracked_url,
                     score: r.score,
                     match_type: r.match_type
                 })),

@@ -32,6 +32,7 @@ export interface PumoProduct {
   price_before_discount?: number;
   stock: number;
   url: string;
+  tracked_url?: string;
   image_url?: string;
   sku?: string;
   created_at?: string;
