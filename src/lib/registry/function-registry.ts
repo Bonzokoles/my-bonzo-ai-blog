@@ -409,7 +409,7 @@ export const DEFAULT_FUNCTIONS: FunctionRegistryEntry[] = [
     endpoint: '/api/ai/image-gallery',
     method: 'GET',
     enabled: true,
-    permissions: ['user', 'admin'],
+    permissions: ['public', 'user', 'admin'],
     rateLimit: {
       requests: 50,
       window: 60000,
