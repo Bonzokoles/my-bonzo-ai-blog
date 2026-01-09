@@ -20,32 +20,32 @@ export const GET: APIRoute = async (context) => {
     }
 
     try {
-        const baseUrl = env.PUMO_API_BASE_URL || 'https://api.meblepumo.pl/v1';
-        const testUrl = `${baseUrl}/products?page=1&per_page=5`;
+        const baseUrl = env.PUMO_API_BASE_URL || 'https://www.meblepumo.pl';
+        const testUrl = `${baseUrl}/xml/products.xml`;
 
-        console.log(`🧪 Testing Pumo API connection: ${testUrl}`);
+        console.log(`🧪 Testing Pumo XML Feed connection: ${testUrl}`);
         console.log(`🔑 Using API key: ${env.PUMO_API_KEY?.substring(0, 10)}...`);
 
         const response = await fetch(testUrl, {
             method: 'GET',
             headers: {
                 'X-API-KEY': env.PUMO_API_KEY,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
+                'Content-Type': 'application/xml',
+                'Accept': 'application/xml',
                 'User-Agent': 'MyBonzo-AI-Blog/1.0 (https://mybonzoaiblog.com)'
             }
         });
 
-        console.log(`📊 API Response status: ${response.status}`);
-        console.log(`📊 API Response headers:`, Object.fromEntries(response.headers.entries()));
+        console.log(`📊 XML Feed Response status: ${response.status}`);
+        console.log(`📊 XML Feed Response headers:`, Object.fromEntries(response.headers.entries()));
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error(`❌ API Error Response: ${errorText}`);
+            console.error(`❌ XML Feed Error Response: ${errorText}`);
 
             return new Response(JSON.stringify({
                 success: false,
-                error: `API Error: ${response.status} ${response.statusText}`,
+                error: `XML Feed Error: ${response.status} ${response.statusText}`,
                 details: errorText,
                 test_url: testUrl
             }), {
@@ -54,21 +54,23 @@ export const GET: APIRoute = async (context) => {
             });
         }
 
-        const data = await response.json();
-        console.log(`✅ API Response data:`, data);
-
+        const xmlData = await response.text();
+        console.log(`✅ XML Feed Response length: ${xmlData.length} characters`);
+        
+        // Quick XML validation
+        const hasProducts = xmlData.includes('<product>') || xmlData.includes('<item>');
+        
         return new Response(JSON.stringify({
             success: true,
             data: {
-                api_working: true,
+                xml_feed_working: true,
                 test_url: testUrl,
                 response_status: response.status,
-                products_returned: data.products?.length || 0,
-                total_available: data.total || 0,
-                has_more: data.has_more || false,
-                sample_product: data.products?.[0] || null
+                xml_length: xmlData.length,
+                has_products: hasProducts,
+                xml_preview: xmlData.substring(0, 500) + '...'
             },
-            message: `✅ Meble Pumo API connection successful! Found ${data.products?.length || 0} products`
+            message: `✅ Meble Pumo XML Feed connection successful! XML length: ${xmlData.length} chars`
         }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
