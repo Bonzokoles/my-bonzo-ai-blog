@@ -2,14 +2,14 @@
  * Debug WHITECAT API Endpoint
  * Testowy endpoint bez middleware
  */
-import { getProductManager } from '@/lib/whitecat/product-manager-d1';
 import { getGuideGenerator } from '@/lib/whitecat/guide-generator';
+import { getProductManager } from '@/lib/whitecat/product-manager-d1';
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async (context) => {
     const url = new URL(context.request.url);
     const test = url.searchParams.get('test') || 'basic';
-    
+
     const runtime = (context.locals as any)?.runtime;
     const env = runtime?.env;
 
@@ -35,9 +35,9 @@ export const GET: APIRoute = async (context) => {
             // Test guide generator
             const guideGenerator = getGuideGenerator(env);
             console.log('🔍 Debug WHITECAT API - guideGenerator:', !!guideGenerator);
-            
+
             const guideStats = await guideGenerator.getStats();
-            
+
             return new Response(JSON.stringify({
                 success: true,
                 test: 'guide-generator',
@@ -55,7 +55,7 @@ export const GET: APIRoute = async (context) => {
         if (test === 'stats') {
             // Test product manager stats
             const productStats = await productManager.getStats();
-            
+
             return new Response(JSON.stringify({
                 success: true,
                 test: 'product-stats',

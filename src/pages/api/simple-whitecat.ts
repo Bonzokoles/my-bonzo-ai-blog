@@ -1,8 +1,8 @@
 /**
  * Simple WHITECAT Test - bez middleware
  */
-import { getProductManager } from '@/lib/whitecat/product-manager-d1';
 import { getGuideGenerator } from '@/lib/whitecat/guide-generator';
+import { getProductManager } from '@/lib/whitecat/product-manager-d1';
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async (context) => {
@@ -11,7 +11,7 @@ export const GET: APIRoute = async (context) => {
 
     try {
         console.log('🎯 Simple WHITECAT Test - start');
-        
+
         if (!env || !env.DB) {
             return new Response(JSON.stringify({
                 error: 'Missing env or DB binding'
@@ -22,7 +22,7 @@ export const GET: APIRoute = async (context) => {
         const guideGenerator = getGuideGenerator(env);
 
         console.log('🎯 Managers created, testing stats...');
-        
+
         // Test tylko product stats
         const productStats = await productManager.getStats();
         console.log('🎯 Product stats OK:', productStats);

@@ -22,11 +22,11 @@ export class ProductManager {
      * Inicjalizacja - sprawdzenie czy tabela products istnieje
      */
     async initialize(): Promise<void> {
-        if (this.initialized || !this.env?.DB) return;
+        if (this.initialized || !this.env?.PUMO_DB) return;
 
         try {
-            // Sprawdź czy tabela products istnieje
-            const { results } = await this.env.DB.prepare(`
+            // Sprawdź czy tabela products istnieje w PUMO database
+            const { results } = await this.env.PUMO_DB.prepare(`
         SELECT COUNT(*) as count FROM products LIMIT 1
       `).all();
 
@@ -47,7 +47,7 @@ export class ProductManager {
         if (!this.env?.DB) return [];
 
         try {
-            const { results } = await this.env.DB.prepare(`
+            const { results } = await this.env.PUMO_DB.prepare(`
         SELECT 
           id,
           name,
@@ -85,7 +85,7 @@ export class ProductManager {
         if (!this.env?.DB) return null;
 
         try {
-            const { results } = await this.env.DB.prepare(`
+            const { results } = await this.env.PUMO_DB.prepare(`
         SELECT 
           id,
           name,
@@ -145,7 +145,7 @@ export class ProductManager {
         if (!this.env?.DB) return [];
 
         try {
-            const { results } = await this.env.DB.prepare(`
+            const { results } = await this.env.PUMO_DB.prepare(`
         SELECT DISTINCT category 
         FROM products 
         WHERE category IS NOT NULL AND category != ''
@@ -169,7 +169,7 @@ export class ProductManager {
 
         try {
             const searchTerm = `%${query.toLowerCase()}%`;
-            const { results } = await this.env.DB.prepare(`
+            const { results } = await this.env.PUMO_DB.prepare(`
         SELECT 
           id,
           name,
@@ -224,7 +224,7 @@ export class ProductManager {
     }> {
         await this.initialize();
 
-        if (!this.env?.DB) return {
+        if (!this.env?.PUMO_DB) return {
             totalProducts: 0,
             categories: 0,
             avgPrice: 0,
@@ -233,16 +233,16 @@ export class ProductManager {
 
         try {
             // Szybsze zapytanie - tylko count bez agregacji
-            const countResult = await this.env.DB.prepare(`
+            const countResult = await this.env.PUMO_DB.prepare(`
                 SELECT COUNT(*) as total FROM products
             `).first();
 
-            const categoriesResult = await this.env.DB.prepare(`
+            const categoriesResult = await this.env.PUMO_DB.prepare(`
                 SELECT COUNT(DISTINCT category) as categories FROM products
             `).first();
 
             // Uproszczone cenowe statystyki (sample z pierwszych 100 produktów)
-            const priceResult = await this.env.DB.prepare(`
+            const priceResult = await this.env.PUMO_DB.prepare(`
                 SELECT 
                     AVG(price) as avg_price,
                     MIN(price) as min_price,
@@ -289,7 +289,7 @@ export class ProductManager {
             for (let i = 0; i < products.length; i += batchSize) {
                 const batch = products.slice(i, i + batchSize);
 
-                const stmt = this.env.DB.prepare(`
+                const stmt = this.env.PUMO_DB.prepare(`
           INSERT OR REPLACE INTO products (id, name, category, price, url, description)
           VALUES (?, ?, ?, ?, ?, ?)
         `);
@@ -305,7 +305,7 @@ export class ProductManager {
                     )
                 );
 
-                await this.env.DB.batch(batchStmts);
+                await this.env.PUMO_DB.batch(batchStmts);
                 imported += batch.length;
 
                 console.log(`📦 Imported ${imported}/${products.length} products`);
