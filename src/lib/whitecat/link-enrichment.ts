@@ -1,31 +1,42 @@
 import type { Env } from './whitecat-types';
 
 /**
+ * Build product URL with consistent UTM tracking
+ */
+function buildProductUrl(baseUrl: string, utmParams: Record<string, string>): string {
+    if (!baseUrl) return '';
+    if (baseUrl.includes('utm_source')) return baseUrl; // Already has UTM
+
+    const params = new URLSearchParams(utmParams);
+    return `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}${params.toString()}`;
+}
+
+/**
  * Link Enrichment Service
  * Enhances AI responses with clickable product links
  */
 export class LinkEnrichmentService {
-    constructor(private env: Env) {}
+    constructor(private env: Env) { }
 
     /**
      * Extract product IDs and names from AI response
      */
     private extractProductMentions(text: string): Array<{ id?: string; name: string }> {
         const mentions: Array<{ id?: string; name: string }> = [];
-        
+
         // Pattern 1: Product ID mentions (e.g., "produkt 12345", "ID: 12345")
         const idPattern = /(?:produkt|product|id:?)\s*(\d{3,})/gi;
         let match;
         while ((match = idPattern.exec(text)) !== null) {
             mentions.push({ id: match[1], name: '' });
         }
-        
+
         // Pattern 2: Product name patterns in quotes or titles
         const namePattern = /(?:fotel|łóżko|krzesło|sofa|biurko|stół|szafa|komoda)\s+[\w\s-]+/gi;
         while ((match = namePattern.exec(text)) !== null) {
             mentions.push({ name: match[0], id: undefined });
         }
-        
+
         return mentions;
     }
 
@@ -36,7 +47,7 @@ export class LinkEnrichmentService {
         mentions: Array<{ id?: string; name: string }>
     ): Promise<Map<string, { url: string; name: string; id: string }>> {
         const urlMap = new Map<string, { url: string; name: string; id: string }>();
-        
+
         if (!this.env.DB) {
             console.warn('DB not available for link enrichment');
             return urlMap;
@@ -49,10 +60,15 @@ export class LinkEnrichmentService {
             const { results } = await this.env.DB.prepare(
                 `SELECT id, name, real_url, category FROM products WHERE id IN (${placeholders}) LIMIT 20`
             ).bind(...ids).all();
-            
+
             for (const row of results as any[]) {
                 if (row.real_url) {
-                    const trackedUrl = this.generateTrackedUrl(row.real_url, row.category, row.id);
+                    const trackedUrl = buildProductUrl(row.real_url, {
+                        utm_source: 'mybonzo',
+                        utm_medium: 'rag_chat',
+                        utm_campaign: `chat_${row.category || 'general'}`,
+                        utm_content: row.id
+                    });
                     urlMap.set(row.id, {
                         id: row.id,
                         name: row.name,
@@ -70,10 +86,15 @@ export class LinkEnrichmentService {
                     `SELECT id, name, real_url, category FROM products 
                      WHERE LOWER(name) LIKE ? LIMIT 3`
                 ).bind(`%${name.toLowerCase()}%`).all();
-                
+
                 for (const row of results as any[]) {
                     if (row.real_url && !urlMap.has(row.id)) {
-                        const trackedUrl = this.generateTrackedUrl(row.real_url, row.category, row.id);
+                        const trackedUrl = buildProductUrl(row.real_url, {
+                            utm_source: 'mybonzo',
+                            utm_medium: 'rag_chat',
+                            utm_campaign: `chat_${row.category || 'general'}`,
+                            utm_content: row.id
+                        });
                         urlMap.set(row.id, {
                             id: row.id,
                             name: row.name,
@@ -88,33 +109,11 @@ export class LinkEnrichmentService {
     }
 
     /**
-     * Generate tracked URL with UTM parameters
-     */
-    private generateTrackedUrl(baseUrl: string, category: string, productId: string): string {
-        if (!baseUrl) return '';
-        if (baseUrl.includes('utm_source')) return baseUrl;
-
-        const categorySlug = (category || 'general')
-            .toLowerCase()
-            .replace(/[^\w\s-]/g, '')
-            .replace(/[\s_-]+/g, '_');
-
-        const utmParams = new URLSearchParams({
-            utm_source: 'mybonzo',
-            utm_medium: 'rag_chat',
-            utm_campaign: `chat_${categorySlug}`,
-            utm_content: `product_${productId}`
-        });
-
-        return `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}${utmParams.toString()}`;
-    }
-
-    /**
      * Enrich AI response with product links
      */
     async enrichWithProductLinks(response: string): Promise<string> {
         console.log('[LinkEnrichment] Enriching response with product links...');
-        
+
         // Extract product mentions
         const mentions = this.extractProductMentions(response);
         if (mentions.length === 0) {
@@ -134,14 +133,14 @@ export class LinkEnrichmentService {
 
         // Replace product mentions with markdown links
         let enriched = response;
-        
+
         for (const [productId, data] of productUrls.entries()) {
             // Replace ID mentions
             enriched = enriched.replace(
                 new RegExp(`\\b(produkt|product|id:?)\\s*${productId}\\b`, 'gi'),
                 `[${data.name}](${data.url})`
             );
-            
+
             // Replace name mentions (case-insensitive, whole words)
             const namePattern = new RegExp(`\\b${this.escapeRegex(data.name)}\\b`, 'gi');
             let replaced = false;
