@@ -7,6 +7,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "deploy": "astro build && wrangler pages deploy dist",
+    "deploy:pages": "wrangler pages deploy dist",
+    "prefetch": "node scripts/prefetch.js",
+    "health": "curl -f https://mybonzoaiblog.com/api/health",
     "astro": "astro"
   },
   "dependencies": {
