@@ -20,15 +20,22 @@ interface EnrichedProduct {
 }
 
 export class ProductExtractorService {
-    constructor(private env: Env) {}
+    constructor(private env: Env) { }
 
     /**
      * Extract product mentions from query using Gemini Flash via OpenRouter
      */
     private async extractProductsWithGemini(query: string): Promise<ExtractedProduct[]> {
-        const apiKey = this.env.OPENROUTER_API_KEY;
-        if (!apiKey) {
+        const rawApiKey = this.env.OPENROUTER_API_KEY;
+        if (!rawApiKey) {
             console.warn('[ProductExtractor] OPENROUTER_API_KEY not configured');
+            return [];
+        }
+
+        // Sanitize API key - remove spaces and trim
+        const apiKey = rawApiKey.trim().replace(/\s/g, '');
+        if (!apiKey) {
+            console.warn('[ProductExtractor] OPENROUTER_API_KEY is empty after sanitization');
             return [];
         }
 
@@ -82,14 +89,14 @@ If no products mentioned, return empty array [].`
 
             const data = await response.json();
             const textResponse = data.choices?.[0]?.message?.content || '[]';
-            
+
             // Parse JSON from response (Gemini sometimes adds markdown)
             const jsonMatch = textResponse.match(/\[[\s\S]*\]/);
             if (!jsonMatch) return [];
-            
+
             const extracted = JSON.parse(jsonMatch[0]) as ExtractedProduct[];
             console.log(`[ProductExtractor] OpenRouter/Gemini extracted ${extracted.length} products`);
-            
+
             return extracted;
 
         } catch (error) {
@@ -149,7 +156,7 @@ If no products mentioned, return empty array [].`
                             row.category,
                             row.id
                         );
-                        
+
                         enriched.push({
                             id: row.id,
                             name: row.name,
