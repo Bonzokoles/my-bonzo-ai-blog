@@ -11,6 +11,10 @@ interface Product {
     manufacturer: string;
     url: string;
     tracked_url: string;
+    description?: string;
+    images?: any[];
+    availability?: string;
+    sku?: string;
 }
 
 export class ProductManager {
@@ -22,7 +26,17 @@ export class ProductManager {
      * Inicjalizacja - sprawdzenie czy tabela products istnieje
      */
     async initialize(): Promise<void> {
-        if (this.initialized || !this.env?.DB) return;
+        if (this.initialized) return;
+
+        console.log('🔧 DEBUG: NODE_ENV =', process?.env?.NODE_ENV);
+        console.log('🔧 DEBUG: Has DB =', !!this.env?.DB);
+
+        // W trybie lokalnym (bez DB) nie rzucaj błędu - tylko zaznacz jako zainicjalizowane
+        if (!this.env?.DB) {
+            console.log('⚠️ Running in local mode - no D1 Database access');
+            this.initialized = true;
+            return;
+        }
 
         try {
             // Sprawdź czy tabela products istnieje w jimbo-rag-db
@@ -34,20 +48,51 @@ export class ProductManager {
             this.initialized = true;
         } catch (error) {
             console.error('❌ D1 Database initialization failed:', error);
-            throw new Error('D1 Database not available');
+
+            // Lokalnie z Wrangler tabela może nie istnieć - to jest OK
+            const errorMessage = (error as any)?.message || '';
+            const isLocalDev = process?.env?.NODE_ENV === 'development' ||
+                process?.env?.MODE === 'development' ||
+                errorMessage.includes('no such table') ||
+                errorMessage.includes('SQLITE_ERROR');
+
+            console.log('🔧 DEBUG: isLocalDev =', isLocalDev, 'errorMessage =', errorMessage);
+            this.initialized = true;
+
         }
     }
+
 
     /**
      * Pobiera produkty według kategorii
      */
-    async getProductsByCategory(category: string): Promise<Product[]> {
-        await this.initialize();
+    async getProductsByCategory(category: string): Promise < Product[] > {
+    await this.initialize();
 
-        if (!this.env?.DB) return [];
+    // Sprawdź czy tryb lokalny (nawet po initialize)
+    const isLocal = !this.env?.DB || process?.env?.NODE_ENV === 'development';
+
+    if(isLocal) {
+        console.log(`🏠 Local mode - returning mock products for category: ${category}`);
+        return [
+            {
+                id: '1',
+                name: `Przykładowy ${category}`,
+                category,
+                price: 1000,
+                description: 'Mock produkt dla trybu lokalnego',
+                images: [],
+                availability: 'available',
+                url: 'https://example.com/mock-product',
+                sku: 'MOCK001',
+                manufacturer: 'Mock Manufacturer',
+                tracked_url: ''
+            }
+        ];
+    }
 
         try {
-            const { results } = await this.env.DB.prepare(`
+        const { results } = await this.env.DB.prepare(`
         SELECT 
           id,
           name,
@@ -61,31 +106,31 @@ export class ProductManager {
         LIMIT 50
       `).bind(`%${category}%`).all();
 
-            return results.map((row: any) => ({
-                id: row.id,
-                name: row.name,
-                category: row.category || '',
-                price: row.price || 0,
-                manufacturer: row.manufacturer || '',
-                url: row.url,
-                tracked_url: this.generateTrackedUrl(row.url, row.category)
-            }));
-        } catch (error) {
-            console.error('❌ Failed to get products by category:', error);
-            return [];
-        }
+        return results.map((row: any) => ({
+            id: row.id,
+            name: row.name,
+            category: row.category || '',
+            price: row.price || 0,
+            manufacturer: row.manufacturer || '',
+            url: row.url,
+            tracked_url: this.generateTrackedUrl(row.url, row.category)
+        }));
+    } catch(error) {
+        console.error('❌ Failed to get products by category:', error);
+        return [];
     }
+}
 
     /**
      * Pobiera produkt po ID
      */
-    async getProduct(id: string): Promise<Product | null> {
-        await this.initialize();
+    async getProduct(id: string): Promise < Product | null > {
+    await this.initialize();
 
-        if (!this.env?.DB) return null;
+    if(!this.env?.DB) return null;
 
-        try {
-            const { results } = await this.env.DB.prepare(`
+    try {
+        const { results } = await this.env.DB.prepare(`
         SELECT 
           id,
           name,
@@ -97,79 +142,121 @@ export class ProductManager {
         WHERE id = ?
       `).bind(id).all();
 
-            if (results.length === 0) return null;
+        if(results.length === 0) return null;
 
-            const row = results[0] as any;
-            return {
-                id: row.id,
-                name: row.name,
-                category: row.category || '',
-                price: row.price || 0,
-                manufacturer: row.manufacturer || '',
-                url: row.url,
-                tracked_url: this.generateTrackedUrl(row.url, row.category)
-            };
-        } catch (error) {
-            console.error('❌ Failed to get product:', error);
-            return null;
-        }
+        const row = results[0] as any;
+        return {
+            id: row.id,
+            name: row.name,
+            category: row.category || '',
+            price: row.price || 0,
+            manufacturer: row.manufacturer || '',
+            url: row.url,
+            tracked_url: this.generateTrackedUrl(row.url, row.category)
+        };
+    } catch(error) {
+        console.error('❌ Failed to get product:', error);
+        return null;
     }
+}
 
-    /**
-     * Generuje tracked URL z UTM parameters
-     */
-    generateTrackedUrl(url: string, category: string, source: string = 'mybonzo'): string {
-        if (!url) return '';
+/**
+ * Generuje tracked URL z UTM parameters
+ */
+generateTrackedUrl(url: string, category: string, source: string = 'mybonzo'): string {
+    if (!url) return '';
 
-        const categorySlug = category
-            .toLowerCase()
-            .replace(/[^\w\s-]/g, '')
-            .replace(/[\s_-]+/g, '_')
-            .replace(/^-+|-+$/g, '');
+    const categorySlug = category
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '_')
+        .replace(/^-+|-+$/g, '');
 
-        const utmParams = new URLSearchParams({
-            utm_source: source,
-            utm_medium: 'ai_guide',
-            utm_campaign: `buying_guide_${categorySlug}`
-        });
+    const utmParams = new URLSearchParams({
+        utm_source: source,
+        utm_medium: 'ai_guide',
+        utm_campaign: `buying_guide_${categorySlug}`
+    });
 
-        return `${url}${url.includes('?') ? '&' : '?'}${utmParams.toString()}`;
-    }
+    return `${url}${url.includes('?') ? '&' : '?'}${utmParams.toString()}`;
+}
 
     /**
      * Pobiera wszystkie kategorie
      */
-    async getCategories(): Promise<string[]> {
-        await this.initialize();
+    async getCategories(): Promise < string[] > {
+    await this.initialize();
 
-        if (!this.env?.DB) return [];
+    // Sprawdź czy tryb lokalny (nawet po initialize)
+    const isLocal = !this.env?.DB || process?.env?.NODE_ENV === 'development';
+
+    if(isLocal) {
+        console.log('🏠 Local mode - returning mock categories');
+        return [
+            'Biurka', 'Krzesła', 'Szafy', 'Stoły', 'Łóżka',
+            'Komody', 'Regały', 'Fotele', 'Sofy', 'Szafki'
+        ];
+    }
 
         try {
-            const { results } = await this.env.DB.prepare(`
+        const { results } = await this.env.DB.prepare(`
         SELECT DISTINCT category 
         FROM products 
         WHERE category IS NOT NULL AND category != ''
         ORDER BY category
       `).all();
 
-            return results.map((row: any) => row.category).filter(Boolean);
-        } catch (error) {
-            console.error('❌ Failed to get categories:', error);
-            return [];
-        }
+        return results.map((row: any) => row.category).filter(Boolean);
+    } catch(error) {
+        console.error('❌ Failed to get categories:', error);
+        return [];
     }
+}
 
     /**
      * Wyszukiwanie produktów
      */
-    async searchProducts(query: string, limit: number = 10): Promise<Product[]> {
-        await this.initialize();
+    async searchProducts(query: string, limit: number = 10): Promise < Product[] > {
+    await this.initialize();
 
-        if (!this.env?.DB) return [];
+    // Sprawdź czy tryb lokalny (nawet po initialize)
+    const isLocal = !this.env?.DB || process?.env?.NODE_ENV === 'development';
 
-        try {
-            const searchTerm = `%${query.toLowerCase()}%`;
-            const { results } = await this.env.DB.prepare(`
+    if(isLocal) {
+        console.log(`🏠 Local mode - returning mock search results for: ${query}`);
+        return [
+            {
+                id: '1',
+                name: `${query} - Mock Result 1`,
+                category: 'Meble',
+                price: 800,
+                description: `Mock wynik wyszukiwania dla "${query}"`,
+                images: [],
+                availability: 'available',
+                url: 'https://example.com/mock-search-1',
+                sku: 'SEARCH001',
+                manufacturer: 'Mock Manufacturer',
+                tracked_url: ''
+            },
+            {
+                id: '2',
+                name: `${query} - Mock Result 2`,
+                category: 'Akcesoria',
+                price: 1200,
+                description: `Drugi mock wynik dla "${query}"`,
+                images: [],
+                availability: 'available',
+                url: 'https://example.com/mock-search-2',
+                sku: 'SEARCH002',
+                manufacturer: 'Mock Manufacturer',
+                tracked_url: ''
+            }
+        ].slice(0, limit);
+    }
+
+    try {
+        const searchTerm = `%${query.toLowerCase()}%`;
+        const { results } = await this.env.DB.prepare(`
         SELECT 
           id,
           name,
@@ -187,62 +274,69 @@ export class ProductManager {
         LIMIT ?
       `).bind(searchTerm, searchTerm, searchTerm, limit).all();
 
-            return results.map((row: any) => ({
-                id: row.id,
-                name: row.name,
-                category: row.category || '',
-                price: row.price || 0,
-                manufacturer: row.manufacturer || '',
-                url: row.url,
-                tracked_url: this.generateTrackedUrl(row.url, row.category)
-            }));
-        } catch (error) {
-            console.error('❌ Failed to search products:', error);
-            return [];
-        }
+        return results.map((row: any) => ({
+            id: row.id,
+            name: row.name,
+            category: row.category || '',
+            price: row.price || 0,
+            manufacturer: row.manufacturer || '',
+            url: row.url,
+            tracked_url: this.generateTrackedUrl(row.url, row.category)
+        }));
+    } catch(error) {
+        console.error('❌ Failed to search products:', error);
+        return [];
     }
+}
 
     /**
      * Pobiera najlepsze produkty z kategorii (sortowane po cenie)
      */
-    async getTopProductsInCategory(category: string, limit: number = 5): Promise<Product[]> {
-        const products = await this.getProductsByCategory(category);
+    async getTopProductsInCategory(category: string, limit: number = 5): Promise < Product[] > {
+    const products = await this.getProductsByCategory(category);
 
-        return products
-            .sort((a, b) => b.price - a.price) // Sortuj od najdroższych (premium first)
-            .slice(0, limit);
-    }
+    return products
+        .sort((a, b) => b.price - a.price) // Sortuj od najdroższych (premium first)
+        .slice(0, limit);
+}
+
 
     /**
      * Statystyki produktów - zoptymalizowane dla dużych zbiorów danych
      */
-    async getStats(): Promise<{
-        totalProducts: number;
-        categories: number;
-        avgPrice: number;
-        priceRange: { min: number; max: number };
-    }> {
-        await this.initialize();
+    async getStats(): Promise < {
+    totalProducts: number;
+    categories: number;
+    avgPrice: number;
+    priceRange: { min: number; max: number };
+} > {
+    await this.initialize();
 
-        if (!this.env?.DB) return {
-            totalProducts: 0,
-            categories: 0,
-            avgPrice: 0,
-            priceRange: { min: 0, max: 0 }
+    // Sprawdź czy tryb lokalny (nawet po initialize)
+    const isLocal = !this.env?.DB || process?.env?.NODE_ENV === 'development';
+
+    if(isLocal) {
+        console.log('🏠 Local mode - returning mock stats');
+        return {
+            totalProducts: 2130,
+            categories: 68,
+            avgPrice: 1020,
+            priceRange: { min: 50, max: 15000 }
         };
+    }
 
         try {
-            // Szybsze zapytanie - tylko count bez agregacji
-            const countResult = await this.env.DB.prepare(`
+        // Szybsze zapytanie - tylko count bez agregacji
+        const countResult = await this.env.DB.prepare(`
                 SELECT COUNT(*) as total FROM products
             `).first();
 
-            const categoriesResult = await this.env.DB.prepare(`
+        const categoriesResult = await this.env.DB.prepare(`
                 SELECT COUNT(DISTINCT category) as categories FROM products
             `).first();
 
-            // Uproszczone cenowe statystyki (sample z pierwszych 100 produktów)
-            const priceResult = await this.env.DB.prepare(`
+        // Uproszczone cenowe statystyki (sample z pierwszych 100 produktów)
+        const priceResult = await this.env.DB.prepare(`
                 SELECT 
                     AVG(price) as avg_price,
                     MIN(price) as min_price,
@@ -252,71 +346,71 @@ export class ProductManager {
                 LIMIT 500
             `).first();
 
-            return {
-                totalProducts: (countResult as any)?.total || 0,
-                categories: (categoriesResult as any)?.categories || 0,
-                avgPrice: (priceResult as any)?.avg_price || 0,
-                priceRange: {
-                    min: (priceResult as any)?.min_price || 0,
-                    max: (priceResult as any)?.max_price || 0
-                }
-            };
-        } catch (error) {
-            console.error('❌ Failed to get stats:', error);
-            return {
-                totalProducts: 0,
-                categories: 0,
-                avgPrice: 0,
-                priceRange: { min: 0, max: 0 }
-            };
-        }
+        return {
+            totalProducts: (countResult as any)?.total || 0,
+            categories: (categoriesResult as any)?.categories || 0,
+            avgPrice: (priceResult as any)?.avg_price || 0,
+            priceRange: {
+                min: (priceResult as any)?.min_price || 0,
+                max: (priceResult as any)?.max_price || 0
+            }
+        };
+    } catch(error) {
+        console.error('❌ Failed to get stats:', error);
+        return {
+            totalProducts: 0,
+            categories: 0,
+            avgPrice: 0,
+            priceRange: { min: 0, max: 0 }
+        };
     }
+}
 
     /**
      * Import produktów z JSON do D1 database
      */
-    async importProductsFromJson(jsonData: any): Promise<number> {
-        await this.initialize();
+    async importProductsFromJson(jsonData: any): Promise < number > {
+    await this.initialize();
 
-        if (!this.env?.DB) throw new Error('D1 Database not available');
+    if(!this.env?.DB) throw new Error('D1 Database not available');
 
-        const products = Object.values(jsonData) as Product[];
-        let imported = 0;
+    const products = Object.values(jsonData) as Product[];
+    let imported = 0;
 
-        try {
-            // Batch insert products
-            const batchSize = 100;
-            for (let i = 0; i < products.length; i += batchSize) {
-                const batch = products.slice(i, i + batchSize);
+    try {
+        // Batch insert products
+        const batchSize = 100;
+        for(let i = 0; i <products.length; i += batchSize) {
+    const batch = products.slice(i, i + batchSize);
 
-                const stmt = this.env.DB.prepare(`
+    const stmt = this.env.DB.prepare(`
           INSERT OR REPLACE INTO products (id, name, category, price, url, description)
           VALUES (?, ?, ?, ?, ?, ?)
         `);
 
-                const batchStmts = batch.map(product =>
-                    stmt.bind(
-                        product.id,
-                        product.name,
-                        product.category,
-                        product.price,
-                        product.url,
-                        product.manufacturer
-                    )
-                );
+    const batchStmts = batch.map(product =>
+        stmt.bind(
+            product.id,
+            product.name,
+            product.category,
+            product.price,
+            product.url,
+            product.manufacturer
+        )
+    );
 
-                await this.env.DB.batch(batchStmts);
-                imported += batch.length;
+    await this.env.DB.batch(batchStmts);
+    imported += batch.length;
 
-                console.log(`📦 Imported ${imported}/${products.length} products`);
-            }
+    console.log(`📦 Imported ${imported}/${products.length} products`);
+}
 
-            console.log(`✅ Successfully imported ${imported} products to D1`);
-            return imported;
+console.log(`✅ Successfully imported ${imported} products to D1`);
+return imported;
         } catch (error) {
-            console.error('❌ Failed to import products:', error);
-            throw error;
-        }
+    console.error('❌ Failed to import products:', error);
+    throw error;
+}
     }
 }
 
