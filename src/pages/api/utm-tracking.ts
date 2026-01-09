@@ -15,7 +15,7 @@ export const POST: APIRoute = async (context) => {
 
     try {
         const body = await context.request.json();
-        
+
         // Track click event
         await env.PUMO_DB.prepare(`
             INSERT INTO analytics_events (
