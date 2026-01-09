@@ -406,10 +406,10 @@ export const DEFAULT_FUNCTIONS: FunctionRegistryEntry[] = [
     id: 'image-gallery',
     name: 'Image Gallery',
     category: 'media',
-    endpoint: '/api/ai/image-gallery',
+    endpoint: '/api/media/gallery',
     method: 'GET',
     enabled: true,
-    permissions: ['user', 'admin'],
+    permissions: ['public', 'user', 'admin'],
     rateLimit: {
       requests: 50,
       window: 60000,

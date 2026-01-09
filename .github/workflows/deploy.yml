@@ -135,8 +135,16 @@ jobs:
           fi
 
           echo "✅ Cloudflare credentials configured"
-          echo "• API Token: ****${CLOUDFLARE_API_TOKEN: -4}"
-          echo "• Account ID: ${CLOUDFLARE_ACCOUNT_ID:0:8}...${CLOUDFLARE_ACCOUNT_ID: -4}"
+          if [ -n "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "• API Token: ${CLOUDFLARE_API_TOKEN//?*/****}"
+          else
+            echo "• API Token: (not set)"
+          fi
+          if [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "• Account ID: ${CLOUDFLARE_ACCOUNT_ID//?*/****}"
+          else
+            echo "• Account ID: (not set)"
+          fi
 
       - name: Deploy to Cloudflare Pages
         env:
