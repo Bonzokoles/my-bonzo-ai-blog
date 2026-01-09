@@ -1,3 +1,4 @@
+import { getLinkEnrichmentService } from '@/lib/whitecat/link-enrichment';
 import type { APIRoute } from 'astro';
 
 export const prerender = false;
@@ -107,7 +108,19 @@ Kontekst strony: ${context || 'Strona główna przewodnika'}`
         }
 
         const data = await response.json();
-        const reply = data.choices?.[0]?.message?.content || 'Brak odpowiedzi';
+        let reply = data.choices?.[0]?.message?.content || 'Brak odpowiedzi';
+
+        // ENHANCEMENT: Enrich response with clickable product links
+        if (env) {
+            try {
+                const linkService = getLinkEnrichmentService(env);
+                reply = await linkService.enrichWithProductLinks(reply);
+                console.log('[PumoChat] Link enrichment applied');
+            } catch (enrichError) {
+                console.error('[PumoChat] Link enrichment failed:', enrichError);
+                // Continue with original reply if enrichment fails
+            }
+        }
 
         return new Response(
             JSON.stringify({ reply }),
