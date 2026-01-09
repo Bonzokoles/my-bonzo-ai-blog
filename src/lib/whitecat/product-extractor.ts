@@ -23,25 +23,31 @@ export class ProductExtractorService {
     constructor(private env: Env) {}
 
     /**
-     * Extract product mentions from query using Gemini Flash
+     * Extract product mentions from query using Gemini Flash via OpenRouter
      */
     private async extractProductsWithGemini(query: string): Promise<ExtractedProduct[]> {
-        const apiKey = this.env.GEMINI_API_KEY;
+        const apiKey = this.env.OPENROUTER_API_KEY;
         if (!apiKey) {
-            console.warn('[ProductExtractor] GEMINI_API_KEY not configured');
+            console.warn('[ProductExtractor] OPENROUTER_API_KEY not configured');
             return [];
         }
 
         try {
             const response = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
+                'https://openrouter.ai/api/v1/chat/completions',
                 {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json',
+                        'HTTP-Referer': 'https://mybonzoaiblog.pages.dev',
+                        'X-Title': 'MyBonzo AI Blog'
+                    },
                     body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: `Extract furniture product mentions from this query. Return JSON array of products.
+                        model: 'google/gemini-2.0-flash-exp:free',
+                        messages: [{
+                            role: 'user',
+                            content: `Extract furniture product mentions from this query. Return JSON array of products.
 
 Query: "${query}"
 
@@ -61,32 +67,28 @@ Return JSON format:
 ]
 
 If no products mentioned, return empty array [].`
-                            }]
                         }],
-                        generationConfig: {
-                            temperature: 0.1,
-                            topP: 0.95,
-                            topK: 20,
-                            maxOutputTokens: 500
-                        }
+                        temperature: 0.1,
+                        max_tokens: 500
                     })
                 }
             );
 
             if (!response.ok) {
-                console.error('[ProductExtractor] Gemini API error:', response.status);
+                const errorText = await response.text();
+                console.error('[ProductExtractor] OpenRouter API error:', response.status, errorText);
                 return [];
             }
 
             const data = await response.json();
-            const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || '[]';
+            const textResponse = data.choices?.[0]?.message?.content || '[]';
             
             // Parse JSON from response (Gemini sometimes adds markdown)
             const jsonMatch = textResponse.match(/\[[\s\S]*\]/);
             if (!jsonMatch) return [];
             
             const extracted = JSON.parse(jsonMatch[0]) as ExtractedProduct[];
-            console.log(`[ProductExtractor] Gemini extracted ${extracted.length} products`);
+            console.log(`[ProductExtractor] OpenRouter/Gemini extracted ${extracted.length} products`);
             
             return extracted;
 
