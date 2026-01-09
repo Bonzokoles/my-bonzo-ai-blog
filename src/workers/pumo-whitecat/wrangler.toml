@@ -1,0 +1,42 @@
+name = "pumo-chunk-processor"
+main = "src/index.ts"
+compatibility_date = "2026-01-08"
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "jimbo-rag-db"
+database_id = "90fe9b43-f8a4-4e78-94c5-c44aff4012e9"  # pumo_products
+
+# Vectorize
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "pumo_embeddings"
+
+# KV for cache
+[[kv_namespaces]]
+binding = "CACHE"
+id = "dd9f40a8318d4275ae760b1194833723"  # CACHE (pumo-chunk-processor-CACHE)
+
+# AI binding
+[ai]
+binding = "AI"
+
+# Environment variables
+[vars]
+ALLOWED_ORIGINS = "https://www.mybonzoaiblog.com,http://localhost:4656"
+PUMO_API_BASE_URL = "https://api.meblepumo.pl/v1"
+
+# Cron triggers - Daily at 3 AM CET
+[triggers]
+crons = ["0 3 * * *"]
+
+# Secrets (set via: wrangler secret put SECRET_NAME)
+# - ANTHROPIC_API_KEY
+# - OPENAI_API_KEY
+# - DKIM_PRIVATE_KEY
+# - GA4_MEASUREMENT_ID
+# - GA4_API_SECRET
+# - PUMO_API_KEY
+# - PUMO_PRODUCTS_API_KEY
+# - PUMO_ORDERS_API_KEY
