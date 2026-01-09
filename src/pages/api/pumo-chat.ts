@@ -120,6 +120,19 @@ Kontekst strony: ${context || 'Strona główna przewodnika'}`
                 console.error('[PumoChat] Link enrichment failed:', enrichError);
                 // Continue with original reply if enrichment fails
             }
+            
+            // POST-PROCESS: Add UTM to existing meblepumo.pl markdown links
+            reply = reply.replace(
+                /\[([^\]]+)\]\((https?:\/\/(?:www\.)?meblepumo\.pl\/[^)]+)\)/g,
+                (match, text, url) => {
+                    // Only add UTM if not already present
+                    if (url.includes('utm_source')) return match;
+                    
+                    const separator = url.includes('?') ? '&' : '?';
+                    const utmParams = `utm_source=mybonzo&utm_medium=rag_chat&utm_campaign=chat_assistant`;
+                    return `[${text}](${url}${separator}${utmParams})`;
+                }
+            );
         }
 
         return new Response(
