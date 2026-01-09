@@ -5,6 +5,22 @@ pages_build_output_dir = "dist"
 
 # Account ID will be set via CLOUDFLARE_ACCOUNT_ID env var
 
+# Pages Configuration
+[pages]
+build_output_dir = "dist"
+
+# D1 Databases - explicitly for Pages
+[[d1_databases]]
+binding = "DB"
+database_name = "jimbo-rag-db"
+database_id = "90fe9b43-f8a4-4e78-94c5-c44aff4012e9"
+
+# Additional D1 Database (future use)
+[[d1_databases]]
+binding = "PUMO_DB"
+database_name = "pumo_products"  
+database_id = "9534ef30-4ccd-4e90-9efc-7ddd2f9935cc"
+
 # Environment Variables for AI Services
 # WARNING: DO NOT commit actual secrets to git!
 # Set these in Cloudflare Dashboard > Pages > Settings > Environment Variables
@@ -25,20 +41,6 @@ preview_id = "183215eb52fa4ef8a7fc312a76e6b688"
 binding = "CACHE"
 id = "cce469bb54d142ebbbce4287e450daec"
 preview_id = "139be3a08d7940eea1de297b0ac22e59"
-
-# D1 Database - WHITECAT Products + RAG System
-[[d1_databases]]
-binding = "DB"
-database_name = "jimbo-rag-db"
-database_id = "90fe9b43-f8a4-4e78-94c5-c44aff4012e9"
-remote = true
-
-# D1 Database - Additional products storage (future use)
-[[d1_databases]]
-binding = "PUMO_DB"
-database_name = "pumo_products"
-database_id = "9534ef30-4ccd-4e90-9efc-7ddd2f9935cc"
-remote = true
 
 # AI binding with remote access for local dev
 [ai]
