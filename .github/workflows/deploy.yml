@@ -20,6 +20,9 @@ jobs:
     - name: Install
       run: npm ci
       
+    - name: Build Astro
+      run: npm run build
+
     - name: Deploy Pages (Keep Alive)
       env:
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
