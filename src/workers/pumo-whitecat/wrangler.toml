@@ -54,6 +54,7 @@ crons = [
 ]
 
 # Secrets (set via: wrangler secret put SECRET_NAME)
+# - DASHBOARD_PASSWORD (simple password for dashboard access, e.g., #HAOS77#)
 # - ANTHROPIC_API_KEY
 # - OPENAI_API_KEY
 # - DKIM_PRIVATE_KEY

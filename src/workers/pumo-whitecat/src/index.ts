@@ -32,13 +32,14 @@ async function getAccessJwks(env: Env): Promise<any> {
 }
 
 async function requireDashboardAccess(request: Request, env: Env): Promise<void> {
-  const aud = (env.CF_ACCESS_AUD || '').trim();
-  const jwksUrl = (env.CF_ACCESS_JWKS_URL || '').trim();
+  // Check if auth is disabled
   let disableAuth = String((env as any).DASHBOARD_DISABLE_AUTH || '').trim().toLowerCase();
   disableAuth = disableAuth.replace(/^['\"]+|['\"]+$/g, '');
   if (disableAuth === '1' || disableAuth === 'true' || disableAuth === 'yes') {
     return;
   }
+
+  // Check if running locally
   const u = new URL(request.url);
   const hostname = u.hostname;
   const hostHeader = (request.headers.get('Host') || '').toLowerCase();
@@ -51,7 +52,29 @@ async function requireDashboardAccess(request: Request, env: Env): Promise<void>
     return;
   }
 
+  // Option 1: Simple password-based auth (if DASHBOARD_PASSWORD is set)
+  const dashboardPassword = String((env as any).DASHBOARD_PASSWORD || '').trim();
+  if (dashboardPassword) {
+    const authHeader = request.headers.get('Authorization') || '';
+    if (!authHeader.startsWith('Basic ')) {
+      throw new Error('BASIC_AUTH_REQUIRED');
+    }
+    
+    const base64Credentials = authHeader.substring(6);
+    const credentials = atob(base64Credentials);
+    const [username, password] = credentials.split(':');
+    
+    if (password !== dashboardPassword) {
+      throw new Error('Invalid credentials');
+    }
+    return; // Password auth successful
+  }
+
+  // Option 2: Cloudflare Access JWT auth (enterprise SSO)
+  const aud = (env.CF_ACCESS_AUD || '').trim();
+  const jwksUrl = (env.CF_ACCESS_JWKS_URL || '').trim();
   const token = request.headers.get('Cf-Access-Jwt-Assertion') || '';
+  
   if (!token) throw new Error('Missing Cf-Access-Jwt-Assertion');
   if (!aud) throw new Error('CF_ACCESS_AUD missing');
   if (!jwksUrl) throw new Error('CF_ACCESS_JWKS_URL missing');
@@ -194,12 +217,20 @@ export default {
         try {
           await requireDashboardAccess(request, env);
         } catch (error: any) {
-          return new Response(error?.message || 'Unauthorized', {
+          const errorMsg = error?.message || 'Unauthorized';
+          const headers: any = {
+            'Content-Type': 'text/plain; charset=utf-8',
+            ...(corsHeaders || {})
+          };
+          
+          // If password-based auth is enabled, request Basic Auth
+          if (errorMsg === 'BASIC_AUTH_REQUIRED') {
+            headers['WWW-Authenticate'] = 'Basic realm="PUMO Dashboard", charset="UTF-8"';
+          }
+          
+          return new Response(errorMsg === 'BASIC_AUTH_REQUIRED' ? 'Authentication required' : errorMsg, {
             status: 401,
-            headers: {
-              'Content-Type': 'text/plain; charset=utf-8',
-              ...(corsHeaders || {})
-            }
+            headers
           });
         }
         return await handleDashboard(env, corsHeaders);
