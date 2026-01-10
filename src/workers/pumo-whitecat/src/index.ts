@@ -1,5 +1,17 @@
 import { ChunkData, Env } from './types';
 
+// Constant-time string comparison to prevent timing attacks
+function constantTimeCompare(a: string, b: string): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return result === 0;
+}
+
 let jwksCache: { fetchedAt: number; jwks: any } | null = null;
 
 function base64UrlToBytes(input: string): Uint8Array {
@@ -33,7 +45,7 @@ async function getAccessJwks(env: Env): Promise<any> {
 
 async function requireDashboardAccess(request: Request, env: Env): Promise<void> {
   // Check if auth is disabled
-  let disableAuth = String((env as any).DASHBOARD_DISABLE_AUTH || '').trim().toLowerCase();
+  let disableAuth = String(env.DASHBOARD_DISABLE_AUTH || '').trim().toLowerCase();
   disableAuth = disableAuth.replace(/^['\"]+|['\"]+$/g, '');
   if (disableAuth === '1' || disableAuth === 'true' || disableAuth === 'yes') {
     return;
@@ -53,21 +65,37 @@ async function requireDashboardAccess(request: Request, env: Env): Promise<void>
   }
 
   // Option 1: Simple password-based auth (if DASHBOARD_PASSWORD is set)
-  const dashboardPassword = String((env as any).DASHBOARD_PASSWORD || '').trim();
+  const dashboardPassword = String(env.DASHBOARD_PASSWORD || '').trim();
   if (dashboardPassword) {
     const authHeader = request.headers.get('Authorization') || '';
     if (!authHeader.startsWith('Basic ')) {
       throw new Error('BASIC_AUTH_REQUIRED');
     }
     
-    const base64Credentials = authHeader.substring(6);
-    const credentials = atob(base64Credentials);
-    const [username, password] = credentials.split(':');
-    
-    if (password !== dashboardPassword) {
+    try {
+      const base64Credentials = authHeader.substring(6).trim();
+      if (!base64Credentials || !/^[A-Za-z0-9+/=]+$/.test(base64Credentials)) {
+        throw new Error('Invalid credentials format');
+      }
+      
+      const credentials = atob(base64Credentials);
+      const colonIndex = credentials.indexOf(':');
+      if (colonIndex === -1) {
+        throw new Error('Invalid credentials format');
+      }
+      
+      const password = credentials.substring(colonIndex + 1);
+      
+      if (!constantTimeCompare(password, dashboardPassword)) {
+        throw new Error('Invalid credentials');
+      }
+      return; // Password auth successful
+    } catch (error: any) {
+      if (error.message === 'BASIC_AUTH_REQUIRED') {
+        throw error;
+      }
       throw new Error('Invalid credentials');
     }
-    return; // Password auth successful
   }
 
   // Option 2: Cloudflare Access JWT auth (enterprise SSO)
