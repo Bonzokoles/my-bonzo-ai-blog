@@ -3,7 +3,7 @@
  * Centralny endpoint do zarządzania systemem Meble Pumo
  */
 
-import { withFeatureMiddleware } from '@/middleware/api-middleware';
+import { withSimpleMiddleware } from '@/middleware/simple-middleware';
 import type { APIRoute } from 'astro';
 
 interface SystemStatus {
@@ -18,7 +18,7 @@ interface SystemStatus {
 }
 
 export const GET: APIRoute = async (context) => {
-    return withFeatureMiddleware(
+    return withSimpleMiddleware(
         'whitecat-products',
         context,
         'public',
@@ -92,7 +92,7 @@ export const GET: APIRoute = async (context) => {
 };
 
 export const POST: APIRoute = async (context) => {
-    return withFeatureMiddleware(
+    return withSimpleMiddleware(
         'whitecat-products',
         context,
         'admin',

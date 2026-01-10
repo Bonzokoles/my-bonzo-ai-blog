@@ -3,6 +3,7 @@ export interface Env {
   VECTORIZE: VectorizeIndex;
   CACHE: KVNamespace;
   AI: any;
+  PUMO_RAW_BUCKET: R2Bucket;
   ALLOWED_ORIGINS: string;
 
   // Dashboard config
@@ -11,7 +12,7 @@ export interface Env {
   // Cloudflare Access (for protecting dashboard)
   CF_ACCESS_AUD?: string;
   CF_ACCESS_JWKS_URL?: string;
-  
+
   // APIs
   ANTHROPIC_API_KEY?: string;
   OPENAI_API_KEY?: string;

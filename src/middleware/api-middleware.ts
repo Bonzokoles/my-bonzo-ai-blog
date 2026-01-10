@@ -3,20 +3,28 @@
  * Centralized middleware for feature flags, rate limiting, and authorization
  */
 
-import type { APIContext } from 'astro';
 import type {
-  FeatureFlag,
-  Permission,
   MiddlewareResult,
-  RequestContext,
-  RateLimitConfig
+  Permission,
+  RateLimitConfig,
+  RequestContext
 } from '@/Types/features';
-import { getFeatureFlagsManager } from '@/lib/features/feature-flags';
 import { FEATURES, getCurrentEnvironment } from '@/config/features';
+import { getFeatureFlagsManager } from '@/lib/features/feature-flags';
+import { createLazyInitializer, getRuntimeConfig } from '@/lib/runtime/environment';
+import type { APIContext } from 'astro';
 
-// Initialize features
-const featureManager = getFeatureFlagsManager(getCurrentEnvironment());
-featureManager.registerBatch(FEATURES);
+// Environment-aware feature manager initialization
+const getFeatureManager = createLazyInitializer(() => {
+  const { runtime } = getRuntimeConfig();
+  console.log(`[Middleware] Initializing feature manager for ${runtime} environment`);
+
+  const manager = getFeatureFlagsManager(getCurrentEnvironment());
+  manager.registerBatch(FEATURES);
+
+  console.log(`[Middleware] Feature manager initialized with ${FEATURES.length} features`);
+  return manager;
+});
 
 // Rate limiter storage (in-memory per worker instance)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
@@ -104,8 +112,10 @@ export function validateFeatureAccess(
   permission: Permission = 'public',
   context: RequestContext
 ): MiddlewareResult {
+  const manager = getFeatureManager();
+
   // Check if feature exists
-  const feature = featureManager.getFeature(featureId);
+  const feature = manager.getFeature(featureId);
 
   if (!feature) {
     return {
@@ -116,7 +126,7 @@ export function validateFeatureAccess(
   }
 
   // Check if feature is enabled
-  if (!featureManager.isEnabled(featureId, permission)) {
+  if (!manager.isEnabled(featureId, permission)) {
     return {
       allowed: false,
       reason: `Feature '${feature.name}' is not enabled`,
@@ -245,8 +255,8 @@ export async function withFeatureMiddleware(
 /**
  * Get feature flags manager instance
  */
-export function getFeatureManager() {
-  return featureManager;
+export function getFeatureManagerInstance() {
+  return getFeatureManager();
 }
 
 /**

@@ -148,246 +148,260 @@ function transformPumoProduct(product: PumoAPIProduct): any {
 
 // GET endpoint - Status i statystyki
 export const GET: APIRoute = async (context) => {
-    const runtime = (context.locals as any)?.runtime;
-    const env = runtime?.env;
+    return withSimpleMiddleware(
+        'whitecat-products',
+        context,
+        'user',
+        async (ctx, requestContext) => {
+            const runtime = (ctx.locals as any)?.runtime;
+            const env = runtime?.env;
 
-    if (!env?.PUMO_DB) {
-        return new Response(JSON.stringify({
-            success: false,
-            error: 'PUMO_DB not configured'
-        }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
-    }
+            if (!env?.PUMO_DB) {
+                return new Response(JSON.stringify({
+                    success: false,
+                    error: 'PUMO_DB not configured'
+                }), {
+                    status: 500,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
 
-    try {
-        const productManager = getProductManager(env);
-        const stats = await productManager.getStats();
+            try {
+                const productManager = getProductManager(env);
+                const stats = await productManager.getStats();
 
-        // Check last sync time
-        const lastSyncResult = await env.PUMO_DB.prepare(`
+                // Check last sync time
+                const lastSyncResult = await env.PUMO_DB.prepare(`
       SELECT * FROM sync_history 
       WHERE sync_type = 'api_sync' 
       ORDER BY started_at DESC 
       LIMIT 1
     `).first();
 
-        return new Response(JSON.stringify({
-            success: true,
-            data: {
-                database_stats: stats,
-                last_sync: lastSyncResult ? {
-                    started_at: lastSyncResult.started_at,
-                    completed_at: lastSyncResult.completed_at,
-                    status: lastSyncResult.status,
-                    products_synced: lastSyncResult.products_synced,
-                    duration_ms: lastSyncResult.duration_ms
-                } : null,
-                api_config: {
-                    base_url: env.PUMO_API_BASE_URL || 'https://api.meblepumo.pl/v1',
-                    has_api_key: !!env.PUMO_API_KEY
-                }
-            }
-        }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-        });
+                return new Response(JSON.stringify({
+                    success: true,
+                    data: {
+                        database_stats: stats,
+                        last_sync: lastSyncResult ? {
+                            started_at: lastSyncResult.started_at,
+                            completed_at: lastSyncResult.completed_at,
+                            status: lastSyncResult.status,
+                            products_synced: lastSyncResult.products_synced,
+                            duration_ms: lastSyncResult.duration_ms
+                        } : null,
+                        api_config: {
+                            base_url: env.PUMO_API_BASE_URL || 'https://api.meblepumo.pl/v1',
+                            has_api_key: !!env.PUMO_API_KEY
+                        }
+                    }
+                }), {
+                    status: 200,
+                    headers: { 'Content-Type': 'application/json' }
+                });
 
-    } catch (error: any) {
-        console.error('❌ Pumo API sync status error:', error);
-        return new Response(JSON.stringify({
-            success: false,
-            error: error.message
-        }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
-    }
+            } catch (error: any) {
+                console.error('❌ Pumo API sync status error:', error);
+                return new Response(JSON.stringify({
+                    success: false,
+                    error: error.message
+                }), {
+                    status: 500,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
+        }
+    );
 };
 
 // POST endpoint - Manual sync trigger
 export const POST: APIRoute = async (context) => {
-    const runtime = (context.locals as any)?.runtime;
-    const env = runtime?.env;
+    return withSimpleMiddleware(
+        'whitecat-products',
+        context,
+        'admin',
+        async (ctx, requestContext) => {
+            const runtime = (ctx.locals as any)?.runtime;
+            const env = runtime?.env;
 
-    if (!env?.PUMO_DB) {
-        return new Response(JSON.stringify({
-            success: false,
-            error: 'PUMO_DB not configured'
-        }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
-    }
+            if (!env?.PUMO_DB) {
+                return new Response(JSON.stringify({
+                    success: false,
+                    error: 'PUMO_DB not configured'
+                }), {
+                    status: 500,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
 
-    if (!env.PUMO_API_KEY) {
-        return new Response(JSON.stringify({
-            success: false,
-            error: 'PUMO_API_KEY not configured'
-        }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
-    }
+            if (!env.PUMO_API_KEY) {
+                return new Response(JSON.stringify({
+                    success: false,
+                    error: 'PUMO_API_KEY not configured'
+                }), {
+                    status: 500,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
 
-    const syncStartTime = Date.now();
-    let syncId: number | null = null;
+            const syncStartTime = Date.now();
+            let syncId: number | null = null;
 
-    try {
-        // Start sync record
-        const syncResult = await env.PUMO_DB.prepare(`
+            try {
+                // Start sync record
+                const syncResult = await env.PUMO_DB.prepare(`
       INSERT INTO sync_history (sync_type, started_at, status)
       VALUES ('api_sync', ?, 'running')
     `).bind(new Date().toISOString()).run();
 
-        syncId = syncResult.meta.last_row_id;
-        console.log(`🚀 Starting API sync #${syncId}`);
+                syncId = syncResult.meta.last_row_id;
+                console.log(`🚀 Starting API sync #${syncId}`);
 
-        // Initialize API client
-        const apiClient = new PumoAPIClient(env);
-        const productManager = getProductManager(env);
+                // Initialize API client
+                const apiClient = new PumoAPIClient(env);
+                const productManager = getProductManager(env);
 
-        // Fetch all products from API
-        const apiProducts = await apiClient.getAllProducts();
+                // Fetch all products from API
+                const apiProducts = await apiClient.getAllProducts();
 
-        if (apiProducts.length === 0) {
-            throw new Error('No products returned from Pumo API');
-        }
+                if (apiProducts.length === 0) {
+                    throw new Error('No products returned from Pumo API');
+                }
 
-        // Process products
-        let processed = 0;
-        let created = 0;
-        let updated = 0;
-        let errors = 0;
+                // Process products
+                let processed = 0;
+                let created = 0;
+                let updated = 0;
+                let errors = 0;
 
-        console.log(`📦 Processing ${apiProducts.length} products...`);
+                console.log(`📦 Processing ${apiProducts.length} products...`);
 
-        for (const apiProduct of apiProducts) {
-            try {
-                const transformedProduct = transformPumoProduct(apiProduct);
+                for (const apiProduct of apiProducts) {
+                    try {
+                        const transformedProduct = transformPumoProduct(apiProduct);
 
-                // Check if product exists
-                const existingProduct = await productManager.getProduct(apiProduct.id);
+                        // Check if product exists
+                        const existingProduct = await productManager.getProduct(apiProduct.id);
 
-                if (existingProduct) {
-                    // Update existing product
-                    await env.PUMO_DB.prepare(`
+                        if (existingProduct) {
+                            // Update existing product
+                            await env.PUMO_DB.prepare(`
             UPDATE products 
             SET name = ?, description = ?, price = ?, category = ?, 
                 availability = ?, stock_quantity = ?, url = ?, 
                 updated_at = ?, synced_at = ?
             WHERE id = ?
           `).bind(
-                        transformedProduct.name,
-                        transformedProduct.description,
-                        transformedProduct.price,
-                        transformedProduct.category,
-                        transformedProduct.availability,
-                        transformedProduct.stockQuantity,
-                        transformedProduct.url,
-                        transformedProduct.updatedAt,
-                        transformedProduct.syncedAt,
-                        apiProduct.id
-                    ).run();
-                    updated++;
-                } else {
-                    // Create new product
-                    await env.PUMO_DB.prepare(`
+                                transformedProduct.name,
+                                transformedProduct.description,
+                                transformedProduct.price,
+                                transformedProduct.category,
+                                transformedProduct.availability,
+                                transformedProduct.stockQuantity,
+                                transformedProduct.url,
+                                transformedProduct.updatedAt,
+                                transformedProduct.syncedAt,
+                                apiProduct.id
+                            ).run();
+                            updated++;
+                        } else {
+                            // Create new product
+                            await env.PUMO_DB.prepare(`
             INSERT INTO products (id, name, description, price, category, availability, 
                                 stock_quantity, url, source, created_at, updated_at, synced_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pumo_api', ?, ?, ?)
           `).bind(
-                        transformedProduct.id,
-                        transformedProduct.name,
-                        transformedProduct.description,
-                        transformedProduct.price,
-                        transformedProduct.category,
-                        transformedProduct.availability,
-                        transformedProduct.stockQuantity,
-                        transformedProduct.url,
-                        transformedProduct.syncedAt,
-                        transformedProduct.updatedAt,
-                        transformedProduct.syncedAt
-                    ).run();
-                    created++;
+                                transformedProduct.id,
+                                transformedProduct.name,
+                                transformedProduct.description,
+                                transformedProduct.price,
+                                transformedProduct.category,
+                                transformedProduct.availability,
+                                transformedProduct.stockQuantity,
+                                transformedProduct.url,
+                                transformedProduct.syncedAt,
+                                transformedProduct.updatedAt,
+                                transformedProduct.syncedAt
+                            ).run();
+                            created++;
+                        }
+
+                        processed++;
+
+                        if (processed % 100 === 0) {
+                            console.log(`📊 Progress: ${processed}/${apiProducts.length} products processed`);
+                        }
+
+                    } catch (productError: any) {
+                        console.error(`❌ Error processing product ${apiProduct.id}:`, productError);
+                        errors++;
+                    }
                 }
 
-                processed++;
+                const syncDuration = Date.now() - syncStartTime;
 
-                if (processed % 100 === 0) {
-                    console.log(`📊 Progress: ${processed}/${apiProducts.length} products processed`);
-                }
-
-            } catch (productError: any) {
-                console.error(`❌ Error processing product ${apiProduct.id}:`, productError);
-                errors++;
-            }
-        }
-
-        const syncDuration = Date.now() - syncStartTime;
-
-        // Complete sync record
-        await env.PUMO_DB.prepare(`
+                // Complete sync record
+                await env.PUMO_DB.prepare(`
       UPDATE sync_history 
       SET completed_at = ?, status = 'success', products_synced = ?, 
           duration_ms = ?, created_count = ?, updated_count = ?, error_count = ?
       WHERE id = ?
     `).bind(
-            new Date().toISOString(),
-            processed,
-            syncDuration,
-            created,
-            updated,
-            errors,
-            syncId
-        ).run();
+                    new Date().toISOString(),
+                    processed,
+                    syncDuration,
+                    created,
+                    updated,
+                    errors,
+                    syncId
+                ).run();
 
-        console.log(`✅ API sync completed successfully in ${syncDuration}ms`);
+                console.log(`✅ API sync completed successfully in ${syncDuration}ms`);
 
-        return new Response(JSON.stringify({
-            success: true,
-            data: {
-                sync_id: syncId,
-                duration_ms: syncDuration,
-                statistics: {
-                    total_products: apiProducts.length,
-                    processed: processed,
-                    created: created,
-                    updated: updated,
-                    errors: errors
-                },
-                message: `Successfully synced ${processed} products from Pumo API`
-            }
-        }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-        });
+                return new Response(JSON.stringify({
+                    success: true,
+                    data: {
+                        sync_id: syncId,
+                        duration_ms: syncDuration,
+                        statistics: {
+                            total_products: apiProducts.length,
+                            processed: processed,
+                            created: created,
+                            updated: updated,
+                            errors: errors
+                        },
+                        message: `Successfully synced ${processed} products from Pumo API`
+                    }
+                }), {
+                    status: 200,
+                    headers: { 'Content-Type': 'application/json' }
+                });
 
-    } catch (error: any) {
-        console.error('❌ Pumo API sync error:', error);
+            } catch (error: any) {
+                console.error('❌ Pumo API sync error:', error);
 
-        // Update sync record with error
-        if (syncId) {
-            await env.PUMO_DB.prepare(`
+                // Update sync record with error
+                if (syncId) {
+                    await env.PUMO_DB.prepare(`
         UPDATE sync_history 
         SET completed_at = ?, status = 'failed', error_message = ?, duration_ms = ?
         WHERE id = ?
       `).bind(
-                new Date().toISOString(),
-                error.message,
-                Date.now() - syncStartTime,
-                syncId
-            ).run();
-        }
+                        new Date().toISOString(),
+                        error.message,
+                        Date.now() - syncStartTime,
+                        syncId
+                    ).run();
+                }
 
-        return new Response(JSON.stringify({
-            success: false,
-            error: error.message,
-            sync_id: syncId
-        }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
-    }
+                return new Response(JSON.stringify({
+                    success: false,
+                    error: error.message,
+                    sync_id: syncId
+                }), {
+                    status: 500,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
+        }
+    );
 };

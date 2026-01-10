@@ -15,7 +15,7 @@ export default {
 	// WORKAROUND dla bug'a z "file" zamiast "flex" w generowanym CSS
 	// Disable problematic flex utilities
 	corePlugins: {
-		flex: false,
+		flex: true,
 	},
 	theme: {
 		colors: {

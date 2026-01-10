@@ -3,7 +3,6 @@
  * Synchronizuje dostępność produktów między bazą PUMO_DB i główną bazą RAG
  */
 
-import { withFeatureMiddleware } from '@/middleware/api-middleware';
 import type { APIRoute } from 'astro';
 
 interface SyncResult {
@@ -58,7 +57,7 @@ async function checkProductAvailability(productId: string): Promise<{ available:
  * Główna funkcja synchronizacji
  */
 export const POST: APIRoute = async (context) => {
-    return withFeatureMiddleware(
+    return withSimpleMiddleware(
         'whitecat-products',
         context,
         'admin',
@@ -196,7 +195,7 @@ export const POST: APIRoute = async (context) => {
 
 // Status endpoint
 export const GET: APIRoute = async (context) => {
-    return withFeatureMiddleware(
+    return withSimpleMiddleware(
         'whitecat-products',
         context,
         'public',

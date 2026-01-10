@@ -1,4 +1,3 @@
-import { DASHBOARD_HTML } from './templates/dashboard';
 import { ChunkData, Env } from './types';
 
 let jwksCache: { fetchedAt: number; jwks: any } | null = null;
@@ -35,8 +34,18 @@ async function getAccessJwks(env: Env): Promise<any> {
 async function requireDashboardAccess(request: Request, env: Env): Promise<void> {
   const aud = (env.CF_ACCESS_AUD || '').trim();
   const jwksUrl = (env.CF_ACCESS_JWKS_URL || '').trim();
-  const hostname = new URL(request.url).hostname;
-  const isLocal = hostname === '127.0.0.1' || hostname === 'localhost';
+  let disableAuth = String((env as any).DASHBOARD_DISABLE_AUTH || '').trim().toLowerCase();
+  disableAuth = disableAuth.replace(/^['\"]+|['\"]+$/g, '');
+  if (disableAuth === '1' || disableAuth === 'true' || disableAuth === 'yes') {
+    return;
+  }
+  const u = new URL(request.url);
+  const hostname = u.hostname;
+  const hostHeader = (request.headers.get('Host') || '').toLowerCase();
+  const isLocal = hostname === '127.0.0.1'
+    || hostname === 'localhost'
+    || hostHeader.startsWith('127.0.0.1')
+    || hostHeader.startsWith('localhost');
 
   if (isLocal) {
     return;
@@ -277,6 +286,11 @@ export default {
         return await handleGA4RunReport(request, env, corsHeaders);
       }
 
+      // R2 cleanup - delete old backups (>30 days)
+      if (path === '/api/cleanup-r2' && request.method === 'POST') {
+        return await handleR2Cleanup(env, corsHeaders);
+      }
+
       return jsonResponse({ error: 'Not found' }, 404, corsHeaders);
 
     } catch (error: any) {
@@ -287,14 +301,31 @@ export default {
 
   async scheduled(event: any, env: Env, ctx: any) {
     console.log('⏰ Cron triggered at:', new Date().toISOString());
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0 = Sunday
+    const hour = now.getHours();
 
     try {
+      // Daily sync (every 6 hours)
       const { DailySyncWorkflow } = await import('./workflows/daily-sync');
       const workflow = new DailySyncWorkflow(env);
       await workflow.run();
       console.log('✅ Scheduled sync completed');
+
+      // Weekly R2 cleanup (Sundays at 3:00)
+      if (dayOfWeek === 0 && hour === 3) {
+        console.log('🧹 Running weekly R2 cleanup');
+        const corsHeaders = {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization, Cf-Access-Jwt-Assertion'
+        };
+        const cleanupResult = await handleR2Cleanup(env, corsHeaders);
+        console.log('✅ Weekly R2 cleanup completed');
+      }
+
     } catch (error) {
-      console.error('❌ Scheduled sync failed:', error);
+      console.error('❌ Scheduled task failed:', error);
     }
   }
 };
@@ -987,6 +1018,43 @@ async function handleFavicon(path: string, corsHeaders: any): Promise<Response> 
     status: 404,
     headers: corsHeaders
   });
+}
+
+// R2 Cleanup Handler
+async function handleR2Cleanup(env: Env, corsHeaders: any): Promise<Response> {
+  try {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    console.log(`🧹 Starting R2 cleanup for files older than ${thirtyDaysAgo.toISOString()}`);
+
+    const list = await env.PUMO_RAW_BUCKET.list();
+    let deleted = 0;
+
+    for (const obj of list.objects) {
+      if (obj.uploaded < thirtyDaysAgo) {
+        await env.PUMO_RAW_BUCKET.delete(obj.key);
+        deleted++;
+        console.log(`🗑️ Deleted old backup: ${obj.key}`);
+      }
+    }
+
+    console.log(`✅ R2 cleanup completed. Deleted ${deleted} old backup files`);
+
+    return jsonResponse({
+      success: true,
+      deleted,
+      message: `Deleted ${deleted} old backup files`,
+      cutoff_date: thirtyDaysAgo.toISOString()
+    }, 200, corsHeaders);
+
+  } catch (error: any) {
+    console.error('❌ R2 cleanup failed:', error);
+    return jsonResponse({
+      success: false,
+      error: error.message
+    }, 500, corsHeaders);
+  }
 }
 
 

@@ -3,10 +3,9 @@
  * Provides access to the function registry and feature flags
  */
 
-import type { APIRoute } from 'astro';
-import { withFeatureMiddleware } from '@/middleware/api-middleware';
 import { getFunctionRegistry } from '@/lib/registry/function-registry';
-import { getFeatureManager } from '@/middleware/api-middleware';
+import { withFeatureMiddleware } from '@/middleware/api-middleware';
+import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
@@ -20,7 +19,7 @@ export const GET: APIRoute = async (context) => {
       const action = url.searchParams.get('action') || 'list';
 
       const registry = getFunctionRegistry();
-      const featureManager = getFeatureManager();
+      const featureManager = getFeatureManagerInstance();
 
       switch (action) {
         case 'list':

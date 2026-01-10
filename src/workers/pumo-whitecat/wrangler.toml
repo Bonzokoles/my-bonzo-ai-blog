@@ -30,6 +30,11 @@ id = "dd9f40a8318d4275ae760b1194833723"  # CACHE (pumo-chunk-processor-CACHE)
 [ai]
 binding = "AI"
 
+# R2 bucket for raw data backup
+[[r2_buckets]]
+binding = "PUMO_RAW_BUCKET"
+bucket_name = "pumo-raw-data"
+
 # Environment variables
 [vars]
 ALLOWED_ORIGINS = "https://www.mybonzoaiblog.com,http://localhost:4656"
@@ -39,9 +44,12 @@ GA4_PROPERTY_ID = ""
 CF_ACCESS_AUD = ""
 CF_ACCESS_JWKS_URL = ""
 
-# Cron triggers - Daily at 3 AM CET
+# Cron triggers - Every 6 hours + weekly cleanup
 [triggers]
-crons = ["0 3 * * *"]
+crons = [
+  "0 */6 * * *",      # Sync co 6h
+  "0 3 * * SUN"       # Cleanup w niedzielę o 3:00
+]
 
 # Secrets (set via: wrangler secret put SECRET_NAME)
 # - ANTHROPIC_API_KEY

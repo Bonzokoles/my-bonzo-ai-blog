@@ -1,6 +1,6 @@
+import { ChunkProcessor } from '../processors/chunk-processor';
 import { Env, PumoProduct } from '../types';
 import { PumoAPIClient } from './pumo-api-client';
-import { ChunkProcessor } from '../processors/chunk-processor';
 
 interface SyncResult {
   total_fetched: number;
@@ -22,7 +22,7 @@ interface ProductChange {
 
 export class ProductSync {
   private apiClient: PumoAPIClient;
-  
+
   constructor(private env: Env) {
     this.apiClient = new PumoAPIClient(env);
   }
@@ -38,6 +38,9 @@ export class ProductSync {
       if (apiProducts.length === 0) {
         throw new Error('No products fetched from API');
       }
+
+      // ⬇️ SAVE RAW DATA TO R2
+      await this.saveToR2(apiProducts, 'full');
 
       // Get existing products from database
       const existingProducts = await this.getExistingProducts();
@@ -81,7 +84,7 @@ export class ProductSync {
       // Mark deleted products
       const apiProductIds = new Set(apiProducts.map(p => p.id));
       const deletedIds = Array.from(existingIds).filter(id => !apiProductIds.has(id));
-      
+
       if (deletedIds.length > 0) {
         await this.markProductsAsDeleted(deletedIds);
       }
@@ -129,7 +132,7 @@ export class ProductSync {
       const apiProducts = await this.apiClient.getAllProducts();
 
       // Filter products updated since last sync
-      const updatedProducts = apiProducts.filter(p => 
+      const updatedProducts = apiProducts.filter(p =>
         new Date(p.updated_at || 0) > new Date(lastSyncTime)
       );
 
@@ -146,6 +149,9 @@ export class ProductSync {
           duration_ms: Date.now() - startTime
         };
       }
+
+      // ⬇️ SAVE UPDATED PRODUCTS TO R2
+      await this.saveToR2(updatedProducts, 'incremental');
 
       // Process updated products
       const existingProducts = await this.getExistingProductsByIds(
@@ -296,7 +302,7 @@ export class ProductSync {
   private async logChanges(changes: ProductChange[]): Promise<void> {
     // Create product_changes table if needed (moved to schema.sql but keeping check just in case)
     // Actually we assume it exists now.
-    
+
     for (const change of changes) {
       await this.env.DB.prepare(`
         INSERT INTO product_changes (
@@ -314,25 +320,25 @@ export class ProductSync {
 
   private async sendChangeAlerts(changes: ProductChange[]): Promise<void> {
     // Send email alerts for important changes
-    const importantChanges = changes.filter(c => 
-      c.change_type === 'price_change' && 
+    const importantChanges = changes.filter(c =>
+      c.change_type === 'price_change' &&
       (c.new_value && c.old_value && Math.abs((c.new_value - c.old_value) / c.old_value) > 0.1) // >10% price change
     );
 
     if (importantChanges.length > 0) {
       console.log(`⚠️  ${importantChanges.length} important price changes detected`);
-      
+
       // Send alert email
       const { EmailService } = await import('./email-service');
       const emailService = new EmailService(this.env);
 
       // Just log for now as sendAlertEmail isn't in EmailService interface yet
       console.log('Sending alert email would happen here regarding price changes.');
-       /* await emailService.sendAlertEmail(
-        'Important Product Changes Detected',
-        `${importantChanges.length} products have significant price changes (>10%)`,
-        ['alerts@mybonzoaiblog.com'] 
-      );*/
+      /* await emailService.sendAlertEmail(
+       'Important Product Changes Detected',
+       `${importantChanges.length} products have significant price changes (>10%)`,
+       ['alerts@mybonzoaiblog.com'] 
+     );*/
     }
   }
 
@@ -362,5 +368,40 @@ export class ProductSync {
 
   async testAPIConnection(): Promise<boolean> {
     return await this.apiClient.testConnection();
+  }
+
+  async saveToR2(products: PumoProduct[], syncType: 'full' | 'incremental'): Promise<void> {
+    console.log(`📦 Saving ${products.length} products to R2...`);
+
+    try {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const filename = `sync-${syncType}-${timestamp}.json`;
+
+      const data = {
+        sync_type: syncType,
+        timestamp: new Date().toISOString(),
+        product_count: products.length,
+        products: products
+      };
+
+      await this.env.PUMO_RAW_BUCKET.put(
+        filename,
+        JSON.stringify(data, null, 2),
+        {
+          httpMetadata: {
+            contentType: 'application/json'
+          },
+          customMetadata: {
+            sync_type: syncType,
+            product_count: String(products.length)
+          }
+        }
+      );
+
+      console.log(`✅ Saved to R2: ${filename}`);
+    } catch (error) {
+      console.error('❌ R2 save failed:', error);
+      // Nie przerwamy synca jeśli R2 fail
+    }
   }
 }
