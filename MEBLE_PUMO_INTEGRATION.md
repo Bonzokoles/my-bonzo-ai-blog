@@ -16,6 +16,7 @@ cp .env.example .env
 2. Otwórz `.env` i zamień placeholder na prawdziwy klucz:
 ```bash
 MEBLE_PUMO_API_KEY=YourActualAPIKeyHere
+# MEBLE_PUMO_API_URL=https://api.meblepumo.pl  # Opcjonalnie: zmień URL API jeśli inny
 ```
 
 ⚠️ **WAŻNE**: Plik `.env` jest w `.gitignore` - NIE commituj go do repo!
@@ -35,7 +36,7 @@ if (validateMeblePumoConfig()) {
 ```
 
 ## 📚 Dokumentacja API
-- Endpoint: `https://api.meblepumo.pl` (zaktualizuj jeśli inny)
+- Endpoint: `https://api.meblepumo.pl` (domyślny, można zmienić przez `MEBLE_PUMO_API_URL`)
 - Format autoryzacji: Bearer token
 - Rate limit: (do uzupełnienia)
 

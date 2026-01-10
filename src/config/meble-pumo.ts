@@ -5,7 +5,7 @@
 
 export const MEBLE_PUMO_CONFIG = {
   apiKey: import.meta.env.MEBLE_PUMO_API_KEY || '',
-  baseUrl: 'https://api.meblepumo.pl', // Zaktualizuj jeśli znasz prawdziwy URL
+  baseUrl: import.meta.env.MEBLE_PUMO_API_URL || 'https://api.meblepumo.pl',
   enabled: !!import.meta.env.MEBLE_PUMO_API_KEY,
 } as const;
 
@@ -14,7 +14,7 @@ export const MEBLE_PUMO_CONFIG = {
  */
 export function validateMeblePumoConfig(): boolean {
   if (!MEBLE_PUMO_CONFIG.apiKey) {
-    console.warn('⚠️  MEBLE_PUMO_API_KEY not configured');
+    console.warn('⚠️ MEBLE_PUMO_API_KEY not configured');
     return false;
   }
   return true;
