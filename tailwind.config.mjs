@@ -5,8 +5,18 @@ import colors from "tailwindcss/colors";
 import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
-	content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+	content: [
+		"./src/**/*.{astro,html,js,jsx,ts,tsx,vue}",
+		"!./src/workers/**/*.md", // Exclude problematic markdown files with [file:XX] tags
+		"./public/**/*.html"
+	],
 	darkMode: "class",
+
+	// WORKAROUND dla bug'a z "file" zamiast "flex" w generowanym CSS
+	// Disable problematic flex utilities
+	corePlugins: {
+		flex: false,
+	},
 	theme: {
 		colors: {
 			// optionally add more colors from tailwindcss/colors
@@ -215,7 +225,30 @@ export default {
 			},
 		},
 	},
-	plugins: [require("@tailwindcss/typography")],
+	plugins: [
+		require("@tailwindcss/typography"),
+		// Plugin do dodania własnych flex utilities
+		function ({ addUtilities }) {
+			const flexUtilities = {
+				'.flex-1': { flex: '1 1 0%' },
+				'.flex-2': { flex: '2 1 0%' },
+				'.flex-3': { flex: '3 1 0%' },
+				'.flex-4': { flex: '4 1 0%' },
+				'.flex-5': { flex: '5 1 0%' },
+				'.flex-6': { flex: '6 1 0%' },
+				'.flex-7': { flex: '7 1 0%' },
+				'.flex-8': { flex: '8 1 0%' },
+				'.flex-9': { flex: '9 1 0%' },
+				'.flex-10': { flex: '10 1 0%' },
+				'.flex-11': { flex: '11 1 0%' },
+				'.flex-12': { flex: '12 1 0%' },
+				'.flex-auto': { flex: '1 1 auto' },
+				'.flex-initial': { flex: '0 1 auto' },
+				'.flex-none': { flex: 'none' },
+			};
+			addUtilities(flexUtilities);
+		}
+	],
 };
 
 /**
