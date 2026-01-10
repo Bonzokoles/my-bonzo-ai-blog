@@ -38,7 +38,7 @@ if (validateMeblePumoConfig()) {
 ## 📚 Dokumentacja API
 - Endpoint: `https://api.meblepumo.pl` (domyślny, można zmienić przez `MEBLE_PUMO_API_URL`)
 - Format autoryzacji: Bearer token
-- Rate limit: (do uzupełnienia)
+- Rate limit: Sprawdź dokumentację API Meble Pumo
 
 ## 🛡️ Bezpieczeństwo
 - ✅ Klucz API przechowywany w `.env` (nie w repo)
