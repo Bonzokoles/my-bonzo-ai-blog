@@ -1,16 +1,98 @@
 import { DASHBOARD_HTML } from './templates/dashboard';
 import { ChunkData, Env } from './types';
 
+let jwksCache: { fetchedAt: number; jwks: any } | null = null;
+
+function base64UrlToBytes(input: string): Uint8Array {
+  const b64 = input.replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(input.length / 4) * 4, '=');
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+
+function base64UrlToString(input: string): string {
+  const bytes = base64UrlToBytes(input);
+  return new TextDecoder().decode(bytes);
+}
+
+async function getAccessJwks(env: Env): Promise<any> {
+  const url = (env.CF_ACCESS_JWKS_URL || '').trim();
+  if (!url) throw new Error('CF_ACCESS_JWKS_URL missing');
+
+  const now = Date.now();
+  if (jwksCache && now - jwksCache.fetchedAt < 5 * 60_000) {
+    return jwksCache.jwks;
+  }
+
+  const res = await fetch(url, { method: 'GET' });
+  if (!res.ok) throw new Error(`Failed to fetch JWKS: ${res.status}`);
+  const jwks = await res.json();
+  jwksCache = { fetchedAt: now, jwks };
+  return jwks;
+}
+
+async function requireDashboardAccess(request: Request, env: Env): Promise<void> {
+  const aud = (env.CF_ACCESS_AUD || '').trim();
+  const jwksUrl = (env.CF_ACCESS_JWKS_URL || '').trim();
+  const hostname = new URL(request.url).hostname;
+  const isLocal = hostname === '127.0.0.1' || hostname === 'localhost';
+
+  if (isLocal) {
+    return;
+  }
+
+  const token = request.headers.get('Cf-Access-Jwt-Assertion') || '';
+  if (!token) throw new Error('Missing Cf-Access-Jwt-Assertion');
+  if (!aud) throw new Error('CF_ACCESS_AUD missing');
+  if (!jwksUrl) throw new Error('CF_ACCESS_JWKS_URL missing');
+
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error('Invalid JWT');
+  const [h, p, s] = parts;
+
+  const header = JSON.parse(base64UrlToString(h)) as any;
+  const payload = JSON.parse(base64UrlToString(p)) as any;
+
+  const payloadAud = payload?.aud;
+  const audOk = Array.isArray(payloadAud) ? payloadAud.includes(aud) : payloadAud === aud;
+  if (!audOk) throw new Error('Invalid audience');
+
+  const exp = typeof payload?.exp === 'number' ? payload.exp : 0;
+  if (exp && Date.now() / 1000 > exp) throw new Error('Token expired');
+
+  const jwks = await getAccessJwks(env);
+  const kid = header?.kid;
+  const keys: any[] = Array.isArray(jwks?.keys) ? jwks.keys : [];
+  const jwk = keys.find(k => k.kid === kid) || null;
+  if (!jwk) throw new Error('JWKS key not found');
+
+  const key = await crypto.subtle.importKey(
+    'jwk',
+    jwk,
+    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+    false,
+    ['verify']
+  );
+
+  const data = new TextEncoder().encode(`${h}.${p}`);
+  const sig = base64UrlToBytes(s);
+  const ok = await crypto.subtle.verify('RSASSA-PKCS1-v1_5', key, sig, data);
+  if (!ok) throw new Error('Invalid signature');
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: any): Promise<Response> {
     const url = new URL(request.url);
     const path = url.pathname;
+    const hostname = url.hostname;
+    const isLocal = hostname === '127.0.0.1' || hostname === 'localhost';
 
     // CORS headers
     const corsHeaders = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, Cf-Access-Jwt-Assertion'
     };
 
     if (request.method === 'OPTIONS') {
@@ -20,7 +102,10 @@ export default {
     try {
       // Dashboard - main page
       if (path === '/' && request.method === 'GET') {
-        return await handleDashboard(env, corsHeaders);
+        if (isLocal) {
+          return Response.redirect(`${url.origin}/dashboard`, 302);
+        }
+        return jsonResponse({ status: 'ok', timestamp: new Date().toISOString() }, 200, corsHeaders);
       }
 
       // Health check
@@ -97,6 +182,17 @@ export default {
 
       // Dashboard
       if (path === '/dashboard' && request.method === 'GET') {
+        try {
+          await requireDashboardAccess(request, env);
+        } catch (error: any) {
+          return new Response(error?.message || 'Unauthorized', {
+            status: 401,
+            headers: {
+              'Content-Type': 'text/plain; charset=utf-8',
+              ...(corsHeaders || {})
+            }
+          });
+        }
         return await handleDashboard(env, corsHeaders);
       }
 

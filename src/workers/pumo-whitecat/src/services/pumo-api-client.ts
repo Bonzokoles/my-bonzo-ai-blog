@@ -199,6 +199,10 @@ export class PumoAPIClient {
 
   async testConnection(): Promise<boolean> {
     console.log('🔌 Testing Pumo API connection...');
+
+    if (!this.config.apiKey) {
+      throw new Error('PUMO_API_KEY missing (configure secret for this worker environment)');
+    }
     
     try {
       const url = `${this.config.baseUrl}/products?page=1&per_page=1`;

@@ -138,13 +138,102 @@ Odpowiadaj naturalnie, pomocnie, ale tylko na podstawie powyższych danych.`;
             temperature: 0.1 // Low temperature to reduce hallucinations
         });
 
-        const answer = aiResponse.response || 'Przepraszam, wystąpił błąd podczas generowania odpowiedzi.';
+        // 5. Check product availability in real-time
+        console.log('[RAG Chat] Checking product availability...');
+        const productIds = productsContext.map(p => {
+            // Extract product ID from URL or use direct ID
+            const match = p.url.match(/-([0-9]+)(?:\?|$)/);
+            return match ? match[1] : p.id;
+        });
+
+        let availableProducts = productsContext;
+        try {
+            const availabilityResponse = await fetch(`${context.url.origin}/api/check-product-availability`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ product_ids: productIds.slice(0, 5) }) // Max 5 for performance
+            });
+
+            if (availabilityResponse.ok) {
+                const availabilityData = await availabilityResponse.json();
+
+                if (availabilityData.success) {
+                    // Filter only available products
+                    const availabilityMap = new Map(
+                        availabilityData.data.products.map((p: any) => [p.id, p])
+                    );
+
+                    availableProducts = productsContext.filter((product, index) => {
+                        const checkId = productIds[index];
+                        const availability = availabilityMap.get(checkId);
+                        return availability?.available === true;
+                    });
+
+                    console.log(`[RAG Chat] Filtered to ${availableProducts.length} available products`);
+                }
+            }
+        } catch (availError) {
+            console.warn('[RAG Chat] Availability check failed, showing all products:', availError);
+            // Continue with all products if availability check fails
+        }
+
+        // If no products are available, provide honest response
+        if (availableProducts.length === 0) {
+            return new Response(JSON.stringify({
+                success: true,
+                answer: `Przepraszam, ale produkty pasujące do zapytania "${query}" są obecnie wyprzedane lub niedostępne. 
+
+Mogę polecić sprawdzenie naszej oferty później lub wyszukanie podobnych produktów w innych kategoriach. Czy mogę pomóc Ci znaleźć alternatywę?`,
+                products_found: [],
+                sources: [],
+                metadata: {
+                    query,
+                    products_searched: productsContext.length,
+                    products_available: 0,
+                    availability_checked: true,
+                    provider: 'local-rag-d1',
+                    timestamp: new Date().toISOString()
+                }
+            }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+
+        // 6. Regenerate AI response with only available products
+        const availableSystemPrompt = `Jesteś konsultantem w sklepie meblowym Meble Pumo. 
+
+KRYTYCZNE ZASADY:
+1. Odpowiadaj WYŁĄCZNIE na podstawie produktów z bazy danych poniżej
+2. NIGDY nie wymyślaj produktów, cen, ani specyfikacji
+3. Używaj dokładnie tych nazw i cen które podałem
+4. Zawsze podawaj linki do produktów w formacie [Nazwa produktu](URL)
+5. Wszystkie podane produkty są DOSTĘPNE DO ZAKUPU
+
+DOSTĘPNE PRODUKTY:
+${availableProducts.map(p =>
+            `${p.position}. ${p.name} (${p.category}) - ${p.price} zł
+   Link: ${p.url}`
+        ).join('\n')}
+
+Odpowiadaj naturalnie, pomocnie, ale tylko na podstawie powyższych danych.`;
+
+        const finalAiResponse = await env.AI.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', {
+            messages: [
+                { role: 'system', content: availableSystemPrompt },
+                { role: 'user', content: userMessage }
+            ],
+            max_tokens: 800,
+            temperature: 0.1
+        });
+
+        const answer = finalAiResponse.response || 'Przepraszam, wystąpił błąd podczas generowania odpowiedzi.';
 
         return new Response(JSON.stringify({
             success: true,
             answer,
-            products_found: productsContext,
-            sources: searchResults.map(r => ({
+            products_found: availableProducts,
+            sources: searchResults.slice(0, availableProducts.length).map(r => ({
                 text: `${r.product.name} - ${r.product.category}`,
                 score: r.score,
                 metadata: {
@@ -155,6 +244,8 @@ Odpowiadaj naturalnie, pomocnie, ale tylko na podstawie powyższych danych.`;
             metadata: {
                 query,
                 products_searched: searchResults.length,
+                products_available: availableProducts.length,
+                availability_checked: true,
                 provider: "local-rag-d1",
                 timestamp: new Date().toISOString(),
                 model: '@cf/meta/llama-3.3-70b-instruct-fp8-fast'

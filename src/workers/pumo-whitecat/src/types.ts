@@ -7,6 +7,10 @@ export interface Env {
 
   // Dashboard config
   DASHBOARD_API_BASE?: string;
+
+  // Cloudflare Access (for protecting dashboard)
+  CF_ACCESS_AUD?: string;
+  CF_ACCESS_JWKS_URL?: string;
   
   // APIs
   ANTHROPIC_API_KEY?: string;
