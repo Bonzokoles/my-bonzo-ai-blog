@@ -1,7 +1,7 @@
 ---
 export const prerender = true;
 
-import PumoBreadcrumbs from "../components/PumoBreadcrumbs.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
 import PumoEnhancedSEO from "../components/PumoEnhancedSEO.astro";
 import PumoStructuredData from "../components/PumoStructuredData.astro";
 import Layout from "./Layout.astro";
@@ -52,10 +52,13 @@ const description =
 
 <Layout title={title} description={description}>
     <article class="max-w-4xl mx-auto px-4 py-8">
-        <PumoBreadcrumbs
-            {category}
-            {subcategory}
-            current={subcategory || category}
+        <Breadcrumbs 
+            items={[
+                { name: "Meble Pumo", url: "https://www.meblepumo.pl" },
+                { name: "Przewodnik AI", url: "/pumo-guide" },
+                ...(category ? [{ name: category, url: subcategory ? `/pumo-guide/${category}` : undefined }] : []),
+                { name: subcategory || category, current: true }
+            ].filter((item): item is { name: string; url?: string; current?: boolean } => Boolean(item.name))}
         />
 
         <!-- Main attribution banner -->

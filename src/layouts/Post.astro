@@ -10,6 +10,7 @@ import { getEntry, render } from "astro:content";
 
 import Author from "@components/Astro/Author.astro";
 import Tags from "@components/Astro/Tags.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
 import Layout from "@layouts/Layout.astro";
 
 interface Props {
@@ -41,6 +42,13 @@ const { Content } = await render(entry);
   class="theme-ultra capitalize"
 >
   <section class="mt-0 mb-2 ultra-stage">
+    <Breadcrumbs 
+      items={[
+        { name: "Home", url: "/" },
+        { name: collectionName === "blog" ? "Blog" : "Docs", url: `/${collectionName}` },
+        { name: entry.data.title, current: true }
+      ]}
+    />
     <article class:list={["prose ultra-panel", className]}>
       {entry.data.subtitle && <p class="h2">{entry.data.subtitle}</p>}
 

@@ -1,0 +1,51 @@
+---
+interface Props {
+    items: Array<{
+        name: string;
+        url?: string;
+        current?: boolean;
+    }>;
+    class?: string;
+}
+
+const { items, class: className } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class:list={["mb-6", className]}>
+    <ol
+        class="flex items-center gap-2 text-sm text-gray-400"
+        itemscope
+        itemtype="https://schema.org/BreadcrumbList"
+    >
+        {items.map((item, index) => (
+            <>
+                <li
+                    itemprop="itemListElement"
+                    itemscope
+                    itemtype="https://schema.org/ListItem"
+                >
+                    {item.url && !item.current ? (
+                        <a
+                            href={item.url}
+                            class="hover:text-blue-400 transition-colors"
+                            itemprop="item"
+                        >
+                            <span itemprop="name">{item.name}</span>
+                        </a>
+                    ) : (
+                        <span 
+                            class:list={[item.current ? "text-white font-semibold" : "text-gray-300"]} 
+                            itemprop="name"
+                        >
+                            {item.name}
+                        </span>
+                    )}
+                    <meta itemprop="position" content={String(index + 1)} />
+                </li>
+                {index < items.length - 1 && (
+                    <li class="text-gray-600" aria-hidden="true">/</li>
+                )}
+            </>
+        ))}
+    </ol>
+</nav>

@@ -115,6 +115,8 @@ const headerLogo = typeof logo === "undefined" ? null : logo; // guard against n
       }
       <Nav links={NAVIGATION} />
       <main class="flex-grow">
+        <!-- Breadcrumbs slot -->
+        <slot name="breadcrumbs" />
         <!-- content -->
         <slot />
       </main>
