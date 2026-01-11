@@ -70,7 +70,8 @@ const fonts = SITE.fonts || [];
 const headerLogo = typeof logo === "undefined" ? null : logo; // guard against no logo
 
 // Prepare logo URL for Schema.org (use full URL with domain)
-const logoUrl = logo?.src ? new URL(logo.src, SITE.url || "https://mybonzoaiblog.com").href : "https://mybonzoaiblog.com/bonzo_logo_new.png";
+const siteUrl = SITE.url || "https://mybonzoaiblog.com";
+const logoUrl = logo?.src ? new URL(logo.src, siteUrl).href : `${siteUrl}/bonzo_logo_new.png`;
 ---
 
 <html lang={lang}>
@@ -95,9 +96,9 @@ const logoUrl = logo?.src ? new URL(logo.src, SITE.url || "https://mybonzoaiblog
       "@graph": [
         {
           "@type": "Organization",
-          "@id": "https://mybonzoaiblog.com/#organization",
+          "@id": `${siteUrl}/#organization`,
           "name": "MyBonzo AI Blog",
-          "url": "https://mybonzoaiblog.com",
+          "url": siteUrl,
           "logo": {
             "@type": "ImageObject",
             "url": logoUrl,
@@ -117,19 +118,19 @@ const logoUrl = logo?.src ? new URL(logo.src, SITE.url || "https://mybonzoaiblog
         },
         {
           "@type": "WebSite",
-          "@id": "https://mybonzoaiblog.com/#website",
-          "url": "https://mybonzoaiblog.com",
+          "@id": `${siteUrl}/#website`,
+          "url": siteUrl,
           "name": "MyBonzo AI Blog - Sztuczna Inteligencja po Polsku",
           "description": "Kompleksowy przewodnik po sztucznej inteligencji: tutoriale, case studies, narzędzia AI i aktualne trendy w ML/AI",
           "publisher": {
-            "@id": "https://mybonzoaiblog.com/#organization"
+            "@id": `${siteUrl}/#organization`
           },
           "inLanguage": "pl-PL",
           "potentialAction": {
             "@type": "SearchAction",
             "target": {
               "@type": "EntryPoint",
-              "urlTemplate": "https://mybonzoaiblog.com/search?q={search_term_string}"
+              "urlTemplate": `${siteUrl}/search?q={search_term_string}`
             },
             "query-input": "required name=search_term_string"
           }
