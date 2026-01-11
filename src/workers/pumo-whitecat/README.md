@@ -54,10 +54,25 @@ Repo ma workflow:
 
 - `.github/workflows/deploy-pumo-whitecat-worker.yml`
 
+Workflow automatycznie deployuje workera i ustawia `DASHBOARD_PASSWORD`.
+
+### Wymagane GitHub Secrets:
+
 W GitHub ustaw:
 
-- `CLOUDFLARE_API_TOKEN`
-- `CLOUDFLARE_ACCOUNT_ID`
+- `CLOUDFLARE_API_TOKEN` - Cloudflare API token z uprawnieniami Workers edit
+- `CLOUDFLARE_ACCOUNT_ID` - Twoje Cloudflare account ID
+- `DASHBOARD_PASSWORD` - Hasło do dashboardu workera (zalecane: `#HAOS77#`)
+
+**Aby ustawić GitHub Secret:**
+
+1. Idź do: **Settings → Secrets and variables → Actions**
+2. Kliknij **New repository secret**
+3. Dodaj secret:
+   - Name: `DASHBOARD_PASSWORD`
+   - Value: `#HAOS77#`
+
+Po ustawieniu, każdy deploy automatycznie zaktualizuje hasło w Cloudflare.
 
 Deploy wykona się na `push` do `main` dla zmian w `src/workers/pumo-whitecat/**`.
 
