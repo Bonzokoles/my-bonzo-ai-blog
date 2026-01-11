@@ -68,6 +68,9 @@ const fonts = SITE.fonts || [];
 
 // @ts-ignore
 const headerLogo = typeof logo === "undefined" ? null : logo; // guard against no logo
+
+// Prepare logo URL for Schema.org (use full URL with domain)
+const logoUrl = logo?.src ? new URL(logo.src, SITE.url || "https://mybonzoaiblog.com").href : "https://mybonzoaiblog.com/bonzo_logo_new.png";
 ---
 
 <html lang={lang}>
@@ -97,7 +100,7 @@ const headerLogo = typeof logo === "undefined" ? null : logo; // guard against n
           "url": "https://mybonzoaiblog.com",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://mybonzoaiblog.com/bonzo_logo_new.png",
+            "url": logoUrl,
             "width": 512,
             "height": 512
           },
