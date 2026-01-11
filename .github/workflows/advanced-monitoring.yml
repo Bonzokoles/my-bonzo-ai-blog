@@ -14,7 +14,9 @@ jobs:
 
         steps:
             - name: Health Check with Retry Logic
+              shell: bash
               run: |
+                  set +e
                   echo "🔍 Starting comprehensive health check..."
 
                   # Funkcja do sprawdzania URL z retry
@@ -61,9 +63,7 @@ jobs:
                   total_count=${#main_urls[@]}
 
                   for url in "${main_urls[@]}"; do
-                    if check_url "$url"; then
-                      ((success_count++))
-                    fi
+                    check_url "$url" && ((success_count++)) || true
                     sleep 3
                   done
 
