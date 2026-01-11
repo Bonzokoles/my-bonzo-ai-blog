@@ -17,10 +17,11 @@ import vue from "@astrojs/vue";
 // https://astro.build/config
 export default defineConfig({
     site: SITE.url,
-    output: "server",
+    output: "server", // SSR mode but with selective prerendering
     adapter: cloudflare({
         // Konfiguracja sesji z KV
-        sessionKVBindingName: "SESSION"
+        sessionKVBindingName: "SESSION",
+        mode: "directory"
     }),
 
     // Optymalizacje obrazów 
@@ -59,7 +60,17 @@ export default defineConfig({
     integrations: [mdx({
         optimize: true, // Optymalizacja MDX dla szybszego renderowania
         ignoreElementNames: ['custom-component'] // Ignoruj custom komponenty
-		}), tailwind(), sitemap(), robotsTxt(robotsConfig), icon(), vue()],
+		}), tailwind(), sitemap({
+        filter: (page) => !page.includes('/api/'),
+        serialize: (item) => {
+            // Ensure pumo-guide pages have high priority for AI crawlers
+            if (item.url.includes('/pumo-guide/')) {
+                item.changefreq = 'weekly';
+                item.priority = 0.9;
+            }
+            return item;
+        }
+    }), robotsTxt(robotsConfig), icon(), vue()],
 
     // Vite optymalizacje
     vite: {
