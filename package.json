@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:verify": "astro build && node scripts/verify-build.js",
     "preview": "astro preview",
     "deploy": "astro build && wrangler pages deploy dist",
     "deploy:pages": "wrangler pages deploy dist",

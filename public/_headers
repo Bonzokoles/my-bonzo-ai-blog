@@ -1,0 +1,40 @@
+# MyBonzo AI Blog - Bot-Friendly Headers
+# Cloudflare Pages Headers Configuration
+# https://developers.cloudflare.com/pages/platform/headers/
+
+# Global headers - Bot-friendly
+/*
+  X-Robots-Tag: index, follow, max-snippet:-1, max-image-preview:large
+
+# Static assets - long cache
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# robots.txt - CRITICAL for AI bots
+/robots.txt
+  Cache-Control: public, max-age=3600
+  Content-Type: text/plain; charset=utf-8
+  X-Robots-Tag: all
+
+# Sitemaps - CRITICAL for indexing
+/sitemap*.xml
+  Cache-Control: public, max-age=3600
+  Content-Type: application/xml; charset=utf-8
+  X-Robots-Tag: all
+
+# Pumo Guide - HIGH priority for AI indexing
+/pumo-guide/*
+  X-Robots-Tag: index, follow, max-snippet:-1, max-image-preview:large
+  Cache-Control: public, max-age=1800
+
+# API endpoints - no indexing
+/api/*
+  Cache-Control: no-store, no-cache, must-revalidate
+  X-Robots-Tag: noindex
+
+# HTML pages - standard cache
+/*.html
+  Cache-Control: public, max-age=3600, must-revalidate
