@@ -269,5 +269,5 @@ git push origin main
 
 **Dokumentacja powiązana**:
 - [ZLOTE_ZASADY_ROZWOJU.md](../ZLOTE_ZASADY_ROZWOJU.md)
-- [FEATURE_CONTROL_SYSTEM.md](../../FEATURE_CONTROL_SYSTEM.md)
+- [FEATURE_CONTROL_SYSTEM.md](../features/FEATURE_CONTROL_SYSTEM.md)
 - [.github/copilot-instructions.md](../../.github/copilot-instructions.md)

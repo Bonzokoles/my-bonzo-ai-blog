@@ -306,14 +306,17 @@ See [docs/ZLOTE_ZASADY_ROZWOJU.md](docs/ZLOTE_ZASADY_ROZWOJU.md) for detailed de
 
 ## 📚 Documentation
 
-Comprehensive documentation is available in the `/docs` directory:
+Detailed documentation has been organized in the `/docs` directory:
 
-- **[ZLOTE_ZASADY_ROZWOJU.md](docs/ZLOTE_ZASADY_ROZWOJU.md)** - Golden development rules
-- **[WORKFLOW_ARCHITECTURE/](docs/WORKFLOW_ARCHITECTURE/)** - System architecture
-- **[FEATURE_CONTROL_SYSTEM.md](FEATURE_CONTROL_SYSTEM.md)** - Feature flags guide
-- **[ENHANCED_AI_CHAT_FEATURES.md](ENHANCED_AI_CHAT_FEATURES.md)** - AI chat documentation
-- **[AI_GATEWAY_SETUP.md](AI_GATEWAY_SETUP.md)** - AI Gateway configuration
-- **[CLOUDFLARE_SETUP.md](CLOUDFLARE_SETUP.md)** - Cloudflare setup guide
+- **[Setup Guides](docs/setup/)** - Configuration and integration guides (AI Gateway, Cloudflare, HeyGen, Fonts, etc.)
+- **[Features](docs/features/)** - Feature documentation and usage (AI Chat, Feature Control, Media Management)
+- **[Deployment](docs/deployment/)** - CI/CD and deployment guides
+- **[Development](docs/development/)** - Architecture and development guides
+- **[Archive](docs/archive/)** - Historical documentation
+
+Key documents:
+- **[Golden Development Rules](docs/ZLOTE_ZASADY_ROZWOJU.md)** - Essential development workflow
+- **[System Architecture](docs/WORKFLOW_ARCHITECTURE/)** - Complete architecture overview
 
 ---
 

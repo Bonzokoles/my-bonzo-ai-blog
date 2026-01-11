@@ -548,6 +548,6 @@ AI → Vectorize → blog-rag-index → Metrics
 
 **Dokumentacja powiązana**:
 - [ZLOTE_ZASADY_ROZWOJU.md](../ZLOTE_ZASADY_ROZWOJU.md)
-- [FEATURE_CONTROL_SYSTEM.md](../../FEATURE_CONTROL_SYSTEM.md)
+- [FEATURE_CONTROL_SYSTEM.md](../features/FEATURE_CONTROL_SYSTEM.md)
 - [wrangler.toml](../../wrangler.toml)
 - [Cloudflare Vectorize Docs](https://developers.cloudflare.com/vectorize/)
