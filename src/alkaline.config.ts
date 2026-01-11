@@ -1,4 +1,3 @@
-
 import type { Author, Blog, NavEntry, Site, Socials } from "./types/types";
 
 /**
@@ -80,58 +79,87 @@ export const NAVIGATION: NavEntry[] = [
 	{
 		href: "/",
 		text: "Strona główna",
+		icon: "home",
 	},
 	{
 		href: "/blog",
 		text: "Blog",
+		icon: "article",
 	},
 	{
 		href: "/r2-blog",
 		text: "Artykuły",
+		icon: "file-text",
 	},
 	{
-		href: "/ai-tools",
+		href: "#",
 		text: "AI Tools",
+		icon: "robot",
+		submenu: [
+			{
+				href: "/system/ai-chat",
+				text: "AI Chat",
+				icon: "chat-1",
+			},
+			{
+				href: "https://ee304a89.gemini-ai-generator.pages.dev",
+				text: "Generator Grafiki",
+				icon: "image",
+				external: true,
+			},
+			{
+				href: "/ai-tools",
+				text: "Wszystkie narzędzia",
+				icon: "grid",
+			},
+		]
 	},
 	{
 		href: "/eksperymenty",
 		text: "Eksperymenty",
+		icon: "flask",
 	},
 	{
 		href: "/poradniki",
 		text: "Poradniki",
+		icon: "book-open",
 	},
 	{
-		href: "/system",
+		href: "#",
 		text: "System",
-	},
-	{
-		href: "/system/ai-chat",
-		text: "AI Chat",
-	},
-	{
-		href: "https://gemini-ai-generator.pages.dev",
-		text: "Generator Grafiki",
-	},
-	{
-		href: "/system/media",
-		text: "Media",
+		icon: "settings",
+		submenu: [
+			{
+				href: "/system",
+				text: "Dashboard",
+				icon: "dashboard",
+			},
+			{
+				href: "/system/media",
+				text: "Media",
+				icon: "folder",
+			},
+		]
 	},
 	{
 		href: "/o-nas",
 		text: "O nas",
+		icon: "info",
 	},
 	{
 		href: "/pro",
 		text: "MyBonzo Pro",
+		icon: "star",
 	},
 	{
 		href: "/search",
 		text: "Search",
+		icon: "search",
 	},
 	{
 		href: "/newsletter",
 		text: "Newsletter",
+		icon: "mail",
 	},
 ];
 
