@@ -1,12 +1,13 @@
 # GitHub Actions - Quick Settings Reference
 
-**Ostatnia aktualizacja:** 2026-01-09
+**Ostatnia aktualizacja:** 2026-01-11
 
 ## 🎯 Aktywne Workflow-y
 
 | Workflow | Status | Częstotliwość | Cel |
 |----------|--------|---------------|-----|
 | deploy.yml | ✅ Active | On push/PR | Deployment pipeline |
+| cloudflare-cache-purge.yml | ✅ Active | After deploy | Clear Cloudflare cache |
 | keep-alive.yml | ✅ Active | 10-30 min | Keep site alive |
 | advanced-monitoring.yml | ✅ Active | 1-2h | Health & performance |
 | auto-index.yml | ✅ Active | 30 min | SEO indexing |
@@ -18,26 +19,28 @@ Skonfigurowane w: Settings → Secrets and variables → Actions
 
 | Secret Name | Wymagane przez | Status |
 |-------------|----------------|--------|
-| `CLOUDFLARE_API_TOKEN` | deploy.yml | ✅ Required |
+| `CLOUDFLARE_API_TOKEN` | deploy.yml, cloudflare-cache-purge.yml | ✅ Required |
 | `CLOUDFLARE_ACCOUNT_ID` | deploy.yml | ✅ Required |
+| `CLOUDFLARE_ZONE_ID` | cloudflare-cache-purge.yml | ✅ Required |
 
 ## 📊 Zużycie Actions Minutes (szacunkowe/miesiąc)
 
 | Workflow | Wykonań | Czas | Minuty |
 |----------|---------|------|--------|
 | deploy.yml | ~30-60 | ~5 min | ~150-300 |
+| cloudflare-cache-purge.yml | ~30-60 | <1 min | ~30-60* |
 | keep-alive.yml | ~10,000 | <1 min | ~200-500* |
 | advanced-monitoring.yml | ~360 | ~2 min | ~720 |
 | auto-index.yml | ~1,440 | <1 min | ~100-200* |
-| **RAZEM** | ~11,830 | - | **~1,170-1,720** |
+| **RAZEM** | ~11,860 | - | **~1,200-1,780** |
 
 *\* Keep-alive workflows używają minimalnych zasobów (tylko curl)*
 
 ### Porównanie z limitami:
 
 - **Free tier:** 2,000 min/miesiąc
-- **Obecne zużycie:** ~1,170-1,720 min/miesiąc
-- **Margin:** ✅ W limicie (~15-40% bufforu)
+- **Obecne zużycie:** ~1,200-1,780 min/miesiąc
+- **Margin:** ✅ W limicie (~10-40% bufforu)
 
 ## ⚙️ Ważne ustawienia repozytorium
 
@@ -132,6 +135,18 @@ permissions:
    ```
 
 ## 📞 Szybkie komendy
+
+### Ręczne czyszczenie cache Cloudflare:
+1. Idź do: Actions
+2. Wybierz "Clear Cloudflare Cache" z lewej
+3. Kliknij "Run workflow"
+4. (Opcjonalnie) Podaj powód w polu "Reason for manual cache purge"
+5. Kliknij "Run workflow"
+
+**Kiedy używać:**
+- Po wdrożeniu ważnych zmian, które muszą być natychmiast widoczne
+- Gdy automatyczne czyszczenie nie zadziałało
+- Podczas testowania nowych funkcji na produkcji
 
 ### Ręczne uruchomienie workflow:
 1. Idź do: Actions
