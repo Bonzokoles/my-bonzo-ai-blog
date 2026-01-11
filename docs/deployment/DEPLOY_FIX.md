@@ -94,7 +94,7 @@ If issues persist:
 2. Verify environment variables (CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN)
 3. Check Cloudflare Workers AI binding
 4. Review [BUG_FIX_SUMMARY.md](BUG_FIX_SUMMARY.md) for technical details
-5. Review [ENHANCED_AI_CHAT_FEATURES.md](ENHANCED_AI_CHAT_FEATURES.md) for full documentation
+5. Review [ENHANCED_AI_CHAT_FEATURES.md](../features/ENHANCED_AI_CHAT_FEATURES.md) for full documentation
 
 ---
 

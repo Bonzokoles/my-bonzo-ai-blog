@@ -261,7 +261,7 @@ docs: dodaj Copilot instructions + przenies pliki planistyczne z public/
 ### Pliki w projekcie:
 - [.github/copilot-instructions.md](../.github/copilot-instructions.md)
 - [docs/ZLOTE_ZASADY_ROZWOJU.md](../docs/ZLOTE_ZASADY_ROZWOJU.md)
-- [FEATURE_CONTROL_SYSTEM.md](../FEATURE_CONTROL_SYSTEM.md)
+- [FEATURE_CONTROL_SYSTEM.md](../features/FEATURE_CONTROL_SYSTEM.md)
 - [docs/planning/AI_SEO_AUDIT_PUMO_GUIDE.md](../docs/planning/AI_SEO_AUDIT_PUMO_GUIDE.md)
 - [docs/planning/RAG_DEPLOYMENT_GUIDE.md](../docs/planning/RAG_DEPLOYMENT_GUIDE.md)
 

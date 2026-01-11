@@ -6,16 +6,16 @@
 Start here: [ENHANCED_CHAT_README.md](ENHANCED_CHAT_README.md)
 
 ### 🔄 **Migrating from Standard?**
-Go to: [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md)
+Go to: [../development/MIGRATION_GUIDE.md](../development/MIGRATION_GUIDE.md)
 
 ### 📖 **Need full documentation?**
 See: [ENHANCED_CHAT_DOCS.md](ENHANCED_CHAT_DOCS.md)
 
 ### 🏗️ **Understanding architecture?**
-Read: [ARCHITECTURE_DIAGRAM.md](ARCHITECTURE_DIAGRAM.md)
+Read: [../development/ARCHITECTURE_DIAGRAM.md](../development/ARCHITECTURE_DIAGRAM.md)
 
 ### 📊 **Project overview?**
-Check: [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)
+Check: [../archive/IMPLEMENTATION_SUMMARY.md](../archive/IMPLEMENTATION_SUMMARY.md)
 
 ---
 
@@ -158,7 +158,7 @@ data: {"done": true, "fullText": "complete response"}
 
 ---
 
-#### [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md)
+#### [../development/MIGRATION_GUIDE.md](../development/MIGRATION_GUIDE.md)
 **Type:** Migration Tutorial
 **Size:** ~450 lines
 **Purpose:** Step-by-step upgrade guide
@@ -179,7 +179,7 @@ data: {"done": true, "fullText": "complete response"}
 
 ---
 
-#### [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)
+#### [../archive/IMPLEMENTATION_SUMMARY.md](../archive/IMPLEMENTATION_SUMMARY.md)
 **Type:** Project Summary
 **Size:** ~650 lines
 **Purpose:** Complete implementation overview
@@ -204,7 +204,7 @@ data: {"done": true, "fullText": "complete response"}
 
 ---
 
-#### [ARCHITECTURE_DIAGRAM.md](ARCHITECTURE_DIAGRAM.md)
+#### [../development/ARCHITECTURE_DIAGRAM.md](../development/ARCHITECTURE_DIAGRAM.md)
 **Type:** Architecture Documentation
 **Size:** ~450 lines
 **Purpose:** Visual system architecture
@@ -249,9 +249,9 @@ data: {"done": true, "fullText": "complete response"}
 |------|------|-----|---------|
 | ENHANCED_CHAT_README.md | Markdown | ~200 | Quick start |
 | ENHANCED_CHAT_DOCS.md | Markdown | ~850 | Full docs |
-| MIGRATION_GUIDE.md | Markdown | ~450 | Migration |
-| IMPLEMENTATION_SUMMARY.md | Markdown | ~650 | Summary |
-| ARCHITECTURE_DIAGRAM.md | Markdown | ~450 | Architecture |
+| ../development/MIGRATION_GUIDE.md | Markdown | ~450 | Migration |
+| ../archive/IMPLEMENTATION_SUMMARY.md | Markdown | ~650 | Summary |
+| ../development/ARCHITECTURE_DIAGRAM.md | Markdown | ~450 | Architecture |
 | ENHANCED_CHAT_INDEX.md | Markdown | ~350 | Index |
 | **Total Docs** | - | **~2,950** | - |
 
@@ -287,9 +287,9 @@ mybonzoAIblog/
 ├── Documentation (Root level)
 │   ├── ENHANCED_CHAT_README.md ✨ NEW
 │   ├── ENHANCED_CHAT_DOCS.md ✨ NEW
-│   ├── MIGRATION_GUIDE.md ✨ NEW
-│   ├── IMPLEMENTATION_SUMMARY.md ✨ NEW
-│   ├── ARCHITECTURE_DIAGRAM.md ✨ NEW
+│   ├── ../development/MIGRATION_GUIDE.md ✨ NEW
+│   ├── ../archive/IMPLEMENTATION_SUMMARY.md ✨ NEW
+│   ├── ../development/ARCHITECTURE_DIAGRAM.md ✨ NEW
 │   └── ENHANCED_CHAT_INDEX.md ✨ NEW (this file)
 │
 └── Config (unchanged)
@@ -305,7 +305,7 @@ mybonzoAIblog/
 
 **First Time Setup:**
 1. Read: [ENHANCED_CHAT_README.md](ENHANCED_CHAT_README.md)
-2. Review: [ARCHITECTURE_DIAGRAM.md](ARCHITECTURE_DIAGRAM.md)
+2. Review: [../development/ARCHITECTURE_DIAGRAM.md](../development/ARCHITECTURE_DIAGRAM.md)
 3. Implement: Follow 3-step guide
 
 **Deep Dive:**
@@ -318,7 +318,7 @@ mybonzoAIblog/
 ### For Project Managers
 
 **Quick Overview:**
-1. Read: [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)
+1. Read: [../archive/IMPLEMENTATION_SUMMARY.md](../archive/IMPLEMENTATION_SUMMARY.md)
 2. Check: Business Impact section
 3. Review: Success Criteria
 
@@ -332,7 +332,7 @@ mybonzoAIblog/
 ### For Users (Existing Installation)
 
 **Migration Path:**
-1. Start: [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md)
+1. Start: [../development/MIGRATION_GUIDE.md](../development/MIGRATION_GUIDE.md)
 2. Follow: 3-step Quick Start
 3. Test: Using testing checklist
 4. Verify: All features work
@@ -346,7 +346,7 @@ If issues occur, see "Rollback Plan" section in Migration Guide
 
 **Testing Resources:**
 1. Checklist: [ENHANCED_CHAT_DOCS.md#Testing](ENHANCED_CHAT_DOCS.md)
-2. Manual tests: See MIGRATION_GUIDE.md
+2. Manual tests: See ../development/MIGRATION_GUIDE.md
 3. Demo page: `/system/ai-chat-enhanced`
 
 **Test Coverage:**
@@ -364,7 +364,7 @@ If issues occur, see "Rollback Plan" section in Migration Guide
 
 #### Installation
 - **Quick:** [ENHANCED_CHAT_README.md](ENHANCED_CHAT_README.md) → "3-Step Installation"
-- **Detailed:** [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) → "Quick Start"
+- **Detailed:** [../development/MIGRATION_GUIDE.md](../development/MIGRATION_GUIDE.md) → "Quick Start"
 
 #### Configuration
 - **Options:** [ENHANCED_CHAT_DOCS.md](ENHANCED_CHAT_DOCS.md) → "Configuration"
@@ -372,20 +372,20 @@ If issues occur, see "Rollback Plan" section in Migration Guide
 
 #### API Reference
 - **Endpoints:** [ENHANCED_CHAT_DOCS.md](ENHANCED_CHAT_DOCS.md) → "API Endpoints"
-- **Flow:** [ARCHITECTURE_DIAGRAM.md](ARCHITECTURE_DIAGRAM.md) → "Data Flow"
+- **Flow:** [../development/ARCHITECTURE_DIAGRAM.md](../development/ARCHITECTURE_DIAGRAM.md) → "Data Flow"
 
 #### Troubleshooting
 - **Quick:** [ENHANCED_CHAT_README.md](ENHANCED_CHAT_README.md) → "Problem?"
-- **Detailed:** [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) → "Troubleshooting"
+- **Detailed:** [../development/MIGRATION_GUIDE.md](../development/MIGRATION_GUIDE.md) → "Troubleshooting"
 - **Common Issues:** [ENHANCED_CHAT_DOCS.md](ENHANCED_CHAT_DOCS.md) → "Troubleshooting"
 
 #### Performance
-- **Metrics:** [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) → "Performance Metrics"
-- **Optimization:** [ARCHITECTURE_DIAGRAM.md](ARCHITECTURE_DIAGRAM.md) → "Performance Layers"
+- **Metrics:** [../archive/IMPLEMENTATION_SUMMARY.md](../archive/IMPLEMENTATION_SUMMARY.md) → "Performance Metrics"
+- **Optimization:** [../development/ARCHITECTURE_DIAGRAM.md](../development/ARCHITECTURE_DIAGRAM.md) → "Performance Layers"
 
 #### Security
-- **Overview:** [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) → "Security & Privacy"
-- **Layers:** [ARCHITECTURE_DIAGRAM.md](ARCHITECTURE_DIAGRAM.md) → "Security Layers"
+- **Overview:** [../archive/IMPLEMENTATION_SUMMARY.md](../archive/IMPLEMENTATION_SUMMARY.md) → "Security & Privacy"
+- **Layers:** [../development/ARCHITECTURE_DIAGRAM.md](../development/ARCHITECTURE_DIAGRAM.md) → "Security Layers"
 
 ---
 
@@ -394,12 +394,12 @@ If issues occur, see "Rollback Plan" section in Migration Guide
 ### Path 1: Quick Start (30 minutes)
 1. [ENHANCED_CHAT_README.md](ENHANCED_CHAT_README.md) - 5 min
 2. Demo page (`/system/ai-chat-enhanced`) - 10 min
-3. [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) - Quick Start section - 5 min
+3. [../development/MIGRATION_GUIDE.md](../development/MIGRATION_GUIDE.md) - Quick Start section - 5 min
 4. Implement & test - 10 min
 
 ### Path 2: Comprehensive (2 hours)
-1. [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) - 15 min
-2. [ARCHITECTURE_DIAGRAM.md](ARCHITECTURE_DIAGRAM.md) - 20 min
+1. [../archive/IMPLEMENTATION_SUMMARY.md](../archive/IMPLEMENTATION_SUMMARY.md) - 15 min
+2. [../development/ARCHITECTURE_DIAGRAM.md](../development/ARCHITECTURE_DIAGRAM.md) - 20 min
 3. [ENHANCED_CHAT_DOCS.md](ENHANCED_CHAT_DOCS.md) - 30 min
 4. [AIChat.Enhanced.astro](src/components/Astro/AIChat.Enhanced.astro) - 30 min
 5. [chat-stream.ts](src/pages/api/ai/chat-stream.ts) - 15 min
@@ -464,15 +464,15 @@ If issues occur, see "Rollback Plan" section in Migration Guide
 
 ### For Existing Users
 1. ✅ Read this index
-2. → Go to [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md)
+2. → Go to [../development/MIGRATION_GUIDE.md](../development/MIGRATION_GUIDE.md)
 3. → Follow migration steps
 4. → Run testing checklist
 5. → Deploy! 🚀
 
 ### For Contributors
 1. ✅ Read this index
-2. → Study [ARCHITECTURE_DIAGRAM.md](ARCHITECTURE_DIAGRAM.md)
-3. → Review [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)
+2. → Study [../development/ARCHITECTURE_DIAGRAM.md](../development/ARCHITECTURE_DIAGRAM.md)
+3. → Review [../archive/IMPLEMENTATION_SUMMARY.md](../archive/IMPLEMENTATION_SUMMARY.md)
 4. → Read source code
 5. → Submit PRs! 💪
 
@@ -490,7 +490,7 @@ If something in the docs is unclear:
 ### Technical Issues
 If you encounter bugs:
 1. Check [Troubleshooting](#finding-information) sections
-2. Review [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) → Rollback Plan
+2. Review [../development/MIGRATION_GUIDE.md](../development/MIGRATION_GUIDE.md) → Rollback Plan
 3. Report on GitHub Issues
 4. Contact support (below)
 

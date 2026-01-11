@@ -115,7 +115,7 @@ npx wrangler pages deploy dist
 
 - [AIChat.Enhanced.astro](src/components/Astro/AIChat.Enhanced.astro) - Main component
 - [ai-chat.astro](src/pages/system/ai-chat.astro) - Page using component
-- [ENHANCED_AI_CHAT_FEATURES.md](ENHANCED_AI_CHAT_FEATURES.md) - Full documentation
+- [ENHANCED_AI_CHAT_FEATURES.md](../features/ENHANCED_AI_CHAT_FEATURES.md) - Full documentation
 
 ## Status
 
