@@ -96,6 +96,91 @@ const headerLogo = typeof logo === "undefined" ? null : logo; // guard against n
       publishedTime={publishedTime}
       modifiedTime={modifiedTime}
     />
+    
+    <!-- Global Schema.org for AI Crawlers -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://mybonzoaiblog.com/#organization",
+          "name": "MyBonzo AI Blog",
+          "url": "https://mybonzoaiblog.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://mybonzoaiblog.com/bonzo_logo_new.png",
+            "width": 512,
+            "height": 512
+          },
+          "sameAs": [
+            "https://github.com/Bonzokoles/my-bonzo-ai-blog",
+            "https://mybonzoaiblog.pages.dev"
+          ],
+          "description": "Blog o sztucznej inteligencji, machine learning i nowoczesnych technologiach AI dla polskich użytkowników. Przewodniki, tutoriale i case studies.",
+          "founder": {
+            "@type": "Person",
+            "name": "Bonzo",
+            "jobTitle": "AI Developer & Content Creator"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "Technical Support",
+            "availableLanguage": ["pl", "en"]
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://mybonzoaiblog.com/#website",
+          "url": "https://mybonzoaiblog.com",
+          "name": "MyBonzo AI Blog",
+          "description": "Kompleksowy przewodnik po sztucznej inteligencji - od podstaw do zaawansowanych zastosowań",
+          "publisher": {
+            "@id": "https://mybonzoaiblog.com/#organization"
+          },
+          "inLanguage": "pl-PL",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://mybonzoaiblog.com/search?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "ItemList",
+          "@id": "https://mybonzoaiblog.com/#mainnavigation",
+          "name": "Main Navigation",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Blog",
+              "url": "https://mybonzoaiblog.com/blog"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Meble Pumo Guide",
+              "url": "https://mybonzoaiblog.com/pumo-guide"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "RAG Assistant",
+              "url": "https://mybonzoaiblog.com/rag"
+            },
+            {
+              "@type": "ListItem",
+              "position": 4,
+              "name": "AI Tools",
+              "url": "https://mybonzoaiblog.com/eksperymenty"
+            }
+          ]
+        }
+      ]
+    })} />
+    
     <ClientRouter />
     {/*<ResourceLinks />*/}
   </head>
