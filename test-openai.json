@@ -1,9 +1,0 @@
-﻿{
-  "messages": [
-    {
-      "role": "user",
-      "content": "Say hello in Polish"
-    }
-  ],
-  "model": "gpt-4o-mini"
-}
