@@ -31,6 +31,20 @@ const title = frontmatter.title || fileName?.replace(/_/g, " ") || "Przewodnik";
 const description =
     frontmatter.description ||
     `Przewodnik zakupowy ${category} ${subcategory} - Meble Pumo`;
+
+// Build breadcrumb items
+const breadcrumbItems = [
+    { name: "Meble Pumo", url: "https://www.meblepumo.pl" },
+    { name: "Przewodnik AI", url: "/pumo-guide" }
+];
+
+// Add category if it exists and differs from subcategory
+if (category && subcategory && category !== subcategory) {
+    breadcrumbItems.push({ name: category });
+}
+
+// Add final item (subcategory or category)
+breadcrumbItems.push({ name: subcategory || category, current: true });
 ---
 
 <PumoStructuredData
@@ -52,14 +66,7 @@ const description =
 
 <Layout title={title} description={description}>
     <article class="max-w-4xl mx-auto px-4 py-8">
-        <Breadcrumbs 
-            items={[
-                { name: "Meble Pumo", url: "https://www.meblepumo.pl" },
-                { name: "Przewodnik AI", url: "/pumo-guide" },
-                ...(category ? [{ name: category, url: subcategory ? `/pumo-guide/${category}` : undefined }] : []),
-                { name: subcategory || category, current: true }
-            ].filter((item): item is { name: string; url?: string; current?: boolean } => Boolean(item.name))}
-        />
+        <Breadcrumbs items={breadcrumbItems} />
 
         <!-- Main attribution banner -->
         <div

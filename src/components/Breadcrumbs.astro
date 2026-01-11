@@ -33,11 +33,13 @@ const { items, class: className } = Astro.props;
                             <span itemprop="name">{item.name}</span>
                         </a>
                     ) : (
-                        <span 
-                            class:list={[item.current ? "text-white font-semibold" : "text-gray-300"]} 
-                            itemprop="name"
-                        >
-                            {item.name}
+                        <span itemprop="item">
+                            <span 
+                                class:list={[item.current ? "text-white font-semibold" : "text-gray-300"]} 
+                                itemprop="name"
+                            >
+                                {item.name}
+                            </span>
                         </span>
                     )}
                     <meta itemprop="position" content={String(index + 1)} />
