@@ -2,6 +2,7 @@
 // Layout component that wraps around pages and blog posts, providing consistent structure and styling. you can read more about it here: https://docs.astro.build/en/guides/layouts/
 
 import Author from "@components/Astro/Author.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
 import Heading from "@components/Astro/Heading.astro";
 import Pagination from "@components/Astro/Pagination.astro";
 import Tag from "@components/Astro/utils/Tag.astro";
@@ -37,6 +38,12 @@ const sortedPosts = posts?.sort(
     new Date(b.data?.pubDatetime || 0).valueOf() -
     new Date(a.data?.pubDatetime || 0).valueOf(),
 );
+
+// Generate breadcrumb items for list pages
+const breadcrumbItems = [
+  { name: "Home", href: "/" },
+  { name: title || (collectionName === "blog" ? "Blog" : "Docs") }
+];
 ---
 
 <Layout
@@ -52,6 +59,11 @@ const sortedPosts = posts?.sort(
       </span>
     )
   }
+  
+  <div class="md:max-w-3xl md:mx-auto">
+    <Breadcrumbs items={breadcrumbItems} class="mt-4" />
+  </div>
+
   <section class="md:max-w-3xl md:mx-auto mt-0">
     {!posts?.length && <p class="text-theme-primary">No posts found.</p>}
     {

@@ -9,6 +9,7 @@ import { Image } from "astro:assets";
 import { getEntry, render } from "astro:content";
 
 import Author from "@components/Astro/Author.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
 import Tags from "@components/Astro/Tags.astro";
 import Layout from "@layouts/Layout.astro";
 
@@ -33,6 +34,16 @@ if (!entry) {
 }
 
 const { Content } = await render(entry);
+
+// Generate breadcrumb items
+const breadcrumbItems = [
+  { name: "Home", href: "/" },
+  { 
+    name: collectionName === "blog" ? "Blog" : "Docs", 
+    href: `/${collectionName}` 
+  },
+  { name: entry.data.title } // Current page - no href
+];
 ---
 
 <Layout
@@ -42,6 +53,8 @@ const { Content } = await render(entry);
 >
   <section class="mt-0 mb-2 ultra-stage">
     <article class:list={["prose ultra-panel", className]}>
+      <Breadcrumbs items={breadcrumbItems} />
+
       {entry.data.subtitle && <p class="h2">{entry.data.subtitle}</p>}
 
       {
