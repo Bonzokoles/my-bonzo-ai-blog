@@ -37,7 +37,7 @@ projectName: <YOUR_PAGES_PROJECT_NAME>
 ## Przykład gotowego workflow:
 
 ```yaml
-accountId: "1234567890abcdef1234567890abcdef"
+accountId: "<YOUR_CLOUDFLARE_ACCOUNT_ID>"
 projectName: "mybonzo-ai-blog"
 ```
 
