@@ -1,33 +1,43 @@
 ---
-/* Component for rendering the main navigation with theme toggle.
+/* Component for rendering the main navigation with theme toggle, icons, and submenu support.
  *
  * Props:
- * - links: NavEntry[] - Array of navigation links
+ * - links: NavEntry[] - Array of navigation links (now supports icons and submenus)
  * - themeNames?: string[] - Optional theme names for toggle
  * - class?: string - Additional CSS classes
  *
  * Example usage:
  * <Nav
  *   links={[
- *     { href: "/", text: "Home" },
- *     { href: "/blog", text: "Blog" },
- *     { href: "/about", text: "About" }
+ *     { href: "/", text: "Home", icon: "home" },
+ *     { href: "/blog", text: "Blog", icon: "article" },
+ *     { 
+ *       href: "#", 
+ *       text: "AI Tools", 
+ *       icon: "robot",
+ *       submenu: [
+ *         { href: "/ai-chat", text: "AI Chat", icon: "message" },
+ *         { href: "/generator", text: "Image Generator", icon: "image", external: true }
+ *       ]
+ *     }
  *   ]}
  *   class="my-custom-nav"
  * />
  *
  * Notes:
  * - Includes theme toggle button
+ * - Supports icons and submenu dropdowns
  * - Responsive design with flex layout
  * - Accessible with proper ARIA labels
- * - Supports custom styling
- * - Automatically handles mobile layout
+ * - External link indicators
+ * - Hover effects for submenus
  */
 
 import type { NavEntry } from "../../types/types";
 
 import Link from "@components/Astro/Link.astro";
 import ToggleTheme from "@components/Astro/ToggleTheme.astro";
+import { Icon } from "astro-icon/components";
 
 interface Props {
   // Array of navigation links //
@@ -51,12 +61,53 @@ const pathname = new URL(Astro.request.url).pathname;
   <ul class="inline-flex flex-wrap mb-2 sm:mb-0 sm:mr-6">
     {
       links.map((obj) => (
-        <li class=" mb-2 py-0 pr-4 first:pl-1 sm:mb-0 md:pr-5">
-          <Link
-            href={obj.href}
-            class:list={["text-lg", { active: obj.href === pathname }]}
-            text={obj.text}
-          />
+        <li class="mb-2 py-0 pr-4 first:pl-1 sm:mb-0 md:pr-5 relative group">
+          {obj.submenu && obj.submenu.length > 0 ? (
+            // Menu item with submenu
+            <div class="relative">
+              <button
+                class="text-lg flex items-center gap-2 hover:text-theme-accent transition-colors cursor-pointer"
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                {obj.icon && <Icon name={`ri:${obj.icon}-line`} size={16} />}
+                {obj.text}
+                <Icon name="ri:arrow-down-s-line" size={14} class="transition-transform group-hover:rotate-180" />
+              </button>
+              <!-- Submenu dropdown -->
+              <ul class="absolute left-0 top-full mt-2 bg-theme-surface border border-theme-border rounded-lg shadow-lg py-2 min-w-[200px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                {obj.submenu.map((subItem) => (
+                  <li>
+                    <a
+                      href={subItem.href}
+                      class="flex items-center gap-3 px-4 py-2 text-sm hover:bg-theme-accent-secondary hover:text-theme-accent transition-colors"
+                      target={subItem.external ? "_blank" : "_self"}
+                      rel={subItem.external ? "noopener noreferrer" : undefined}
+                    >
+                      {subItem.icon && <Icon name={`ri:${subItem.icon}-line`} size={14} />}
+                      {subItem.text}
+                      {subItem.external && <Icon name="ri:external-link-line" size={12} class="ml-auto opacity-60" />}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            // Regular menu item
+            <Link
+              href={obj.href}
+              class:list={[
+                "text-lg flex items-center gap-2 hover:text-theme-accent transition-colors",
+                { active: obj.href === pathname }
+              ]}
+              target={obj.external ? "_blank" : "_self"}
+              rel={obj.external ? "noopener noreferrer" : undefined}
+            >
+              {obj.icon && <Icon name={`ri:${obj.icon}-line`} size={16} />}
+              {obj.text}
+              {obj.external && <Icon name="ri:external-link-line" size={12} class="ml-1 opacity-60" />}
+            </Link>
+          )}
         </li>
       ))
     }
@@ -67,6 +118,39 @@ const pathname = new URL(Astro.request.url).pathname;
 <style>
   nav a.active {
     font-weight: 700;
+    color: var(--theme-accent);
+  }
+
+  /* Enhanced hover effects */
+  .group:hover button {
+    color: var(--theme-accent);
+  }
+
+  /* Smooth submenu animations */
+  .group:hover ul {
+    animation: slideDown 0.2s ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Mobile responsiveness for submenus */
+  @media screen and (max-width: 768px) {
+    .group ul {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100vw - 2rem);
+      max-width: 300px;
+    }
   }
 
   @media screen and (width >= 1670px) {
@@ -76,3 +160,35 @@ const pathname = new URL(Astro.request.url).pathname;
     }
   }
 </style>
+
+<script>
+  // Enhanced keyboard navigation for submenus
+  document.addEventListener('DOMContentLoaded', () => {
+    const submenuButtons = document.querySelectorAll('[aria-haspopup="true"]');
+    
+    submenuButtons.forEach(button => {
+      const submenu = button.nextElementSibling;
+      
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isExpanded = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', (!isExpanded).toString());
+      });
+
+      // Close submenu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!button.contains(e.target as Node) && !submenu?.contains(e.target as Node)) {
+          button.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // Keyboard navigation
+      button.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          button.click();
+        }
+      });
+    });
+  });
+</script>

@@ -1,8 +1,6 @@
 import { CHAT_MODELS, DEFAULT_CHAT_MODEL } from '@/config/ai-chat-models';
 import type { APIRoute } from 'astro';
 
-export const prerender = false;
-
 // MCP Integration
 interface MCPTool {
   name: string;
@@ -27,7 +25,7 @@ const MCP_TOOLS: MCPTool[] = [
     name: "sequential_thinking",
     description: "Break down complex problems into sequential steps",
     inputSchema: {
-      type: "object",
+      type: "object", 
       properties: {
         problem: { type: "string", description: "Complex problem to analyze" }
       },
@@ -73,7 +71,7 @@ async function callMCPTool(toolName: string, args: any): Promise<string> {
       case 'search_context7_docs':
         // Simulate Context7 documentation search
         return `Znaleziono dokumentację dla: ${args.query}. MCP Context7 jest aktywny i gotowy do użycia.`;
-
+      
       case 'sequential_thinking':
         // Simulate sequential thinking process
         return `Analiza problemu: ${args.problem}
@@ -82,7 +80,7 @@ async function callMCPTool(toolName: string, args: any): Promise<string> {
 3. Sekwencyjne rozwiązanie
 4. Integracja wyników
 MCP Sequential Thinking Server jest aktywny.`;
-
+      
       default:
         return `Nieznane narzędzie MCP: ${toolName}`;
     }
@@ -179,11 +177,6 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     const temperature = Math.max(0, Math.min(body.temperature ?? 0.7, 1));
     const maxTokens = Math.min(body.max_tokens ?? 1024, 2048);
 
-    // Determine provider from model ID
-    const isOpenRouter = selectedModel.includes('/') && !selectedModel.startsWith('@cf/');
-    console.log('🔍 Provider:', isOpenRouter ? 'OpenRouter' : 'Cloudflare');
-    console.log('🔍 Model ID:', selectedModel);
-
     // Rate limiting
     const clientId = clientAddress || 'unknown';
     if (!checkRateLimit(clientId)) {
@@ -256,69 +249,7 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     console.log('🔑 CF API Token:', !!cfApiToken);
     console.log('📄 Selected Model:', selectedModel);
 
-    // OpenRouter API handling
-    if (isOpenRouter) {
-      console.log('🌐 Using OpenRouter API...');
-      console.log('🔑 Looking for OPENROUTER_API_KEY...');
-
-      const openRouterKey =
-        (env?.OPENROUTER_API_KEY as string | undefined) ??
-        (typeof process !== 'undefined' ? process.env.OPENROUTER_API_KEY : undefined) ??
-        ((import.meta as any).env?.OPENROUTER_API_KEY as string | undefined);
-
-      console.log('🔑 OpenRouter key found:', !!openRouterKey);
-      console.log('🔑 Key length:', openRouterKey?.length || 0);
-
-      if (!openRouterKey) {
-        console.error('❌ OPENROUTER_API_KEY not found in env');
-        return new Response(
-          JSON.stringify({
-            error: 'OpenRouter API key not configured. Please add OPENROUTER_API_KEY to Cloudflare secrets.'
-          }),
-          { status: 500, headers: { 'Content-Type': 'application/json' } }
-        );
-      }
-
-      const openRouterMessages = messages.map(msg => ({
-        role: msg.role,
-        content: msg.content
-      }));
-
-      console.log('📤 Sending to OpenRouter:', {
-        model: selectedModel,
-        messageCount: openRouterMessages.length,
-        temperature,
-        max_tokens: maxTokens
-      });
-
-      const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${openRouterKey}`,
-          'HTTP-Referer': 'https://mybonzo.ai',
-          'X-Title': 'MyBonzo AI Chat'
-        },
-        body: JSON.stringify({
-          model: selectedModel,
-          messages: openRouterMessages,
-          temperature,
-          max_tokens: maxTokens
-        })
-      });
-
-      if (!resp.ok) {
-        const errText = await resp.text().catch(() => '');
-        console.error('❌ OpenRouter error:', errText);
-        throw new Error(`OpenRouter API error ${resp.status}: ${errText || 'unknown'}`);
-      }
-
-      const json = await resp.json() as any;
-      responseText = json.choices?.[0]?.message?.content || '';
-      console.log('✅ OpenRouter response received, length:', responseText.length);
-    }
-    // Cloudflare AI handling
-    else if (env?.AI) {
+    if (env?.AI) {
       console.log('✅ Using AI binding...');
       const aiResponse = (await env.AI.run(selectedModel, {
         messages,
@@ -330,8 +261,8 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
         typeof aiResponse === 'string'
           ? aiResponse
           : typeof (aiResponse as any)?.response === 'string'
-            ? (aiResponse as any).response
-            : '';
+          ? (aiResponse as any).response
+          : '';
       console.log('🎯 AI Response received, length:', responseText.length);
     } else if (cfAccountId && cfApiToken) {
       console.log('🌐 Using REST API fallback...');
@@ -413,7 +344,7 @@ export const GET: APIRoute = async ({ url, locals }) => {
   const env = (runtime as any)?.env as any;
   const prompt = url.searchParams.get('prompt');
   const mcpStatus = url.searchParams.get('mcp-status');
-
+  
   // MCP Status check
   if (mcpStatus === 'true') {
     return new Response(
@@ -432,11 +363,11 @@ export const GET: APIRoute = async ({ url, locals }) => {
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   }
-
+  
   // Health check endpoint - return status if no prompt
   if (!prompt) {
     return new Response(
-      JSON.stringify({
+      JSON.stringify({ 
         status: 'healthy',
         timestamp: new Date().toISOString(),
         mcp_enabled: true

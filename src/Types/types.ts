@@ -69,6 +69,9 @@ export type Site = {
 export type NavEntry = {
 	href: string;
 	text: string;
+	icon?: string; // Icon name (Remix icons)
+	submenu?: NavEntry[]; // Submenu items
+	external?: boolean; // External link indicator
 };
 
 export type Blog = {
