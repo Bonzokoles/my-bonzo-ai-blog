@@ -2,6 +2,17 @@
 
 System automatycznego utrzymywania strony MyBonzo AI Blog w aktywności.
 
+---
+
+## 🔔 WAŻNE AKTUALIZACJE (2026-01-09)
+
+- ✅ **Przeprowadzono pełną analizę** ustawień GitHub Actions
+- ⚠️ **Emergency Keep-Alive WYŁĄCZONY** - zużywał zbyt dużo minut Actions
+- 📊 **Obecne zużycie:** ~1,170-1,720 min/miesiąc (w limicie 2,000)
+- 📚 **Nowa dokumentacja:** Zobacz [`SETTINGS_QUICK_REFERENCE.md`](./SETTINGS_QUICK_REFERENCE.md) i [`GITHUB_ACTIONS_ANALYSIS.md`](../../GITHUB_ACTIONS_ANALYSIS.md)
+
+---
+
 ## 📁 Pliki Workflow
 
 ### 1. `keep-alive.yml` - **GŁÓWNY WORKFLOW** ⭐
@@ -26,9 +37,12 @@ System automatycznego utrzymywania strony MyBonzo AI Blog w aktywności.
   - Szczegółowe raporty
 
 ### 3. `emergency-keep-alive.yml` - **TRYB AWARYJNY** 🚨
-- **Użycie**: Tylko w przypadku problemów z usypianiem
-- **Częstotliwość**: Co 5 minut (24/7)
-- **⚠️ UWAGA**: Zużywa dużo minut GitHub Actions!
+- **Status**: ❌ **WYŁĄCZONY (2026-01-09)** - oszczędność minut Actions
+- **Użycie**: Tylko w przypadku krytycznych problemów z usypianiem
+- **Częstotliwość**: Co 5 minut (24/7) - **288 razy dziennie!**
+- **⚠️ UWAGA**: Zużywa ~43,200 minut/miesiąc - ponad 20x limit!
+- **Lokalizacja**: `emergency-keep-alive.yml.disabled`
+- **Szczegóły**: Zobacz [`README_EMERGENCY_DISABLED.md`](./README_EMERGENCY_DISABLED.md)
 
 ## 🎯 Monitored URLs
 
