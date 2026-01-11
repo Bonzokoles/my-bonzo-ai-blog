@@ -84,14 +84,14 @@ Obecnie w repozytorium znajduje się **9 otwartych Pull Requestów** z różnymi
 ### PR #6, #7, #8: Poprawki konfiguracji funkcji
 **Branches:** `copilot/sub-pr-3`, `copilot/sub-pr-3-again`, `copilot/sub-pr-3-another-one`  
 **Status:** DRAFT  
-**Base:** `claude/analyze-function-control-011CUp65GfuUCnJQJC7ePo6t` (PR #3)
+**Base:** `claude/analyze-function-control-011CUp65GfuUCnJQJC7ePo6t` (PR #3 - ZAMKNIĘTY/CLOSED)
 
 **Opis:**
 - Synchronizacja permissions dla `image-gallery` 
 - Poprawa maskowania credentials w deployment workflow
 - Ujednolicenie ścieżek API endpoints
 
-**Rekomendacja:** ⏸️ **WSTRZYMAĆ** - bazują na PR #3 który jest już zamknięty, mogą wymagać rebasing
+**Rekomendacja:** ⏸️ **WSTRZYMAĆ** - bazują na PR #3 który jest już zamknięty (merged), mogą wymagać rebasing lub zamknięcia
 
 ---
 
@@ -128,7 +128,7 @@ Obecnie w repozytorium znajduje się **9 otwartych Pull Requestów** z różnymi
 **Otwarte PRs:** 9  
 **Gotowe do merge:** 4  
 **Draft/Wstrzymane:** 5  
-**Zamknięte (merged):** 3 (PR #1, #2, #3, #10)
+**Zamknięte (merged):** 4 (PR #1, #2, #3, #10)
 
 **Kluczowe obszary ulepszeń:**
 - 🔒 Bezpieczeństwo: 2 PRs
