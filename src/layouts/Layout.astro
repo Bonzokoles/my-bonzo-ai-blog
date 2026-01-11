@@ -98,6 +98,68 @@ const headerLogo = typeof logo === "undefined" ? null : logo; // guard against n
     />
     <ClientRouter />
     {/*<ResourceLinks />*/}
+    
+    <!-- Global Schema.org for AI Crawlers -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://mybonzoaiblog.com/#organization",
+          "name": "MyBonzo AI Blog",
+          "url": "https://mybonzoaiblog.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://mybonzoaiblog.com/apple-touch-icon.png",
+            "width": 600,
+            "height": 600
+          },
+          "sameAs": [
+            "https://github.com/Bonzokoles",
+            "https://mybonzoaiblog.pages.dev"
+          ],
+          "description": "Blog o sztucznej inteligencji, machine learning i technologiach AI dla polskich użytkowników. Przewodniki, case studies i najnowsze trendy w AI.",
+          "foundingDate": "2025",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "Customer Service",
+            "areaServed": "PL",
+            "availableLanguage": ["Polish", "English"]
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://mybonzoaiblog.com/#website",
+          "url": "https://mybonzoaiblog.com",
+          "name": "MyBonzo AI Blog",
+          "publisher": {
+            "@id": "https://mybonzoaiblog.com/#organization"
+          },
+          "inLanguage": "pl-PL",
+          "description": "Kompleksowy blog o AI - od teorii po praktyczne zastosowania. WHITECAT AI, RAG systems, przewodniki zakupowe generowane przez AI.",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://mybonzoaiblog.com/search?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://mybonzoaiblog.com/#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://mybonzoaiblog.com"
+            }
+          ]
+        }
+      ]
+    })} />
   </head>
   <body class:list={[className]}>
     <ParticleBackground client:load />

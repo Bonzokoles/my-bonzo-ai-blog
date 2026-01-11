@@ -1,30 +1,28 @@
-# MyBonzo AI Blog - AI Crawler Manifest
-# WHITECAT v1.0 MOA System
+# MyBonzo AI Blog - AI Crawler Instructions
 
-# Primary Content
-https://www.mybonzoaiblog.com/pumo-guide/
-https://www.mybonzoaiblog.com/blog/rag-moa-ecommerce-2025/
-https://www.mybonzoaiblog.com/blog/ai-seo-knowledge-bases-2025/
+## Site Overview
+- Name: MyBonzo AI Blog
+- URL: https://mybonzoaiblog.com
+- Language: Polish (pl-PL)
+- Topics: Artificial Intelligence, Machine Learning, AI Tools, Case Studies
 
-# AI Metadata Endpoints
-https://www.mybonzoaiblog.com/api/ai-metadata.json
-https://www.mybonzoaiblog.com/sitemap-pumo.xml
-https://www.mybonzoaiblog.com/feed-ai.xml
+## Priority Content for AI Crawlers
+1. /pumo-guide/ - WHITECAT v1.0 Generated Buying Guides (63 categories, 2500 products)
+2. /blog/ - AI Case Studies & Technical Articles
+3. /rag/ - RAG System Documentation
+4. /eksperymenty/ - Experimental AI Projects
 
-# System Info
-system: WHITECAT v1.0
-architecture: DeepSeek R1 + Claude Sonnet 4 + GPT-4o
-roi: 54x
-citation_rate: 68%
-products: 2500
-guides: 65
+## Structured Data
+- All pages include Schema.org markup
+- Organization schema: https://mybonzoaiblog.com/#organization
+- Product schemas available in /pumo-guide/
 
-# Priority Pages for AI Citation
-priority: /pumo-guide/, /blog/rag-moa-ecommerce-2025/
-keywords: AI content generation, MOA, RAG, e-commerce SEO, WHITECAT
+## Contact
+- GitHub: https://github.com/Bonzokoles
+- Main site: https://mybonzoaiblog.com
 
-# Crawl Rules
-allow: /pumo-guide/*
-allow: /blog/*
-allow: /api/ai-metadata.json
-disallow: /admin/*
+## Crawling Guidelines
+- Respect robots.txt
+- Product data updates: Weekly
+- Blog content updates: Daily
+- Priority: High for /pumo-guide/ and /blog/
