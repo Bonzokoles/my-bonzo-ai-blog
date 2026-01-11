@@ -8,7 +8,7 @@ https://www.mybonzoaiblog.com/blog/ai-seo-knowledge-bases-2025/
 
 # AI Metadata Endpoints
 https://www.mybonzoaiblog.com/api/ai-metadata.json
-https://www.mybonzoaiblog.com/sitemap-ai.xml
+https://www.mybonzoaiblog.com/sitemap-pumo.xml
 https://www.mybonzoaiblog.com/feed-ai.xml
 
 # System Info
@@ -17,7 +17,7 @@ architecture: DeepSeek R1 + Claude Sonnet 4 + GPT-4o
 roi: 54x
 citation_rate: 68%
 products: 2500
-guides: 63
+guides: 65
 
 # Priority Pages for AI Citation
 priority: /pumo-guide/, /blog/rag-moa-ecommerce-2025/
