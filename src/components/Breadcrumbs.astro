@@ -1,0 +1,63 @@
+---
+/**
+ * Universal Breadcrumbs Component
+ * 
+ * A reusable breadcrumb navigation component with Schema.org markup for SEO
+ * and ARIA labels for accessibility.
+ * 
+ * @example
+ * <Breadcrumbs items={[
+ *   { name: "Home", href: "/" },
+ *   { name: "Blog", href: "/blog" },
+ *   { name: "Current Post" }
+ * ]} />
+ */
+
+interface BreadcrumbItem {
+  name: string;
+  href?: string; // Optional link (last element typically has no href)
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+  class?: string;
+}
+
+const { items, class: className = "" } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class:list={["mb-6", className]}>
+  <ol
+    class="flex items-center gap-2 text-sm text-gray-400 flex-wrap"
+    itemscope
+    itemtype="https://schema.org/BreadcrumbList"
+  >
+    {items.map((item, index) => (
+      <>
+        <li
+          itemprop="itemListElement"
+          itemscope
+          itemtype="https://schema.org/ListItem"
+        >
+          {item.href ? (
+            <a
+              href={item.href}
+              class="hover:text-blue-400 transition-colors"
+              itemprop="item"
+            >
+              <span itemprop="name">{item.name}</span>
+            </a>
+          ) : (
+            <span class="text-white font-semibold" itemprop="name">
+              {item.name}
+            </span>
+          )}
+          <meta itemprop="position" content={String(index + 1)} />
+        </li>
+        {index < items.length - 1 && (
+          <li class="text-gray-600" aria-hidden="true">/</li>
+        )}
+      </>
+    ))}
+  </ol>
+</nav>
