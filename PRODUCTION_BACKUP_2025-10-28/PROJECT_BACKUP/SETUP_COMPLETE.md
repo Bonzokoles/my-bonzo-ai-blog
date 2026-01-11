@@ -65,8 +65,8 @@ M  src/components/Astro/Title.astro
 ### 4. 🔑 Tokeny i Sekrety - SKONFIGUROWANE ✅
 
 #### GitHub Secrets (dla CI/CD):
-- ✅ `CLOUDFLARE_API_TOKEN` = `Bp7MhvjGfUaxPoCz4DF8Psenw55emI_T8RAGBjuR`
-- ✅ `CLOUDFLARE_ACCOUNT_ID` = `7f490d58a478c6baccb0ae01ea1d87c3`
+- ✅ `CLOUDFLARE_API_TOKEN` = `<YOUR_CLOUDFLARE_API_TOKEN>`
+- ✅ `CLOUDFLARE_ACCOUNT_ID` = `<YOUR_CLOUDFLARE_ACCOUNT_ID>`
 
 #### Wrangler Secrets (dla Worker):
 - ✅ `BLOG_API_TOKEN` = ustawione ✅
@@ -98,11 +98,11 @@ M  src/components/Astro/Title.astro
 PUBLIC_BLOG_API_URL=https://blog-api.mybonzo-ai-blog.pages.dev
 
 # Authentication
-BLOG_API_TOKEN=Bp7MhvjGfUaxPoCz4DF8Psenw55emI_T8RAGBjuR
-CLOUDFLARE_API_TOKEN=Bp7MhvjGfUaxPoCz4DF8Psenw55emI_T8RAGBjuR
+BLOG_API_TOKEN=<YOUR_BLOG_API_TOKEN>
+CLOUDFLARE_API_TOKEN=<YOUR_CLOUDFLARE_API_TOKEN>
 
 # Cloudflare Account
-CLOUDFLARE_ACCOUNT_ID=7f490d58a478c6baccb0ae01ea1d87c3
+CLOUDFLARE_ACCOUNT_ID=<YOUR_CLOUDFLARE_ACCOUNT_ID>
 
 # R2 Bucket
 R2_BUCKET_NAME=mybonzo-blog-content
@@ -115,7 +115,7 @@ AUTHORS: [
   {
     id: 1,
     name: "Redakcja MyBonzo",
-    email: 'kontakt@mybonzo.com'
+    email: 'contact@example.com'
   }
 ]
 ```
@@ -172,7 +172,7 @@ git push origin main
 
 1. **Otwórz Dashboard:**
    ```
-   https://dash.cloudflare.com/7f490d58a478c6baccb0ae01ea1d87c3/images
+   https://dash.cloudflare.com/<YOUR_ACCOUNT_ID>/images
    ```
 
 2. **Znajdź Account Hash:**
@@ -182,7 +182,7 @@ git push origin main
 3. **Odkomentuj w `.env`:**
    ```env
    CF_IMAGES_DELIVERY_URL=https://imagedelivery.net/[TWOJ_HASH]
-   CF_IMAGES_API_TOKEN=Bp7MhvjGfUaxPoCz4DF8Psenw55emI_T8RAGBjuR
+   CF_IMAGES_API_TOKEN=<YOUR_CF_IMAGES_API_TOKEN>
    ```
 
 4. **Dodaj do wrangler:**
