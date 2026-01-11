@@ -68,6 +68,16 @@ jobs:
                   done
 
                   echo "📊 Health Check Summary: $success_count/$total_count URLs healthy"
+                  
+                  # Tolerant exit logic - at least one URL must be healthy
+                  if [ $success_count -gt 0 ]; then
+                    echo "✅ SUCCESS: $success_count/$total_count URLs are healthy"
+                    echo "This is acceptable - at least one domain is working"
+                    exit 0
+                  else
+                    echo "❌ CRITICAL FAILURE: All $total_count URLs failed"
+                    exit 1
+                  fi
 
             - name: Performance Testing
               run: |

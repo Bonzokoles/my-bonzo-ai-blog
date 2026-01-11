@@ -6,9 +6,11 @@ compatibility_date = "2026-01-08"
 workers_dev = true
 
 # Custom domain route (Cloudflare DNS zone: jimbolikepumo.dev)
-routes = [
-  { pattern = "api.jimbolikepumo.dev/*", zone_name = "jimbolikepumo.dev" }
-]
+# COMMENTED OUT: Zone "jimbolikepumo.dev" does not exist on Cloudflare account
+# Worker is available at: jimbo-like-pumo-api.workers.dev
+# routes = [
+#   { pattern = "api.jimbolikepumo.dev/*", zone_name = "jimbolikepumo.dev" }
+# ]
 
 # D1 Database
 [[d1_databases]]
@@ -52,6 +54,7 @@ crons = [
 ]
 
 # Secrets (set via: wrangler secret put SECRET_NAME)
+# - DASHBOARD_PASSWORD (simple password for dashboard access, e.g., #HAOS77#)
 # - ANTHROPIC_API_KEY
 # - OPENAI_API_KEY
 # - DKIM_PRIVATE_KEY

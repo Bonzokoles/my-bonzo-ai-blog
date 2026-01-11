@@ -8,6 +8,8 @@ export interface Env {
 
   // Dashboard config
   DASHBOARD_API_BASE?: string;
+  DASHBOARD_PASSWORD?: string;
+  DASHBOARD_DISABLE_AUTH?: string;
 
   // Cloudflare Access (for protecting dashboard)
   CF_ACCESS_AUD?: string;
