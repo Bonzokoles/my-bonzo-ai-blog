@@ -4,16 +4,34 @@ System automatycznego utrzymywania strony MyBonzo AI Blog w aktywności.
 
 ---
 
+## 🔔 WAŻNE AKTUALIZACJE (2026-01-11)
+
+- ✅ **Dodano automatyczne czyszczenie cache Cloudflare** - nowy workflow `cloudflare-cache-purge.yml`
+- ✅ Cache jest teraz automatycznie czyszczony po każdym udanym wdrożeniu
+- 🎯 **Możliwość ręcznego czyszczenia** przez interfejs GitHub Actions
+
 ## 🔔 WAŻNE AKTUALIZACJE (2026-01-09)
 
 - ✅ **Przeprowadzono pełną analizę** ustawień GitHub Actions
 - ⚠️ **Emergency Keep-Alive WYŁĄCZONY** - zużywał zbyt dużo minut Actions
-- 📊 **Obecne zużycie:** ~1,170-1,720 min/miesiąc (w limicie 2,000)
+- 📊 **Obecne zużycie:** ~1,200-1,780 min/miesiąc (w limicie 2,000)
 - 📚 **Nowa dokumentacja:** Zobacz [`SETTINGS_QUICK_REFERENCE.md`](./SETTINGS_QUICK_REFERENCE.md) i [`GITHUB_ACTIONS_ANALYSIS.md`](../../GITHUB_ACTIONS_ANALYSIS.md)
 
 ---
 
 ## 📁 Pliki Workflow
+
+### 0. `cloudflare-cache-purge.yml` - **CZYSZCZENIE CACHE** 🧹 **[NOWY]**
+- **Użycie**: Automatyczne czyszczenie cache po deploymencie
+- **Trigger**: 
+  - Automatyczny: Po udanym wdrożeniu (`deployment_status: success`)
+  - Ręczny: Przez interfejs GitHub Actions
+- **Funkcje**:
+  - Pełne czyszczenie cache Cloudflare
+  - Weryfikacja powodzenia operacji
+  - Cache warming po wyczyszczeniu
+  - Szczegółowe logowanie
+- **Wymagane secrets**: `CLOUDFLARE_ZONE_ID`, `CLOUDFLARE_API_TOKEN`
 
 ### 1. `keep-alive.yml` - **GŁÓWNY WORKFLOW** ⭐
 - **Użycie**: Codzienna podstawowa aktywność
