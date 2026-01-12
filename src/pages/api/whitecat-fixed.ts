@@ -19,10 +19,21 @@ export const GET: APIRoute = async (context) => {
             const runtime = (ctx.locals as any)?.runtime;
             const env = runtime?.env;
 
+            if (!env || !env.DB) {
+                return new Response(JSON.stringify({
+                    success: false,
+                    error: 'Database not available'
+                }), {
+                    status: 500,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
+
             try {
                 switch (action) {
                     case 'stats': {
                         const productManager = getProductManager(env);
+                        await productManager.initialize();
                         const productStats = await productManager.getStats();
 
                         return new Response(JSON.stringify({
@@ -40,6 +51,7 @@ export const GET: APIRoute = async (context) => {
 
                     case 'categories': {
                         const productManager = getProductManager(env);
+                        await productManager.initialize();
                         const categories = await productManager.getCategories();
 
                         return new Response(JSON.stringify({
@@ -53,6 +65,7 @@ export const GET: APIRoute = async (context) => {
 
                     case 'products': {
                         const productManager = getProductManager(env);
+                        await productManager.initialize();
                         const limit = parseInt(url.searchParams.get('limit') || '20');
 
                         let products;
