@@ -15,7 +15,7 @@ export async function requireDashboardAccess(request: Request): Promise<boolean>
         const [username, password] = credentials.split(':');
 
         // Constant-time comparison to prevent timing attacks
-        return constantTimeEqual(username, 'admin') &&
+        return constantTimeEqual(username, 'Bonzo') &&
             constantTimeEqual(password, '#HAOS77#');
     } catch (error) {
         console.error('Auth parsing error:', error);
