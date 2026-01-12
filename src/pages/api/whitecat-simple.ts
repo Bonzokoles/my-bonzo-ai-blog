@@ -23,7 +23,7 @@ export const GET: APIRoute = async (context) => {
 
         // Simple query
         const result = await env.DB.prepare('SELECT COUNT(*) as count FROM products').first();
-        
+
         return Response.json({
             success: true,
             products: result?.count || 0,
