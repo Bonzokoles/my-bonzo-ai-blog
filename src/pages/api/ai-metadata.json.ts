@@ -12,7 +12,22 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ request }) => {
+    // Tracking to Pumo API (awaiting to ensure delivery in serverless env)
+    try {
+        await fetch('https://jimbo-like-pumo-api.stolarnia-ams.workers.dev/api/analytics/track-bot', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userAgent: request.headers.get('user-agent'),
+                path: '/api/ai-metadata.json',
+                headers: Object.fromEntries(request.headers)
+            })
+        });
+    } catch (e) { 
+        console.error('Tracking failed', e);
+    }
+
     const metadata = {
         site: "MyBonzo AI Blog",
         description: "AI-powered content generation system for e-commerce",

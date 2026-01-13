@@ -1,6 +1,34 @@
 import { CHAT_MODELS, DEFAULT_CHAT_MODEL } from '@/config/ai-chat-models';
 import type { APIRoute } from 'astro';
 
+// Shop RAG Integration
+async function getShopRAGContext(): Promise<string> {
+  try {
+    const response = await fetch('http://localhost:4321/api/ai/rag-shop-data');
+    if (!response.ok) throw new Error('Shop data unavailable');
+
+    const shopData = await response.json();
+
+    if (shopData.error) {
+      return `Dane sklepu obecnie niedostępne. Status: ${shopData.shop?.status || 'unknown'}`;
+    }
+
+    return `🛒 AKTUALNY STATUS SKLEPU MEBLE PUMO:
+• Dziś: ${shopData.shop.todayOrders} zamówień (${shopData.shop.todayRevenue} PLN)
+• Łącznie (30 dni): ${shopData.shop.totalOrders} zamówień
+• Średnia wartość: ${shopData.shop.avgOrderValue} PLN
+• Status: ${shopData.shop.status}
+• Aktualizacja: ${new Date(shopData.updatedAt).toLocaleString('pl-PL')}
+
+KONTEKST BIZNESOWY:
+${shopData.context.business_summary || 'Brak dodatkowych informacji'}
+${shopData.context.current_status || ''}
+${shopData.context.recommendations || ''}`;
+  } catch (error) {
+    return 'Dane ze sklepu obecnie niedostępne (system RAG offline)';
+  }
+}
+
 // MCP Integration
 interface MCPTool {
   name: string;
@@ -25,11 +53,22 @@ const MCP_TOOLS: MCPTool[] = [
     name: "sequential_thinking",
     description: "Break down complex problems into sequential steps",
     inputSchema: {
-      type: "object", 
+      type: "object",
       properties: {
         problem: { type: "string", description: "Complex problem to analyze" }
       },
       required: ["problem"]
+    }
+  },
+  {
+    name: "get_shop_data",
+    description: "Get real-time shop data from Meble Pumo IdoSell integration",
+    inputSchema: {
+      type: "object",
+      properties: {
+        data_type: { type: "string", enum: ["current_status", "analytics", "orders"], description: "Type of shop data to retrieve" }
+      },
+      required: ["data_type"]
     }
   }
 ];
@@ -71,7 +110,7 @@ async function callMCPTool(toolName: string, args: any): Promise<string> {
       case 'search_context7_docs':
         // Simulate Context7 documentation search
         return `Znaleziono dokumentację dla: ${args.query}. MCP Context7 jest aktywny i gotowy do użycia.`;
-      
+
       case 'sequential_thinking':
         // Simulate sequential thinking process
         return `Analiza problemu: ${args.problem}
@@ -80,7 +119,12 @@ async function callMCPTool(toolName: string, args: any): Promise<string> {
 3. Sekwencyjne rozwiązanie
 4. Integracja wyników
 MCP Sequential Thinking Server jest aktywny.`;
-      
+
+      case 'get_shop_data':
+        // Get real-time shop data from IdoSell
+        const shopContext = await getShopRAGContext();
+        return `📊 DANE ZE SKLEPU MEBLE PUMO:\n${shopContext}`;
+
       default:
         return `Nieznane narzędzie MCP: ${toolName}`;
     }
@@ -261,8 +305,8 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
         typeof aiResponse === 'string'
           ? aiResponse
           : typeof (aiResponse as any)?.response === 'string'
-          ? (aiResponse as any).response
-          : '';
+            ? (aiResponse as any).response
+            : '';
       console.log('🎯 AI Response received, length:', responseText.length);
     } else if (cfAccountId && cfApiToken) {
       console.log('🌐 Using REST API fallback...');
@@ -344,7 +388,7 @@ export const GET: APIRoute = async ({ url, locals }) => {
   const env = (runtime as any)?.env as any;
   const prompt = url.searchParams.get('prompt');
   const mcpStatus = url.searchParams.get('mcp-status');
-  
+
   // MCP Status check
   if (mcpStatus === 'true') {
     return new Response(
@@ -363,11 +407,11 @@ export const GET: APIRoute = async ({ url, locals }) => {
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   }
-  
+
   // Health check endpoint - return status if no prompt
   if (!prompt) {
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         status: 'healthy',
         timestamp: new Date().toISOString(),
         mcp_enabled: true

@@ -53,15 +53,15 @@ export const GET: APIRoute = async (context) => {
 
             case 'products': {
                 const limit = parseInt(url.searchParams.get('limit') || '20');
-                
+
                 let query = 'SELECT * FROM products';
                 let params: any[] = [];
-                
+
                 if (category) {
                     query += ' WHERE category = ?';
                     params.push(category);
                 }
-                
+
                 query += ' LIMIT ?';
                 params.push(limit);
 
