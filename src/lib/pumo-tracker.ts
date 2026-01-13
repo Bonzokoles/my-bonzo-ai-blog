@@ -1,5 +1,5 @@
 export class PumoTracker {
-    private endpoint = 'https://jimbo-like-pumo-api.stolarnia-ams.workers.dev/api/track';
+    private endpoint = 'https://jimbo-like-pumo-api.stolarnia-ams.workers.dev/api/analytics/track';
     private clientId: string;
 
     constructor() {
