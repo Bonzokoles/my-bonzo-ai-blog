@@ -1,5 +1,5 @@
 export class PumoTracker {
-    private endpoint = '/api/analytics/event';
+    private endpoint = 'https://jimbo-like-pumo-api.stolarnia-ams.workers.dev/api/track';
     private clientId: string;
 
     constructor() {
@@ -30,19 +30,26 @@ export class PumoTracker {
         try {
             // Non-blocking fetch (fire and forget)
             const urlParams = new URLSearchParams(window.location.search);
+            const utmCampaign = params.utm_campaign || urlParams.get('utm_campaign') || null;
+            const utmSource = urlParams.get('utm_source') || null;
             
             fetch(this.endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    event: eventName,
-                    category: params.category,
-                    product_id: params.product_id,
-                    utm_campaign: params.utm_campaign || urlParams.get('utm_campaign') || null,
-                    // Additional context for debugging/expansion (not currently saved to DB columns but useful payload)
+                    name: eventName,
                     client_id: this.clientId,
-                    url: window.location.href,
-                    timestamp: new Date().toISOString()
+                    params: {
+                        ...params,
+                        category: params.category,
+                        product_id: params.product_id,
+                        utm_campaign: utmCampaign,
+                        utm_source: utmSource,
+                        url: window.location.href,
+                        referrer: document.referrer,
+                        viewport: `${window.innerWidth}x${window.innerHeight}`,
+                        timestamp: new Date().toISOString()
+                    }
                 })
             }).catch(err => console.debug('Tracker fail:', err));
         } catch (e) {
