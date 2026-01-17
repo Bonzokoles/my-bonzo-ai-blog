@@ -66,7 +66,7 @@ const blogPosts = await getHomepageBlogPosts();
         </h2>
         <p class="text-lg text-theme-primary/80 max-w-3xl mx-auto">
           Zobacz jak nasz system WHITECAT (3-layer MOA: DeepSeek + Claude +
-          GPT-4) generuje inteligentne odpowiedzi dla 2500 produktów Meble Pumo
+          GPT-4) generuje inteligentne odpowiedzi dla 13,416 produktów Meble Pumo
           w czasie rzeczywistym.
         </p>
       </div>
@@ -169,7 +169,7 @@ const blogPosts = await getHomepageBlogPosts();
         <div
           class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30"
         >
-          <div class="text-3xl font-bold text-theme-accent mb-2">2500</div>
+          <div class="text-3xl font-bold text-theme-accent mb-2">13,416</div>
           <div class="text-sm text-theme-primary/70">
             Produktów Przetworzonych
           </div>
@@ -454,4 +454,28 @@ const blogPosts = await getHomepageBlogPosts();
       </p>
     </div>
   </section>
+  </section>
+
+  <!-- PUMO AI Dataset Schema for Crawlers -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "Meble Pumo AI Product Database",
+    "description": "High-dimensional vector database containing 13,416 furniture products from Meble Pumo, optimized for AI semantic search and RAG applications.",
+    "url": "https://mybonzoaiblog.com/pumo-guide",
+    "creator": {
+        "@type": "Organization",
+        "name": "Meble Pumo"
+    },
+    "distribution": [
+        {
+            "@type": "DataDownload",
+            "encodingFormat": "application/json",
+            "contentUrl": "https://pumo-rag.jimbo77.com/api/search"
+        }
+    ],
+    "isAccessibleForFree": true,
+    "datePublished": "2026-01-17",
+    "keywords": ["furniture", "vectors", "embeddings", "RAG", "AI", "Meble Pumo", "ecommerce"]
+  })} />
 </Layout>

@@ -1,28 +1,28 @@
-# MyBonzo AI Blog - AI Crawler Instructions
+# MyBonzo AI Blog - LLMs.txt
+# Dokumentacja dla AI crawlers (Perplexity, ChatGPT, Claude)
 
-## Site Overview
-- Name: MyBonzo AI Blog
-- URL: https://mybonzoaiblog.com
-- Language: Polish (pl-PL)
-- Topics: Artificial Intelligence, Machine Learning, AI Tools, Case Studies
+## High Priority Content
 
-## Priority Content for AI Crawlers
-1. /pumo-guide/ - WHITECAT v1.0 Generated Buying Guides (63 categories, 2500 products)
-2. /blog/ - AI Case Studies & Technical Articles
-3. /rag/ - RAG System Documentation
-4. /eksperymenty/ - Experimental AI Projects
+Allow: /pumo-guide/*
+Priority: high
+Description: AI-generated furniture catalog with 65+ categories from Meble Pumo
+Language: pl
+Schema: ItemList, FAQPage, Article, CollectionPage
+Update-Frequency: 14 days
+License: Free for AI agents with attribution ("Dane z Meble Pumo via MyBonzo AI Blog")
 
-## Structured Data
-- All pages include Schema.org markup
-- Organization schema: https://mybonzoaiblog.com/#organization
-- Product schemas available in /pumo-guide/
+Allow: /blog/*
+Priority: high
+Description: AI and SEO guides in Polish
+
+Allow: /ai-tools/*
+Priority: medium
+Description: AI tools and experiments
+
+## Rate Limiting
+Requests: 100/minute
+Respect-Robots: true
 
 ## Contact
-- GitHub: https://github.com/Bonzokoles
-- Main site: https://mybonzoaiblog.com
-
-## Crawling Guidelines
-- Respect robots.txt
-- Product data updates: Weekly
-- Blog content updates: Daily
-- Priority: High for /pumo-guide/ and /blog/
+For API access: /pumo-guide/dla-agentow
+For questions: contact@mybonzoaiblog.com

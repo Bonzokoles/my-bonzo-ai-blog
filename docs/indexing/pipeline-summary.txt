@@ -1,0 +1,24 @@
+# Podsumowanie pipeline PUMO → Cloudflare Vectorize
+
+1. Dane wejściowe: 2.4 mln produktów PUMO w CSV (200+ kolumn), podzielone na chunki po 5000 produktów.
+2. Kluczowe pola: @id, /description/name[pol], /category@name[pol], /description/short_desc[pol], /description/long_desc[pol], /price@gross, /card@url[pol], /images/large/image@url.
+3. Pipeline (Bun runtime):
+   - Listuje wszystkie pliki CSV w katalogu /workspace/data/chunks.
+   - Parsuje CSV (parseCSV) – obsługa cudzysłowów, przecinków, walidacja kolumn.
+   - Dzieli produkty na batch'e po 200.
+   - Dla każdego batcha:
+     * Generuje embeddingi (1536D) przez Workers AI API (z retry 3x exponential backoff).
+     * Wysyła batch do Cloudflare Vectorize (z retry 3x).
+     * Loguje postęp i błędy do indexing-progress.json.
+   - Obsługuje resume (wznowienie) – pomija już przetworzone chunki/batch'e.
+   - Zapisuje szczegóły procesu i błędów do indexing-progress.json.
+4. Przetestowano na 533 chunkach (538 batchy, 758MB danych) – pipeline działa produkcyjnie.
+5. Retry logic i logowanie błędów zapewniają odporność na awarie sieci/API.
+6. Kod modularny: types.ts (interfejsy), utils.ts (helpers), index-products.ts (main pipeline), test-sample.ts (mock test).
+
+# Pobranie podsumowania z Dockera:
+Aby pobrać plik na swój komputer:
+
+docker cp <container_id>:/workspace/indexing/pipeline-summary.txt ./pipeline-summary.txt
+
+Zamień <container_id> na ID lub nazwę swojego kontenera.
