@@ -13,6 +13,7 @@ interface Props {
         description?: string;
         category?: string;
         subcategory?: string;
+        faq?: any[];
     };
 }
 
@@ -36,6 +37,9 @@ const description =
 const shopUrl = getCategoryUrl(category);
 const isCategorySpecific = shopUrl !== "https://www.meblepumo.pl";
 const shopButtonText = isCategorySpecific ? `Kup ${category} w Meble Pumo` : "Kup w Meble Pumo";
+
+// FAQ parsed from frontmatter (injected by rollout script)
+const faqItems = frontmatter.faq || [];
 ---
 
 <PumoStructuredData
@@ -43,8 +47,9 @@ const shopButtonText = isCategorySpecific ? `Kup ${category} w Meble Pumo` : "Ku
     {title}
     {description}
     {category}
-    productCount={50}
+    productCount={13400}
     url={url.href}
+    {faqItems}
 />
 
 <PumoEnhancedSEO

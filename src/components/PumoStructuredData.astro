@@ -5,6 +5,14 @@ interface Props {
     description: string;
     category?: string;
     url?: string;
+    faqItems?: {
+        "@type": "Question";
+        name: string;
+        acceptedAnswer: {
+            "@type": "Answer";
+            text: string;
+        };
+    }[];
 }
 
 const { pageType = "guide", title, description, category, url } = Astro.props;
@@ -132,15 +140,38 @@ const currentUrl = url || Astro.url.href;
     )
 }
 
-<!-- FAQPage Schema for AI Q&A -->
+<!-- BreadcrumbList Schema -->
+<script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Strona Główna",
+                item: "https://mybonzoaiblog.pages.dev/pumo-guide"
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: category || "Kategoria",
+                item: currentUrl
+            }
+        ]
+    })}
+/>
+
+<!-- FAQPage Schema (Dynamic or AI Fallback) -->
 {
-    pageType === "guide" && (
+    (pageType === "guide" || pageType === "category") && (
         <script
             type="application/ld+json"
             set:html={JSON.stringify({
                 "@context": "https://schema.org",
                 "@type": "FAQPage",
-                mainEntity: [
+                mainEntity: Astro.props.faqItems || [
                     {
                         "@type": "Question",
                         name: `Gdzie kupić ${category || "meble"} online?`,

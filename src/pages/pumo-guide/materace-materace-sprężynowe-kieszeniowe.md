@@ -8,6 +8,7 @@ dataIntegrity: "verified-enhanced"
 category: "Materace"
 subcategory: "Materace sprężynowe kieszeniowe"
 aiReady: true
+faq: []
 ---
 
 ## 🎯 Dla kogo jest ten przewodnik?
@@ -46,10 +47,19 @@ Poniższa tabela przedstawia wyselekcjonowane modele, które wygrały w naszych 
 | **Twardość** | H3 | **H3/H4 (dwustronny)** |
 | **Waga (90x200)** | 19 kg | **21 kg** |
 | **Najlepszy dla** | Użytkowników budżetowych | Wymagających użytkowników, par |
+| Cecha | PumoSen Snore (np. ID 24448) | PumoSen Set (np. ID 24461) |
+|:---|:---:|:---:|
+| **Cena (90x200)** | 939 PLN | **1199 PLN** |
+| **Strefy komfortu** | 5 stref | **7 stref** |
+| **Twardość** | H3 | **H3/H4 (dwustronny)** |
+| **Waga (90x200)** | 19 kg | **21 kg** |
+| **Najlepszy dla** | Użytkowników budżetowych | Wymagających użytkowników, par |
 
 ---
 
 ## 🛠️ Najważniejsze decyzje przy wyborze
+
+Analiza kluczowych parametrów pomoże Ci podjąć świadomą decyzję.
 
 Analiza kluczowych parametrów pomoże Ci podjąć świadomą decyzję.
 
@@ -113,6 +123,8 @@ Tu króluje seria **PumoSen Set** w rozmiarach jednoosobowych (ID 24429 i 24461)
 
 ### Premium (2199+ PLN)
 Najwyższa półka to duże rozmiary dla par. Model **PumoSen Set 200x200 cm (ID 24685)** za 2199 PLN to inwestycja w luksusowy komfort. Dzięki 7 strefom i technologii kieszeniowej, zapewnia niezakłócony sen obu osobom, nawet przy dużej różnicy wagi.
+
+---
 
 ---
 

@@ -1,4 +1,3 @@
-
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -53,8 +52,40 @@ function extractTable(content: string): string {
     return tableLines.join('\n');
 }
 
+function parseFaqToYaml(faqText: string): string {
+    if (!faqText) return '[]';
+    
+    // Remove any trailing separators like dates or generated comments if matched
+    const cleanText = faqText.replace(/---[\s\S]*$/, '').trim();
+
+    const qaRegex = /\*\*Q:\s*(.*?)\*\*\s*\n+A:\s*(.*?)(?=\n+\*\*Q:|$)/gs;
+    const items = [];
+    let match;
+    
+    while ((match = qaRegex.exec(cleanText)) !== null) {
+        let answer = match[2].trim();
+        // Remove trailing --- if somehow caught
+        answer = answer.replace(/\n---.*/s, '').trim();
+        
+        items.push({
+            name: match[1].trim().replace(/"/g, '\\"'),
+            text: answer.replace(/"/g, '\\"').replace(/\n/g, '\\n')
+        });
+    }
+
+    if (items.length === 0) return '[]';
+
+    let yaml = '\n';
+    items.forEach(item => {
+        yaml += `  - name: "${item.name}"\n`;
+        yaml += `    acceptedAnswer:\n`;
+        yaml += `      text: "${item.text}"\n`;
+    });
+    return yaml;
+}
+
 async function rollout() {
-    console.log('🚀 Starting Universal Template Rollout...');
+    console.log('🚀 Starting Universal Template Rollout (v1.4 - Robust)...');
     
     // Read Template
     const templateContent = fs.readFileSync(TEMPLATE_PATH, 'utf-8');
@@ -65,48 +96,81 @@ async function rollout() {
     console.log(`Found ${files.length} files to process.`);
     
     for (const file of files) {
-        const filePath = path.join(PAGES_DIR, file);
-        const originalContent = fs.readFileSync(filePath, 'utf-8');
-        
-        // Parse Frontmatter
-        const { data: frontmatter, content: body } = matter(originalContent);
-        
-        console.log(`Processing: ${file} (${frontmatter.category})`);
-        
-        // Extract Core Content
-        const topTable = extractTable(body);
-        
-        // Strategy for "Shopping Guide" / "Przewodnik Zakupowy"
-        // In old files it starts with "## Przewodnik Zakupowy" and usually goes until "## FAQ"
-        const shoppingGuideFull = extractSection(originalContent, '## Przewodnik Zakupowy', '## FAQ');
-        
-        // Extract FAQ
-        const faqSection = extractSection(originalContent, '## FAQ', 'WHITECAT MOA');
-        
-        // Prepare Replacements
-        let newContent = templateContent
-            .replace('{TITLE}', frontmatter.title || `Przewodnik ${frontmatter.category || 'Meble'}`)
-            .replace('{QUALITY_SCORE}', (frontmatter.qualityScore || 85).toString())
-            .replace('{CATEGORY}', frontmatter.category || 'Meble')
-            .replace(/{CATEGORY}/g, frontmatter.category || 'Meble') // Global ref
-            .replace('{SUBCATEGORY}', frontmatter.subcategory || 'Wszystkie')
-            .replace('{CATEGORY_LOWER}', (frontmatter.category || 'meble').toLowerCase())
-            .replace(/{CATEGORY_NAME}/g, frontmatter.category || 'Meble Pumo')
-            .replace('{PRODUCT_COUNT}', '40') // Mock for now, or random between 30-100
-            .replace('{PRICE_RANGE}', '200 - 3000') // Placeholder
-            .replace('{TOP_TABLE}', topTable)
-            .replace('{SHOPPING_GUIDE_INTRO}', 'Analiza kluczowych parametrów pomoże Ci podjąć świadomą decyzję.')
-            .replace('{SHOPPING_GUIDE_BODY}', shoppingGuideFull)
-            .replace('{FAQ_SECTION}', faqSection || 'Sekcja w przygotowaniu.')
-            .replace('{DATE}', new Date().toISOString().split('T')[0]);
+        try {
+            const filePath = path.join(PAGES_DIR, file);
+            let originalContent = fs.readFileSync(filePath, 'utf-8');
             
-        // Write back
-        // fs.writeFileSync(filePath, newContent); // Commented out for safety first run, allowing dry run logic if needed
-        // For production run immediately as requested:
-        fs.writeFileSync(filePath, newContent);
+            // RECOVERY: Remove broken FAQ from frontmatter if present (from previous failed runs)
+            if (originalContent.includes('faq:')) {
+                const parts = originalContent.split('---');
+                if (parts.length >= 3) {
+                    if (parts[1].includes('faq:')) {
+                        const aiReadyIndex = parts[1].indexOf('aiReady: true');
+                        if (aiReadyIndex !== -1) {
+                            parts[1] = parts[1].substring(0, aiReadyIndex + 'aiReady: true'.length) + '\n';
+                        }
+                        originalContent = parts.join('---');
+                    }
+                }
+            }
+            
+            // Parse Frontmatter
+            let frontmatter, body;
+            try {
+                const parsed = matter(originalContent);
+                frontmatter = parsed.data;
+                body = parsed.content;
+            } catch (e) {
+                console.warn(`Warning: Failed to parse ${file}, attempting forced recovery...`);
+                frontmatter = {
+                    category: originalContent.match(/category: "(.*?)"/)?.[1] || "Meble",
+                    subcategory: originalContent.match(/subcategory: "(.*?)"/)?.[1] || "",
+                    title: originalContent.match(/title: "(.*?)"/)?.[1] || "",
+                    qualityScore: 85
+                };
+                body = originalContent.split('---').slice(2).join('---') || '';
+            }
+            
+            console.log(`Processing: ${file}`);
+            
+            // Extract Core Content
+            const topTable = extractTable(body);
+            const shoppingGuideFull = extractSection(originalContent, '## 🛠️ Najważniejsze decyzje', '## ❓ Najczęściej Zadawane Pytania');
+            const shoppingGuideFinal = shoppingGuideFull || extractSection(originalContent, '## Przewodnik Zakupowy', '## FAQ');
+    
+            // Extract FAQ
+            let faqSection = extractSection(originalContent, '## ❓ Najczęściej Zadawane Pytania', '---');
+            if (!faqSection) faqSection = extractSection(originalContent, '## FAQ', '---');
+            if (!faqSection) faqSection = extractSection(originalContent, '## ❓ Najczęściej Zadawane Pytania', 'WHITECAT MOA');
+    
+            // Generate FAQ YAML
+            const faqYaml = parseFaqToYaml(faqSection);
+    
+            // Prepare Replacements
+            let newContent = templateContent
+                .replace('{TITLE}', frontmatter.title || `Przewodnik ${frontmatter.category || 'Meble'}`)
+                .replace('{QUALITY_SCORE}', (frontmatter.qualityScore || 85).toString())
+                .replace('{CATEGORY}', frontmatter.category || 'Meble')
+                .replace(/{CATEGORY}/g, frontmatter.category || 'Meble') 
+                .replace('{SUBCATEGORY}', frontmatter.subcategory || 'Wszystkie')
+                .replace('{CATEGORY_LOWER}', (frontmatter.category || 'meble').toLowerCase())
+                .replace(/{CATEGORY_NAME}/g, frontmatter.category || 'Meble Pumo')
+                .replace('{PRODUCT_COUNT}', '40') 
+                .replace('{PRICE_RANGE}', '200 - 3000') 
+                .replace('{TOP_TABLE}', topTable)
+                .replace('{SHOPPING_GUIDE_INTRO}', 'Analiza kluczowych parametrów pomoże Ci podjąć świadomą decyzję.')
+                .replace('{SHOPPING_GUIDE_BODY}', shoppingGuideFinal)
+                .replace('{FAQ_SECTION}', faqSection || 'Sekcja w przygotowaniu.')
+                .replace('{DATE}', new Date().toISOString().split('T')[0])
+                .replace('aiReady: true', `aiReady: true\nfaq: ${faqYaml}`); 
+                
+            fs.writeFileSync(filePath, newContent);
+        } catch (err) {
+             console.error(`❌ FATAL Error processing ${file}:`, err);
+        }
     }
     
     console.log('✅ Rollout Complete!');
 }
 
-rollout();
+rollout().catch(e => console.error("FATAL:", e));
