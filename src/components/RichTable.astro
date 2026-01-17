@@ -1,0 +1,45 @@
+---
+interface Props {
+  headers: string[];
+  rows: (string | number | boolean)[][];
+  caption?: string;
+  id?: string;
+}
+
+const { headers, rows, caption, id } = Astro.props;
+---
+
+<div class="my-8 overflow-hidden rounded-lg border border-gray-700 shadow-xl bg-gray-900/50" id={id}>
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-sm text-gray-300">
+      {caption && (
+        <caption class="p-4 text-left text-lg font-bold text-white bg-gray-800/80 border-b border-gray-700">
+          {caption}
+        </caption>
+      )}
+      <thead class="bg-gray-800 text-xs uppercase text-blue-300 font-bold">
+        <tr>
+          {headers.map((header) => (
+            <th scope="col" class="px-6 py-4 whitespace-nowrap">
+              {header}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-700">
+        {rows.map((row, rowIndex) => (
+          <tr class={rowIndex % 2 === 0 ? "bg-gray-900/30" : "bg-gray-800/20"}>
+            {row.map((cell, cellIndex) => (
+              <td class={`px-6 py-4 ${cellIndex === 0 ? "font-medium text-white" : ""}`}>
+                {cell}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <div class="px-4 py-2 bg-gray-800/50 text-xs text-center text-gray-500 border-t border-gray-700">
+    Data source: Meble Pumo Catalog © {new Date().getFullYear()}
+  </div>
+</div>

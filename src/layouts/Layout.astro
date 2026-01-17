@@ -34,6 +34,10 @@ interface Props {
   showTitleBackground?: boolean;
   class?: string | undefined;
   lang?: string;
+  // AI SEO Props
+  robots?: string;      // Override default robots meta
+  googlebot?: string;   // Specific rules for Googlebot (AI Overviews)
+  maxSnippet?: number;  // Limit snippet length (default -1 = unlimited)
 }
 
 const {
@@ -49,7 +53,22 @@ const {
   modifiedTime = "",
   class: className = "",
   lang = "pl",
+  robots,
+  googlebot,
+  maxSnippet,
 } = Astro.props;
+
+// Construct robots meta content
+let robotsContent = robots;
+if (!robotsContent) {
+    robotsContent = `index, ${SITE.disableIndexing ? "noindex, nofollow" : "index, follow"}`;
+}
+if (maxSnippet) {
+    // Append max-snippet if not already present
+    if (!robotsContent.includes('max-snippet')) {
+        robotsContent += `, max-snippet:${maxSnippet}`;
+    }
+}
 
 const metaTags = [
   { name: "viewport", content: "width=device-width, initial-scale=1.0" },
@@ -57,13 +76,17 @@ const metaTags = [
   { name: "sitemap", content: "/sitemap-index.xml" },
   {
     name: "robots",
-    content: `index, ${SITE.disableIndexing ? "noindex, nofollow" : "index, follow"}`,
+    content: robotsContent,
   },
   // GEO TAGS FOR POLAND TARGETING
   { name: "geo.region", content: "PL" },
   { name: "geo.position", content: "52.237049;21.017532" },
   { name: "ICBM", content: "52.237049, 21.017532" },
 ];
+
+if (googlebot) {
+    metaTags.push({ name: "googlebot", content: googlebot });
+}
 const fonts = SITE.fonts || [];
 
 // @ts-ignore

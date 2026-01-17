@@ -1,0 +1,159 @@
+
+> dreary-doppler@0.0.2 build
+> astro build
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[2m17:30:56[22m [34m[@astrojs/cloudflare][39m Enabling sessions with Cloudflare KV with the "SESSION" KV binding.
+[2m17:30:56[22m [34m[@astrojs/cloudflare][39m If you see the error "Invalid binding `SESSION`" in your build output, you need to add the binding to your wrangler config file.
+[33m[1m17:30:56[22m [WARN] [adapter][39m Cloudflare does not support sharp at runtime. However, you can configure `imageService: "compile"` to optimize images with sharp on prerendered pages during build time.
+🚀 ~ collectionSchemas: ./src/data/blog
+[2m17:30:57[22m [34m[content][39m Syncing content
+[2m17:30:57[22m [34m[content][39m Synced content
+[2m17:30:57[22m [34m[types][39m Generated [2m407ms[22m
+[2m17:30:57[22m [34m[build][39m output: [34m"server"[39m
+[2m17:30:57[22m [34m[build][39m mode: [34m"server"[39m
+[2m17:30:57[22m [34m[build][39m directory: [34mU:\The_yellow_hub\my-bonzo-ai-blog\dist\[39m
+[2m17:30:57[22m [34m[build][39m adapter: [32m@astrojs/cloudflare[39m
+[2m17:30:57[22m [34m[build][39m Collecting build info...
+[2m17:30:57[22m [34m[build][39m [32m✓ Completed in 517ms.[39m
+[2m17:30:57[22m [34m[build][39m Building server entrypoints...
+[33m[1m17:31:01[22m [WARN] [vite][39m [33m[plugin vite:resolve] Automatically externalized node built-in module "fs" imported from "src\pages\robots.txt.ts". Consider adding it to environments.ssr.external if it is intended.[39m
+[33m[1m17:31:01[22m [WARN] [vite][39m [33m[plugin vite:resolve] Automatically externalized node built-in module "path" imported from "src\pages\robots.txt.ts". Consider adding it to environments.ssr.external if it is intended.[39m
+[33m[1m17:31:01[22m [WARN] [vite][39m [33m[plugin vite:resolve] Automatically externalized node built-in module "node:fs/promises" imported from "src\pages\api\pumo-category\[slug].json.ts". Consider adding it to environments.ssr.external if it is intended.[39m
+[33m[1m17:31:01[22m [WARN] [vite][39m [33m[plugin vite:resolve] Automatically externalized node built-in module "node:path" imported from "src\pages\api\pumo-category\[slug].json.ts". Consider adding it to environments.ssr.external if it is intended.[39m
+[33m[1m17:31:01[22m [WARN] [vite][39m [33m[plugin vite:resolve] Automatically externalized node built-in module "crypto" imported from "src\pages\api\ai\generate-image-queue.ts". Consider adding it to environments.ssr.external if it is intended.[39m
+[33m[1m17:31:01[22m [WARN] [vite][39m [33m[plugin vite:resolve] Automatically externalized node built-in module "crypto" imported from "src\pages\api\ai\generate-image.ts". Consider adding it to environments.ssr.external if it is intended.[39m
+[33m[1m17:31:02[22m [WARN] [router][39m getStaticPaths() ignored in dynamic page [1m/src/pages/tags/[tag]/[...page].astro[22m. Add `export const prerender = true;` to prerender the page as static HTML during the build process.
+[33m[1m17:31:04[22m [WARN] [vite][39m 
+/fonts/Throlacon Trial.ttf referenced in /fonts/Throlacon Trial.ttf didn't resolve at build time, it will remain unchanged to be resolved at runtime
+[33m[1m17:31:05[22m [WARN] [vite][39m [33msrc/lib/whitecat/sitemap-sync.ts (1:9): "Env" is not exported by "src/lib/whitecat/whitecat-types.ts", imported by "src/lib/whitecat/sitemap-sync.ts".[39m
+[2m17:31:08[22m [34m[vite][39m [32m✓ built in 11.68s[39m
+[2m17:31:08[22m [34m[build][39m [32m✓ Completed in 11.71s.[39m
+
+[42m[30m building client (vite) [39m[49m
+[2m17:31:08[22m [34m[vite][39m transforming...
+[2m17:31:09[22m [34m[vite][39m [32m✓[39m 46 modules transformed.
+[33m[1m17:31:09[22m [WARN] [vite][39m [33mGenerated an empty chunk: "rag.astro_astro_type_script_index_0_lang".[39m
+[2m17:31:09[22m [34m[vite][39m rendering chunks...
+[2m17:31:09[22m [34m[vite][39m computing gzip size...
+[2m17:31:09[22m [34m[vite][39m [2mdist/[22m[35m_assets/_page_.D32G3rzM.css                                                     [39m[1m[2m 0.18 kB[22m[1m[22m[2m │ gzip:  0.14 kB[22m
+[2m17:31:09[22m [34m[vite][39m [2mdist/[22m[36m_assets/ParticleBackground.CbFKZs12.js                                          [39m[1m[2m 1.86 kB[22m[1m[22m[2m │ gzip:  0.95 kB[22m
+[2m17:31:09[22m [34m[vite][39m [2mdist/[22m[36m_assets/client.DwOfGCi_.js                                                      [39m[1m[2m 7.08 kB[22m[1m[22m[2m │ gzip:  3.29 kB[22m
+[2m17:31:09[22m [34m[vite][39m [2mdist/[22m[36m_assets/media.astro_astro_type_script_index_0_lang.DQAmVYR4.js                  [39m[1m[2m 9.20 kB[22m[1m[22m[2m │ gzip:  3.16 kB[22m
+[2m17:31:09[22m [34m[vite][39m [2mdist/[22m[36m_assets/advanced-ai-assistant.astro_astro_type_script_index_0_lang.BgX1vGiY.js  [39m[1m[2m10.65 kB[22m[1m[22m[2m │ gzip:  4.35 kB[22m
+[2m17:31:09[22m [34m[vite][39m [2mdist/[22m[36m_assets/ClientRouter.astro_astro_type_script_index_0_lang.QW52Ox2j.js           [39m[1m[2m15.33 kB[22m[1m[22m[2m │ gzip:  5.27 kB[22m
+[2m17:31:09[22m [34m[vite][39m [2mdist/[22m[36m_assets/AIChat.Enhanced.astro_astro_type_script_index_0_lang.C8PXwwzN.js        [39m[1m[2m20.55 kB[22m[1m[22m[2m │ gzip:  7.13 kB[22m
+[2m17:31:09[22m [34m[vite][39m [2mdist/[22m[36m_assets/runtime-core.esm-bundler.LMN5Qp_G.js                                    [39m[1m[2m62.52 kB[22m[1m[22m[2m │ gzip: 24.75 kB[22m
+[2m17:31:09[22m [34m[vite][39m [32m✓ built in 627ms[39m
+
+[42m[30m prerendering static routes [39m[49m
+[2m17:31:09[22m [35mλ[39m src/pages/api/pumo-category/[slug].json.ts
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/biurka-biurka-gamingowe.json[22m [2m(+11ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/biurka-biurka-narożne.json[22m [2m(+4ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/biurka-biurka-proste.json[22m [2m(+8ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/biurka-biurka-z-regulacją-wysokości.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/biurka-biurka-z-szufladami-i-drzwiami.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/biurka-części-do-biurek.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/dodatki-do-mebli-akcesoria-.json[22m [2m(+4ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/dodatki-do-mebli-części-do-mebli.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/dodatki-do-mebli-oświetlenie-led.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/fotele-fotele-bujane.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/fotele-fotele-do-biurka.json[22m [2m(+4ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/fotele-fotele-kubełkowe.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/fotele-fotele-młodzieżowe.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/fotele-fotele-ogrodowe-halmar.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/fotele-fotele-ogrodowe.json[22m [2m(+5ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/fotele-fotele-rozkładane.json[22m [2m(+4ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/fotele-fotele-wypoczynkowe.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/halmar-tymczasowa.json[22m [2m(+4ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/Hokery.json[22m [2m(+4ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/komody-komody-z-drzwiami.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/komody-komody-z-szufladami-i-drzwiami.json[22m [2m(+4ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/komody-komody-z-szufladami.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/Kontenerki.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/krzesła-krzesła-do-jadalni.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/krzesła-krzesła-na-płozie.json[22m [2m(+6ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/krzesła-krzesła-ogrodowe.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/Lustra.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/materace-materace-piankowe.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/materace-materace-sprężynowe-kieszeniowe.json[22m [2m(+4ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/Meblościanki.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/pozostałe-produkty.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/Pufy.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/półki-wiszące.json[22m [2m(+4ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/Regały.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/sofy-i-narożniki-narożniki.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/sofy-i-narożniki-sofy-2-osobowe.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/sofy-i-narożniki-sofy-3-osobowe.json[22m [2m(+4ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/Sofy_i_narożniki_Sofy_2_osobowe.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/Sofy_i_narożniki_Sofy_3_osobowe.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/Stelaże.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/stoliki-kawowe-i-ławy-stoliki-kawowe.json[22m [2m(+4ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/stoliki-kawowe-i-ławy-ławostoły.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/stoliki-kawowe-i-ławy-ławy.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/stoly-stoły-nierozkładane.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/stoly-stoły-ogrodowe.json[22m [2m(+8ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/stoly-stoły-rozkładane.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/szafki-kuchenne.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/szafki-modułowe.json[22m [2m(+6ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/szafki-na-buty.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/szafki-nocne.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/szafki-rtv.json[22m [2m(+4ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/szafy-nadstawki-na-szafę.json[22m [2m(+4ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/szafy-szafy-uchylne.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/Szezlongi.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/toaletki-i-konsole-konsole-.json[22m [2m(+6ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/toaletki-i-konsole-toaletki.json[22m [2m(+6ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/wieszaki-na-ubrania-wieszaki-stojące.json[22m [2m(+4ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/wieszaki-na-ubrania-wieszaki-ścienne.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/witryny-i-kredensy-witryny.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/zestawy-mebli-zestawy-mebli-do-jadalni.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/zestawy-mebli-zestawy-mebli-kuchennych.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/ławki-do-przedpokoju.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/łóżka-dziecięce.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/łóżka-i-części-części-do-łóżek.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/api/pumo-category/łóżka-i-części-stelaże-do-łóżek.json[22m [2m(+3ms)[22m 
+[2m17:31:09[22m   [34m└─[39m [2m/api/pumo-category/łóżka-i-części-łóżka.json[22m [2m(+6ms)[22m 
+[2m17:31:09[22m [32m▶[39m src/pages/blog/[id].astro
+[2m17:31:09[22m   [34m├─[39m [2m/blog/ai-w-codziennosci/index.html[22m [2m(+45ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/blog/ai-tools-przyszlosc-narzedzi/index.html[22m [2m(+27ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/blog/ai-seo-knowledge-bases-2025/index.html[22m [2m(+25ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/blog/new-ai-era/index.html[22m [2m(+26ms)[22m 
+[2m17:31:09[22m   [34m├─[39m [2m/blog/alkaline-design-przywrocony/index.html[22m [2m(+32ms)[22m 
+[2m17:31:10[22m   [34m├─[39m [2m/blog/mybonzo-pro-platforma-ai/index.html[22m [2m(+25ms)[22m 
+[2m17:31:10[22m   [34m├─[39m [2m/blog/rag-moa-ecommerce-2025/index.html[22m [2m(+24ms)[22m 
+[2m17:31:10[22m   [34m├─[39m [2m/blog/karol-zyciorys/index.html[22m [2m(+26ms)[22m 
+[2m17:31:10[22m   [34m├─[39m [2m/blog/rzeczywistosc-jazn-wieloswiat/index.html[22m [2m(+27ms)[22m 
+[2m17:31:10[22m   [34m├─[39m [2m/blog/rag-moa-podstawy-2025/index.html[22m [2m(+25ms)[22m 
+[2m17:31:10[22m   [34m├─[39m [2m/blog/whitecat-case-study-roi-2025/index.html[22m [2m(+25ms)[22m 
+[2m17:31:10[22m   [34m├─[39m [2m/blog/untitled-article/index.html[22m [2m(+21ms)[22m 
+[2m17:31:10[22m   [34m├─[39m [2m/blog/why-autonomous-ai-agents-are-the-future-of-devops-in-2026/index.html[22m [2m(+23ms)[22m 
+[2m17:31:10[22m   [34m└─[39m [2m/blog/why-pollinations-ai-crushes-dall-e-as-the-ultimate-free-alternative/index.html[22m [2m(+30ms)[22m 
+[2m17:31:10[22m [32m▶[39m src/pages/blog/[...page].astro
+[2m17:31:10[22m   [34m├─[39m [2m/blog/index.html[22m [2m(+30ms)[22m 
+[2m17:31:10[22m   [34m├─[39m [2m/blog/2/index.html[22m [2m(+26ms)[22m 
+[2m17:31:10[22m   [34m└─[39m [2m/blog/3/index.html[22m [2m(+24ms)[22m 
+[2m17:31:10[22m [32m▶[39m src/pages/o-nas.astro
+[2m17:31:10[22m   [34m└─[39m [2m/o-nas/index.html[22m [2m(+25ms)[22m 
+[2m17:31:10[22m [32m▶[39m src/pages/pumo-guide/index.astro
+[2m17:31:10[22m   [34m└─[39m [2m/pumo-guide/index.html[22mAstro.glob is deprecated and will be removed in a future major version of Astro.
+Use import.meta.glob instead: https://vitejs.dev/guide/features.html#glob-import
+ [2m(+98ms)[22m 
+[2m17:31:10[22m [32m▶[39m src/pages/rag.astro
+[2m17:31:10[22m   [34m└─[39m [2m/rag/index.html[22m [2m(+21ms)[22m 
+[2m17:31:10[22m [35mλ[39m src/pages/robots.txt.ts
+[2m17:31:10[22m   [34m└─[39m [2m/robots.txt[22m [2m(+3ms)[22m 
+[2m17:31:10[22m [35mλ[39m src/pages/rss.xml.ts
+[2m17:31:10[22m   [34m└─[39m [2m/rss.xml[22m [2m(+21ms)[22m 
+[2m17:31:10[22m [32m✓ Completed in 958ms.
+[39m
+[42m[30m generating optimized images [39m[49m
+[2m17:31:10[22m   [32m▶[39m /_assets/bonzo_logo_new.c_iONp0m_Z12W9Pz.webp [2m(reused cache entry)[22m [2m(+3ms)[22m [2m(1/1)[22m
+[2m17:31:10[22m [32m✓ Completed in 3ms.
+[39m
+[2m17:31:10[22m [34m[build][39m Rearranging server assets...
+[2m17:31:10[22m [34m[@astrojs/sitemap][39m `sitemap-index.xml` created at `dist`
+[32mastro-robots-txt:[0m `robots.txt` is created.
+
+[2m17:31:10[22m [34m[build][39m Server built in [1m14.01s[22m
+[2m17:31:10[22m [34m[build][39m [1mComplete![22m

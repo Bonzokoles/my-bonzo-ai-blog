@@ -6,6 +6,10 @@ interface Props {
 }
 
 const { category, subcategory, current } = Astro.props;
+import { getCategoryUrl } from "../utils/categoryMapper";
+
+const categoryUrl = category ? getCategoryUrl(category) : null;
+const isCategoryLinkable = categoryUrl && categoryUrl !== "https://www.meblepumo.pl";
 ---
 
 <nav aria-label="Breadcrumb" class="mb-6">
@@ -57,9 +61,19 @@ const { category, subcategory, current } = Astro.props;
                         itemscope
                         itemtype="https://schema.org/ListItem"
                     >
-                        <span class="text-gray-300" itemprop="name">
-                            {category}
-                        </span>
+                        {isCategoryLinkable ? (
+                            <a
+                                href={categoryUrl}
+                                class="hover:text-blue-400 transition-colors"
+                                itemprop="item"
+                            >
+                                <span itemprop="name">{category}</span>
+                            </a>
+                        ) : (
+                            <span class="text-gray-300" itemprop="name">
+                                {category}
+                            </span>
+                        )}
                         <meta itemprop="position" content="3" />
                     </li>
                 </>

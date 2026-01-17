@@ -1,0 +1,16 @@
+---
+interface Props {
+  as?: string; // Tag name (div, span, p, etc.)
+  class?: string;
+}
+
+const { as: Tag = "div", class: className } = Astro.props;
+
+// "data-nosnippet" is an HTML attribute that tells Google/Bing NOT to use this content 
+// for text snippets or AI Overviews/Copilot summaries. 
+// Useful for: Price tables, unique sales copy, or "premium" content we want users to click through to see.
+---
+
+<Tag data-nosnippet class={className}>
+  <slot />
+</Tag>

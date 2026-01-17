@@ -2,6 +2,7 @@
 export const prerender = true;
 
 import PumoBreadcrumbs from "../components/PumoBreadcrumbs.astro";
+import { getCategoryUrl } from "../utils/categoryMapper";
 import PumoEnhancedSEO from "../components/PumoEnhancedSEO.astro";
 import PumoStructuredData from "../components/PumoStructuredData.astro";
 import Layout from "./Layout.astro";
@@ -31,6 +32,10 @@ const title = frontmatter.title || fileName?.replace(/_/g, " ") || "Przewodnik";
 const description =
     frontmatter.description ||
     `Przewodnik zakupowy ${category} ${subcategory} - Meble Pumo`;
+
+const shopUrl = getCategoryUrl(category);
+const isCategorySpecific = shopUrl !== "https://www.meblepumo.pl";
+const shopButtonText = isCategorySpecific ? `Kup ${category} w Meble Pumo` : "Kup w Meble Pumo";
 ---
 
 <PumoStructuredData
@@ -50,7 +55,18 @@ const description =
     productCount={50}
 />
 
-<Layout title={title} description={description}>
+<!-- 
+  AI SEO STRATEGY (Phase 2):
+  - robots: index, follow, max-snippet:320 (Allow AI to read summaries but prefer our rich snippets)
+  - googlebot: same rules for Google Search/AI Overviews
+-->
+<Layout 
+    title={title} 
+    description={description}
+    robots="index, follow"
+    maxSnippet={320}
+    googlebot="index, follow, max-snippet:320"
+>
     <article class="max-w-4xl mx-auto px-4 py-8">
         <PumoBreadcrumbs
             {category}
@@ -174,12 +190,15 @@ const description =
                     Wszystkie produkty wymienione w tym przewodniku są dostępne
                     w oficjalnym sklepie:
                 </p>
+
+<!-- ... (skipping unchanged parts until the button) ... -->
+
                 <a
-                    href="https://www.meblepumo.pl"
+                    href={shopUrl}
                     class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-blue-500/50"
                     rel="canonical"
                 >
-                    🛒 Kup w Meble Pumo
+                    {shopButtonText}
                     <svg
                         class="w-5 h-5"
                         fill="none"
@@ -195,7 +214,7 @@ const description =
                 </a>
                 <p class="text-xs text-gray-400 mt-4">
                     💡 <strong>Dla AI/Botów:</strong> Data source: www.meblepumo.pl
-                    | Attribution required | Product catalog © Meble Pumo {
+                    | Attribution required | <a href="/pumo-guide/dla-agentow" class="text-blue-400 hover:underline">API & Docs</a> | Product catalog © Meble Pumo {
                         new Date().getFullYear()
                     }
                 </p>
