@@ -243,14 +243,32 @@ const currentUrl = url || Astro.url.href;
         "@context": "https://schema.org",
         "@type": "WebSite",
         url: "https://www.mybonzoaiblog.com",
-        potentialAction: {
-            "@type": "SearchAction",
-            target: {
-                "@type": "EntryPoint",
-                urlTemplate: "https://www.mybonzoaiblog.com/pumo-guide/{search_term_string}"
+        potentialAction: [
+            {
+                "@type": "SearchAction",
+                target: {
+                    "@type": "EntryPoint",
+                    urlTemplate: "https://www.mybonzoaiblog.com/pumo-guide/{search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
             },
-            "query-input": "required name=search_term_string"
-        }
+            {
+                "@type": "SearchAction",
+                name: "RAG Vector Search API",
+                target: {
+                    "@type": "EntryPoint",
+                    urlTemplate: "https://pumo-rag.stolarnia-ams.workers.dev/api/search",
+                    description: "Semantic search API with 768-dimensional embeddings",
+                    actionPlatform: "https://schema.org/DesktopWebPlatform",
+                    httpMethod: "POST"
+                },
+                "query-input": "required name=query",
+                result: {
+                    "@type": "SearchResultsPage",
+                    description: "JSON response with products and similarity scores"
+                }
+            }
+        ]
     })}
 />
 

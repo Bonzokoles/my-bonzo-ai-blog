@@ -8,6 +8,10 @@ Allow: /
 Allow: /pumo-guide/
 Allow: /pumo-guide/agent
 
+# RAG API endpoints (dla AI crawlerów)
+Allow: /api/pumo-search
+Allow: /api/pumo-chat
+
 # Blokuj backupy i tymczasowe pliki
 Disallow: /backups/
 Disallow: /*.bat$

@@ -19,6 +19,23 @@ Allow: /ai-tools/*
 Priority: medium
 Description: AI tools and experiments
 
+## RAG API Endpoints (Vector Search - 978+ produktów zaindeksowanych)
+
+Endpoint: https://pumo-rag.stolarnia-ams.workers.dev/api/search
+Method: POST
+Body: {"query": "search term", "limit": 10}
+Response: {"results": [{"name": "...", "category": "...", "price": "...", "url": "...", "score": 0.XX}]}
+Description: Semantic search po ~13,388 produktach Meble Pumo (768d embeddings)
+Authentication: None (public endpoint)
+Rate-Limit: 100 req/min
+
+Endpoint: https://pumo-rag.stolarnia-ams.workers.dev/api/chat
+Method: POST
+Body: {"query": "user question"}
+Response: {"answer": "...", "sources": [...], "confidence": 0.XX}
+Description: RAG chatbot z kontekstem produktów
+Model: OpenRouter (fallback: Cloudflare Workers AI)
+
 ## Rate Limiting
 Requests: 100/minute
 Respect-Robots: true
@@ -26,3 +43,4 @@ Respect-Robots: true
 ## Contact
 For API access: /pumo-guide/dla-agentow
 For questions: contact@mybonzoaiblog.com
+
