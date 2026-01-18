@@ -11,6 +11,11 @@ export interface NavigationSection {
 
 export const NAVIGATION_SECTIONS: NavigationSection[] = [
   {
+    href: "/blog",
+    label: "📰 Blog",
+    description: "Artykuły i wpisy o AI i technologii",
+  },
+  {
     href: "/BROWSERY",
     label: "Browsery",
     description: "Porównanie i recenzje przeglądarek internetowych",
@@ -41,18 +46,28 @@ export const NAVIGATION_SECTIONS: NavigationSection[] = [
     description: "Kultura i technologia razem",
   },
   {
+    href: "/poradniki",
+    label: "📚 Poradniki",
+    description: "Praktyczne przewodniki i tutoriale",
+  },
+  {
     href: "/system/ai-chat",
-    label: "AI Chat",
+    label: "💬 AI Chat",
     description: "Rozmawiaj z asystentem AI MyBonzo",
   },
   {
     href: "/GENERATOR_GRAFIKI",
-    label: "Generator Grafiki",
+    label: "🎨 Generator Grafiki",
     description: "Twórz grafiki za pomocą AI",
   },
   {
     href: "/eksperymenty",
     label: "🧪 Eksperymenty",
     description: "Laboratorium projektów AI i zaawansowane testy",
+  },
+  {
+    href: "/o-nas",
+    label: "ℹ️ O Nas",
+    description: "Poznaj zespół MyBonzo AI",
   },
 ];
