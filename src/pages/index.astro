@@ -11,7 +11,6 @@ import HeroSection from "@components/features/HeroSection.astro";
 import Layout from "@layouts/Layout.astro";
 
 import coverImage from "@assets/alk4.png";
-import Bing from "@assets/bing.jpg";
 import { Icon } from "astro-icon/components";
 import { Image } from "astro:assets";
 
@@ -410,16 +409,16 @@ const blogPosts = await getHomepageBlogPosts();
     </a>
   </section>
 
-  <!-- Chandler Bing Quote Image -->
+  <!-- AI Empowerment Image -->
   <section class="flex flex-col items-center justify-center mt-6">
     <div class="w-full mb-8 flex justify-center">
-      <Image
-        src={Bing}
-        alt="a quote from Chandler Bing from Friends. Hard work never killed anybody, but why take a chance?"
-        class="shadow-md shadow-theme-primary"
+      <img
+        src="https://pub-ec47f213b171463d9502f5562213f837.r2.dev/images/2026-01/AI_News_ZenBrowsers.png"
+        alt="Let AI empower your work - Modern AI tools transforming productivity and creativity in 2026"
+        class="shadow-md shadow-theme-primary max-w-4xl rounded-lg"
         loading="lazy"
-        width={750}
-        format="webp"
+        width="1200"
+        height="630"
       />
     </div>
   </section>
