@@ -55,38 +55,44 @@ const blogPosts = await getHomepageBlogPosts();
     sections={NAVIGATION_SECTIONS}
   />
 
-  <!-- Meble Pumo Feature Video (WHITECAT Generated) -->
+  <!-- Meble Pumo RAG Feature - Cloudflare Vectorize -->
   <section
     class="w-full py-16 bg-gradient-to-b from-theme-primary/5 to-transparent"
   >
     <div class="container mx-auto px-4">
       <div class="max-w-5xl mx-auto text-center mb-8">
         <h2 class="text-3xl lg:text-4xl font-bold text-theme-primary mb-4">
-          🎬 WHITECAT v1.0 w Akcji: Meble Pumo AI Assistant
+          🚀 PUMO RAG v2.0: Vector Search z Cloudflare AI
         </h2>
         <p class="text-lg text-theme-primary/80 max-w-3xl mx-auto">
-          Zobacz jak nasz system WHITECAT (3-layer MOA: DeepSeek + Claude +
-          GPT-4) generuje inteligentne odpowiedzi dla 13,416 produktów Meble Pumo
-          w czasie rzeczywistym.
+          Nowa generacja wyszukiwania semantycznego: 768-wymiarowe embeddingi, 
+          Cloudflare Vectorize, Workers AI - wyszukaj meble używając naturalnego języka 
+          wśród 13,388 produktów w czasie rzeczywistym.
         </p>
       </div>
 
       <div class="max-w-4xl mx-auto">
-        <div
-          class="relative aspect-video bg-gray-900 border border-theme-accent/30 shadow-2xl shadow-theme-accent/20"
-        >
-          <video
-            id="pumoPresentationVideo"
-            class="w-full h-full object-contain"
-            controls
-            preload="metadata"
-          >
-            <source
-              src="https://pub-ec47f213b171463d9502f5562213f837.r2.dev/Agent_video_Pippit_20251231072136.mp4"
-              type="video/mp4"
+        <!-- Live Search Demo -->
+        <div class="bg-gray-900 border border-theme-accent/30 shadow-2xl shadow-theme-accent/20 p-8">
+          <h3 class="text-2xl font-bold text-white mb-4">🔍 Live Semantic Search Demo</h3>
+          <p class="text-gray-300 mb-6">Wpisz zapytanie po polsku, np. "wygodna sofa do salonu" lub "biurko dla gracza"</p>
+          
+          <div class="flex gap-4 mb-6">
+            <input 
+              type="text" 
+              id="searchInput" 
+              placeholder="Szukaj mebli..."
+              class="flex-1 px-4 py-3 bg-gray-800 border border-theme-accent/50 text-white placeholder-gray-500 focus:outline-none focus:border-theme-accent"
             />
-            Twoja przeglądarka nie obsługuje odtwarzania wideo HTML5.
-          </video>
+            <button 
+              id="searchButton"
+              class="px-6 py-3 bg-theme-accent text-white font-semibold hover:opacity-90 transition-opacity"
+            >
+              Szukaj
+            </button>
+          </div>
+          
+          <div id="searchResults" class="space-y-4"></div>
         </div>
 
         <div class="mt-6 flex flex-wrap justify-center gap-4">
@@ -94,69 +100,47 @@ const blogPosts = await getHomepageBlogPosts();
             href="/pumo-guide/"
             class="px-6 py-3 bg-theme-accent text-white font-semibold hover:opacity-90 transition-opacity border border-gray-500"
           >
-            📚 Zobacz 63 Przewodniki Meble Pumo
+            📚 Zobacz 66 Przewodników AI Meble Pumo
           </a>
           <a
-            href="/blog/whitecat-case-study-roi-2025/"
+            href="https://pumo-rag.stolarnia-ams.workers.dev/api/search"
+            target="_blank"
             class="px-6 py-3 bg-transparent text-theme-primary border border-theme-accent font-semibold hover:bg-theme-accent hover:text-white transition-colors"
           >
-            📊 Case Study: ROI 54x
+            🔍 API: Semantic Search (POST)
           </a>
           <a
-            href="/blog/rag-moa-ecommerce-2025/"
+            href="/llms.txt"
+            target="_blank"
             class="px-6 py-3 bg-transparent text-theme-primary border border-theme-accent font-semibold hover:bg-theme-accent hover:text-white transition-colors"
           >
-            🔬 Jak Działa 3-Layer MOA
+            🤖 Dokumentacja dla AI Crawlerów
           </a>
         </div>
 
-        <!-- Additional Videos Grid -->
+        <!-- Tech Stack Features -->
         <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-theme-primary/5 p-4 border border-theme-accent/20">
-            <video
-              class="w-full aspect-video object-cover mb-3"
-              controls
-              preload="none"
-            >
-              <source
-                src="https://pub-ec47f213b171463d9502f5562213f837.r2.dev/Poprawka_i_gotowe_wideo.mp4"
-                type="video/mp4"
-              />
-            </video>
-            <p class="text-sm text-theme-primary/70 text-center">
-              Demo: Poprawki AI w czasie rzeczywistym
+          <div class="bg-theme-primary/5 p-6 border border-theme-accent/20">
+            <div class="text-4xl mb-4">⚡</div>
+            <h4 class="text-xl font-bold text-theme-primary mb-2">Cloudflare Workers</h4>
+            <p class="text-sm text-theme-primary/70">
+              Edge computing - API działa w 310 lokalizacjach globalnie z sub-100ms latency
             </p>
           </div>
 
-          <div class="bg-theme-primary/5 p-4 border border-theme-accent/20">
-            <video
-              class="w-full aspect-video object-cover mb-3"
-              controls
-              preload="none"
-            >
-              <source
-                src="https://pub-ec47f213b171463d9502f5562213f837.r2.dev/videonr333.mp4"
-                type="video/mp4"
-              />
-            </video>
-            <p class="text-sm text-theme-primary/70 text-center">
-              Video #333: Advanced Features
+          <div class="bg-theme-primary/5 p-6 border border-theme-accent/20">
+            <div class="text-4xl mb-4">🧠</div>
+            <h4 class="text-xl font-bold text-theme-primary mb-2">Workers AI</h4>
+            <p class="text-sm text-theme-primary/70">
+              Model BGE-base-en-v1.5 (768d) - embeddingi generowane on-the-fly bez cold starts
             </p>
           </div>
 
-          <div class="bg-theme-primary/5 p-4 border border-theme-accent/20">
-            <video
-              class="w-full aspect-video object-cover mb-3"
-              controls
-              preload="none"
-            >
-              <source
-                src="https://pub-ec47f213b171463d9502f5562213f837.r2.dev/202512310711.mp4"
-                type="video/mp4"
-              />
-            </video>
-            <p class="text-sm text-theme-primary/70 text-center">
-              Quick Demo: System Overview
+          <div class="bg-theme-primary/5 p-6 border border-theme-accent/20">
+            <div class="text-4xl mb-4">🗄️</div>
+            <h4 class="text-xl font-bold text-theme-primary mb-2">Vectorize</h4>
+            <p class="text-sm text-theme-primary/70">
+              13,388 wektorów produktów z cosine similarity search - znalezienie w ms
             </p>
           </div>
         </div>
@@ -169,31 +153,31 @@ const blogPosts = await getHomepageBlogPosts();
         <div
           class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30"
         >
-          <div class="text-3xl font-bold text-theme-accent mb-2">13,416</div>
+          <div class="text-3xl font-bold text-theme-accent mb-2">13,388</div>
           <div class="text-sm text-theme-primary/70">
-            Produktów Przetworzonych
+            Produktów w Vectorize
           </div>
         </div>
         <div
           class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30"
         >
-          <div class="text-3xl font-bold text-theme-accent mb-2">24h</div>
+          <div class="text-3xl font-bold text-theme-accent mb-2">768</div>
           <div class="text-sm text-theme-primary/70">
-            Czas Generacji (vs 180h)
+            Wymiarów Embeddings
           </div>
         </div>
         <div
           class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30"
         >
-          <div class="text-3xl font-bold text-theme-accent mb-2">68%</div>
-          <div class="text-sm text-theme-primary/70">AI Citation Rate</div>
+          <div class="text-3xl font-bold text-theme-accent mb-2">&lt;100ms</div>
+          <div class="text-sm text-theme-primary/70">Czas Odpowiedzi API</div>
         </div>
         <div
           class="text-center p-6 bg-theme-accent/10 border border-theme-accent/30"
         >
-          <div class="text-3xl font-bold text-theme-accent mb-2">54x</div>
+          <div class="text-3xl font-bold text-theme-accent mb-2">∞</div>
           <div class="text-sm text-theme-primary/70">
-            ROI (500 vs 27,800 PLN)
+            Skalowalność (Workers)
           </div>
         </div>
       </div>
@@ -455,27 +439,76 @@ const blogPosts = await getHomepageBlogPosts();
     </div>
   </section>
 
+  <!-- Search Script -->
+  <script>
+    const searchButton = document.getElementById('searchButton');
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+
+    async function performSearch() {
+      const query = searchInput?.value.trim();
+      if (!query || !searchResults) return;
+
+      searchResults.innerHTML = '<div class="text-gray-400 text-center py-8">🔍 Wyszukiwanie...</div>';
+      
+      try {
+        const response = await fetch('https://pumo-rag.stolarnia-ams.workers.dev/api/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query, limit: 5 })
+        });
+        
+        if (!response.ok) throw new Error('Search failed');
+        
+        const data = await response.json();
+        
+        if (data.results && data.results.length > 0) {
+          searchResults.innerHTML = data.results.map((product, i) => `
+            <div class="bg-gray-800 border border-theme-accent/30 p-4 hover:border-theme-accent/60 transition-colors">
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="text-white font-semibold flex-1">${product.name}</h4>
+                <span class="text-xs text-theme-accent ml-2">Score: ${(product.score * 100).toFixed(1)}%</span>
+              </div>
+              <p class="text-gray-400 text-sm mb-2">${product.category || 'Meble'}</p>
+              ${product.price ? `<p class="text-theme-accent font-bold">${product.price} PLN</p>` : ''}
+              ${product.url ? `<a href="${product.url}" target="_blank" class="text-xs text-blue-400 hover:underline">Zobacz produkt ↗</a>` : ''}
+            </div>
+          `).join('');
+        } else {
+          searchResults.innerHTML = '<div class="text-gray-400 text-center py-8">Brak wyników</div>';
+        }
+      } catch (error) {
+        searchResults.innerHTML = '<div class="text-red-400 text-center py-8">❌ Błąd wyszukiwania. Spróbuj ponownie.</div>';
+        console.error('Search error:', error);
+      }
+    }
+
+    searchButton?.addEventListener('click', performSearch);
+    searchInput?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') performSearch();
+    });
+  </script>
 
   <!-- PUMO AI Dataset Schema for Crawlers -->
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "Dataset",
-    "name": "Meble Pumo AI Product Database",
-    "description": "High-dimensional vector database containing 13,416 furniture products from Meble Pumo, optimized for AI semantic search and RAG applications.",
-    "url": "https://mybonzoaiblog.com/pumo-guide",
+    "name": "Meble Pumo RAG Vector Database",
+    "description": "768-dimensional vector database with 13,388 furniture products from Meble Pumo, powered by Cloudflare Vectorize and Workers AI for semantic search.",
+    "url": "https://mybonzoaiblog.pages.dev/pumo-guide",
     "creator": {
         "@type": "Organization",
-        "name": "Meble Pumo"
+        "name": "MyBonzo AI"
     },
     "distribution": [
         {
             "@type": "DataDownload",
             "encodingFormat": "application/json",
-            "contentUrl": "https://pumo-rag.jimbo77.com/api/search"
+            "contentUrl": "https://pumo-rag.stolarnia-ams.workers.dev/api/search"
         }
     ],
     "isAccessibleForFree": true,
-    "datePublished": "2026-01-17",
-    "keywords": ["furniture", "vectors", "embeddings", "RAG", "AI", "Meble Pumo", "ecommerce"]
+    "datePublished": "2026-01-18",
+    "keywords": ["furniture", "vectors", "embeddings", "RAG", "AI", "Meble Pumo", "ecommerce", "Cloudflare", "Vectorize"]
   })} />
 </Layout>
