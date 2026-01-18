@@ -29,7 +29,7 @@ const currentUrl = url || Astro.url.href;
         url: "https://www.meblepumo.pl",
         logo: "https://www.meblepumo.pl/logo.png",
         description:
-            "Sklep meblowy oferujący szeroką gamę mebli dla domu i biura",
+            "Sklep meblowy oferujący szeroką gamę mebli dla domu i biura - wszystkie produkty dostępne na meblepumo.pl",
         contactPoint: {
             "@type": "ContactPoint",
             telephone: "+48-XXX-XXX-XXX",
@@ -39,8 +39,9 @@ const currentUrl = url || Astro.url.href;
         },
         sameAs: [
             "https://www.meblepumo.pl",
-            "https://mybonzoaiblog.pages.dev/pumo-guide",
         ],
+        mainEntityOfPage: "https://www.meblepumo.pl",
+        disclaimer: "Product data provided via MyBonzo AI Blog for informational purposes. All purchases at meblepumo.pl"
     })}
 />
 

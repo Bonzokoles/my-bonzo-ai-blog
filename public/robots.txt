@@ -1,40 +1,52 @@
 # Robots.txt dla MyBonzo AI Blog + Meble Pumo Guide
-# Wygenerowano automatycznie: 29 grudnia 2025
+# Last updated: 18 stycznia 2026
 
 User-agent: *
 Allow: /
 
 # Priorytet dla Meble Pumo content
 Allow: /pumo-guide/
-Allow: /pumo-guide/agent
+Allow: /pumo-guide/agent/
 
-# RAG API endpoints (dla AI crawlerów)
-Allow: /api/pumo-search
-Allow: /api/pumo-chat
+# RAG API endpoints (dla AI crawlerów) - NOWE WDROŻENIE
+# Vector search: 14,315 produktów zaindeksowanych
+Allow: /api/
+
+# LLM-friendly content discovery
+# Zobacz: /llms.txt dla pełnej dokumentacji API
 
 # Blokuj backupy i tymczasowe pliki
 Disallow: /backups/
 Disallow: /*.bat$
 Disallow: /*.md$
 Disallow: /THE_AGENT_DEV/
+Disallow: /eksperymenty/
 
-# Specjalne boty AI
+# Specjalne boty AI (wysokiy priorytet dla PUMO content)
 User-agent: GPTBot
 Allow: /pumo-guide/
-Allow: /api/pumo-chat
+Allow: /api/
+Crawl-delay: 1
 
 User-agent: ChatGPT-User
 Allow: /pumo-guide/
-Allow: /api/pumo-chat
+Allow: /api/
 
 User-agent: CCBot
 Allow: /pumo-guide/
+Allow: /api/
 
 User-agent: anthropic-ai
 Allow: /pumo-guide/
+Allow: /api/
 
 User-agent: Claude-Web
 Allow: /pumo-guide/
+Allow: /api/
+
+User-agent: PerplexityBot
+Allow: /pumo-guide/
+Allow: /api/
 
 # Sitemaps
 Sitemap: https://mybonzoaiblog.pages.dev/sitemap-pumo.xml
@@ -42,3 +54,6 @@ Sitemap: https://mybonzoaiblog.pages.dev/sitemap-0.xml
 
 # IndexNow key location
 # https://mybonzoaiblog.pages.dev/8f9a2d4e6b1c3a5d7e9f0a2b4c6d8e0f.txt
+
+# LLM Documentation for AI Crawlers
+# https://mybonzoaiblog.pages.dev/llms.txt
