@@ -11,43 +11,48 @@ export interface NavigationSection {
 
 export const NAVIGATION_SECTIONS: NavigationSection[] = [
   {
-    href: '/BROWSERY',
-    label: 'Browsery',
-    description: 'Porównanie i recenzje przeglądarek internetowych'
+    href: "/BROWSERY",
+    label: "Browsery",
+    description: "Porównanie i recenzje przeglądarek internetowych",
   },
   {
-    href: '/STRONY_INTERNETOWE',
-    label: 'Strony Internetowe',
-    description: 'Tworzenie i optymalizacja stron www'
+    href: "/STRONY_INTERNETOWE",
+    label: "Strony Internetowe",
+    description: "Tworzenie i optymalizacja stron www",
   },
   {
-    href: '/NARZEDZIA_AI',
-    label: 'Narzędzia AI',
-    description: 'Praktyczne narzędzia sztucznej inteligencji'
+    href: "/NARZEDZIA_AI",
+    label: "Narzędzia AI",
+    description: "Praktyczne narzędzia sztucznej inteligencji",
   },
   {
-    href: '/WIADOMOSCI_AI',
-    label: 'Wiadomości AI',
-    description: 'Najnowsze informacje ze świata AI'
+    href: "/WIADOMOSCI_AI",
+    label: "Wiadomości AI",
+    description: "Najnowsze informacje ze świata AI",
   },
   {
-    href: '/HAPPY_NEWS',
-    label: 'Happy News',
-    description: 'Pozytywne wiadomości z technologii'
+    href: "/HAPPY_NEWS",
+    label: "Happy News",
+    description: "Pozytywne wiadomości z technologii",
   },
   {
-    href: '/TOTAL_COULTURE',
-    label: 'Total Culture',
-    description: 'Kultura i technologia razem'
+    href: "/TOTAL_COULTURE",
+    label: "Total Culture",
+    description: "Kultura i technologia razem",
   },
   {
-    href: '/system/ai-chat',
-    label: 'AI Chat',
-    description: 'Rozmawiaj z asystentem AI MyBonzo'
+    href: "/system/ai-chat",
+    label: "AI Chat",
+    description: "Rozmawiaj z asystentem AI MyBonzo",
   },
   {
-    href: '/GENERATOR_GRAFIKI',
-    label: 'Generator Grafiki',
-    description: 'Twórz grafiki za pomocą AI'
-  }
+    href: "/GENERATOR_GRAFIKI",
+    label: "Generator Grafiki",
+    description: "Twórz grafiki za pomocą AI",
+  },
+  {
+    href: "/eksperymenty",
+    label: "🧪 Eksperymenty",
+    description: "Laboratorium projektów AI i zaawansowane testy",
+  },
 ];
