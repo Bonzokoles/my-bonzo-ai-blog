@@ -183,6 +183,128 @@ const blogPosts = await getHomepageBlogPosts();
     </div>
   </section>
 
+  <!-- AI Image Generator Section - Replicate + Cloudflare -->
+  <section class="w-full py-16 bg-gradient-to-b from-purple-500/5 to-blue-500/5">
+    <div class="container mx-auto px-4">
+      <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
+            🎨 AI Image Generator: FLUX & Stable Diffusion
+          </h2>
+          <p class="text-lg text-theme-primary/80 max-w-3xl mx-auto">
+            Generowanie obrazów z tekstu w czasie rzeczywistym. Najnowsze modele FLUX Schnell, 
+            FLUX Pro i SDXL - od $0.003 za obraz, wyniki w <60 sekund.
+          </p>
+        </div>
+
+        <!-- Main Feature Grid -->
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <!-- Image Preview -->
+          <div class="relative group">
+            <div class="absolute -inset-1 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+            <div class="relative bg-gray-900 border border-purple-500/30 rounded-lg overflow-hidden">
+              <img 
+                src="/artwork-main.jpeg" 
+                alt="AI Generated Art - FLUX Model Example"
+                class="w-full h-auto"
+              />
+              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 via-gray-900/90 to-transparent p-4">
+                <p class="text-sm text-purple-300">Przykład: AI-generated artwork z modelem FLUX</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Features & Tech Stack -->
+          <div class="space-y-6">
+            <div class="bg-gray-900 border border-purple-500/30 p-6 rounded-lg">
+              <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <span class="text-2xl">⚡</span>
+                Dostępne Modele
+              </h3>
+              <div class="space-y-3">
+                <div class="flex justify-between items-center p-3 bg-purple-500/10 rounded">
+                  <span class="font-semibold text-purple-300">FLUX Schnell</span>
+                  <span class="text-sm text-gray-400">$0.003/obraz</span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-blue-500/10 rounded">
+                  <span class="font-semibold text-blue-300">FLUX Pro</span>
+                  <span class="text-sm text-gray-400">$0.055/obraz</span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-indigo-500/10 rounded">
+                  <span class="font-semibold text-indigo-300">SDXL</span>
+                  <span class="text-sm text-gray-400">$0.004/obraz</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-gray-900 border border-blue-500/30 p-6 rounded-lg">
+              <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <span class="text-2xl">🔧</span>
+                Tech Stack
+              </h3>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="text-center p-3 bg-orange-500/10 border border-orange-500/20 rounded">
+                  <div class="text-xl mb-1">🔗</div>
+                  <div class="text-xs text-orange-300 font-semibold">Replicate API</div>
+                </div>
+                <div class="text-center p-3 bg-amber-500/10 border border-amber-500/20 rounded">
+                  <div class="text-xl mb-1">⚡</div>
+                  <div class="text-xs text-amber-300 font-semibold">Cloudflare Workers</div>
+                </div>
+                <div class="text-center p-3 bg-purple-500/10 border border-purple-500/20 rounded">
+                  <div class="text-xl mb-1">🎯</div>
+                  <div class="text-xs text-purple-300 font-semibold">Hono Framework</div>
+                </div>
+                <div class="text-center p-3 bg-blue-500/10 border border-blue-500/20 rounded">
+                  <div class="text-xl mb-1">🔄</div>
+                  <div class="text-xs text-blue-300 font-semibold">Async Polling</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-900 border border-purple-500/30 p-6 rounded-lg">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-purple-400">3</div>
+            <div class="text-sm text-gray-400">Modele AI</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-blue-400">&lt;60s</div>
+            <div class="text-sm text-gray-400">Generowanie</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-indigo-400">1024²</div>
+            <div class="text-sm text-gray-400">Rozdzielczość</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-purple-400">∞</div>
+            <div class="text-sm text-gray-400">Możliwości</div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-8 text-center">
+          <a 
+            href="/system/ai-image-generator" 
+            class="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-300 shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/50"
+          >
+            <span>🎨</span>
+            <span>Wypróbuj Generator</span>
+            <span>→</span>
+          </a>
+          <p class="mt-4 text-sm text-gray-400">
+            Pełna dokumentacja API: 
+            <a href="https://replicate.com/docs" target="_blank" class="text-purple-400 hover:text-purple-300 underline">
+              Replicate Docs
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Partner Links & AI News 2025 -->
   <section
     class="w-full py-16 bg-gradient-to-b from-transparent to-theme-primary/5"
