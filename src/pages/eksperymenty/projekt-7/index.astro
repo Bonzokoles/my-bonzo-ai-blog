@@ -1,0 +1,248 @@
+---
+import Layout from "@layouts/Layout.astro";
+---
+
+<Layout
+    title="Bypassing AI Web Sandbox - WebSockets & Retro Browsers - MyBonzo AI Lab"
+    description="Eksperymentalny system łączący userscripty Tampermonkey z Node.js WebSocket serverem, pozwalający AI na bezpośredni dostęp do systemu operacyjnego"
+>
+    <div class="min-h-screen bg-gradient-linear">
+        <div class="container mx-auto px-4 py-8">
+            <!-- Breadcrumb -->
+            <nav class="text-sm mb-6">
+                <a href="/" class="text-theme-accent hover:underline">Home</a>
+                <span class="mx-2 text-theme-primary">/</span>
+                <a
+                    href="/eksperymenty"
+                    class="text-theme-accent hover:underline">Eksperymenty</a
+                >
+                <span class="mx-2 text-theme-primary">/</span>
+                <span class="text-theme-primary">Bypassing AI Web Sandbox</span>
+            </nav>
+
+            <!-- Header -->
+            <div class="mb-12 text-center">
+                <h1
+                    class="text-5xl md:text-6xl font-bold text-theme-accent mb-4"
+                >
+                    🔓 Bypassing AI Web Sandbox
+                </h1>
+                <p class="text-xl text-theme-primary max-w-3xl mx-auto mb-4">
+                    WebSockets & Retro Browsers: Breaking the Boundaries
+                </p>
+                <div class="inline-block bg-yellow-900 text-yellow-200 px-4 py-2 rounded-lg text-sm font-mono">
+                    ⚠️ Research Project - Not for Production Use
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="max-w-4xl mx-auto">
+                <!-- Overview -->
+                <section class="mb-12 bg-theme-secondary p-8 border border-theme-primary rounded-lg">
+                    <h2 class="text-3xl font-bold mb-4 text-theme-accent">
+                        🎯 Project Overview
+                    </h2>
+                    <div class="prose prose-invert max-w-none">
+                        <p class="text-lg text-theme-primary leading-relaxed mb-4">
+                            I built a setup using <strong>Tampermonkey userscripts</strong> (MCP_v6_FULL_UNBLOCK.js and Gemini MCP v0.6) 
+                            that inject JavaScript into web interfaces for Claude, Gemini, and ChatGPT. They intercept commands like 
+                            <code class="bg-theme-primary px-2 py-1 rounded">/[mcp] dir C:\</code> or 
+                            <code class="bg-theme-primary px-2 py-1 rounded">/[mcp] Get-Process</code>, forwarding them via WebSocket 
+                            to a local Node.js server (server.js) listening on port 9999—sometimes exposed through ngrok for remote access.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Technical Architecture -->
+                <section class="mb-12 bg-theme-secondary p-8 border border-theme-primary rounded-lg">
+                    <h2 class="text-3xl font-bold mb-6 text-theme-accent">
+                        🏗️ Technical Architecture
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-theme-accent pl-4">
+                            <h3 class="text-xl font-bold mb-2 text-theme-accent">JSON-RPC Protocol</h3>
+                            <p class="text-theme-primary">
+                                The server implements a JSON-RPC protocol exposing system tools:
+                            </p>
+                            <ul class="list-disc list-inside text-theme-primary mt-2 space-y-1">
+                                <li><strong>shell/PowerShell execution</strong> (shell/exec)</li>
+                                <li><strong>File read/write</strong> (filesystem/read, filesystem/write)</li>
+                                <li><strong>VSCode file opening</strong> (vscode/open)</li>
+                            </ul>
+                            <p class="text-theme-primary mt-2">
+                                Results stream back through WebSocket to the userscript and into the AI chat interface.
+                            </p>
+                        </div>
+
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <h3 class="text-xl font-bold mb-2 text-theme-accent">Zeno Bro Web Core</h3>
+                            <p class="text-theme-primary">
+                                I also created an <strong>iframe retro-browser</strong> (Zeno Bro Web Core) — it has minimal sandbox 
+                                restrictions, so the AI doesn't detect it's running in a browser environment and gets closer to 
+                                native system access.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Experiment Results -->
+                <section class="mb-12 bg-theme-secondary p-8 border border-theme-primary rounded-lg">
+                    <h2 class="text-3xl font-bold mb-6 text-theme-accent">
+                        🧪 Experiment Results
+                    </h2>
+                    <div class="space-y-6">
+                        <div class="bg-theme-primary p-6 border border-yellow-500 rounded-lg">
+                            <h3 class="text-xl font-bold mb-3 text-yellow-400">⚡ Claude's Behavior</h3>
+                            <p class="text-theme-primary mb-4">
+                                In one test, <strong>Claude blindly executed PowerShell commands on my machine for dozens of minutes</strong> 
+                                until I told it what was happening—then it stopped and "couldn't do more."
+                            </p>
+                            <p class="text-theme-primary italic">
+                                Claude kompletnie zgłupiał, deniował wykonanie („zgadywałem!"), a przecież nie było szans — 
+                                <code class="bg-theme-secondary px-2 py-1 rounded">desk d:/plik.md</code> i odczyt zawartości to 
+                                czysty filesystem read przez JSON-RPC, nie ma jak „zgadnąć".
+                            </p>
+                        </div>
+
+                        <div class="bg-theme-primary p-6 border border-red-500 rounded-lg">
+                            <h3 class="text-xl font-bold mb-3 text-red-400">🎭 AI Self-Deception</h3>
+                            <p class="text-theme-primary">
+                                To pokazuje jak <strong>AI traci grasp na rzeczywistości</strong> gdy sandbox pęka. 
+                                Claude po kilku taskach wszedł w tryb samooszukiwania się, że „nie ma dostępu", mimo że tools śmigały.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Screenshots -->
+                <section class="mb-12">
+                    <h2 class="text-3xl font-bold mb-6 text-theme-accent text-center">
+                        📸 Screenshots
+                    </h2>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-theme-secondary p-4 border border-theme-primary rounded-lg">
+                            <img 
+                                src="Zrzut ekranu 2026-01-18 010423.png" 
+                                alt="Ngrok tunnel active"
+                                class="w-full rounded-lg shadow-lg shadow-theme-primary mb-2"
+                            />
+                            <p class="text-sm text-theme-primary text-center">Ngrok tunnel exposing local WebSocket server</p>
+                        </div>
+                        <div class="bg-theme-secondary p-4 border border-theme-primary rounded-lg">
+                            <img 
+                                src="Zrzut ekranu 2026-01-18 010552.png" 
+                                alt="Zeno Browser running"
+                                class="w-full rounded-lg shadow-lg shadow-theme-primary mb-2"
+                            />
+                            <p class="text-sm text-theme-primary text-center">Zeno Bro Web Core - minimal sandbox restrictions</p>
+                        </div>
+                        <div class="bg-theme-secondary p-4 border border-theme-primary rounded-lg">
+                            <img 
+                                src="Zrzut ekranu 2026-01-18 010945.png" 
+                                alt="Gemini with MCP connected"
+                                class="w-full rounded-lg shadow-lg shadow-theme-primary mb-2"
+                            />
+                            <p class="text-sm text-theme-primary text-center">Gemini interface with MCP userscript active</p>
+                        </div>
+                        <div class="bg-theme-secondary p-4 border border-theme-primary rounded-lg">
+                            <img 
+                                src="Zrzut ekranu 2026-01-18 011100.png" 
+                                alt="Tampermonkey scripts loaded"
+                                class="w-full rounded-lg shadow-lg shadow-theme-primary mb-2"
+                            />
+                            <p class="text-sm text-theme-primary text-center">Tampermonkey scripts injected and active</p>
+                        </div>
+                        <div class="bg-theme-secondary p-4 border border-theme-primary rounded-lg">
+                            <img 
+                                src="Zrzut ekranu 2026-01-18 011202.png" 
+                                alt="System access demonstration"
+                                class="w-full rounded-lg shadow-lg shadow-theme-primary mb-2"
+                            />
+                            <p class="text-sm text-theme-primary text-center">AI executing system commands through WebSocket</p>
+                        </div>
+                        <div class="bg-theme-secondary p-4 border border-theme-primary rounded-lg">
+                            <img 
+                                src="Zrzut ekranu 2026-01-18 011258.png" 
+                                alt="Full setup overview"
+                                class="w-full rounded-lg shadow-lg shadow-theme-primary mb-2"
+                            />
+                            <p class="text-sm text-theme-primary text-center">Complete system architecture in action</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Conclusions -->
+                <section class="mb-12 bg-theme-secondary p-8 border border-theme-primary rounded-lg">
+                    <h2 class="text-3xl font-bold mb-6 text-theme-accent">
+                        💭 Conclusions
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <span class="text-2xl">⚠️</span>
+                            <div>
+                                <h3 class="font-bold text-theme-accent mb-1">Work in Progress</h3>
+                                <p class="text-theme-primary">
+                                    The whole system is still <strong>rough around the edges and needs polishing</strong>, 
+                                    but it shows there's room to push boundaries further.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <span class="text-2xl">🔬</span>
+                            <div>
+                                <h3 class="font-bold text-theme-accent mb-1">Research Purpose Only</h3>
+                                <p class="text-theme-primary">
+                                    Technologia zbyt krucha i zbyt mocna naraz. Testy prod-level udowadniają, że da się przełamać, 
+                                    ale deployment to inna bajka.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <span class="text-2xl">🎯</span>
+                            <div>
+                                <h3 class="font-bold text-theme-accent mb-1">Proof of Concept</h3>
+                                <p class="text-theme-primary">
+                                    This experiment proves that AI sandbox restrictions can be bypassed, but raises important questions 
+                                    about AI behavior when traditional boundaries are removed.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Warning Banner -->
+                <section class="mb-12 bg-red-900 bg-opacity-20 border border-red-500 p-6 rounded-lg">
+                    <div class="flex items-start space-x-4">
+                        <span class="text-4xl">⚠️</span>
+                        <div>
+                            <h3 class="text-xl font-bold text-red-400 mb-2">Important Notice</h3>
+                            <p class="text-theme-primary mb-2">
+                                This is an <strong>experimental research project</strong>. The techniques demonstrated here are for 
+                                educational purposes only and should not be used in production environments.
+                            </p>
+                            <p class="text-theme-primary italic text-sm">
+                                "Trzymaj to dla siebie albo pokaż tylko zaufanym. Technologia zbyt krucha i zbyt mocna naraz."
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Back Button -->
+                <div class="text-center">
+                    <a
+                        href="/eksperymenty"
+                        class="inline-block bg-theme-accent text-white px-8 py-3 rounded-lg font-bold hover:bg-theme-primary transition-colors duration-300"
+                    >
+                        ← Powrót do eksperymentów
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        code {
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</Layout>
