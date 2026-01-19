@@ -1,0 +1,74 @@
+{
+  "Czat i Asystenci": {
+    "slug": "czat-i-asystenci",
+    "parent": null,
+    "related": ["Tekst i Pisanie", "Produktywność", "Research", "Wyszukiwarki"],
+    "keywords": ["chatgpt", "claude", "gemini", "copilot", "chatbot", "asystent ai"]
+  },
+  "Generowanie Obrazów": {
+    "slug": "generowanie-obrazow",
+    "parent": null,
+    "related": ["Edycja Zdjęć", "Rysowanie", "Wideo", "HuggingFace Spaces"],
+    "keywords": ["midjourney", "dall-e", "stable diffusion", "generator obrazów", "grafika ai"]
+  },
+  "Edycja Zdjęć": {
+    "slug": "edycja-zdjec",
+    "parent": "Generowanie Obrazów",
+    "related": ["Generowanie Obrazów", "Rysowanie"],
+    "keywords": ["usuwanie tła", "retusz", "edycja foto", "upscaling"]
+  },
+  "Wideo": {
+    "slug": "wideo",
+    "parent": null,
+    "related": ["Generowanie Obrazów", "Głos i Audio"],
+    "keywords": ["wideo ai", "animacja", "generator wideo", "montaż ai"]
+  },
+  "Tekst i Pisanie": {
+    "slug": "tekst-i-pisanie",
+    "parent": "Czat i Asystenci",
+    "related": ["Czat i Asystenci", "Produktywność", "Prezentacje"],
+    "keywords": ["copywriting", "pisanie", "blogowanie", "korekta", "seo"]
+  },
+  "Głos i Audio": {
+    "slug": "glos-i-audio",
+    "parent": null,
+    "related": ["Wideo", "Tekst i Pisanie"],
+    "keywords": ["tts", "text to speech", "klonowanie głosu", "transkrypcja", "lektor ai"]
+  },
+  "Prezentacje": {
+    "slug": "prezentacje",
+    "parent": "Produktywność",
+    "related": ["Tekst i Pisanie", "Produktywność"],
+    "keywords": ["slajdy", "prezentacja", "powerpoint ai", "deck"]
+  },
+  "Research": {
+    "slug": "research",
+    "parent": null,
+    "related": ["Czat i Asystenci", "Wyszukiwarki", "HuggingFace Spaces"],
+    "keywords": ["badania", "nauka", "analiza danych", "artykuły naukowe"]
+  },
+  "Produktywność": {
+    "slug": "produktywnosc",
+    "parent": null,
+    "related": ["Czat i Asystenci", "Prezentacje", "Tekst i Pisanie"],
+    "keywords": ["organizacja", "notatki", "kalendarz ai", "efektywność"]
+  },
+  "Rysowanie": {
+    "slug": "rysowanie",
+    "parent": "Generowanie Obrazów",
+    "related": ["Generowanie Obrazów", "Edycja Zdjęć"],
+    "keywords": ["szkicowanie", "rysowanie ai", "sketch to image"]
+  },
+  "HuggingFace Spaces": {
+    "slug": "huggingface-spaces",
+    "parent": "Research",
+    "related": ["Generowanie Obrazów", "Research"],
+    "keywords": ["modele open source", "demo ai", "huggingface"]
+  },
+  "Wyszukiwarki": {
+    "slug": "wyszukiwarki",
+    "parent": null,
+    "related": ["Czat i Asystenci", "Research"],
+    "keywords": ["szukanie", "przeglądarka ai", "seo"]
+  }
+}

@@ -12,6 +12,7 @@ import Author from "@components/Astro/Author.astro";
 import Breadcrumbs from "@components/Breadcrumbs.astro";
 import Tags from "@components/Astro/Tags.astro";
 import Layout from "@layouts/Layout.astro";
+import RelatedTopics from "@components/Astro/RelatedTopics.astro";
 
 interface Props {
   collectionName: (typeof COLLECTION_NAMES_LIST)[number];
@@ -81,6 +82,8 @@ const breadcrumbItems = [
       }
 
       <Content />
+
+      <RelatedTopics tags={entry.data.tags} description={entry.data.description} />
     </article>
   </section>
 </Layout>

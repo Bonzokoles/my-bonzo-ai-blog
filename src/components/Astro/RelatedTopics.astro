@@ -1,0 +1,72 @@
+---
+import { getCategoryData, getRelatedCategories, suggestRelatedCategoriesByContent } from "src/lib/internal-links";
+
+interface Props {
+  tags?: string[];
+  description?: string;
+}
+
+const { tags = [], description = "" } = Astro.props;
+
+let relatedCategories: string[] = [];
+
+// 1. Try to identify categories from tags
+// We map tags to potential categories. 
+// Ideally tags match category names, but if not, we rely on content suggestion.
+const foundCategories = tags.filter(tag => getCategoryData(tag) !== null);
+
+// 2. Get graph-based related categories from explicit category tags
+foundCategories.forEach(cat => {
+    relatedCategories.push(...getRelatedCategories(cat));
+});
+
+// 3. Fallback/Augment: Use content matching on description + tags
+// This finds categories based on keywords in the text
+const contentText = `${description} ${tags.join(" ")}`;
+// We pass the first found category as "current" to avoid self-referencing if possible, 
+// though for generic related links it's less critical.
+const suggested = suggestRelatedCategoriesByContent(contentText, foundCategories[0] || "");
+relatedCategories.push(...suggested);
+
+// 4. Clean up: Deduplicate and remove categories that are already in tags (optional, but good for "discover *else*")
+// filtering out tags themselves to show *related*, not *current*.
+const uniqueRelated = [...new Set(relatedCategories)].filter(cat => !tags.includes(cat));
+
+// Limit to reasonable number
+const displayCategories = uniqueRelated.slice(0, 6);
+---
+
+{displayCategories.length > 0 && (
+  <div class="related-topics mt-12 mb-8 p-6 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600 dark:text-indigo-400">
+          <path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/>
+        </svg>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight">
+          Powiązane Tematy
+        </h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+            Odkryj więcej z Sementic Brain
+        </p>
+      </div>
+    </div>
+    
+    <div class="flex flex-wrap gap-2">
+      {displayCategories.map(category => {
+          const data = getCategoryData(category);
+          return (
+            <a 
+            href={`/blog/${data?.slug || '#'}`} 
+            class="group flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-slate-800 text-sm font-medium text-slate-600 dark:text-slate-300 rounded-full border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-sm transition-all"
+            >
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 group-hover:bg-indigo-500"></span>
+            {category}
+            </a>
+        );
+      })}
+    </div>
+  </div>
+)}
