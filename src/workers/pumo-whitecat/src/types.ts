@@ -18,6 +18,7 @@ export interface Env {
   // APIs
   ANTHROPIC_API_KEY?: string;
   OPENAI_API_KEY?: string;
+  DEEPSEEK_API_KEY?: string; // DeepSeek V3 API key
   DKIM_PRIVATE_KEY?: string;
   GA4_MEASUREMENT_ID?: string;
   GA4_API_SECRET?: string;
@@ -88,11 +89,11 @@ export interface SearchQuery {
     in_stock?: boolean;
   };
   limit?: number;
-  mode?: 'semantic' | 'hybrid' | 'keyword';
+  mode?: "semantic" | "hybrid" | "keyword";
 }
 
 export interface SearchResult {
   product: PumoProduct;
   score: number;
-  match_type: 'semantic' | 'keyword' | 'hybrid';
+  match_type: "semantic" | "keyword" | "hybrid";
 }

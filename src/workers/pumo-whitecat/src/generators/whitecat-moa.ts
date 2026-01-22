@@ -1,7 +1,7 @@
 import { Env } from '../types';
 
 type ModelProvider = 'deepseek' | 'claude' | 'openai';
-type TaskType = 'guide_generation' | 'product_description' | 'email_content' | 'analysis';
+type TaskType = 'guide_generation' | 'product_description' | 'email_content' | 'analysis' | 'planning' | 'organization';
 
 interface MOAResponse {
   content: string;
@@ -47,19 +47,19 @@ export class WhitecatMOA {
   private selectModelStrategy(taskType: TaskType): ModelProvider[] {
     switch (taskType) {
       case 'guide_generation':
-        return ['deepseek', 'claude']; // DeepSeek for reasoning, Claude for writing quality
+        return ['deepseek', 'claude']; // R1 reasoning + Claude polish = quality content
       
       case 'product_description':
-        return ['claude', 'openai']; // Claude and GPT for creative writing
+        return ['deepseek', 'claude']; // Both for best descriptions
       
       case 'email_content':
-        return ['claude']; // Claude best for professional communication
+        return ['deepseek', 'claude']; // R1 strategy + Claude professionalism
       
       case 'analysis':
-        return ['deepseek', 'openai']; // DeepSeek for logic, GPT for insights
+        return ['deepseek', 'claude']; // R1 deep analysis + Claude synthesis
       
       default:
-        return ['claude'];
+        return ['deepseek', 'claude']; // Full power for everything else
     }
   }
 
@@ -106,21 +106,21 @@ export class WhitecatMOA {
   }
 
   private async callDeepSeek(prompt: string): Promise<{ content: string; model: string; tokens: number }> {
-    // DeepSeek V3 via OpenRouter or direct API
+    // DeepSeek R1 (reasoner) - best for reasoning, planning, organization
     const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.env.ANTHROPIC_API_KEY}` // Reuse key or add separate
+        'Authorization': `Bearer ${this.env.DEEPSEEK_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'deepseek-chat',
+        model: 'deepseek-reasoner', // R1 - chain-of-thought reasoning, $0.55/$2.19 per M tokens
         messages: [
-          { role: 'system', content: 'You are an expert assistant providing high-quality, detailed responses in Polish.' },
+          { role: 'system', content: 'You are an expert assistant providing high-quality, detailed responses in Polish. Think step-by-step and provide comprehensive analysis.' },
           { role: 'user', content: prompt }
         ],
         temperature: 0.7,
-        max_tokens: 2000
+        max_tokens: 8000 // Więcej tokenów dla pełnej analizy
       })
     });
 
@@ -130,16 +130,18 @@ export class WhitecatMOA {
 
     const data = await response.json() as any;
     
+    // R1 returns reasoning_content + content
+    const fullContent = data.choices[0].message.reasoning_content 
+      ? `${data.choices[0].message.reasoning_content}\n\n${data.choices[0].message.content}`
+      : data.choices[0].message.content;
+    
     return {
-      content: data.choices[0].message.content,
-      model: 'deepseek-chat',
+      content: fullContent,
+      model: 'deepseek-reasoner',
       tokens: data.usage?.total_tokens || 0
-    };
-  }
-
-  private async callClaude(prompt: string): Promise<{ content: string; model: string; tokens: number }> {
-    if (!this.env.ANTHROPIC_API_KEY) {
-      throw new Error('ANTHROPIC_API_KEY not configured');
+    };// Fallback: jeśli nie ma Claude, użyj tylko DeepSeek R1
+      console.warn('⚠️ ANTHROPIC_API_KEY not set, using DeepSeek R1 only');
+      return this.callDeepSeek(prompt);
     }
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -147,6 +149,11 @@ export class WhitecatMOA {
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': this.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: 4000, // Więcej dla pełnych response.env.ANTHROPIC_API_KEY,
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
