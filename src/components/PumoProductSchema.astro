@@ -1,0 +1,86 @@
+---
+/**
+ * PRODUCT SCHEMA COMPONENT
+ * Generates schema.org Product markup for individual furniture items from PUMO RAG
+ * Usage: <PumoProductSchema product={productData} />
+ */
+
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  currency: string;
+  description?: string;
+  image?: string;
+  url: string;
+  manufacturer?: string;
+  availability?: "available" | "out_of_stock" | "preorder";
+  sku?: string;
+}
+
+interface Props {
+  product: Product;
+  aggregateRating?: {
+    ratingValue: number;
+    reviewCount: number;
+  };
+}
+
+const { product, aggregateRating } = Astro.props;
+
+// Mapowanie dostępności na schema.org format
+const availabilityMap = {
+  available: "https://schema.org/InStock",
+  out_of_stock: "https://schema.org/OutOfStock",
+  preorder: "https://schema.org/PreOrder",
+};
+
+const productSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "@id": `${product.url}#product`,
+  name: product.name,
+  description: product.description || `${product.name} - dostępny w Meble Pumo`,
+  image: product.image || "https://www.meblepumo.pl/placeholder.jpg",
+  sku: product.sku || product.id,
+  brand: {
+    "@type": "Brand",
+    name: product.manufacturer || "Meble Pumo",
+  },
+  category: product.category,
+  offers: {
+    "@type": "Offer",
+    url: product.url,
+    priceCurrency: product.currency || "PLN",
+    price: product.price,
+    availability: availabilityMap[product.availability || "available"],
+    seller: {
+      "@type": "Organization",
+      name: "Meble Pumo",
+      url: "https://www.meblepumo.pl",
+    },
+    priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0], // 30 dni
+  },
+  // Agregowana ocena (opcjonalna)
+  ...(aggregateRating && {
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: aggregateRating.ratingValue,
+      reviewCount: aggregateRating.reviewCount,
+    },
+  }),
+  // Dodatkowe informacje
+  isRelatedTo: {
+    "@type": "ProductGroup",
+    name: product.category,
+    url: "https://www.meblepumo.pl",
+  },
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": product.url,
+  },
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(productSchema)} />

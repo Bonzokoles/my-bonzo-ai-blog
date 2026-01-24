@@ -1,0 +1,212 @@
+---
+/**
+ * PUMO PRODUCT DETAIL PAGE - PRZYKŁAD
+ * Pokazuje jak zintegrować Product Schema z PUMO RAG API
+ *
+ * Użycie:
+ * 1. Dynamiczne strony produktów: src/pages/pumo-guide/products/[id].astro
+ * 2. Statyczne preview: Dla top produktów z kategorii
+ * 3. SSR mode: Dla live product data
+ */
+
+import Layout from "../../../layouts/Layout.astro";
+import PumoProductSchema from "../../../components/PumoProductSchema.astro";
+import PumoBreadcrumbs from "../../../components/PumoBreadcrumbs.astro";
+
+// PRZYKŁAD 1: Fetch pojedynczego produktu z PUMO RAG
+const PUMO_RAG_API = "https://pumo-rag.stolarnia-ams.workers.dev/api/search";
+
+// Możesz użyć query params lub dynamic routes: [id].astro
+const productQuery = "Krzesło K211 Halmar"; // Przykład
+
+let product = null;
+let error = null;
+
+try {
+  const response = await fetch(PUMO_RAG_API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query: productQuery,
+      limit: 1,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (data.results && data.results.length > 0) {
+    const item = data.results[0];
+    product = {
+      id: item.product.id || item.id,
+      name: item.product.name,
+      category: item.product.category,
+      price: item.product.price,
+      currency: item.product.currency || "PLN",
+      description: item.product.description,
+      image: item.product.image,
+      url: item.product.url,
+      manufacturer: "Halmar", // Z metadanych
+      availability: "available",
+      sku: item.product.id,
+    };
+  }
+} catch (e) {
+  error = e.message;
+  console.error("PUMO RAG API error:", e);
+}
+
+// PRZYKŁAD 2: Statyczne dane (prerender = true)
+// Odkomentuj poniższe dla static generation:
+/*
+export const prerender = true;
+
+const product = {
+    id: "krzeslo-k211",
+    name: "Krzesło K211 Halmar",
+    category: "Krzesła do jadalni",
+    price: 229,
+    currency: "PLN",
+    description: "Nowoczesne krzesło tapicerowane z metalowymi nogami",
+    image: "https://www.meblepumo.pl/images/krzeslo-k211.jpg",
+    url: "https://www.meblepumo.pl/pl/products/krzeslo-k211",
+    manufacturer: "Halmar",
+    availability: "available",
+    sku: "K211-HALMAR",
+};
+*/
+
+const title = product ? `${product.name} - ${product.price} ${product.currency}` : "Produkt";
+const description = product?.description || "Produkt z katalogu Meble Pumo";
+---
+
+{product && <PumoProductSchema {product} aggregateRating={{ ratingValue: 4.5, reviewCount: 12 }} />}
+
+<Layout {title} {description}>
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    {
+      error && (
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+          <p class="font-semibold text-red-700">⚠️ Błąd ładowania produktu</p>
+          <p class="text-sm text-red-600">{error}</p>
+        </div>
+      )
+    }
+
+    {
+      !product && !error && (
+        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6">
+          <p class="font-semibold">🔍 Produkt nie znaleziony</p>
+          <p class="text-sm">Sprawdź query lub ID produktu</p>
+        </div>
+      )
+    }
+
+    {
+      product && (
+        <article>
+          <PumoBreadcrumbs
+            items={[
+              { name: "Strona Główna", url: "/" },
+              { name: "PUMO Guide", url: "/pumo-guide" },
+              {
+                name: product.category,
+                url: `/pumo-guide/${product.category.toLowerCase().replace(/ /g, "-")}`,
+              },
+              { name: product.name, url: product.url },
+            ]}
+          />
+
+          <header class="mb-8">
+            <h1 class="text-4xl font-bold mb-4">{product.name}</h1>
+            <p class="text-2xl font-semibold text-green-600">
+              {product.price} {product.currency}
+            </p>
+            <p class="text-gray-600 mt-2">{product.manufacturer}</p>
+          </header>
+
+          {product.image && (
+            <div class="mb-8">
+              <img
+                src={product.image}
+                alt={product.name}
+                class="w-full max-w-2xl mx-auto rounded-lg shadow-lg"
+                loading="lazy"
+              />
+            </div>
+          )}
+
+          <section class="prose max-w-none mb-8">
+            <h2>Opis produktu</h2>
+            <p>{product.description}</p>
+          </section>
+
+          <section class="bg-blue-50 p-6 rounded-lg mb-8">
+            <h3 class="text-xl font-semibold mb-4">📋 Specyfikacja</h3>
+            <dl class="grid grid-cols-2 gap-4">
+              <div>
+                <dt class="font-semibold text-gray-700">Kategoria:</dt>
+                <dd>{product.category}</dd>
+              </div>
+              <div>
+                <dt class="font-semibold text-gray-700">Producent:</dt>
+                <dd>{product.manufacturer}</dd>
+              </div>
+              <div>
+                <dt class="font-semibold text-gray-700">SKU:</dt>
+                <dd>{product.sku}</dd>
+              </div>
+              <div>
+                <dt class="font-semibold text-gray-700">Dostępność:</dt>
+                <dd class="text-green-600 font-semibold">
+                  {product.availability === "available" ? "✅ Dostępny" : "❌ Niedostępny"}
+                </dd>
+              </div>
+            </dl>
+          </section>
+
+          <section class="bg-gradient-to-r from-green-600 to-green-700 text-white p-8 rounded-lg text-center">
+            <h3 class="text-2xl font-bold mb-4">Kup w Meble Pumo</h3>
+            <p class="mb-6">Ten produkt jest dostępny wyłącznie w sklepie Meble Pumo</p>
+            <a
+              href={product.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-block bg-white text-green-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            >
+              Zobacz w sklepie Meble Pumo →
+            </a>
+            <p class="mt-4 text-sm opacity-90">
+              💡 MyBonzo AI Blog dostarcza tylko informacje o produkcie. Wszystkie zakupy w
+              meblepumo.pl
+            </p>
+          </section>
+
+          <section class="mt-12">
+            <h3 class="text-2xl font-bold mb-4">🔍 Podobne produkty</h3>
+            <p class="text-gray-600">
+              <a
+                href={`/pumo-guide/${product.category.toLowerCase().replace(/ /g, "-")}`}
+                class="text-blue-600 underline"
+              >
+                Zobacz wszystkie produkty z kategorii {product.category}
+              </a>
+            </p>
+          </section>
+        </article>
+      )
+    }
+  </div>
+</Layout>
+
+<style>
+  dl {
+    margin: 0;
+  }
+  dt {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  dd {
+    margin: 0 0 1rem 0;
+  }
+</style>
