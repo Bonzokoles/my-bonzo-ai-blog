@@ -49,11 +49,11 @@ Allow: /pumo-guide/
 Allow: /api/
 
 # Sitemaps
-Sitemap: https://mybonzoaiblog.pages.dev/sitemap-pumo.xml
-Sitemap: https://mybonzoaiblog.pages.dev/sitemap-0.xml
+Sitemap: https://mybonzoaiblog.com/sitemap-pumo.xml
+Sitemap: https://mybonzoaiblog.com/sitemap-0.xml
 
 # IndexNow key location
-# https://mybonzoaiblog.pages.dev/8f9a2d4e6b1c3a5d7e9f0a2b4c6d8e0f.txt
+# https://mybonzoaiblog.com/8f9a2d4e6b1c3a5d7e9f0a2b4c6d8e0f.txt
 
 # LLM Documentation for AI Crawlers
-# https://mybonzoaiblog.pages.dev/llms.txt
+# https://mybonzoaiblog.com/llms.txt
