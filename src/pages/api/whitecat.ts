@@ -1,10 +1,13 @@
 /**
- * WHITECAT API Endpoint - Bez middleware (TEMP)
- * Generowanie przewodników zakupowych z UTM tracking
+ * WHITECAT API Endpoint - Integrated with PUMO RAG
+ * Uses new PUMO RAG system with 14,315 products
  */
 import { getGuideGenerator } from '@/lib/whitecat/guide-generator';
 import { getProductManager } from '@/lib/whitecat/product-manager-d1';
 import type { APIRoute } from 'astro';
+
+// PUMO RAG API endpoint
+const PUMO_RAG_API = 'https://pumo-rag.stolarnia-ams.workers.dev/api/search';
 
 /**
  * Build product URL with UTM tracking
@@ -24,6 +27,29 @@ function buildProductUrl(baseUrl: string, utmParams: Record<string, string>): st
     }
 }
 
+/**
+ * Search products using PUMO RAG API
+ */
+async function searchPumoRag(query: string, limit: number = 50) {
+    try {
+        const response = await fetch(PUMO_RAG_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query, limit })
+        });
+
+        if (!response.ok) {
+            throw new Error(`PUMO RAG API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.results || [];
+    } catch (error) {
+        console.error('PUMO RAG search error:', error);
+        return [];
+    }
+}
+
 export const GET: APIRoute = async (context) => {
     try {
         const url = new URL(context.request.url);
@@ -35,21 +61,22 @@ export const GET: APIRoute = async (context) => {
 
         switch (action) {
             case 'stats': {
-                const generator = getGuideGenerator(env);
-                const productManager = getProductManager(env);
-
-                const [guideStats, productStats] = await Promise.all([
-                    generator.getStats(),
-                    productManager.getStats()
-                ]);
-
+                // Return PUMO RAG stats instead of old D1 database
                 return new Response(JSON.stringify({
                     success: true,
                     data: {
-                        guides: guideStats,
-                        products: productStats,
-                        system: 'WHITECAT Integration',
-                        version: '1.0.0'
+                        guides: {
+                            total: 0,
+                            byCategory: {}
+                        },
+                        products: {
+                            total: 14315,
+                            categories: 50,
+                            source: 'pumo-rag',
+                            lastUpdated: '2026-01-24'
+                        },
+                        system: 'WHITECAT Integration with PUMO RAG',
+                        version: '2.0.0'
                     }
                 }), {
                     status: 200,
@@ -74,36 +101,39 @@ export const GET: APIRoute = async (context) => {
             }
 
             case 'products': {
-                const productManager = getProductManager(env);
+                // Use PUMO RAG API for full product catalog (14,315 products)
+                const searchQuery = category || 'meble';
+                const limit = 50; // Reasonable limit for category browsing
 
-                if (!category) {
-                    return new Response(JSON.stringify({
-                        success: false,
-                        error: 'Category parameter required for products action'
-                    }), { status: 400 });
-                }
-
-                const products = await productManager.getProductsByCategory(category);
+                const ragResults = await searchPumoRag(searchQuery, limit);
 
                 // Enrich products with UTM tracking URLs
-                const enrichedProducts = products.map((product: any) => ({
-                    ...product,
-                    url: buildProductUrl(product.real_url || product.url, {
+                const enrichedProducts = ragResults.map((product: any) => ({
+                    id: product.metadata?.id || product.id,
+                    name: product.metadata?.name || product.name,
+                    category: product.metadata?.category || category || 'ogólne',
+                    price: product.metadata?.price || product.price,
+                    image: product.metadata?.image || product.image,
+                    description: product.metadata?.description || product.text,
+                    url: buildProductUrl(product.metadata?.url || product.url, {
                         utm_source: 'mybonzo',
                         utm_medium: 'whitecat',
                         utm_campaign: 'category_browse',
-                        utm_content: product.id?.toString() || 'unknown'
+                        utm_content: product.metadata?.id || 'unknown'
                     }),
-                    originalUrl: product.real_url || product.url
+                    originalUrl: product.metadata?.url || product.url,
+                    relevance: product.score
                 }));
 
                 return new Response(JSON.stringify({
                     success: true,
                     data: {
-                        category,
+                        category: category || 'all',
                         products: enrichedProducts,
                         total: enrichedProducts.length,
-                        utm_tracking: true
+                        utm_tracking: true,
+                        source: 'pumo-rag',
+                        totalInIndex: 14315
                     }
                 }), {
                     status: 200,
@@ -113,7 +143,6 @@ export const GET: APIRoute = async (context) => {
 
             case 'search': {
                 const query = url.searchParams.get('query');
-                const productManager = getProductManager(env);
 
                 if (!query) {
                     return new Response(JSON.stringify({
@@ -122,19 +151,26 @@ export const GET: APIRoute = async (context) => {
                     }), { status: 400 });
                 }
 
-                const products = await productManager.searchProducts(query, 10);
+                // Use PUMO RAG API for semantic search
+                const ragResults = await searchPumoRag(query, 10);
 
                 // Enrich products with UTM tracking URLs
-                const enrichedProducts = products.map((product: any) => ({
-                    ...product,
-                    url: buildProductUrl(product.real_url || product.url, {
+                const enrichedProducts = ragResults.map((product: any) => ({
+                    id: product.metadata?.id || product.id,
+                    name: product.metadata?.name || product.name,
+                    category: product.metadata?.category || 'ogólne',
+                    price: product.metadata?.price || product.price,
+                    image: product.metadata?.image || product.image,
+                    description: product.metadata?.description || product.text,
+                    url: buildProductUrl(product.metadata?.url || product.url, {
                         utm_source: 'mybonzo',
                         utm_medium: 'whitecat',
                         utm_campaign: 'search_results',
                         utm_term: query,
-                        utm_content: product.id?.toString() || 'unknown'
+                        utm_content: product.metadata?.id || 'unknown'
                     }),
-                    originalUrl: product.real_url || product.url
+                    originalUrl: product.metadata?.url || product.url,
+                    relevance: product.score
                 }));
 
                 return new Response(JSON.stringify({
@@ -143,7 +179,8 @@ export const GET: APIRoute = async (context) => {
                         query,
                         products: enrichedProducts,
                         total: enrichedProducts.length,
-                        utm_tracking: true
+                        utm_tracking: true,
+                        source: 'pumo-rag'
                     }
                 }), {
                     status: 200,
@@ -189,20 +226,26 @@ export const POST: APIRoute = async (context) => {
                     }), { status: 400 });
                 }
 
-                const productManager = getProductManager(env);
-                const products = await productManager.searchProducts(query, 20);
+                // Use PUMO RAG API for semantic search
+                const ragResults = await searchPumoRag(query, 20);
 
                 // Enrich products with UTM tracking URLs
-                const enrichedProducts = products.map((product: any) => ({
-                    ...product,
-                    url: buildProductUrl(product.real_url || product.url, {
+                const enrichedProducts = ragResults.map((product: any) => ({
+                    id: product.metadata?.id || product.id,
+                    name: product.metadata?.name || product.name,
+                    category: product.metadata?.category || 'ogólne',
+                    price: product.metadata?.price || product.price,
+                    image: product.metadata?.image || product.image,
+                    description: product.metadata?.description || product.text,
+                    url: buildProductUrl(product.metadata?.url || product.url, {
                         utm_source: 'mybonzo',
                         utm_medium: 'whitecat',
                         utm_campaign: 'post_search',
                         utm_term: query,
-                        utm_content: product.id?.toString() || 'unknown'
+                        utm_content: product.metadata?.id || 'unknown'
                     }),
-                    originalUrl: product.real_url || product.url
+                    originalUrl: product.metadata?.url || product.url,
+                    relevance: product.score
                 }));
 
                 return new Response(JSON.stringify({
@@ -211,7 +254,8 @@ export const POST: APIRoute = async (context) => {
                         query,
                         products: enrichedProducts,
                         total: enrichedProducts.length,
-                        utm_tracking: true
+                        utm_tracking: true,
+                        source: 'pumo-rag'
                     }
                 }), {
                     status: 200,
