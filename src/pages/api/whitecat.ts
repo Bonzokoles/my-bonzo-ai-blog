@@ -108,22 +108,33 @@ export const GET: APIRoute = async (context) => {
                 const ragResults = await searchPumoRag(searchQuery, limit);
 
                 // Enrich products with UTM tracking URLs
-                const enrichedProducts = ragResults.map((item: any) => ({
-                    id: item.id,
-                    name: item.product?.name || '',
-                    category: item.product?.category || category || 'ogólne',
-                    price: item.product?.price || 0,
-                    currency: item.product?.currency || 'PLN',
-                    description: item.product?.description || '',
-                    url: buildProductUrl(item.product?.url || '', {
+                // Mapowanie zgodne ze starą strukturą D1 (WhiteCat)
+                const enrichedProducts = ragResults.map((item: any) => {
+                    const productUrl = item.product?.url || '';
+                    const trackedUrl = buildProductUrl(productUrl, {
                         utm_source: 'mybonzo',
                         utm_medium: 'whitecat',
                         utm_campaign: 'category_browse',
                         utm_content: item.id
-                    }),
-                    originalUrl: item.product?.url || '',
-                    relevance: item.relevanceScore
-                }));
+                    });
+
+                    return {
+                        id: item.id,
+                        name: item.product?.name || '',
+                        category: item.product?.category || category || 'ogólne',
+                        price: item.product?.price || 0,
+                        manufacturer: '', // PUMO RAG nie ma tego pola
+                        url: productUrl,
+                        tracked_url: trackedUrl,
+                        description: item.product?.description || '',
+                        images: item.product?.image ? [item.product.image] : [],
+                        availability: 'available', // Domyślnie wszystko dostępne
+                        sku: item.id, // Używamy ID jako SKU
+                        // Dodatkowe pola z PUMO RAG
+                        currency: item.product?.currency || 'PLN',
+                        relevance: item.relevanceScore
+                    };
+                });
 
                 return new Response(JSON.stringify({
                     success: true,
@@ -155,23 +166,33 @@ export const GET: APIRoute = async (context) => {
                 const ragResults = await searchPumoRag(query, 10);
 
                 // Enrich products with UTM tracking URLs
-                const enrichedProducts = ragResults.map((item: any) => ({
-                    id: item.id,
-                    name: item.product?.name || '',
-                    category: item.product?.category || 'ogólne',
-                    price: item.product?.price || 0,
-                    currency: item.product?.currency || 'PLN',
-                    description: item.product?.description || '',
-                    url: buildProductUrl(item.product?.url || '', {
+                // Mapowanie zgodne ze starą strukturą D1 (WhiteCat)
+                const enrichedProducts = ragResults.map((item: any) => {
+                    const productUrl = item.product?.url || '';
+                    const trackedUrl = buildProductUrl(productUrl, {
                         utm_source: 'mybonzo',
                         utm_medium: 'whitecat',
                         utm_campaign: 'search_results',
                         utm_term: query,
                         utm_content: item.id
-                    }),
-                    originalUrl: item.product?.url || '',
-                    relevance: item.relevanceScore
-                }));
+                    });
+
+                    return {
+                        id: item.id,
+                        name: item.product?.name || '',
+                        category: item.product?.category || 'ogólne',
+                        price: item.product?.price || 0,
+                        manufacturer: '',
+                        url: productUrl,
+                        tracked_url: trackedUrl,
+                        description: item.product?.description || '',
+                        images: item.product?.image ? [item.product.image] : [],
+                        availability: 'available',
+                        sku: item.id,
+                        currency: item.product?.currency || 'PLN',
+                        relevance: item.relevanceScore
+                    };
+                });
 
                 return new Response(JSON.stringify({
                     success: true,
@@ -230,23 +251,33 @@ export const POST: APIRoute = async (context) => {
                 const ragResults = await searchPumoRag(query, 20);
 
                 // Enrich products with UTM tracking URLs
-                const enrichedProducts = ragResults.map((item: any) => ({
-                    id: item.id,
-                    name: item.product?.name || '',
-                    category: item.product?.category || 'ogólne',
-                    price: item.product?.price || 0,
-                    currency: item.product?.currency || 'PLN',
-                    description: item.product?.description || '',
-                    url: buildProductUrl(item.product?.url || '', {
+                // Mapowanie zgodne ze starą strukturą D1 (WhiteCat)
+                const enrichedProducts = ragResults.map((item: any) => {
+                    const productUrl = item.product?.url || '';
+                    const trackedUrl = buildProductUrl(productUrl, {
                         utm_source: 'mybonzo',
                         utm_medium: 'whitecat',
                         utm_campaign: 'post_search',
                         utm_term: query,
                         utm_content: item.id
-                    }),
-                    originalUrl: item.product?.url || '',
-                    relevance: item.relevanceScore
-                }));
+                    });
+
+                    return {
+                        id: item.id,
+                        name: item.product?.name || '',
+                        category: item.product?.category || 'ogólne',
+                        price: item.product?.price || 0,
+                        manufacturer: '',
+                        url: productUrl,
+                        tracked_url: trackedUrl,
+                        description: item.product?.description || '',
+                        images: item.product?.image ? [item.product.image] : [],
+                        availability: 'available',
+                        sku: item.id,
+                        currency: item.product?.currency || 'PLN',
+                        relevance: item.relevanceScore
+                    };
+                });
 
                 return new Response(JSON.stringify({
                     success: true,
