@@ -108,21 +108,21 @@ export const GET: APIRoute = async (context) => {
                 const ragResults = await searchPumoRag(searchQuery, limit);
 
                 // Enrich products with UTM tracking URLs
-                const enrichedProducts = ragResults.map((product: any) => ({
-                    id: product.metadata?.id || product.id,
-                    name: product.metadata?.name || product.name,
-                    category: product.metadata?.category || category || 'ogólne',
-                    price: product.metadata?.price || product.price,
-                    image: product.metadata?.image || product.image,
-                    description: product.metadata?.description || product.text,
-                    url: buildProductUrl(product.metadata?.url || product.url, {
+                const enrichedProducts = ragResults.map((item: any) => ({
+                    id: item.id,
+                    name: item.product?.name || '',
+                    category: item.product?.category || category || 'ogólne',
+                    price: item.product?.price || 0,
+                    currency: item.product?.currency || 'PLN',
+                    description: item.product?.description || '',
+                    url: buildProductUrl(item.product?.url || '', {
                         utm_source: 'mybonzo',
                         utm_medium: 'whitecat',
                         utm_campaign: 'category_browse',
-                        utm_content: product.metadata?.id || 'unknown'
+                        utm_content: item.id
                     }),
-                    originalUrl: product.metadata?.url || product.url,
-                    relevance: product.score
+                    originalUrl: item.product?.url || '',
+                    relevance: item.relevanceScore
                 }));
 
                 return new Response(JSON.stringify({
@@ -155,22 +155,22 @@ export const GET: APIRoute = async (context) => {
                 const ragResults = await searchPumoRag(query, 10);
 
                 // Enrich products with UTM tracking URLs
-                const enrichedProducts = ragResults.map((product: any) => ({
-                    id: product.metadata?.id || product.id,
-                    name: product.metadata?.name || product.name,
-                    category: product.metadata?.category || 'ogólne',
-                    price: product.metadata?.price || product.price,
-                    image: product.metadata?.image || product.image,
-                    description: product.metadata?.description || product.text,
-                    url: buildProductUrl(product.metadata?.url || product.url, {
+                const enrichedProducts = ragResults.map((item: any) => ({
+                    id: item.id,
+                    name: item.product?.name || '',
+                    category: item.product?.category || 'ogólne',
+                    price: item.product?.price || 0,
+                    currency: item.product?.currency || 'PLN',
+                    description: item.product?.description || '',
+                    url: buildProductUrl(item.product?.url || '', {
                         utm_source: 'mybonzo',
                         utm_medium: 'whitecat',
                         utm_campaign: 'search_results',
                         utm_term: query,
-                        utm_content: product.metadata?.id || 'unknown'
+                        utm_content: item.id
                     }),
-                    originalUrl: product.metadata?.url || product.url,
-                    relevance: product.score
+                    originalUrl: item.product?.url || '',
+                    relevance: item.relevanceScore
                 }));
 
                 return new Response(JSON.stringify({
@@ -230,22 +230,22 @@ export const POST: APIRoute = async (context) => {
                 const ragResults = await searchPumoRag(query, 20);
 
                 // Enrich products with UTM tracking URLs
-                const enrichedProducts = ragResults.map((product: any) => ({
-                    id: product.metadata?.id || product.id,
-                    name: product.metadata?.name || product.name,
-                    category: product.metadata?.category || 'ogólne',
-                    price: product.metadata?.price || product.price,
-                    image: product.metadata?.image || product.image,
-                    description: product.metadata?.description || product.text,
-                    url: buildProductUrl(product.metadata?.url || product.url, {
+                const enrichedProducts = ragResults.map((item: any) => ({
+                    id: item.id,
+                    name: item.product?.name || '',
+                    category: item.product?.category || 'ogólne',
+                    price: item.product?.price || 0,
+                    currency: item.product?.currency || 'PLN',
+                    description: item.product?.description || '',
+                    url: buildProductUrl(item.product?.url || '', {
                         utm_source: 'mybonzo',
                         utm_medium: 'whitecat',
                         utm_campaign: 'post_search',
                         utm_term: query,
-                        utm_content: product.metadata?.id || 'unknown'
+                        utm_content: item.id
                     }),
-                    originalUrl: product.metadata?.url || product.url,
-                    relevance: product.score
+                    originalUrl: item.product?.url || '',
+                    relevance: item.relevanceScore
                 }));
 
                 return new Response(JSON.stringify({
