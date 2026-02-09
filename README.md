@@ -4,6 +4,7 @@
 [![Cloudflare Pages](https://img.shields.io/badge/Cloudflare-Pages-orange)](https://mybonzoaiblog.pages.dev)
 [![Astro](https://img.shields.io/badge/Astro-5.15.1-ff5d01?logo=astro)](https://astro.build)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Last Updated](https://img.shields.io/badge/updated-Feb%202026-blue)]()
 
 > Modern AI-powered blog built with Astro 5, Cloudflare Pages, and cutting-edge AI technologies.
 
