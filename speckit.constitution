@@ -1,0 +1,207 @@
+# SpecKit Constitution - Project Guidelines & Standards
+
+## Code Guidelines & Conventions
+
+### General Principles
+- **Language-Specific Conventions**: Follow language-specific best practices
+- **Code Patterns**: Implement proven design patterns and architectural guidelines
+- **Optimization Goals**: Performance, memory efficiency, maintainability
+
+### TypeScript/JavaScript Conventions
+- Use TypeScript strict mode
+- Implement proper type annotations
+- Follow functional programming principles where applicable
+- Use async/await for asynchronous operations
+- Implement proper error handling with try-catch blocks
+
+### Python Conventions
+- Follow PEP 8 style guide
+- Use type hints (Python 3.6+)
+- Implement virtual environments for dependency isolation
+- Use meaningful variable and function names
+- Document functions with docstrings
+
+### Architecture Patterns
+- **Separation of Concerns**: Keep business logic, UI, and data layers separate
+- **SOLID Principles**: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion
+- **DRY (Don't Repeat Yourself)**: Reuse code through functions, classes, and modules
+- **Clean Code**: Self-documenting code with clear naming
+
+## Project Standards
+
+### Session Management
+- Save session reports after completing major milestones
+- Document decisions, challenges, and solutions
+- Create dated session files (format: SESJA_YYYY_MM_DD.md)
+
+### Code Review & Quality
+- Double-check all code before committing
+- Explore better solutions and alternatives
+- Optimize for performance and readability
+- Write concise, efficient code
+
+### Documentation Requirements
+- README.md for project overview
+- API documentation for public interfaces
+- Inline comments for complex logic
+- Architecture diagrams for system design
+
+---
+
+## Active Projects
+
+### 1. ML Sentiment Analysis Integration
+**Goal**: Integrate TensorFlow/PyTorch sentiment analysis into Windows desktop applications
+
+**Tech Stack**:
+- **ML Frameworks**: TensorFlow, PyTorch
+- **Desktop UI**: PyQt5/PyQt6
+- **Web Framework**: Django (for API/backend)
+- **Database**: PostgreSQL, SQLite
+- **GPU**: CUDA support for NVIDIA GPUs
+
+**Key Requirements**:
+- GPU setup and optimization
+- Memory management for large models
+- Database integration for results storage
+- Professional installer creation
+- Real-time sentiment analysis
+
+### 2. PC Utility Application
+**Goal**: Create a comprehensive PC monitoring, cleaning, and optimization tool
+
+**Features**:
+- System monitoring (CPU, RAM, disk, network)
+- Disk cleanup and optimization
+- Startup manager
+- Process management
+- Performance analytics
+
+**Tech Stack**:
+- **Language**: Python
+- **UI Framework**: PyQt6
+- **System Access**: psutil, WMI (Windows)
+- **Installer**: PyInstaller, Inno Setup
+
+---
+
+## Coding Standards by Project Type
+
+### Windows Desktop Applications (PyQt)
+```python
+# Standard imports organization
+import sys
+from typing import Optional, List, Dict
+from PyQt6.QtWidgets import QApplication, QMainWindow
+from PyQt6.QtCore import Qt, QThread, pyqtSignal
+
+# Use QThread for background tasks
+# Implement signals/slots pattern
+# Follow MVC/MVP architecture
+```
+
+### Machine Learning Projects
+```python
+# GPU configuration
+import tensorflow as tf
+import torch
+
+# Memory optimization
+tf.config.experimental.set_memory_growth(gpu, True)
+torch.cuda.empty_cache()
+
+# Model versioning and checkpointing
+# Data pipeline optimization
+# Batch processing for efficiency
+```
+
+### Django Applications
+```python
+# Settings organization
+# Use environment variables for secrets
+# RESTful API design
+# Proper authentication/authorization
+# Database query optimization
+```
+
+---
+
+## Version Control Standards
+
+### Commit Messages
+- Use conventional commits format
+- **feat**: New feature
+- **fix**: Bug fix
+- **docs**: Documentation changes
+- **refactor**: Code refactoring
+- **perf**: Performance improvements
+- **test**: Adding tests
+
+### Branch Strategy
+- **main**: Production-ready code
+- **develop**: Integration branch
+- **feature/***: New features
+- **fix/***: Bug fixes
+- **docs/***: Documentation updates
+
+---
+
+## Performance Optimization Guidelines
+
+### Memory Optimization
+- Use generators for large datasets
+- Implement lazy loading
+- Clear unused variables and cache
+- Monitor memory usage with profiling tools
+
+### GPU Optimization
+- Batch processing for ML inference
+- Use mixed precision training (FP16)
+- Optimize data transfer between CPU/GPU
+- Monitor GPU utilization
+
+### Database Optimization
+- Use indexes on frequently queried columns
+- Implement connection pooling
+- Use query optimization techniques
+- Cache frequently accessed data
+
+---
+
+## Security Standards
+
+### API Security
+- Use HTTPS for all communications
+- Implement proper authentication (JWT, OAuth)
+- Validate and sanitize all inputs
+- Use parameterized queries to prevent SQL injection
+
+### Application Security
+- Encrypt sensitive data at rest
+- Use secure random number generation
+- Implement proper error handling (don't expose internals)
+- Regular dependency updates for security patches
+
+---
+
+## Testing Standards
+
+### Unit Tests
+- Aim for 80%+ code coverage
+- Test edge cases and error conditions
+- Use meaningful test names
+
+### Integration Tests
+- Test component interactions
+- Mock external dependencies
+- Test database operations
+
+### Performance Tests
+- Benchmark critical operations
+- Load testing for APIs
+- Memory profiling for ML models
+
+---
+
+*Last Updated: 2026-02-09*
+*Repository: Bonzokoles/my-bonzo-ai-blog*
