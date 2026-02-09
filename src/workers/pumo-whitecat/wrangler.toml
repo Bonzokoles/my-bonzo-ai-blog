@@ -12,16 +12,16 @@ workers_dev = true
 #   { pattern = "api.jimbolikepumo.dev/*", zone_name = "jimbolikepumo.dev" }
 # ]
 
-# D1 Database
+# D1 Database - PUMO Products
 [[d1_databases]]
 binding = "DB"
-database_name = "jimbo-rag-db"
-database_id = "90fe9b43-f8a4-4e78-94c5-c44aff4012e9"  # pumo_products
+database_name = "pumo_products"
+database_id = "9534ef30-4ccd-4e90-9efc-7ddd2f9935cc"
 
-# Vectorize
+# Vectorize - PUMO Products Index
 [[vectorize]]
 binding = "VECTORIZE"
-index_name = "pumo_embeddings"
+index_name = "pumo-products"
 
 # KV for cache
 [[kv_namespaces]]

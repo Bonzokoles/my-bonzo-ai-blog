@@ -74,10 +74,10 @@ export class DailySyncWorkflow {
 
   private async syncProducts(): Promise<void> {
     console.log('📦 Step 1: Syncing products...');
-    
+
     const { ProductSync } = await import('../services/product-sync');
     const sync = new ProductSync(this.env);
-    
+
     const today = new Date();
     if (today.getDay() === 0) {
       // Sunday - full sync
@@ -87,23 +87,27 @@ export class DailySyncWorkflow {
       await sync.incrementalSync();
     }
   }
-  
+
   private async syncOrders(): Promise<void> {
     console.log('📦 Step 2: Syncing orders...');
-    
+
     const { OrderSync } = await import('../services/order-sync');
     const sync = new OrderSync(this.env);
-    
+
     await sync.syncRecentOrders(24);
   }
 
   private async regenerateEmbeddings(): Promise<void> {
     console.log('🧠 Step 3: Checking embeddings...');
 
-    // Get products updated in last 24h
+    // Get products updated in last 24h with categories JOIN
     const { results: recentProducts } = await this.env.DB.prepare(`
-      SELECT * FROM products
-      WHERE updated_at >= datetime('now', '-1 day')
+      SELECT
+        p.*,
+        c.name as category_name
+      FROM products p
+      LEFT JOIN categories c ON p.category_id = c.id
+      WHERE p.updated_at >= datetime('now', '-1 day')
     `).all();
 
     if (recentProducts.length === 0) {
@@ -115,23 +119,25 @@ export class DailySyncWorkflow {
 
     for (const product of recentProducts) {
       try {
-        const text = `${product.name} ${product.category || ''} ${product.description?.substring(0, 500) || ''}`;
-        
+        const text = `${product.name} ${product.category_name || ''} ${product.brand || ''} ${product.description?.substring(0, 500) || ''}`;
+
         const embedding = await this.env.AI.run('@cf/baai/bge-base-en-v1.5', { text });
 
         await this.env.VECTORIZE.upsert([{
-          id: product.id as string,
+          id: product.external_id as string,
           values: embedding.data[0],
           metadata: {
             name: product.name as string,
-            category: product.category as string || '',
+            category: product.category_name as string || '',
+            brand: product.brand as string || '',
             price: product.price as number,
-            url: product.url as string
+            in_stock: product.in_stock as boolean,
+            url: product.product_url as string
           }
         }]);
 
       } catch (error) {
-        console.error(`Failed to regenerate embedding for ${product.id}:`, error);
+        console.error(`Failed to regenerate embedding for ${product.external_id}:`, error);
       }
     }
 
@@ -176,16 +182,16 @@ export class DailySyncWorkflow {
 
   private async cleanup(): Promise<void> {
       console.log('🧹 Step 6: Cleaning up old data...');
-      
+
       // Cleanup old sync history (> 30 days)
       await this.env.DB.prepare(`
-        DELETE FROM sync_history 
+        DELETE FROM sync_history
         WHERE started_at < date('now', '-30 days')
       `).run();
-      
+
       // Cleanup old reports from cache (older than 90 days)
       // Note: KV expiration handles most of this automatically
-      
+
       console.log('✅ Cleanup completed');
     }
 }

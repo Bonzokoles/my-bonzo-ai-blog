@@ -13,14 +13,14 @@ interface MOAResponse {
 
 export class WhitecatMOA {
   private readonly MAX_RETRIES = 2;
-  
+
   constructor(private env: Env) {}
 
   async generate(prompt: string, taskType: TaskType): Promise<string> {
     console.log(`🐱 WHITECAT MOA starting for task: ${taskType}`);
-    
+
     const modelStrategy = this.selectModelStrategy(taskType);
-    
+
     // Parallel execution of multiple models
     const responses = await Promise.allSettled(
       modelStrategy.map(provider => this.callModel(provider, prompt, taskType))
@@ -48,16 +48,16 @@ export class WhitecatMOA {
     switch (taskType) {
       case 'guide_generation':
         return ['deepseek', 'claude']; // R1 reasoning + Claude polish = quality content
-      
+
       case 'product_description':
         return ['deepseek', 'claude']; // Both for best descriptions
-      
+
       case 'email_content':
         return ['deepseek', 'claude']; // R1 strategy + Claude professionalism
-      
+
       case 'analysis':
         return ['deepseek', 'claude']; // R1 deep analysis + Claude synthesis
-      
+
       default:
         return ['deepseek', 'claude']; // Full power for everything else
     }
@@ -65,7 +65,7 @@ export class WhitecatMOA {
 
   private async callModel(provider: ModelProvider, prompt: string, taskType: TaskType): Promise<MOAResponse> {
     const startTime = Date.now();
-    
+
     console.log(`🔄 Calling ${provider}...`);
 
     try {
@@ -77,11 +77,11 @@ export class WhitecatMOA {
         case 'deepseek':
           ({ content, model, tokens } = await this.callDeepSeek(prompt));
           break;
-        
+
         case 'claude':
           ({ content, model, tokens } = await this.callClaude(prompt));
           break;
-        
+
         case 'openai':
           ({ content, model, tokens } = await this.callOpenAI(prompt));
           break;
@@ -129,53 +129,16 @@ export class WhitecatMOA {
     }
 
     const data = await response.json() as any;
-    
+
     // R1 returns reasoning_content + content
-    const fullContent = data.choices[0].message.reasoning_content 
+    const fullContent = data.choices[0].message.reasoning_content
       ? `${data.choices[0].message.reasoning_content}\n\n${data.choices[0].message.content}`
       : data.choices[0].message.content;
-    
+
     return {
       content: fullContent,
       model: 'deepseek-reasoner',
       tokens: data.usage?.total_tokens || 0
-    };// Fallback: jeśli nie ma Claude, użyj tylko DeepSeek R1
-      console.warn('⚠️ ANTHROPIC_API_KEY not set, using DeepSeek R1 only');
-      return this.callDeepSeek(prompt);
-    }
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': this.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 4000, // Więcej dla pełnych response.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 2000,
-        temperature: 0.7,
-        messages: [
-          { role: 'user', content: prompt }
-        ]
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error(`Claude API error: ${response.status}`);
-    }
-
-    const data = await response.json() as any;
-    
-    return {
-      content: data.content[0].text,
-      model: 'claude-3-5-sonnet-20241022',
-      tokens: data.usage?.input_tokens + data.usage?.output_tokens || 0
     };
   }
 
@@ -206,7 +169,7 @@ export class WhitecatMOA {
     }
 
     const data = await response.json() as any;
-    
+
     return {
       content: data.choices[0].message.content,
       model: 'gpt-4o',
@@ -219,7 +182,7 @@ export class WhitecatMOA {
 
     // For guide generation, use the longer, more detailed response
     if (taskType === 'guide_generation') {
-      return responses.reduce((longest, current) => 
+      return responses.reduce((longest, current) =>
         current.content.length > longest.content.length ? current : longest
       ).content;
     }
@@ -258,7 +221,7 @@ Wygeneruj TYLKO finalną wersję. Bez komentarzy meta.
 
   async generateBatch(prompts: string[], taskType: TaskType): Promise<string[]> {
     console.log(`🐱 WHITECAT MOA batch: ${prompts.length} prompts`);
-    
+
     const results = await Promise.all(
       prompts.map(prompt => this.generate(prompt, taskType))
     );
