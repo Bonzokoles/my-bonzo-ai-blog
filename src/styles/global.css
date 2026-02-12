@@ -104,7 +104,8 @@ The 'prose' section is used to style markdown content.
 	width: 100vw;
 	height: 100vh;
 	/* Color Source: Gradient from Theme */
-	background: var(--gradient-ai-primary);
+	/* Color Source: Inverted Gradient (Deep Blue -> Cyan) */
+	background: linear-gradient(135deg, var(--ai-deep-blue) 0%, var(--ai-cyan) 100%);
 	/* Mask: Pattern + Radial Fade */
 	mask-image: url('/circuit-board.svg'), radial-gradient(circle at center, transparent 40%, black 100%);
 	-webkit-mask-image: url('/circuit-board.svg'), radial-gradient(circle at center, transparent 40%, black 100%);
@@ -116,11 +117,12 @@ The 'prose' section is used to style markdown content.
 	mask-composite: intersect;
 	-webkit-mask-composite: source-in;
 
-	opacity: 0.15;
-	/* Subtle but visible */
+	opacity: 0.4;
+	/* Strong opacity for dark bg */
 	z-index: 1;
 	pointer-events: none;
-	mix-blend-mode: color-dodge;
+	mix-blend-mode: screen;
+	/* Screen ensures it lights up on dark backgrounds */
 	/* "Lightest brightness" effect requested */
 }
 

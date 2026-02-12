@@ -229,7 +229,7 @@ const logoUrl = logo?.src ? new URL(logo.src, siteUrl).href : `${siteUrl}/bonzo_
     
 
   </head>
-  	<body class="bg-theme-bg text-theme-text min-h-screen relative overflow-x-hidden selection:bg-theme-accent selection:text-theme-bg">
+  	<body class={`bg-theme-bg text-theme-text min-h-screen relative overflow-x-hidden selection:bg-theme-accent selection:text-theme-bg ${className}`}>
 		<!-- Background Layers -->
         <div class="fixed inset-0 z-0 bg-[var(--bg-primary)]"></div> <!-- Base Solid -->
         <div class="neural-nebula-bg fixed inset-0 z-[1]"></div> <!-- Nebula Gradient -->
