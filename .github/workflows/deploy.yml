@@ -14,11 +14,11 @@ on:
       - 'astro.config.mjs'
       - 'wrangler.toml'
       - '.github/workflows/deploy.yml'
-  
+
   # Daily deployment at midnight UTC
   schedule:
     - cron: '0 0 * * *'
-  
+
   # Allow manual workflow dispatch
   workflow_dispatch:
 
@@ -35,7 +35,7 @@ jobs:
   deploy:
     name: Build and Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
-    
+
     steps:
       # 1. Checkout repository
       - name: Checkout code
@@ -64,42 +64,42 @@ jobs:
       - name: Verify build output
         run: |
           echo "Verifying required files in dist/..."
-          
+
           # Check robots.txt
           if [ ! -f "dist/robots.txt" ]; then
             echo "❌ ERROR: dist/robots.txt not found"
             exit 1
           fi
           echo "✅ dist/robots.txt exists"
-          
+
           # Check sitemap-pumo.xml
           if [ ! -f "dist/sitemap-pumo.xml" ]; then
             echo "❌ ERROR: dist/sitemap-pumo.xml not found"
             exit 1
           fi
           echo "✅ dist/sitemap-pumo.xml exists"
-          
+
           # Check llms.txt
           if [ ! -f "dist/llms.txt" ]; then
             echo "❌ ERROR: dist/llms.txt not found"
             exit 1
           fi
           echo "✅ dist/llms.txt exists"
-          
+
           # Check IndexNow key file
           if [ ! -f "dist/8f9a2d4e6b1c3a5d7e9f0a2b4c6d8e0f.txt" ]; then
             echo "❌ ERROR: dist/8f9a2d4e6b1c3a5d7e9f0a2b4c6d8e0f.txt not found"
             exit 1
           fi
           echo "✅ dist/8f9a2d4e6b1c3a5d7e9f0a2b4c6d8e0f.txt exists"
-          
+
           # Check .well-known directory
           if [ ! -d "dist/.well-known" ]; then
             echo "❌ ERROR: dist/.well-known/ directory not found"
             exit 1
           fi
           echo "✅ dist/.well-known/ directory exists"
-          
+
           echo "✅ All required files verified successfully"
 
       # 6. Deploy to Cloudflare Pages
