@@ -8,21 +8,45 @@ const title = "Meble Pumo AI Guide 2026 | 65 Kategorii - Kompletny Katalog";
 const description =
   "Pełny przewodnik po 65 kategoriach Meble Pumo. AI-powered baza wiedzy z analizami cen, rekomendacjami i specyfikacjami. WHITECAT v1.0 case study.";
 
-// Pobierz wszystkie kategorie dla ItemList schema
-const allGuides = await Astro.glob("./*.md");
-const categories = allGuides.map((post, index) => {
-  const slug = post.url.split("/").pop();
-  // Format slug to readable name: "fotele-biurkowe" -> "Fotele Biurkowe"
-  const name = slug
-    .replace(/-/g, " ")
-    .replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+// Fetch categories from D1 or fallback to static files
+let categories = [];
+const { DB } = Astro.locals.runtime.env;
+
+try {
+  if (DB) {
+    const { results } = await DB.prepare(
+      "SELECT name, slug, product_count FROM categories WHERE is_active = 1 ORDER BY sort_order ASC"
+    ).all();
     
-  return {
-    position: index + 1,
-    name: name,
-    url: `https://www.mybonzoaiblog.com${post.url}`,
-  };
-});
+    if (results && results.length > 0) {
+      categories = results.map((cat: any, index: number) => ({
+        position: index + 1,
+        name: cat.name,
+        url: `/pumo-guide/${cat.slug}`, // New dynamic route structure
+        count: cat.product_count
+      }));
+    }
+  }
+} catch (e) {
+  console.error("D1 Fetch Error:", e);
+}
+
+// Fallback to static files if D1 failed or returned empty
+if (categories.length === 0) {
+  const allGuides = await Astro.glob("./*.md");
+  categories = allGuides.map((post, index) => {
+    const slug = post.url.split("/").pop();
+    const name = slug
+      .replace(/-/g, " ")
+      .replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+      
+    return {
+      position: index + 1,
+      name: name,
+      url: `https://www.mybonzoaiblog.com${post.url}`,
+    };
+  });
+}
 ---
 
 <PumoStructuredData pageType="index" {title} {description} />
