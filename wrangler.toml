@@ -22,18 +22,17 @@ database_id = "d881af54-3b21-4193-834b-7ac54d5ac44d"
 # Session storage for user sessions (referenced in astro.config.mjs)
 [[kv_namespaces]]
 binding = "SESSION"
-id = "9288a144c0ad416893e1d260a084990a"
+id = "5f8f0cabba9843e3a63eb4fb94746257"
 
-# Cache namespace for general caching (existing namespace from production)
-# This ID was provided in the problem statement - it's an existing production namespace
+# Cache namespace for general caching
 [[kv_namespaces]]
 binding = "CACHE"
-id = "dd9f40a8318d4275ae760b1194833723"
+id = "d84ee8f6ae7444f38b896f8a1de1575f"
 
 # Analytics backup storage
 [[kv_namespaces]]
 binding = "ANALYTICS_KV"
-id = "7ec68cb4011041d6ae55b7397f0f77c5"
+id = "d4f8375307144f0cb2c9adb49d06cd3f"
 
 # Vectorize Index
 # For AI embeddings and semantic search
