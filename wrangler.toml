@@ -1,0 +1,58 @@
+# Cloudflare Wrangler Configuration for mybonzoaiblog
+# This file configures all Cloudflare bindings for the Astro SSR application
+# Documentation: https://developers.cloudflare.com/workers/wrangler/configuration/
+
+name = "mybonzoaiblog"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "./dist"
+
+# D1 Databases
+# You need to create D1 databases and replace the database_id placeholders
+[[d1_databases]]
+binding = "DB"
+database_name = "jimbo-rag-db"
+database_id = "YOUR_D1_DATABASE_ID"  # Replace with actual D1 database ID from: wrangler d1 list
+
+[[d1_databases]]
+binding = "ANALYTICS_DB"
+database_name = "analytics-db"
+database_id = "YOUR_D1_DATABASE_ID"  # Replace with actual D1 database ID from: wrangler d1 list
+
+# KV Namespaces
+# Session storage for user sessions (referenced in astro.config.mjs)
+[[kv_namespaces]]
+binding = "SESSION"
+id = "YOUR_KV_NAMESPACE_ID"  # Replace with actual KV namespace ID from: wrangler kv:namespace list
+
+# Cache namespace for general caching
+[[kv_namespaces]]
+binding = "CACHE"
+id = "dd9f40a8318d4275ae760b1194833723"
+
+# Analytics backup storage
+[[kv_namespaces]]
+binding = "ANALYTICS_KV"
+id = "YOUR_KV_NAMESPACE_ID"  # Replace with actual KV namespace ID from: wrangler kv:namespace list
+
+# Vectorize Index
+# For AI embeddings and semantic search
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "pumo_embeddings"
+
+# Workers AI
+# Provides access to Cloudflare's AI models
+[ai]
+binding = "AI"
+
+# R2 Bucket
+# Storage for raw data and backups
+[[r2_buckets]]
+binding = "PUMO_RAW_BUCKET"
+bucket_name = "pumo-raw-data"
+
+# Note: To get your resource IDs, run:
+# - wrangler d1 list                    (for D1 database IDs)
+# - wrangler kv:namespace list          (for KV namespace IDs)
+# - wrangler vectorize list             (to verify vectorize index)
+# - wrangler r2 bucket list             (to verify R2 bucket)
