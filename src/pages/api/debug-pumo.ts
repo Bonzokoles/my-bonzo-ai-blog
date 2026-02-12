@@ -2,7 +2,7 @@
  * Debug PUMO Endpoint - Simple Test
  */
 
-import { withFeatureMiddleware } from '@/middleware/api-middleware';
+import { withFeatureMiddleware } from '../../middleware/api-middleware';
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async (context) => {

@@ -1,0 +1,71 @@
+globalThis.process ??= {}; globalThis.process.env ??= {};
+/* empty css                                 */
+import { c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_CENSSoee.mjs';
+import { $ as $$Layout } from '../chunks/Layout_Dkg1w919.mjs';
+export { renderers } from '../renderers.mjs';
+
+const $$Index = createComponent(($$result, $$props, $$slots) => {
+  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": "Eksperymenty", "description": "Laboratoria i testy nowych technologii" }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<div class="container mx-auto px-4 py-16"> <h1 class="text-4xl font-bold mb-6">🧪 Eksperymenty</h1> <p class="text-lg mb-8">Laboratorium projektów AI dla klientów MyBonzo</p> <!-- Reklama Drzwi - Artystyczna Wizja --> <div class="mb-16 bg-gradient-to-br from-purple-900/30 via-blue-900/20 to-transparent border-2 border-purple-500/40 rounded-2xl p-8 shadow-2xl"> <div class="flex items-center gap-3 mb-6"> <span class="text-4xl">🎬</span> <div> <h2 class="text-3xl font-bold text-white mb-2">
+Reklama Drzwi: Kiedy Wizja Spotyka Rzeczywistość
+</h2> <p class="text-purple-300 text-sm italic">
+Historia prawdziwa - niedoceniona przez zlecającego, doceniona przez
+            branżę reklamową
+</p> </div> </div> <div class="grid lg:grid-cols-2 gap-8 items-start"> <!-- Video Player --> <div class="bg-black rounded-xl overflow-hidden shadow-2xl border border-purple-500/30"> <video class="w-full aspect-video object-contain" controls preload="metadata" poster=""> <source src="https://pub-ec47f213b171463d9502f5562213f837.r2.dev/VIDEO/DRZWI_DRZWI.mp4" type="video/mp4">
+Twoja przeglądarka nie obsługuje wideo HTML5.
+</video> </div> <!-- Story --> <div class="text-gray-200 space-y-4"> <div class="bg-purple-900/20 border-l-4 border-purple-500 p-4 rounded"> <h3 class="text-xl font-bold text-purple-300 mb-2">
+💭 Wizja Artystyczna
+</h3> <p class="text-sm leading-relaxed">
+Gdy tworzysz reklamę z pasją, wkładasz w nią całą kreatywność i
+              emocje. Każda klatka to przemyślana decyzja, każdy dźwięk
+              starannie dobrany.
+</p> </div> <div class="bg-red-900/20 border-l-4 border-red-500 p-4 rounded"> <h3 class="text-xl font-bold text-red-300 mb-2">
+😔 Feedback Klienta
+</h3> <p class="text-sm leading-relaxed">
+"To nie to, co chcieliśmy..."<br>
+Zlecający nie widział tego, co próbowałeś pokazać. Wizja artystyczna
+              zderzyła się z oczekiwaniami biznesowymi.
+</p> </div> <div class="bg-green-900/20 border-l-4 border-green-500 p-4 rounded"> <h3 class="text-xl font-bold text-green-300 mb-2">
+🏆 Uznanie Branży
+</h3> <p class="text-sm leading-relaxed">
+Ale ludzie z reklamy wiedzieli. Docenili odważne podejście,
+              nietypową narrację, techniczne wykonanie. Bo <strong>tak bywa, jak się ma artystyczne wizje</strong>
+- nie zawsze klient jest gotowy na innowację.
+</p> </div> <div class="mt-6 p-4 bg-blue-900/20 border border-blue-500/40 rounded-lg"> <p class="text-xs text-blue-200 italic">
+📌 <strong>Lekcja dla twórców:</strong> Czasami najlepsze projekty nie
+              są zrozumiane od razu. Ale jeśli branża docenia - znaczy że idziesz
+              w dobrym kierunku. Trzymaj się swojej wizji, nawet jeśli klient jeszcze
+              jej nie widzi.
+</p> </div> </div> </div> <!-- Stats --> <div class="mt-8 grid grid-cols-3 gap-4 text-center"> <div class="bg-purple-900/30 p-4 rounded-lg border border-purple-500/30"> <div class="text-3xl font-bold text-purple-300">163 MB</div> <div class="text-xs text-gray-400 mt-1">Raw Quality</div> </div> <div class="bg-blue-900/30 p-4 rounded-lg border border-blue-500/30"> <div class="text-3xl font-bold text-blue-300">1:1</div> <div class="text-xs text-gray-400 mt-1">Klient:Branża Approval</div> </div> <div class="bg-green-900/30 p-4 rounded-lg border border-green-500/30"> <div class="text-3xl font-bold text-green-300">∞</div> <div class="text-xs text-gray-400 mt-1">Artystyczna Wartość</div> </div> </div> </div> <!-- Projekty Grid --> <h2 class="text-2xl font-bold mb-6 text-white">Eksperymenty AI w Toku</h2> <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12"> <a href="/eksperymenty/projekt-1" class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"> <h2 class="text-2xl font-bold mb-2">Projekt 1</h2> <p class="text-gray-600 dark:text-gray-400">
+Eksperyment AI - w przygotowaniu
+</p> </a> <a href="/eksperymenty/projekt-2" class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"> <h2 class="text-2xl font-bold mb-2">Projekt 2</h2> <p class="text-gray-600 dark:text-gray-400">
+Eksperyment AI - w przygotowaniu
+</p> </a> <a href="/eksperymenty/projekt-3" class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"> <h2 class="text-2xl font-bold mb-2">Projekt 3</h2> <p class="text-gray-600 dark:text-gray-400">
+Eksperyment AI - w przygotowaniu
+</p> </a> <a href="/eksperymenty/projekt-4" class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"> <h2 class="text-2xl font-bold mb-2">Projekt 4</h2> <p class="text-gray-600 dark:text-gray-400">
+Eksperyment AI - w przygotowaniu
+</p> </a> <a href="/eksperymenty/projekt-5" class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"> <h2 class="text-2xl font-bold mb-2">Projekt 5</h2> <p class="text-gray-600 dark:text-gray-400">
+Eksperyment AI - w przygotowaniu
+</p> </a> <a href="/eksperymenty/projekt-6" class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"> <h2 class="text-2xl font-bold mb-2">Projekt 6</h2> <p class="text-gray-600 dark:text-gray-400">
+Eksperyment AI - w przygotowaniu
+</p> </a> <a href="/eksperymenty/projekt-7" class="block p-6 bg-gradient-to-br from-red-900/30 to-yellow-900/30 rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-yellow-500/40 relative overflow-hidden"> <div class="absolute top-2 right-2 bg-yellow-500 text-black text-xs px-2 py-1 rounded font-bold">
+⚠️ RESEARCH
+</div> <h2 class="text-2xl font-bold mb-2 text-white">🔓 Bypassing AI Sandbox</h2> <p class="text-gray-300">
+WebSockets & Retro Browsers - Experimental system breaking AI boundaries
+</p> <div class="mt-3 text-xs text-yellow-300 font-mono">
+🎯 Tampermonkey + Node.js + WebSocket + Zeno Browser
+</div> </a> </div> </div> ` })}`;
+}, "U:/WWW_MYbonzoai_blog/src/pages/eksperymenty/index.astro", void 0);
+
+const $$file = "U:/WWW_MYbonzoai_blog/src/pages/eksperymenty/index.astro";
+const $$url = "/eksperymenty";
+
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: $$Index,
+  file: $$file,
+  url: $$url
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };

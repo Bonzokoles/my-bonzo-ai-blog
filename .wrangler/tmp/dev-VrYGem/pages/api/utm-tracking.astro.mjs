@@ -1,0 +1,84 @@
+globalThis.process ??= {}; globalThis.process.env ??= {};
+export { renderers } from '../../renderers.mjs';
+
+const POST = async (context) => {
+  const runtime = context.locals?.runtime;
+  const env = runtime?.env;
+  if (!env?.PUMO_DB) {
+    return new Response(JSON.stringify({
+      error: "PUMO_DB not available"
+    }), { status: 500, headers: { "Content-Type": "application/json" } });
+  }
+  try {
+    const body = await context.request.json();
+    await env.PUMO_DB.prepare(`
+            INSERT INTO analytics_events (
+                event_type, product_id, source, 
+                utm_source, utm_medium, utm_campaign,
+                session_id, timestamp
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `).bind(
+      "product_click",
+      body.product_id || "15956",
+      "mybonzo_test",
+      "mybonzo",
+      "ai_guide",
+      "whitecat_test",
+      "test_session_" + Date.now(),
+      (/* @__PURE__ */ new Date()).toISOString()
+    ).run();
+    return new Response(JSON.stringify({
+      success: true,
+      message: "UTM click tracked",
+      data: body
+    }), { status: 200, headers: { "Content-Type": "application/json" } });
+  } catch (error) {
+    return new Response(JSON.stringify({
+      error: error instanceof Error ? error.message : "Tracking failed"
+    }), { status: 500, headers: { "Content-Type": "application/json" } });
+  }
+};
+const GET = async (context) => {
+  const runtime = context.locals?.runtime;
+  const env = runtime?.env;
+  if (!env?.PUMO_DB) {
+    return new Response(JSON.stringify({
+      error: "PUMO_DB not available"
+    }), { status: 500, headers: { "Content-Type": "application/json" } });
+  }
+  try {
+    const [events, revenue] = await Promise.all([
+      env.PUMO_DB.prepare("SELECT COUNT(*) as total_clicks FROM analytics_events WHERE event_type = ?").bind("product_click").first(),
+      env.PUMO_DB.prepare("SELECT COUNT(*) as total_orders, SUM(revenue) as total_revenue FROM revenue_attribution").first()
+    ]);
+    const recentClicks = await env.PUMO_DB.prepare(`
+            SELECT product_id, utm_source, utm_campaign, timestamp 
+            FROM analytics_events 
+            ORDER BY timestamp DESC 
+            LIMIT 10
+        `).all();
+    return new Response(JSON.stringify({
+      success: true,
+      analytics: {
+        total_clicks: events?.total_clicks || 0,
+        total_orders: revenue?.total_orders || 0,
+        total_revenue: revenue?.total_revenue || 0,
+        recent_clicks: recentClicks.results
+      }
+    }), { status: 200, headers: { "Content-Type": "application/json" } });
+  } catch (error) {
+    return new Response(JSON.stringify({
+      error: error instanceof Error ? error.message : "Analytics failed"
+    }), { status: 500, headers: { "Content-Type": "application/json" } });
+  }
+};
+
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+    __proto__: null,
+    GET,
+    POST
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };

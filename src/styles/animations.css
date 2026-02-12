@@ -1,18 +1,143 @@
 /* Classes to be used to animate text and elements */
 
 @layer components {
+
+	/* 
+    ======================================
+    <(^.^)>  NEURAL NEBULA BACKGROUND  <(^.^)>
+    ======================================
+    */
+	.neural-nebula-bg {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		z-index: -1;
+		background-color: var(--nebula-core);
+		background-image:
+			radial-gradient(circle at 15% 50%, var(--nebula-wisp-1), transparent 25%),
+			radial-gradient(circle at 85% 30%, var(--nebula-wisp-2), transparent 25%);
+		filter: contrast(120%) brightness(0.9);
+		overflow: hidden;
+	}
+
+	.neural-nebula-bg::after {
+		content: "";
+		position: absolute;
+		top: -50%;
+		left: -50%;
+		width: 200%;
+		height: 200%;
+		background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+		opacity: 0.4;
+		animation: nebula-drift 60s linear infinite;
+		mix-blend-mode: overlay;
+	}
+
+	@keyframes nebula-drift {
+		0% {
+			transform: translate(0, 0);
+		}
+
+		100% {
+			transform: translate(10%, 10%);
+		}
+	}
+
+	/* 
+    ======================================
+    <(^.^)>  MICRO INTERACTIONS  <(^.^)>
+    ======================================
+    */
+	/* Smooth Glow on Hover */
+	.hover-glow {
+		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.hover-glow:hover {
+		box-shadow: 0 0 25px var(--glow-cyan);
+		border-color: var(--ai-cyan);
+		transform: translateY(-2px);
+	}
+
+	/* Floating Animation for Hero Elements */
+	.float {
+		animation: float-y 6s ease-in-out infinite;
+	}
+
+	.float-delay {
+		animation: float-y 7s ease-in-out 1s infinite;
+	}
+
+	@keyframes float-y {
+		0% {
+			transform: translateY(0px);
+		}
+
+		50% {
+			transform: translateY(-12px);
+		}
+
+		100% {
+			transform: translateY(0px);
+		}
+	}
+
+	/* Staggered Reveal */
+	.reveal-stagger {
+		opacity: 0;
+		transform: translateY(15px);
+		animation: reveal-up 0.6s ease-out forwards;
+	}
+
+	.reveal-stagger:nth-child(1) {
+		animation-delay: 0.1s;
+	}
+
+	.reveal-stagger:nth-child(2) {
+		animation-delay: 0.2s;
+	}
+
+	.reveal-stagger:nth-child(3) {
+		animation-delay: 0.3s;
+	}
+
+	.reveal-stagger:nth-child(4) {
+		animation-delay: 0.4s;
+	}
+
+	@keyframes reveal-up {
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
 	/*
 ======================================
-<(^.^)>  NEON TEXT ANIMATION  <(^.^)>
+<(^.^)>  NEON TEXT ANIMATION - REFINED  <(^.^)>
 ======================================
  */
 	.neon {
 		@apply text-theme-accent font-bold tracking-wider relative inline-block;
-		color: var(--color-accent);
-		text-shadow: 0 0 7px var(--color-accent), 0 0 10px var(--color-accent),
-			0 0 21px var(--color-accent), 0 0 42px var(--color-accent);
-		animation: neon-flicker 6s infinite alternate;
+		color: var(--ai-cyan);
+		text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+		/* Refined flicker - less aggressive */
+		animation: neon-pulse 4s ease-in-out infinite alternate;
 		transition: transform 0.3s ease-out;
+	}
+
+	@keyframes neon-pulse {
+		0% {
+			text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+			opacity: 1;
+		}
+
+		100% {
+			text-shadow: 0 0 20px rgba(0, 240, 255, 0.8), 0 0 40px rgba(0, 240, 255, 0.4);
+			opacity: 0.95;
+		}
 	}
 
 	.neon::before {
@@ -21,7 +146,7 @@
 		top: 0;
 		left: 0;
 		z-index: -1;
-		color: var(--color-text);
+		color: var(--text-primary);
 		filter: blur(0.02em);
 		opacity: 0.8;
 	}
@@ -33,42 +158,24 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background: linear-gradient(
-			45deg,
-			transparent 5%,
-			rgba(255, 255, 255, 0.1) 5%,
-			rgba(255, 255, 255, 0.1) 10%,
-			transparent 10%
-		);
+		background: linear-gradient(45deg,
+				transparent 5%,
+				rgba(255, 255, 255, 0.1) 5%,
+				rgba(255, 255, 255, 0.1) 10%,
+				transparent 10%);
 		filter: blur(0.05em);
 		opacity: 0.5;
 		animation: neon-edge-glow 6s infinite alternate;
 	}
 
-	@keyframes neon-flicker {
-		0%,
-		18%,
-		22%,
-		25%,
-		53%,
-		57%,
-		100% {
-			text-shadow: 0 0 7px var(--color-accent), 0 0 10px var(--color-accent),
-				0 0 21px var(--color-accent), 0 0 42px var(--color-accent);
-		}
-		20%,
-		24%,
-		55%,
-		100% {
-			text-shadow: 0 0 2px var(--color-accent), 0 0 4px var(--color-accent);
-		}
-	}
 
 	@keyframes neon-edge-glow {
+
 		0%,
 		100% {
 			opacity: 0.1;
 		}
+
 		50% {
 			opacity: 0.3;
 		}
@@ -100,18 +207,23 @@
 		0% {
 			transform: rotate(0deg);
 		}
+
 		5% {
 			transform: rotate(170deg);
 		}
+
 		20% {
 			transform: rotate(180deg);
 		}
+
 		25% {
 			transform: rotate(-170deg);
 		}
+
 		40% {
 			transform: rotate(340deg);
 		}
+
 		54% {
 			transform: rotate(350deg);
 		}
@@ -119,9 +231,11 @@
 		65% {
 			transform: rotate(150deg);
 		}
+
 		70% {
 			transform: rotate(180deg);
 		}
+
 		100% {
 			transform: rotate(-360deg);
 		}
@@ -131,6 +245,7 @@
 		0% {
 			transform: rotate(0deg);
 		}
+
 		100% {
 			transform: rotate(360deg);
 		}
@@ -156,10 +271,12 @@
 			transform: scale(0.5) rotate(-180deg);
 			opacity: 0;
 		}
+
 		50% {
 			transform: scale(0.8) rotate(-80deg);
 			opacity: 0;
 		}
+
 		100% {
 			transform: scale(1) rotate(0deg);
 			opacity: 1;
@@ -171,10 +288,12 @@
 			transform: scale(0.5) rotate(180deg);
 			opacity: 0;
 		}
+
 		50% {
 			transform: scale(0.8) rotate(80deg);
 			opacity: 0;
 		}
+
 		100% {
 			transform: scale(1) rotate(0deg);
 			opacity: 1;
@@ -192,11 +311,43 @@
 		animation: buildIn 0.5s ease-out forwards;
 	}
 
+	/* Hover effect for project cards */
+	.project-card-hover {
+		transition: all 0.3s ease;
+		transform: translateY(0);
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	.project-card-hover:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+		border-color: var(--color-accent) !important;
+	}
+
+	.project-card-hover:hover .project-card-icon {
+		animation: spinAndGrow 0.5s ease-out;
+	}
+
+	@keyframes spinAndGrow {
+		0% {
+			transform: scale(1) rotate(0deg);
+		}
+
+		50% {
+			transform: scale(1.1) rotate(180deg);
+		}
+
+		100% {
+			transform: scale(1) rotate(360deg);
+		}
+	}
+
 	@keyframes buildIn {
 		0% {
 			opacity: 0;
 			transform: translateY(20px);
 		}
+
 		100% {
 			opacity: 1;
 			transform: translateY(0);
@@ -218,6 +369,7 @@
 		from {
 			opacity: 0;
 		}
+
 		to {
 			opacity: 1;
 			transform: scale(1);
@@ -229,6 +381,7 @@
 
 /* accessibility */
 @media (prefers-reduced-motion: reduce) {
+
 	*,
 	::before,
 	::after {
@@ -245,7 +398,9 @@
 	.fade-in,
 	.neon,
 	.donut,
-	.text-build {
+	.text-build,
+	.float,
+	.reveal-stagger {
 		animation: none !important;
 		opacity: 1 !important;
 		transform: none !important;
@@ -255,28 +410,34 @@
 /* =========================
    ULTRA 3D: subtle depth
    ========================= */
-.theme-ultra body{
-  perspective: 1200px;
-  perspective-origin: 50% 12%;
+.theme-ultra body {
+	perspective: 1200px;
+	perspective-origin: 50% 12%;
 }
 
-.theme-ultra .ultra-stage{
-  transform-style: preserve-3d;
+.theme-ultra .ultra-stage {
+	transform-style: preserve-3d;
 }
 
-@media (hover:hover) and (pointer:fine){
-  .theme-ultra .ultra-panel{
-    transform: translateZ(0);
-    will-change: transform;
-    transition: transform .18s ease, border-color .18s ease;
-  }
-  .theme-ultra .ultra-panel:hover{
-    transform: translateZ(14px) rotateX(.8deg) rotateY(-.8deg);
-  }
+@media (hover:hover) and (pointer:fine) {
+	.theme-ultra .ultra-panel {
+		transform: translateZ(0);
+		will-change: transform;
+		transition: transform .18s ease, border-color .18s ease;
+	}
+
+	.theme-ultra .ultra-panel:hover {
+		transform: translateZ(14px) rotateX(.8deg) rotateY(-.8deg);
+	}
 }
 
-@media (prefers-reduced-motion: reduce){
-  .theme-ultra body{ perspective: none; }
-  .theme-ultra .ultra-panel,
-  .theme-ultra .ultra-panel:hover{ transform: none !important; }
+@media (prefers-reduced-motion: reduce) {
+	.theme-ultra body {
+		perspective: none;
+	}
+
+	.theme-ultra .ultra-panel,
+	.theme-ultra .ultra-panel:hover {
+		transform: none !important;
+	}
 }

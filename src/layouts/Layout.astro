@@ -7,7 +7,7 @@ import { ClientRouter } from "astro:transitions";
 
 import "@styles/global.css";
 
-import ParticleBackground from "@components/Vue/AI/ParticleBackground.vue";
+
 
 import DynamicMetaTags from "@components/Astro/head/DynamicMetaTags.astro";
 import GoogleFonts from "@components/Astro/head/GoogleFonts.astro";
@@ -229,9 +229,14 @@ const logoUrl = logo?.src ? new URL(logo.src, siteUrl).href : `${siteUrl}/bonzo_
     
 
   </head>
-  <body class:list={[className]}>
-    <ParticleBackground client:load />
-    <div class="flex flex-col min-h-screen mt-0 pt-0 relative z-10">
+  	<body class="bg-theme-bg text-theme-text min-h-screen relative overflow-x-hidden selection:bg-theme-accent selection:text-theme-bg">
+		<!-- Background Layers -->
+        <div class="fixed inset-0 z-0 bg-[var(--bg-primary)]"></div> <!-- Base Solid -->
+        <div class="neural-nebula-bg fixed inset-0 z-[1]"></div> <!-- Nebula Gradient -->
+		<div class="circuit-board-bg fixed inset-0 z-[1]"></div> <!-- Pattern Overlay (Masked) -->
+        
+        <!-- Main Content -->
+		<div class="flex flex-col min-h-screen mt-0 pt-0 relative z-[10]">
       {
         headerLogo ? (
           <Title

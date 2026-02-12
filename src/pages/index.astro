@@ -5,6 +5,7 @@
  * Reduced from 490 lines to ~150 lines (-69%)
  */
 import PageHeader from "@components/Astro/PageHeader.astro";
+import Card from "@components/Astro/Card.astro";
 import BlogSection from "@components/features/BlogSection.astro";
 import FeaturesSection from "@components/features/FeaturesSection.astro";
 import HeroSection from "@components/features/HeroSection.astro";
@@ -15,11 +16,7 @@ import { Icon } from "astro-icon/components";
 import { Image } from "astro:assets";
 
 // Configuration imports
-import {
-HOMEPAGE_METADATA,
-MAIN_FEATURE_CARDS,
-SPEED_FEATURE_CARDS,
-} from "@/config/homepage";
+import { HOMEPAGE_METADATA, MAIN_FEATURE_CARDS, SPEED_FEATURE_CARDS } from "@/config/homepage";
 import { NAVIGATION_SECTIONS } from "@/config/navigation";
 import { PRO_CONFIG } from "@/config/site";
 
@@ -44,6 +41,7 @@ const blogPosts = await getHomepageBlogPosts();
     image={coverImage}
     imageAlt="Futurystyczny rdzeń AI - MyBonzo"
     animate={true}
+    class="float"
   />
 
   <!-- Hero Section with Video + Navigation -->
@@ -55,116 +53,84 @@ const blogPosts = await getHomepageBlogPosts();
   />
 
   <!-- Latest Projects Section -->
-  <section
-    class="w-full py-8 bg-gradient-to-b from-theme-primary/5 to-transparent"
-  >
+  <section class="w-full py-2 bg-gradient-to-b from-theme-primary/5 to-transparent">
     <div class="container mx-auto px-4">
       <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-6">
-          <h2 class="text-2xl lg:text-3xl font-bold text-theme-primary mb-2">
+        <div class="text-center mb-3">
+          <h2 class="text-2xl lg:text-3xl font-bold text-theme-text mb-2">
             🚀 Najnowsze Projekty & Osiągnięcia
           </h2>
-          <p class="text-base text-theme-primary/80 max-w-3xl mx-auto">
+          <p class="text-base text-theme-text/80 max-w-3xl mx-auto">
             Odkryj nasze najnowsze projekty AI - od optymalizacji crawlerów po generowanie obrazów
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- AI Crawler Optimization -->
-          <a
+          <Card
+            title="AI Crawler Optimization"
+            description="Blog repositioning + llms.txt z PURPOSE section. Perplexity, ChatGPT i Claude mają teraz dostęp do 18,111 produktów z meblepumo.pl przez RAG API."
             href="/.workspace_meta/notes/2026-01-19-ai-crawler-optimization.md"
-            class="group bg-gray-900 border border-green-500/30 p-4 hover:border-green-500 transition-all duration-300 hover:shadow-xl hover:shadow-green-500/20"
+            class="h-full border-green-500/20 hover:border-green-400"
           >
-            <div class="flex items-center gap-2 mb-2">
-              <span class="text-2xl">🤖</span>
-              <h3 class="text-lg font-bold text-green-400 group-hover:text-green-300">
-                AI Crawler Optimization
-              </h3>
-            </div>
-            <p class="text-gray-300 text-sm leading-relaxed mb-3">
-              Blog repositioning + llms.txt z PURPOSE section. Perplexity, ChatGPT i Claude 
-              mają teraz dostęp do 18,111 produktów z meblepumo.pl przez RAG API.
-            </p>
             <div class="flex flex-wrap gap-2">
               <span class="text-xs px-2 py-1 bg-green-500/20 text-green-300 rounded">llms.txt</span>
               <span class="text-xs px-2 py-1 bg-green-500/20 text-green-300 rounded">robots.txt</span>
               <span class="text-xs px-2 py-1 bg-green-500/20 text-green-300 rounded">Schema.org</span>
               <span class="text-xs px-2 py-1 bg-green-500/20 text-green-300 rounded">19.01.2026</span>
             </div>
-          </a>
+          </Card>
 
           <!-- PUMO RAG Vector Search -->
-          <a
+          <Card
+            title="PUMO RAG Vector Search"
+            description="768-wymiarowe embeddingi (BGE-base-en-v1.5), Cloudflare Vectorize, 18,111 produktów zaindeksowanych. Semantic search <100ms."
             href="/pumo-guide/"
-            class="group bg-gray-900 border border-blue-500/30 p-4 hover:border-blue-500 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/20"
+            class="h-full border-blue-500/20 hover:border-blue-400"
           >
-            <div class="flex items-center gap-2 mb-2">
-              <span class="text-2xl">🔍</span>
-              <h3 class="text-lg font-bold text-blue-400 group-hover:text-blue-300">
-                PUMO RAG Vector Search
-              </h3>
-            </div>
-            <p class="text-gray-300 text-sm leading-relaxed mb-3">
-              768-wymiarowe embeddingi (BGE-base-en-v1.5), Cloudflare Vectorize, 
-              18,111 produktów zaindeksowanych. Semantic search w {"<"}100ms.
-            </p>
             <div class="flex flex-wrap gap-2">
               <span class="text-xs px-2 py-1 bg-blue-500/20 text-blue-300 rounded">Vectorize</span>
               <span class="text-xs px-2 py-1 bg-blue-500/20 text-blue-300 rounded">Workers AI</span>
               <span class="text-xs px-2 py-1 bg-blue-500/20 text-blue-300 rounded">Edge Computing</span>
               <span class="text-xs px-2 py-1 bg-blue-500/20 text-blue-300 rounded">v2.0</span>
             </div>
-          </a>
+          </Card>
 
           <!-- AI Image Generator -->
-          <a
+          <Card
+            title="AI Image Generator"
+            description="FREE generowanie obrazów przez Cloudflare Workers AI (SDXL). 10k neurons/day, wyniki w <30s, 1024x1024 PNG."
             href="#ai-image-generator"
-            class="group bg-gray-900 border border-purple-500/30 p-4 hover:border-purple-500 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20"
+            class="h-full border-purple-500/20 hover:border-purple-400"
           >
-            <div class="flex items-center gap-2 mb-2">
-              <span class="text-2xl">🎨</span>
-              <h3 class="text-lg font-bold text-purple-400 group-hover:text-purple-300">
-                AI Image Generator
-              </h3>
-            </div>
-            <p class="text-gray-300 text-sm leading-relaxed mb-3">
-              FREE generowanie obrazów przez Cloudflare Workers AI (SDXL). 
-              10k neurons/day, wyniki w {"<"}30s, 1024x1024 PNG.
-            </p>
             <div class="flex flex-wrap gap-2">
               <span class="text-xs px-2 py-1 bg-purple-500/20 text-purple-300 rounded">Stable Diffusion</span>
               <span class="text-xs px-2 py-1 bg-purple-500/20 text-purple-300 rounded">FREE</span>
               <span class="text-xs px-2 py-1 bg-purple-500/20 text-purple-300 rounded">10k/day</span>
               <span class="text-xs px-2 py-1 bg-purple-500/20 text-purple-300 rounded">SDXL</span>
             </div>
-          </a>
+          </Card>
 
           <!-- Wrangler 4.59.2 Update -->
-          <div class="bg-gray-900 border border-orange-500/30 p-4">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="text-2xl">⚡</span>
-              <h3 class="text-lg font-bold text-orange-400">
-                Wrangler 4.59.2
-              </h3>
-            </div>
-            <p class="text-gray-300 text-sm leading-relaxed mb-3">
-              Aktualizacja Cloudflare Wrangler CLI (3.114.17 → 4.59.2). 
-              Wszystkie workers wdrożone i działają bez błędów.
-            </p>
+          <Card
+            title="Wrangler 4.59.2"
+            description="Aktualizacja Cloudflare Wrangler CLI (3.114.17 → 4.59.2). Wszystkie workers wdrożone i działają bez błędów."
+            class="h-full border-orange-500/20"
+          >
             <div class="flex flex-wrap gap-2">
               <span class="text-xs px-2 py-1 bg-orange-500/20 text-orange-300 rounded">Workers</span>
               <span class="text-xs px-2 py-1 bg-orange-500/20 text-orange-300 rounded">Deployment</span>
               <span class="text-xs px-2 py-1 bg-orange-500/20 text-orange-300 rounded">Updated</span>
               <span class="text-xs px-2 py-1 bg-orange-500/20 text-orange-300 rounded">✅ OK</span>
             </div>
-          </div>
+          </Card>
         </div>
 
         <!-- Stats Grid -->
         <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
           <div class="text-center p-3 bg-theme-accent/10 border border-theme-accent/30">
             <div class="text-xl font-bold text-theme-accent mb-1">18,111</div>
-            <div class="text-xs text-theme-primary/70">Products Indexed</div>
+            <div class="text-xs text-theme-text/70">Products Indexed</div>
           </div>
           <div class="text-center p-3 bg-green-500/10 border border-green-500/30">
             <div class="text-xl font-bold text-green-400 mb-1">6</div>
@@ -184,16 +150,18 @@ const blogPosts = await getHomepageBlogPosts();
   </section>
 
   <!-- AI Image Generator Section - Replicate + Cloudflare -->
-  <section class="w-full py-8 bg-gradient-to-b from-purple-500/5 to-blue-500/5">
+  <section class="w-full py-2 bg-gradient-to-b from-purple-500/5 to-blue-500/5">
     <div class="container mx-auto px-4">
       <div class="max-w-5xl mx-auto">
-        <div class="text-center mb-4">
-          <h2 class="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-2">
+        <div class="text-center mb-2">
+          <h2
+            class="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-2"
+          >
             🎨 AI Image Generator: FLUX & Stable Diffusion
           </h2>
-          <p class="text-base text-theme-primary/80 max-w-3xl mx-auto">
-            Generowanie obrazów z tekstu w czasie rzeczywistym. Najnowsze modele FLUX Schnell, 
-            FLUX Pro i SDXL - od $0.003 za obraz, wyniki w {"<"}60 sekund.
+          <p class="text-base text-theme-text/80 max-w-3xl mx-auto">
+            Generowanie obrazów z tekstu w czasie rzeczywistym. Najnowsze modele FLUX Schnell, FLUX
+            Pro i SDXL - od $0.003 za obraz, wyniki w {"<"}60 sekund.
           </p>
         </div>
 
@@ -201,28 +169,39 @@ const blogPosts = await getHomepageBlogPosts();
         <div class="grid md:grid-cols-2 gap-4 mb-4">
           <!-- Image Preview -->
           <div class="relative group">
-            <div class="absolute -inset-1 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
-            <div class="relative bg-gray-900 border border-purple-500/30 rounded-lg overflow-hidden">
-              <img 
-                src="/generated/ai-search.png" 
+            <div
+              class="absolute -inset-1 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg blur opacity-25 group-hover:opacity-40 transition duration-300"
+            >
+            </div>
+            <div
+              class="relative glass border border-purple-500/30 rounded-xl overflow-hidden hover-glow"
+            >
+              <img
+                src="/generated/ai-search.png"
                 alt="AI-generated semantic search visualization - Cloudflare Workers AI"
                 class="w-full h-auto"
               />
-              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 via-gray-900/90 to-transparent p-4">
-                <p class="text-sm text-purple-300">Wygenerowane przez Cloudflare Workers AI (SDXL) - FREE!</p>
+              <div
+                class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 via-gray-900/90 to-transparent p-4"
+              >
+                <p class="text-sm text-purple-300">
+                  Wygenerowane przez Cloudflare Workers AI (SDXL) - FREE!
+                </p>
               </div>
             </div>
           </div>
 
           <!-- Features & Tech Stack -->
           <div class="space-y-4">
-            <div class="bg-gray-900 border border-purple-500/30 p-4 rounded-lg">
+            <div class="glass border border-purple-500/20 p-5 rounded-xl">
               <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
                 <span class="text-xl">⚡</span>
                 Dostępne Modele
               </h3>
               <div class="space-y-2">
-                <div class="flex justify-between items-center p-2 bg-green-500/10 rounded border border-green-500/20">
+                <div
+                  class="flex justify-between items-center p-2 bg-green-500/10 rounded border border-green-500/20"
+                >
                   <span class="font-semibold text-green-300">SDXL (Cloudflare)</span>
                   <span class="text-sm text-green-400 font-bold">FREE!</span>
                 </div>
@@ -237,7 +216,7 @@ const blogPosts = await getHomepageBlogPosts();
               </div>
             </div>
 
-            <div class="bg-gray-900 border border-blue-500/30 p-4 rounded-lg">
+            <div class="glass border border-blue-500/20 p-5 rounded-xl">
               <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
                 <span class="text-xl">🔧</span>
                 Tech Stack
@@ -265,7 +244,9 @@ const blogPosts = await getHomepageBlogPosts();
         </div>
 
         <!-- Stats Bar -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-900 border border-purple-500/30 p-4 rounded-lg">
+        <div
+          class="grid grid-cols-2 md:grid-cols-4 gap-4 glass border border-purple-500/20 p-6 rounded-xl mt-6"
+        >
           <div class="text-center">
             <div class="text-xl font-bold text-green-400">FREE</div>
             <div class="text-sm text-gray-400">Cloudflare AI</div>
@@ -286,8 +267,8 @@ const blogPosts = await getHomepageBlogPosts();
 
         <!-- CTA -->
         <div class="mt-4 text-center">
-          <a 
-            href="https://cf-ai-image-gen.stolarnia-ams.workers.dev/api/generate" 
+          <a
+            href="https://cf-ai-image-gen.stolarnia-ams.workers.dev/api/generate"
             class="inline-flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold rounded-lg hover:from-green-600 hover:to-blue-600 transition-all duration-300 shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/50"
           >
             <span>🎨</span>
@@ -295,8 +276,12 @@ const blogPosts = await getHomepageBlogPosts();
             <span>→</span>
           </a>
           <p class="mt-4 text-sm text-gray-400">
-            Powered by Cloudflare Workers AI - 
-            <a href="https://developers.cloudflare.com/workers-ai/" target="_blank" class="text-green-400 hover:text-green-300 underline">
+            Powered by Cloudflare Workers AI -
+            <a
+              href="https://developers.cloudflare.com/workers-ai/"
+              target="_blank"
+              class="text-green-400 hover:text-green-300 underline"
+            >
               Workers AI Docs
             </a>
           </p>
@@ -306,14 +291,10 @@ const blogPosts = await getHomepageBlogPosts();
   </section>
 
   <!-- Partner Links & AI News 2025 -->
-  <section
-    class="w-full py-8 bg-gradient-to-b from-transparent to-theme-primary/5"
-  >
+  <section class="w-full py-2 bg-gradient-to-b from-transparent to-theme-primary/5">
     <div class="container mx-auto px-4">
       <div class="max-w-6xl mx-auto">
-        <h2
-          class="text-2xl lg:text-3xl font-bold text-theme-primary text-center mb-6"
-        >
+        <h2 class="text-2xl lg:text-3xl font-bold text-theme-text text-center mb-3">
           🌐 Nasze Projekty & AI 2025 Highlights
         </h2>
 
@@ -323,19 +304,19 @@ const blogPosts = await getHomepageBlogPosts();
             href="https://www.mybonzo.com"
             target="_blank"
             rel="noopener noreferrer"
-            class="group relative overflow-hidden bg-gradient-to-br from-theme-accent/20 to-theme-primary/10 border border-theme-accent/40 p-5 hover:border-theme-accent transition-all duration-300 hover:shadow-xl hover:shadow-theme-accent/20"
+            class="group relative overflow-hidden glass border border-theme-accent/20 p-6 rounded-xl hover:border-theme-accent transition-all duration-300 hover-glow"
           >
             <div class="flex items-center gap-3 mb-2">
               <span class="text-3xl">🏢</span>
               <h3
-                class="text-xl font-bold text-theme-primary group-hover:text-theme-accent transition-colors"
+                class="text-xl font-bold text-theme-text group-hover:text-theme-accent transition-colors"
               >
                 MyBonzo.com
               </h3>
             </div>
-            <p class="text-theme-primary/70 leading-relaxed">
-              Platforma AI dla biznesu. Rozwiązania dla e-commerce,
-              automatyzacja procesów i inteligentne asystenty.
+            <p class="text-theme-text/70 leading-relaxed">
+              Platforma AI dla biznesu. Rozwiązania dla e-commerce, automatyzacja procesów i
+              inteligentne asystenty.
             </p>
             <div
               class="absolute bottom-3 right-3 text-theme-accent text-2xl opacity-0 group-hover:opacity-100 transition-opacity"
@@ -348,19 +329,19 @@ const blogPosts = await getHomepageBlogPosts();
             href="https://www.zenbrowsers.org"
             target="_blank"
             rel="noopener noreferrer"
-            class="group relative overflow-hidden bg-gradient-to-br from-purple-500/20 to-blue-500/10 border border-purple-500/40 p-5 hover:border-purple-500 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20"
+            class="group relative overflow-hidden glass border border-purple-500/20 p-6 rounded-xl hover:border-purple-400 transition-all duration-300 hover-glow"
           >
             <div class="flex items-center gap-3 mb-2">
               <span class="text-3xl">🌸</span>
               <h3
-                class="text-xl font-bold text-theme-primary group-hover:text-purple-400 transition-colors"
+                class="text-xl font-bold text-theme-text group-hover:text-purple-400 transition-colors"
               >
                 Zen Browsers
               </h3>
             </div>
-            <p class="text-theme-primary/70 leading-relaxed">
-              Nowoczesne przeglądarki z wbudowaną AI. Prywatność, wydajność i
-              inteligentne funkcje w jednym.
+            <p class="text-theme-text/70 leading-relaxed">
+              Nowoczesne przeglądarki z wbudowaną AI. Prywatność, wydajność i inteligentne funkcje w
+              jednym.
             </p>
             <div
               class="absolute bottom-3 right-3 text-purple-400 text-2xl opacity-0 group-hover:opacity-100 transition-opacity"
@@ -379,87 +360,73 @@ const blogPosts = await getHomepageBlogPosts();
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <!-- Reasoning Models -->
             <div
-              class="bg-theme-primary/5 border border-theme-accent/30 p-4 hover:border-theme-accent/60 transition-all"
+              class="bg-theme-bg/5 border border-theme-accent/30 p-4 hover:border-theme-accent/60 transition-all"
             >
               <div class="text-2xl mb-2">🧠</div>
-              <h4 class="text-lg font-semibold text-theme-primary mb-2">
-                Modele z Rozumowaniem
-              </h4>
-              <p class="text-sm text-theme-primary/70 leading-relaxed">
-                OpenAI o1/o3 i Claude 3.7 wprowadzają "czas myślenia" - AI teraz
-                deliberuje przed odpowiedzią, osiągając 54% accuracy na
-                ARC-AGI-2 (vs 0-2% rok temu).
+              <h4 class="text-lg font-semibold text-theme-text mb-2">Modele z Rozumowaniem</h4>
+              <p class="text-sm text-theme-text/70 leading-relaxed">
+                OpenAI o1/o3 i Claude 3.7 wprowadzają "czas myślenia" - AI teraz deliberuje przed
+                odpowiedzią, osiągając 54% accuracy na ARC-AGI-2 (vs 0-2% rok temu).
               </p>
             </div>
 
             <!-- Multimodal AI -->
             <div
-              class="bg-theme-primary/5 border border-theme-accent/30 p-4 hover:border-theme-accent/60 transition-all"
+              class="bg-theme-bg/5 border border-theme-accent/30 p-4 hover:border-theme-accent/60 transition-all"
             >
               <div class="text-2xl mb-2">🎨</div>
-              <h4 class="text-lg font-semibold text-theme-primary mb-2">
-                Multimodal AI
-              </h4>
-              <p class="text-sm text-theme-primary/70 leading-relaxed">
-                Llama 4 Scout z 10M tokenów kontekstu, Gemini 3 Flash z
-                sub-millisecond latency. AI teraz natywnie łączy tekst, obraz,
-                video i audio.
+              <h4 class="text-lg font-semibold text-theme-text mb-2">Multimodal AI</h4>
+              <p class="text-sm text-theme-text/70 leading-relaxed">
+                Llama 4 Scout z 10M tokenów kontekstu, Gemini 3 Flash z sub-millisecond latency. AI
+                teraz natywnie łączy tekst, obraz, video i audio.
               </p>
             </div>
 
             <!-- AI Agents -->
             <div
-              class="bg-theme-primary/5 border border-theme-accent/30 p-4 hover:border-theme-accent/60 transition-all"
+              class="bg-theme-bg/5 border border-theme-accent/30 p-4 hover:border-theme-accent/60 transition-all"
             >
               <div class="text-2xl mb-2">🤖</div>
-              <h4 class="text-lg font-semibold text-theme-primary mb-2">
-                Autonomiczne Agenty
-              </h4>
-              <p class="text-sm text-theme-primary/70 leading-relaxed">
-                62% firm eksperymentuje z AI agents, 23% skaluje production.
-                Multi-agent orchestration staje się standardem enterprise.
+              <h4 class="text-lg font-semibold text-theme-text mb-2">Autonomiczne Agenty</h4>
+              <p class="text-sm text-theme-text/70 leading-relaxed">
+                62% firm eksperymentuje z AI agents, 23% skaluje production. Multi-agent
+                orchestration staje się standardem enterprise.
               </p>
             </div>
 
             <!-- Healthcare AI -->
             <div
-              class="bg-theme-primary/5 border border-theme-accent/30 p-4 hover:border-theme-accent/60 transition-all"
+              class="bg-theme-bg/5 border border-theme-accent/30 p-4 hover:border-theme-accent/60 transition-all"
             >
               <div class="text-2xl mb-2">🏥</div>
-              <h4 class="text-lg font-semibold text-theme-primary mb-2">
-                Medycyna & AI
-              </h4>
-              <p class="text-sm text-theme-primary/70 leading-relaxed">
-                PopEVE diagnozuje choroby genetyczne w godziny (vs lata).
-                AI-auscultation wykrywa niewydolność serca 2-3x skuteczniej.
+              <h4 class="text-lg font-semibold text-theme-text mb-2">Medycyna & AI</h4>
+              <p class="text-sm text-theme-text/70 leading-relaxed">
+                PopEVE diagnozuje choroby genetyczne w godziny (vs lata). AI-auscultation wykrywa
+                niewydolność serca 2-3x skuteczniej.
               </p>
             </div>
 
             <!-- Video Generation -->
             <div
-              class="bg-theme-primary/5 border border-theme-accent/30 p-4 hover:border-theme-accent/60 transition-all"
+              class="bg-theme-bg/5 border border-theme-accent/30 p-4 hover:border-theme-accent/60 transition-all"
             >
               <div class="text-2xl mb-2">🎬</div>
-              <h4 class="text-lg font-semibold text-theme-primary mb-2">
-                AI Video Production
-              </h4>
-              <p class="text-sm text-theme-primary/70 leading-relaxed">
-                Sora 2, Kling 2.5, Veo 3.1 - produkcyjna jakość 4K video z
-                audio. 3-minutowe klipy za $8-30/miesiąc.
+              <h4 class="text-lg font-semibold text-theme-text mb-2">AI Video Production</h4>
+              <p class="text-sm text-theme-text/70 leading-relaxed">
+                Sora 2, Kling 2.5, Veo 3.1 - produkcyjna jakość 4K video z audio. 3-minutowe klipy
+                za $8-30/miesiąc.
               </p>
             </div>
 
             <!-- Economic Impact -->
             <div
-              class="bg-theme-primary/5 border border-theme-accent/30 p-4 hover:border-theme-accent/60 transition-all"
+              class="bg-theme-bg/5 border border-theme-accent/30 p-4 hover:border-theme-accent/60 transition-all"
             >
               <div class="text-2xl mb-2">💰</div>
-              <h4 class="text-lg font-semibold text-theme-primary mb-2">
-                Wpływ Ekonomiczny
-              </h4>
-              <p class="text-sm text-theme-primary/70 leading-relaxed">
-                AI zwiększy GDP o 1.5% do 2035, 3.7% do 2075. $2T globalnych
-                inwestycji w AI w 2026. 25-40% redukcja kosztów pracy.
+              <h4 class="text-lg font-semibold text-theme-text mb-2">Wpływ Ekonomiczny</h4>
+              <p class="text-sm text-theme-text/70 leading-relaxed">
+                AI zwiększy GDP o 1.5% do 2035, 3.7% do 2075. $2T globalnych inwestycji w AI w 2026.
+                25-40% redukcja kosztów pracy.
               </p>
             </div>
           </div>
@@ -481,47 +448,44 @@ const blogPosts = await getHomepageBlogPosts();
   <!-- Main Feature Cards -->
   <FeaturesSection
     cards={MAIN_FEATURE_CARDS}
-    className="mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-4 mt-14 mb-16 lg:mt-0 lg:justify-between lg:flex-nowrap lg:p-5 build-in"
+    className="mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-2 mt-4 mb-4 lg:mt-0 lg:justify-between lg:flex-nowrap lg:p-2 build-in"
   />
 
   <!-- AI dla Wszystkich Section -->
-  <section class="flex flex-col items-center justify-center mt-6 mb-48 fade-in">
-    <h2 class="graffiti-footer">AI DLA WSZYSTKICH</h2>
+  <section class="flex flex-col items-center justify-center mt-2 mb-12 fade-in">
+    <h2 class="graffiti-footer scale-75 origin-center">AI DLA WSZYSTKICH</h2>
     <p
       class="text-xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-2xl lg:leading-relaxed"
     >
-      Sztuczna inteligencja nie musi być skomplikowana. MyBonzo AI Blog łączy
-      zaawansowane technologie z prostotą użytkowania, bo przyszłość powinna być
-      dostępna dla każdego, niezależnie od poziomu technicznego.
+      Sztuczna inteligencja nie musi być skomplikowana. MyBonzo AI Blog łączy zaawansowane
+      technologie z prostotą użytkowania, bo przyszłość powinna być dostępna dla każdego,
+      niezależnie od poziomu technicznego.
     </p>
   </section>
 
   <!-- Speed Feature Cards -->
   <FeaturesSection
     cards={SPEED_FEATURE_CARDS}
-    className="mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-4 mt-8 mb-16 lg:justify-between lg:flex-nowrap lg:p-5 build-in"
+    className="mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-2 mt-2 mb-4 lg:justify-between lg:flex-nowrap lg:p-2 build-in"
   />
 
   <!-- Blog Posts Section (SSR) -->
   <BlogSection posts={blogPosts} />
 
   <!-- Stworzone dla Ciebie Section -->
-  <section class="flex flex-col items-center justify-center mt-16 mb-0 fade-in">
-    <h2
-      class="bg-theme-accent text-theme-secondary p-5 text-center mb-8 lg:w-auto"
-    >
+  <section class="flex flex-col items-center justify-center mt-4 mb-0 fade-in">
+    <h2 class="bg-theme-accent text-theme-text-secondary p-3 text-center mb-2 lg:w-auto">
       Stworzone dla Ciebie
     </h2>
     <p
-      class="text-2xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-2xl lg:leading-relaxed tracking-wide mt-6 mb-48"
+      class="text-xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-xl lg:leading-relaxed tracking-wide mt-2 mb-12"
     >
-      Niezależnie od tego czy jesteś początkujący czy ekspertem, MyBonzo AI Blog
-      dostarcza narzędzia i wiedzę na odpowiednim poziomie. Rozwijaj swoje
-      umiejętności AI w tempie które Ci odpowiada.
+      Niezależnie od tego czy jesteś początkujący czy ekspertem, MyBonzo AI Blog dostarcza narzędzia
+      i wiedzę na odpowiednim poziomie. Rozwijaj swoje umiejętności AI w tempie które Ci odpowiada.
     </p>
     <a href="/blog" class="no-underline group group-hover:cursor-pointer">
       <div
-        class="text-xl tracking-wide bg-theme-primary text-theme-primary text-center shadow-sm shadow-theme-primary border-2 mb-4 group-hover:bg-theme-secondary group-hover:text-theme-accent group-hover:shadow-none transition-all duration-300 ease-in-out lg:text-2xl lg:tracking-wider"
+        class="text-xl tracking-wide bg-theme-bg text-theme-text text-center shadow-sm shadow-theme-accent border-2 mb-4 group-hover:bg-theme-bg-secondary group-hover:text-theme-accent group-hover:shadow-none transition-all duration-300 ease-in-out lg:text-2xl lg:tracking-wider"
       >
         <div class="mt-0">
           <Icon name="ri:article-line" height="150" width="300" class="mb-5" />
@@ -537,7 +501,7 @@ const blogPosts = await getHomepageBlogPosts();
       <img
         src="/AI_News_ZenBrowsers.png"
         alt="Let AI empower your work - Modern AI tools transforming productivity and creativity in 2026"
-        class="shadow-md shadow-theme-primary max-w-4xl rounded-lg"
+        class="shadow-md shadow-theme-accent max-w-4xl rounded-lg"
         loading="lazy"
         width="1200"
         height="630"
@@ -546,7 +510,7 @@ const blogPosts = await getHomepageBlogPosts();
   </section>
 
   <!-- MyBonzo Pro CTA -->
-  <section style="margin-top:2.5em; text-align:center; padding: 2rem 0;">
+  <section style="margin-top:0.5em; text-align:center; padding: 0.5rem 0;">
     <div class="container mx-auto px-4">
       <p class="text-lg">
         <strong>{PRO_CONFIG.ctaText}</strong>
@@ -561,25 +525,39 @@ const blogPosts = await getHomepageBlogPosts();
   </section>
 
   <!-- PUMO AI Dataset Schema for Crawlers -->
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "Dataset",
-    "name": "Meble Pumo RAG Vector Database",
-    "description": "768-dimensional vector database with 13,388 furniture products from Meble Pumo, powered by Cloudflare Vectorize and Workers AI for semantic search.",
-    "url": "https://mybonzoaiblog.pages.dev/pumo-guide",
-    "creator": {
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      name: "Meble Pumo RAG Vector Database",
+      description:
+        "768-dimensional vector database with 13,388 furniture products from Meble Pumo, powered by Cloudflare Vectorize and Workers AI for semantic search.",
+      url: "https://mybonzoaiblog.pages.dev/pumo-guide",
+      creator: {
         "@type": "Organization",
-        "name": "MyBonzo AI"
-    },
-    "distribution": [
+        name: "MyBonzo AI",
+      },
+      distribution: [
         {
-            "@type": "DataDownload",
-            "encodingFormat": "application/json",
-            "contentUrl": "https://pumo-rag.stolarnia-ams.workers.dev/api/search"
-        }
-    ],
-    "isAccessibleForFree": true,
-    "datePublished": "2026-01-18",
-    "keywords": ["furniture", "vectors", "embeddings", "RAG", "AI", "Meble Pumo", "ecommerce", "Cloudflare", "Vectorize"]
-  })} />
+          "@type": "DataDownload",
+          encodingFormat: "application/json",
+          contentUrl: "https://pumo-rag.stolarnia-ams.workers.dev/api/search",
+        },
+      ],
+      isAccessibleForFree: true,
+      datePublished: "2026-01-18",
+      keywords: [
+        "furniture",
+        "vectors",
+        "embeddings",
+        "RAG",
+        "AI",
+        "Meble Pumo",
+        "ecommerce",
+        "Cloudflare",
+        "Vectorize",
+      ],
+    })}
+  />
 </Layout>

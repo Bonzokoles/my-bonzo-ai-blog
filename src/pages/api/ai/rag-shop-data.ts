@@ -1,121 +1,82 @@
 /**
  * API Route: /api/ai/rag-shop-data
- * Real-time shop data from IdoSell for RAG system
+ * RAG Context Provider for AI Chat
+ * 
+ * @principle API Design: Context-aware responses
  */
 import type { APIRoute } from 'astro';
 
-const JIMBO77_API_BASE = 'http://localhost:8001/v1/idosell';
+interface RagContextRequest {
+    query: string;
+    domain?: string;
+}
 
-export const GET: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     try {
-        // Pobierz aktualne dane z JIMBO77 API
-        const response = await fetch(`${JIMBO77_API_BASE}/blog-rag-data`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+        const body: RagContextRequest = await request.json();
+        const { query, domain } = body;
+
+        // 1. Perform Vector Search (Internal Call)
+        // We reuse the logic or call the endpoint. For performance in Workers, 
+        // direct function call is better if shared code, but here we simulate internal fetch
+        // or just implement the logic directly to avoid self-fetch overhead if possible.
+        // However, reusing the new vector-search endpoint via URL is standard for separation.
+
+        const url = new URL(request.url);
+        const origin = url.origin;
+
+        const searchResponse = await fetch(`${origin}/api/ai/vector-search`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query, limit: 5, domain })
         });
 
-        if (!response.ok) {
-            throw new Error(`JIMBO77 API error: ${response.status}`);
-        }
+        const searchResult = await searchResponse.json() as { data?: { results: any[] } };
+        const products = searchResult.data?.results || [];
 
-        const shopData = await response.json();
+        // 2. Format Context for LLM
+        // Convert product data into semantic text chunks
+        const productContext = products.map((p: any) => {
+            const prod = p.product;
+            if (!prod) return '';
+            return `Product: ${prod.name}
+Price: ${prod.price} PLN
+Category: ${prod.category}
+Availability: ${prod.availability || 'Unknown'}
+Link: ${prod.url}`;
+        }).join('\n---\n');
 
-        // Przygotuj dane RAG dla AI chat
-        const ragContext = {
-            shop: {
-                name: 'Meble Pumo',
-                status: shopData.business_data?.live_metrics?.shop_activity || 'unknown',
-                todayOrders: shopData.business_data?.live_metrics?.today_orders || 0,
-                todayRevenue: shopData.business_data?.live_metrics?.today_revenue || 0,
-                totalOrders: shopData.business_data?.analytics?.total_orders || 0,
-                avgOrderValue: shopData.business_data?.analytics?.average_order_value || 0
-            },
-            context: shopData.rag_prompts || {},
-            updatedAt: shopData.updated_at || new Date().toISOString()
-        };
+        // 3. Business Context (Static or fetched from D1 config)
+        const businessContext = `Shop: Meble Pumo
+Domain: ${domain || 'meblepumo.pl'}
+Special offers: Free shipping over 2000 PLN.
+Return policy: 30 days.`;
 
-        return new Response(JSON.stringify(ragContext), {
+        return new Response(JSON.stringify({
+            context: `
+[BUSINESS INFO]
+${businessContext}
+
+[RELEVANT PRODUCTS]
+${productContext}
+            `,
+            sourceDocs: products
+        }), {
             status: 200,
-            headers: {
-                'Content-Type': 'application/json',
-                'Cache-Control': 'max-age=300' // Cache 5 minutes
-            }
+            headers: { 'Content-Type': 'application/json' }
         });
 
     } catch (error) {
-        console.error('Shop RAG data error:', error);
-
-        // Fallback data when IdoSell is not available
-        const fallbackData = {
-            shop: {
-                name: 'Meble Pumo',
-                status: 'offline',
-                todayOrders: 0,
-                todayRevenue: 0,
-                totalOrders: 0,
-                avgOrderValue: 0
-            },
-            context: {
-                business_summary: 'Meble Pumo - sklep meblowy online (dane niedostępne)',
-                current_status: 'System shop data obecnie niedostępny',
-                recommendations: 'Sprawdź status połączenia z API sklepu'
-            },
-            updatedAt: new Date().toISOString(),
-            error: 'Shop data temporarily unavailable'
-        };
-
-        return new Response(JSON.stringify(fallbackData), {
-            status: 200,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+        console.error('RAG Data Error:', error);
+        return new Response(JSON.stringify({
+            error: 'Failed to generate RAG context',
+            context: 'System unavailable.'
+        }), { status: 500 });
     }
 };
 
-export const POST: APIRoute = async ({ request }) => {
-    try {
-        // Force refresh shop data
-        const refreshResponse = await fetch(`${JIMBO77_API_BASE}/sync-to-blog`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!refreshResponse.ok) {
-            throw new Error(`Sync failed: ${refreshResponse.status}`);
-        }
-
-        const result = await refreshResponse.json();
-
-        return new Response(JSON.stringify({
-            status: 'success',
-            message: 'Shop data refreshed for RAG system',
-            syncResult: result,
-            updatedAt: new Date().toISOString()
-        }), {
-            status: 200,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-    } catch (error) {
-        console.error('Shop data refresh error:', error);
-
-        return new Response(JSON.stringify({
-            status: 'error',
-            message: 'Failed to refresh shop data',
-            error: error.message,
-            updatedAt: new Date().toISOString()
-        }), {
-            status: 500,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-    }
+export const GET: APIRoute = async () => {
+    return new Response(JSON.stringify({
+        message: 'Use POST with { query } to get RAG context.'
+    }), { status: 405 });
 };

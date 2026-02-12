@@ -71,21 +71,21 @@ async function requireDashboardAccess(request: Request, env: Env): Promise<void>
     if (!authHeader.startsWith('Basic ')) {
       throw new Error('BASIC_AUTH_REQUIRED');
     }
-    
+
     try {
       const base64Credentials = authHeader.substring(6).trim();
       if (!base64Credentials || !/^[A-Za-z0-9+/=]+$/.test(base64Credentials)) {
         throw new Error('Invalid credentials format');
       }
-      
+
       const credentials = atob(base64Credentials);
       const colonIndex = credentials.indexOf(':');
       if (colonIndex === -1) {
         throw new Error('Invalid credentials format');
       }
-      
+
       const password = credentials.substring(colonIndex + 1);
-      
+
       if (!constantTimeCompare(password, dashboardPassword)) {
         throw new Error('Invalid credentials');
       }
@@ -102,7 +102,7 @@ async function requireDashboardAccess(request: Request, env: Env): Promise<void>
   const aud = (env.CF_ACCESS_AUD || '').trim();
   const jwksUrl = (env.CF_ACCESS_JWKS_URL || '').trim();
   const token = request.headers.get('Cf-Access-Jwt-Assertion') || '';
-  
+
   if (!token) throw new Error('Missing Cf-Access-Jwt-Assertion');
   if (!aud) throw new Error('CF_ACCESS_AUD missing');
   if (!jwksUrl) throw new Error('CF_ACCESS_JWKS_URL missing');
@@ -250,12 +250,12 @@ export default {
             'Content-Type': 'text/plain; charset=utf-8',
             ...(corsHeaders || {})
           };
-          
+
           // If password-based auth is enabled, request Basic Auth
           if (errorMsg === 'BASIC_AUTH_REQUIRED') {
             headers['WWW-Authenticate'] = 'Basic realm="PUMO Dashboard", charset="UTF-8"';
           }
-          
+
           return new Response(errorMsg === 'BASIC_AUTH_REQUIRED' ? 'Authentication required' : errorMsg, {
             status: 401,
             headers
@@ -420,7 +420,17 @@ async function handleChunkProcess(request: Request, env: Env, corsHeaders: any):
 
 async function handleSearch(request: Request, env: Env, corsHeaders: any): Promise<Response> {
   try {
-    const searchQuery = await request.json();
+    let searchQuery: any;
+    try {
+      searchQuery = await request.json();
+    } catch (e) {
+      return jsonResponse({ success: false, error: 'Invalid JSON body' }, 400, corsHeaders);
+    }
+
+    if (!searchQuery || !searchQuery.query) {
+      return jsonResponse({ success: false, error: 'Missing query parameter' }, 400, corsHeaders);
+    }
+
     const { SearchService } = await import('./services/search-service');
     const searchService = new SearchService(env);
     const results = await searchService.search(searchQuery);
@@ -430,6 +440,7 @@ async function handleSearch(request: Request, env: Env, corsHeaders: any): Promi
       timestamp: new Date().toISOString()
     }, 200, corsHeaders);
   } catch (error: any) {
+    console.error('Search error:', error);
     return jsonResponse({ success: false, error: error.message }, 500, corsHeaders);
   }
 }

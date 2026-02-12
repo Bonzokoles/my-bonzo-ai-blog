@@ -65,7 +65,7 @@ const breadcrumbItems = [
   </div>
 
   <section class="md:max-w-3xl md:mx-auto mt-0">
-    {!posts?.length && <p class="text-theme-primary">No posts found.</p>}
+    {!posts?.length && <p class="text-theme-text">No posts found.</p>}
     {
       posts?.map((post: any) => (
         <article
@@ -100,17 +100,17 @@ const breadcrumbItems = [
             {post.data.description}{" "}
             <a
               href={`/${post.collection || collectionName}/${post.id}`}
-              class="text-theme-primary pl-2"
+              class="text-theme-text pl-2"
             >
               Read more...
             </a>
           </p>
           {post.data.modDatetime && (
-            <p class="text-theme-primary font-mono text-sm">
+            <p class="text-theme-text font-mono text-sm">
               updated: {new Date(post.data.modDatetime).toLocaleString()}
             </p>
           )}
-          <div class="border-l-4 border-theme-primary p-4 mb-3 ml-1 inline-block">
+          <div class="border-l-4 border-theme-text p-4 mb-3 ml-1 inline-block">
             <Icon
               name="ri:quill-pen-line"
               size="16"

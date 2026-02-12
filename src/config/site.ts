@@ -1,46 +1,24 @@
-/**
- * Site-wide Configuration
- * Global site settings, metadata, and constants
- */
+import type { SiteConfig } from "../types";
 
-export const SITE_CONFIG = {
-  name: 'MyBonzo AI Blog',
-  tagline: 'Sztuczna Inteligencja dla Wszystkich',
-  url: 'https://www.mybonzoaiblog.com',
-  author: {
-    name: 'MyBonzo Team',
-    email: 'kontakt@mybonzo.com'
-  },
-  social: {
-    twitter: '@mybonzo',
-    github: 'mybonzo',
-    linkedin: 'mybonzo'
-  },
-  analytics: {
-    googleAnalyticsId: process.env.GOOGLE_ANALYTICS_ID || '',
-    cloudflareAnalytics: true
-  },
-  features: {
-    blog: true,
-    aiChat: true,
-    imageGenerator: true,
-    newsletter: true
-  },
-  theme: {
-    defaultTheme: 'dark',
-    roundedCorners: true
-  }
-} as const;
+export const SITE: SiteConfig = {
+  website: "https://mybonzoaiblog.com",
+  author: "Jimbo77 & Community",
+  desc: "Polski Social AI Club - Wymiana wiedzy, schematów i doświadczeń dla entuzjastów AI. Zero bullshit, sama praktyka.",
+  title: "Jimbo77 AI Social Club",
+  ogImage: "astropaper-og.jpg",
+  lightAndDarkMode: true,
+  postPerPage: 5,
+};
 
 export const BLOG_CONFIG = {
-  postsPerPage: 6,
-  featuredPostsCount: 1,
-  recentPostsCount: 6,
-  defaultImage: '/images/default-blog-cover.jpg'
-} as const;
+  recentPostsCount: 3,
+  featuredPostSlug: "naprawa-pumo-rag",
+  archiveLimit: 30
+};
 
 export const PRO_CONFIG = {
-  ctaText: 'Chcesz więcej mocy?',
-  ctaLinkText: 'Zobacz MyBonzo Pro z zaawansowanymi narzędziami →',
-  ctaUrl: '/pro'
-} as const;
+  active: true,
+  tier: "Elite",
+  mcpEnabled: true,
+  automationLevel: "MAX"
+};

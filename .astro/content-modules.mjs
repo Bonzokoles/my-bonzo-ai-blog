@@ -1,0 +1,17 @@
+
+export default new Map([
+["src/data/blog/ai-tools-przyszlosc-narzedzi.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fdata%2Fblog%2Fai-tools-przyszlosc-narzedzi.mdx&astroContentModuleFlag=true")],
+["src/data/blog/ai-seo-knowledge-bases-2025.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fdata%2Fblog%2Fai-seo-knowledge-bases-2025.mdx&astroContentModuleFlag=true")],
+["src/data/blog/alkaline-design-przywrocony.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fdata%2Fblog%2Falkaline-design-przywrocony.mdx&astroContentModuleFlag=true")],
+["src/data/blog/karol-zyciorys.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fdata%2Fblog%2Fkarol-zyciorys.mdx&astroContentModuleFlag=true")],
+["src/data/blog/mybonzo-pro-platforma-ai.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fdata%2Fblog%2Fmybonzo-pro-platforma-ai.mdx&astroContentModuleFlag=true")],
+["src/data/blog/new-ai-era.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fdata%2Fblog%2Fnew-ai-era.mdx&astroContentModuleFlag=true")],
+["src/data/blog/ai-w-codziennosci.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fdata%2Fblog%2Fai-w-codziennosci.mdx&astroContentModuleFlag=true")],
+["src/data/blog/rag-moa-ecommerce-2025.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fdata%2Fblog%2Frag-moa-ecommerce-2025.mdx&astroContentModuleFlag=true")],
+["src/data/blog/rzeczywistosc-jazn-wieloswiat.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fdata%2Fblog%2Frzeczywistosc-jazn-wieloswiat.mdx&astroContentModuleFlag=true")],
+["src/data/blog/rag-moa-podstawy-2025.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fdata%2Fblog%2Frag-moa-podstawy-2025.mdx&astroContentModuleFlag=true")],
+["src/data/blog/untitled-article.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fdata%2Fblog%2Funtitled-article.mdx&astroContentModuleFlag=true")],
+["src/data/blog/whitecat-case-study-roi-2025.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fdata%2Fblog%2Fwhitecat-case-study-roi-2025.mdx&astroContentModuleFlag=true")],
+["src/data/blog/why-autonomous-ai-agents-are-the-future-of-devops-in-2026.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fdata%2Fblog%2Fwhy-autonomous-ai-agents-are-the-future-of-devops-in-2026.mdx&astroContentModuleFlag=true")],
+["src/data/blog/why-pollinations-ai-crushes-dall-e-as-the-ultimate-free-alternative.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fdata%2Fblog%2Fwhy-pollinations-ai-crushes-dall-e-as-the-ultimate-free-alternative.mdx&astroContentModuleFlag=true")]]);
+		

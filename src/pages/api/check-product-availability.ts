@@ -3,7 +3,7 @@
  * Sprawdza dostępność produktów w czasie rzeczywistym
  */
 
-import { withFeatureMiddleware } from '@/middleware/api-middleware';
+import { withFeatureMiddleware } from '../../middleware/api-middleware';
 import type { APIRoute } from 'astro';
 
 interface ProductAvailabilityRequest {

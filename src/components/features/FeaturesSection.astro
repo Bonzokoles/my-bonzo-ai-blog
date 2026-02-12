@@ -18,7 +18,7 @@ const { title, description, cards, className = '' } = Astro.props;
 
 <section
   class:list={[
-    'mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-4 mt-14 mb-16 lg:mt-0 lg:justify-between lg:flex-nowrap lg:p-5 build-in',
+    'mx-0 w-full flex flex-row flex-wrap-reverse justify-center gap-2 mt-4 mb-4 lg:mt-0 lg:justify-between lg:flex-nowrap lg:p-2 build-in',
     className
   ]}
 >
@@ -33,10 +33,10 @@ const { title, description, cards, className = '' } = Astro.props;
 </section>
 
 {title && description && (
-  <section class="flex flex-col items-center justify-center mt-6 mb-48 fade-in">
-    {title && <h2 class="graffiti-footer">{title}</h2>}
+  <section class="flex flex-col items-center justify-center mt-2 mb-8 fade-in relative z-10">
+    {title && <h2 class="text-3xl md:text-4xl font-graffiti text-theme-accent mb-3">{title}</h2>}
     {description && (
-      <p class="text-xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-2xl lg:leading-relaxed">
+      <p class="text-xl max-w-6xl leading-relaxed text-center md:max-w-screen-lg lg:text-2xl lg:leading-relaxed text-white/80">
         {description}
       </p>
     )}

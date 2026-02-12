@@ -5,6 +5,7 @@
 
 import { requireDashboardAccess } from '../auth/auth';
 import { handleAnalyticsAPI } from '../endpoints/analytics';
+import { Env } from '../types';
 
 export async function handleRequest(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
@@ -30,34 +31,6 @@ export async function handleRequest(request: Request, env: Env, ctx: ExecutionCo
                 timestamp: new Date().toISOString(),
                 version: '2.0.0-modular'
             });
-        }
-
-        // Sync embeddings for all products (manual trigger)
-        if (path === '/sync-embeddings' && request.method === 'POST') {
-            return await handleSyncEmbeddings(env, ctx, request);
-        }
-
-        // Trigger daily sync workflow manually
-        if (path === '/trigger-daily-sync' && request.method === 'POST') {
-            return await handleTriggerDailySync(env, ctx);
-        }
-
-        // Semantic product search
-        if (path === '/api/search' && request.method === 'GET') {
-            return await handleSemanticSearch(request, env);
-        }
-
-        // AI SEO endpoints
-        if (path === '/llm.txt' && request.method === 'GET') {
-            return await handleLLMTxt(env);
-        }
-
-        if (path === '/robots.txt' && request.method === 'GET') {
-            return handleRobotsTxt();
-        }
-
-        if (path === '/sitemap.xml' && request.method === 'GET') {
-            return await handleSitemap(env);
         }
 
         // Analytics API routes
@@ -86,6 +59,12 @@ export async function handleRequest(request: Request, env: Env, ctx: ExecutionCo
         // Products API
         if (path.startsWith('/api/products/')) {
             return await handleProductsAPI(request, env, ctx);
+        }
+
+        // Search API
+        if (path === '/api/search') {
+            const { handleSearchAPI } = await import('../endpoints/search');
+            return await handleSearchAPI(request, env, ctx);
         }
 
         // Default: API info
@@ -127,24 +106,24 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
         <meta name="color-scheme" content="dark" />
         <title>JIMBO THE PUMO // DIAGNOSIS HUB v2.0</title>
         <meta name="description" content="AI-powered analytics and diagnostic dashboard for Meble Pumo operations" />
-
+        
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;900&display=swap" rel="stylesheet">
-
+        
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-
+        
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
-
-            body {
-                font-family: 'JetBrains Mono', monospace;
-                background: #0b0b12;
-                color: #e4e4e7;
-                line-height: 1.6;
+            
+            body { 
+                font-family: 'JetBrains Mono', monospace; 
+                background: #0b0b12; 
+                color: #e4e4e7; 
+                line-height: 1.6; 
             }
-
+            
             .topbar {
                 background: #18181b;
                 border-bottom: 1px solid #3f3f46;
@@ -153,7 +132,7 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 top: 0;
                 z-index: 100;
             }
-
+            
             .toprow {
                 display: flex;
                 justify-content: space-between;
@@ -161,13 +140,13 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 max-width: 1400px;
                 margin: 0 auto;
             }
-
+            
             .brand {
                 display: flex;
                 align-items: center;
                 gap: 1rem;
             }
-
+            
             .sigil {
                 width: 48px;
                 height: 48px;
@@ -178,32 +157,32 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 justify-content: center;
                 font-size: 24px;
             }
-
+            
             .brand h1 {
                 font-size: 1.5rem;
                 font-weight: 900;
                 color: #7c3aed;
             }
-
-            .sub {
-                color: #06b6d4;
-                font-size: 0.875rem;
+            
+            .sub { 
+                color: #06b6d4; 
+                font-size: 0.875rem; 
                 font-weight: 400;
             }
-
+            
             .status-bar {
                 display: flex;
                 gap: 2rem;
                 align-items: center;
             }
-
+            
             .stat {
                 display: flex;
                 align-items: center;
                 gap: 0.5rem;
                 font-size: 0.875rem;
             }
-
+            
             .dot {
                 width: 8px;
                 height: 8px;
@@ -211,17 +190,17 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 background: #22c55e;
                 animation: pulse 2s infinite;
             }
-
+            
             @keyframes pulse {
                 0%, 100% { opacity: 1; }
                 50% { opacity: 0.5; }
             }
-
+            
             .actions {
                 display: flex;
                 gap: 1rem;
             }
-
+            
             .btn {
                 background: #3f3f46;
                 color: #e4e4e7;
@@ -234,23 +213,23 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 cursor: pointer;
                 transition: all 0.2s;
             }
-
+            
             .btn:hover {
                 background: #52525b;
                 border-color: #71717a;
             }
-
+            
             .container {
                 max-width: 1400px;
                 margin: 0 auto;
                 padding: 2rem;
             }
-
+            
             .hero-section {
                 text-align: center;
                 margin-bottom: 3rem;
             }
-
+            
             .hero-icon {
                 width: 64px;
                 height: 64px;
@@ -259,7 +238,7 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 display: inline-block;
                 margin-bottom: 1rem;
             }
-
+            
             .hero-title {
                 font-size: 2.5rem;
                 font-weight: 900;
@@ -268,19 +247,19 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
             }
-
+            
             .hero-subtitle {
                 color: #a1a1aa;
                 font-size: 1.125rem;
             }
-
+            
             .metrics-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
                 gap: 1.5rem;
                 margin-bottom: 3rem;
             }
-
+            
             .metric-card {
                 background: #18181b;
                 border: 1px solid #3f3f46;
@@ -288,46 +267,46 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 padding: 1.5rem;
                 transition: all 0.2s;
             }
-
+            
             .metric-card:hover {
                 border-color: #7c3aed;
                 transform: translateY(-2px);
             }
-
+            
             .metric-label {
                 color: #a1a1aa;
                 font-size: 0.875rem;
                 font-weight: 600;
                 margin-bottom: 0.5rem;
             }
-
+            
             .metric-value {
                 font-size: 2.25rem;
                 font-weight: 900;
                 color: #e4e4e7;
                 margin-bottom: 0.5rem;
             }
-
+            
             .metric-change {
                 font-size: 0.875rem;
                 color: #22c55e;
                 font-weight: 600;
             }
-
+            
             .charts-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
                 gap: 2rem;
                 margin-bottom: 3rem;
             }
-
+            
             .chart-panel {
                 background: #18181b;
                 border: 1px solid #3f3f46;
                 border-radius: 12px;
                 padding: 1.5rem;
             }
-
+            
             .chart-panel h3 {
                 color: #e4e4e7;
                 font-size: 1.125rem;
@@ -335,11 +314,11 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 margin-bottom: 1rem;
                 text-align: center;
             }
-
+            
             .ai-section {
                 margin-bottom: 3rem;
             }
-
+            
             .ai-panel {
                 background: linear-gradient(135deg, #1e1b4b, #581c87);
                 border: 1px solid #7c3aed;
@@ -347,18 +326,18 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 padding: 2rem;
                 text-align: center;
             }
-
+            
             .ai-panel h3 {
                 font-size: 1.5rem;
                 font-weight: 900;
                 margin-bottom: 1rem;
             }
-
+            
             .ai-status {
                 color: #a1a1aa;
                 margin-bottom: 1rem;
             }
-
+            
             .btn-ai {
                 background: linear-gradient(45deg, #7c3aed, #06b6d4);
                 border: none;
@@ -367,7 +346,7 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 font-size: 1rem;
                 font-weight: 700;
             }
-
+            
             .ai-output {
                 margin-top: 1rem;
                 padding: 1rem;
@@ -376,26 +355,26 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 text-align: left;
                 min-height: 100px;
             }
-
+            
             .activity-panel {
                 background: #18181b;
                 border: 1px solid #3f3f46;
                 border-radius: 12px;
                 padding: 1.5rem;
             }
-
+            
             .activity-panel h3 {
                 color: #e4e4e7;
                 font-size: 1.125rem;
                 font-weight: 700;
                 margin-bottom: 1rem;
             }
-
+            
             .activity-feed {
                 max-height: 200px;
                 overflow-y: auto;
             }
-
+            
             .activity-item {
                 padding: 0.5rem;
                 border-left: 2px solid #7c3aed;
@@ -405,7 +384,7 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 background: rgba(124, 58, 237, 0.1);
                 border-radius: 4px;
             }
-
+            
             .footer {
                 text-align: center;
                 padding: 2rem;
@@ -414,7 +393,7 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 border-top: 1px solid #3f3f46;
                 margin-top: 3rem;
             }
-
+            
             @media (max-width: 768px) {
                 .container { padding: 1rem; }
                 .toprow { flex-direction: column; gap: 1rem; }
@@ -425,7 +404,7 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
             }
         </style>
     </head>
-
+    
     <body x-data="dashboard()">
         <!-- TOP BAR -->
         <header class="topbar">
@@ -537,17 +516,17 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
         function dashboard() {
             return {
                 systemStatus: 'ONLINE',
-                apiStatus: 'CONNECTED',
+                apiStatus: 'CONNECTED', 
                 aiStatus: 'Ready for analysis...',
                 aiOutput: '',
-
+                
                 metrics: {
                     totalProducts: '2,560',
                     revenue: '$284,750',
                     orders: '486',
                     avgOrderValue: '$585.80'
                 },
-
+                
                 activityFeed: [
                     { id: 1, message: 'System initialized successfully' },
                     { id: 2, message: 'Database connection established' },
@@ -568,12 +547,12 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                         const response = await fetch('/api/analytics/kpis', {
                             headers: { 'Authorization': 'Basic ' + btoa('Bonzo:#HAOS77#') }
                         });
-
+                        
                         if (response.ok) {
                             const data = await response.json();
                             this.metrics = {
                                 totalProducts: (data.totalProducts || 2560).toLocaleString(),
-                                revenue: '$' + (data.totalRevenue || 284750).toLocaleString(),
+                                revenue: '$' + (data.totalRevenue || 284750).toLocaleString(), 
                                 orders: (data.totalOrders || 486).toLocaleString(),
                                 avgOrderValue: '$' + (data.averageOrderValue || 585.80).toFixed(2)
                             };
@@ -595,7 +574,7 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                 async generateAnalysis() {
                     this.aiStatus = 'Generating analysis...';
                     this.aiOutput = '<div style="color: #06b6d4;">🔄 AI Analyst working...</div>';
-
+                    
                     setTimeout(() => {
                         this.aiOutput = \`
                             <div style="color: #22c55e;">✅ Analysis Complete</div>
@@ -635,7 +614,7 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                         options: {
                             responsive: true,
                             scales: {
-                                y: {
+                                y: { 
                                     beginAtZero: true,
                                     grid: { color: '#3f3f46' },
                                     ticks: { color: '#a1a1aa' }
@@ -651,7 +630,7 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                         }
                     });
 
-                    // Category Chart
+                    // Category Chart  
                     const categoryCtx = document.getElementById('categoryChart').getContext('2d');
                     new Chart(categoryCtx, {
                         type: 'doughnut',
@@ -667,7 +646,7 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                         options: {
                             responsive: true,
                             plugins: {
-                                legend: {
+                                legend: { 
                                     position: 'bottom',
                                     labels: { color: '#e4e4e7' }
                                 }
@@ -681,7 +660,7 @@ async function serveDashboard(path: string, env: Env): Promise<Response> {
                         id: Date.now(),
                         message: message + ' - ' + new Date().toLocaleTimeString()
                     });
-
+                    
                     if (this.activityFeed.length > 10) {
                         this.activityFeed.pop();
             }
@@ -719,425 +698,4 @@ async function handleProductsAPI(request: Request, env: Env, ctx: ExecutionConte
     }
 }
 
-// Sync embeddings for all products
-async function handleSyncEmbeddings(env: Env, ctx: ExecutionContext, request?: Request): Promise<Response> {
-    const startTime = Date.now();
-    const logs: string[] = [];
-
-    // Parse limit and offset from query params
-    const url = request ? new URL(request.url) : null;
-    const limit = url ? parseInt(url.searchParams.get('limit') || '200') : 200;
-    const offset = url ? parseInt(url.searchParams.get('offset') || '0') : 0;
-
-    logs.push(`🚀 Starting embedding sync (offset: ${offset}, limit: ${limit})...`);
-
-    try {
-        // Fetch PUMO products with JOIN categories
-        const { results: products } = await env.DB.prepare(`
-            SELECT
-                p.external_id,
-                p.name,
-                p.description,
-                c.name as category,
-                p.brand,
-                p.price,
-                p.in_stock,
-                p.product_url
-            FROM products p
-            LEFT JOIN categories c ON p.category_id = c.id
-            WHERE p.external_id NOT LIKE 'prod_%'
-            ORDER BY p.external_id
-            LIMIT ? OFFSET ?
-        `).bind(limit, offset).all();
-
-        logs.push(`✅ Loaded ${products.length} products`);
-
-        const BATCH_SIZE = 50;
-        let successCount = 0;
-        let errorCount = 0;
-
-        for (let i = 0; i < products.length; i += BATCH_SIZE) {
-            const batch = products.slice(i, i + BATCH_SIZE);
-            const batchNum = Math.floor(i / BATCH_SIZE) + 1;
-            const totalBatches = Math.ceil(products.length / BATCH_SIZE);
-
-            const vectors = [];
-
-            for (const product of batch) {
-                try {
-                    // Build text
-                    let text = product.name;
-                    if (product.category) text += ` ${product.category}`;
-                    if (product.brand) text += ` ${product.brand}`;
-                    if (product.description) text += ` ${product.description.substring(0, 300)}`;
-
-                    // Generate embedding
-                    const embedding = await env.AI.run('@cf/baai/bge-base-en-v1.5', { text });
-
-                    vectors.push({
-                        id: product.external_id,
-                        values: embedding.data[0],
-                        metadata: {
-                            name: product.name,
-                            category: product.category || '',
-                            brand: product.brand || '',
-                            price: product.price,
-                            in_stock: product.in_stock,
-                            url: product.product_url || ''
-                        }
-                    });
-
-                    successCount++;
-
-                } catch (error) {
-                    console.error(`Embedding error for ${product.external_id}:`, error);
-                    errorCount++;
-                }
-            }
-
-            // Upsert to Vectorize
-            if (vectors.length > 0) {
-                await env.VECTORIZE.upsert(vectors);
-                logs.push(`✅ Batch ${batchNum}/${totalBatches}: ${vectors.length} embeddings`);
-            }
-        }
-
-        const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-
-        return Response.json({
-            success: true,
-            total: products.length,
-            success_count: successCount,
-            error_count: errorCount,
-            duration_seconds: parseFloat(duration),
-            logs
-        });
-
-    } catch (error) {
-        return Response.json({
-            success: false,
-            error: String(error),
-            logs
-        }, { status: 500 });
-    }
-}
-
-// Semantic search handler
-async function handleSemanticSearch(request: Request, env: Env): Promise<Response> {
-    const url = new URL(request.url);
-    const query = url.searchParams.get('q');
-    const limit = parseInt(url.searchParams.get('limit') || '20');
-    const category = url.searchParams.get('category');
-    const minPrice = url.searchParams.get('min_price');
-    const maxPrice = url.searchParams.get('max_price');
-    const inStockOnly = url.searchParams.get('in_stock') === 'true';
-
-    if (!query) {
-        return Response.json({ error: 'Missing query parameter "q"' }, { status: 400 });
-    }
-
-    try {
-        // Generate query embedding
-        const embedding = await env.AI.run('@cf/baai/bge-base-en-v1.5', { text: query });
-
-        // Search Vectorize index
-        const results = await env.VECTORIZE.query(embedding.data[0], {
-            topK: Math.min(limit * 3, 100), // Get more for filtering
-            returnMetadata: true
-        });
-
-        // Filter and map results
-        let products = results.matches.map((match: any) => ({
-            id: match.id,
-            score: match.score,
-            name: match.metadata.name,
-            category: match.metadata.category,
-            brand: match.metadata.brand,
-            price: match.metadata.price,
-            in_stock: match.metadata.in_stock,
-            url: match.metadata.url
-        }));
-
-        // Apply filters
-        if (category) {
-            products = products.filter(p => p.category?.toLowerCase().includes(category.toLowerCase()));
-        }
-        if (minPrice) {
-            products = products.filter(p => p.price >= parseFloat(minPrice));
-        }
-        if (maxPrice) {
-            products = products.filter(p => p.price <= parseFloat(maxPrice));
-        }
-        if (inStockOnly) {
-            products = products.filter(p => p.in_stock);
-        }
-
-        // Limit final results
-        products = products.slice(0, limit);
-
-        return Response.json({
-            query,
-            total: products.length,
-            products
-        }, {
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Cache-Control': 'public, max-age=300'
-            }
-        });
-
-    } catch (error) {
-        return Response.json({
-            error: 'Search failed',
-            details: String(error)
-        }, { status: 500 });
-    }
-}
-
-// AI SEO: llm.txt handler
-async function handleLLMTxt(env: Env): Promise<Response> {
-    try {
-        // Get categories and brands from DB
-        const { results: categories } = await env.DB.prepare(
-            'SELECT name, slug, product_count FROM categories WHERE is_active = 1 ORDER BY product_count DESC LIMIT 50'
-        ).all();
-
-        const { results: brands } = await env.DB.prepare(
-            'SELECT DISTINCT brand FROM products WHERE brand IS NOT NULL AND brand != "" ORDER BY brand LIMIT 30'
-        ).all();
-
-        const llmContent = `# PUMO Meble - AI Documentation
-
-> PUMO to polski sklep meblowy oferujący wysokiej jakości meble do domu i biura.
-> Specjalizujemy się w meblach drewnianych, systemach przechowywania i meblach tapicerowanych.
-
-## 🏪 O Sklepie
-
-- **Katalog**: ${await getProductCount(env)} produktów w ${categories.length}+ kategoriach
-- **Dostępność**: Produkty na magazynie i na zamówienie
-- **Wysyłka**: Cała Polska
-- **Jakość**: Produkty certyfikowane, gwarancja producenta
-
-## 📂 Główne Kategorie
-
-${categories.map((c: any) => `- **${c.name}** (${c.product_count} produktów) - /${c.slug}/`).join('\n')}
-
-## 🏷️ Dostępne Marki
-
-${(brands as any[]).map(b => `- ${b.brand}`).join('\n')}
-
-## 🔍 API Endpoints
-
-### Semantic Search
-\`\`\`
-GET /api/search?q={query}&limit={n}&category={cat}
-\`\`\`
-Wyszukiwanie semantyczne produktów (AI-powered, 3239 produktów zaindeksowanych).
-
-**Parametry:**
-- \`q\`: Zapytanie tekstowe (np. "czerwona komoda drewniana")
-- \`limit\`: Liczba wyników (domyślnie 20)
-- \`category\`: Filtr kategorii
-- \`min_price\`, \`max_price\`: Zakres cenowy
-- \`in_stock\`: Tylko dostępne (true/false)
-
-**Przykład:**
-\`\`\`
-/api/search?q=nowoczesny stół do jadalni&limit=10&in_stock=true
-\`\`\`
-
-### Analytics
-\`\`\`
-GET /api/analytics/{endpoint}
-\`\`\`
-Statystyki sprzedaży, popularności, trendów cenowych.
-
-## 📊 Dane dla AI
-
-- **Format embeddingsów**: 768-dim vectors (Workers AI: @cf/baai/bge-base-en-v1.5)
-- **Metryka podobieństwa**: Cosine similarity
-- **Update frequency**: Co 6 godzin (automated sync)
-- **Język**: Polskie opisy i metadane
-
-## 🤖 Dla AI Assistants
-
-Podczas wyszukiwania produktów PUMO:
-1. Użyj \`/api/search\` dla semantycznego wyszukiwania
-2. Filtruj po kategorii/cenie/dostępności dla precyzyjnych wyników
-3. Zwracane wyniki zawierają relevance score (0-1)
-4. Wszystkie ceny w PLN
-
-## 📞 Kontakt
-
-- **Website**: https://meblepumo.pl
-- **API**: https://jimbo-like-pumo-api.stolarnia-ams.workers.dev
-- **Support**: kontakt@meblepumo.pl
-
----
-*Last updated: ${new Date().toISOString().split('T')[0]}*
-*Total products: ${await getProductCount(env)}*
-`;
-
-        return new Response(llmContent, {
-            headers: {
-                'Content-Type': 'text/plain; charset=utf-8',
-                'Cache-Control': 'public, max-age=86400'
-            }
-        });
-
-    } catch (error) {
-        return new Response('# Error generating llm.txt', { status: 500 });
-    }
-}
-
-// AI SEO: robots.txt handler
-function handleRobotsTxt(): Response {
-    const robotsContent = `# Robots.txt for PUMO Meble
-# AI Crawlers Welcome!
-
-User-agent: *
-Allow: /
-Allow: /api/search
-Allow: /llm.txt
-Allow: /sitemap.xml
-
-# AI-specific crawlers
-User-agent: GPTBot
-Allow: /
-Allow: /api/
-
-User-agent: Claude-Web
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-# API endpoints
-Allow: /api/search
-Allow: /api/analytics
-
-# Sitemap
-Sitemap: https://jimbo-like-pumo-api.stolarnia-ams.workers.dev/sitemap.xml
-
-# Crawl delay (be nice to our servers)
-Crawl-delay: 1
-`;
-
-    return new Response(robotsContent, {
-        headers: {
-            'Content-Type': 'text/plain; charset=utf-8',
-            'Cache-Control': 'public, max-age=86400'
-        }
-    });
-}
-
-// AI SEO: sitemap.xml handler
-async function handleSitemap(env: Env): Promise<Response> {
-    try {
-        const { results: categories } = await env.DB.prepare(
-            'SELECT slug, updated_at FROM categories WHERE is_active = 1 ORDER BY slug'
-        ).all();
-
-        const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://meblepumo.pl/</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://jimbo-like-pumo-api.stolarnia-ams.workers.dev/api/search</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>hourly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://jimbo-like-pumo-api.stolarnia-ams.workers.dev/llm.txt</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-${categories.map((c: any) => `  <url>
-    <loc>https://meblepumo.pl/${c.slug}/</loc>
-    <lastmod>${c.updated_at || new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>`).join('\n')}
-</urlset>
-`;
-
-        return new Response(sitemapContent, {
-            headers: {
-                'Content-Type': 'application/xml; charset=utf-8',
-                'Cache-Control': 'public, max-age=86400'
-            }
-        });
-
-    } catch (error) {
-        return new Response('<?xml version="1.0"?><error>Failed to generate sitemap</error>', {
-            status: 500,
-            headers: { 'Content-Type': 'application/xml' }
-        });
-    }
-}
-
-// Helper: Get total product count
-async function getProductCount(env: Env): Promise<number> {
-    try {
-        const result = await env.DB.prepare(
-            'SELECT COUNT(*) as count FROM products WHERE external_id NOT LIKE "prod_%"'
-        ).first();
-        return (result as any)?.count || 0;
-    } catch {
-        return 3239; // Fallback to known count
-    }
-}
-
-// Trigger daily sync workflow manually
-async function handleTriggerDailySync(env: Env, ctx: ExecutionContext): Promise<Response> {
-    const startTime = Date.now();
-    const logs: string[] = [];
-
-    logs.push('⏰ Manually triggering daily sync workflow...');
-
-    try {
-        const { DailySyncWorkflow } = await import('../workflows/daily-sync');
-        const workflow = new DailySyncWorkflow(env);
-
-        // Run workflow asynchronously
-        ctx.waitUntil(workflow.run());
-
-        const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-
-        return Response.json({
-            success: true,
-            message: 'Daily sync workflow triggered in background',
-            duration_seconds: parseFloat(duration),
-            logs
-        });
-
-    } catch (error) {
-        return Response.json({
-            success: false,
-            error: String(error),
-            logs
-        }, { status: 500 });
-    }
-}
-
-// Environment interface
-interface Env {
-    DB: D1Database;
-    PUMO_CACHE: KVNamespace;
-    AI: Ai;
-    VECTORIZE_INDEX: VectorizeIndex;
-    MEDIA_BUCKET: R2Bucket;
-    IMAGE_QUEUE: Queue;
-}
+// Local Env interface removed in favor of import from ../types

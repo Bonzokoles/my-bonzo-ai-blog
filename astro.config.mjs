@@ -14,25 +14,26 @@ import icon from "astro-icon";
 
 import vue from "@astrojs/vue";
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 // https://astro.build/config
 export default defineConfig({
   site: SITE.url,
-  output: "server", // SSR mode but with selective prerendering
+  output: "server",
   adapter: cloudflare({
-    // Konfiguracja sesji z KV
     sessionKVBindingName: "SESSION",
     mode: "directory",
   }),
-
-  // Optymalizacje obrazów
   image: {
     service: {
       entrypoint: "astro/assets/services/sharp",
       config: {
-        limitInputPixels: false, // Pozwala na większe obrazy
+        limitInputPixels: false,
       },
     },
-    // Dozwolone domeny dla zdalnych obrazów
     domains: ["images.unsplash.com", "cdn.example.com"],
     remotePatterns: [
       {
@@ -41,46 +42,48 @@ export default defineConfig({
       },
     ],
   },
-
-  // Optymalizacje budowy
   build: {
-    inlineStylesheets: "auto", // Automatyczne wbudowywanie małych CSS (<4kb)
-    assets: "_assets", // Niestandardowa nazwa katalogu assets
+    inlineStylesheets: "auto",
+    assets: "_assets",
   },
-
-  // Kompresja HTML domyślnie włączona w Astro 5.0+
   compressHTML: true,
-
-  // Optymalizacje Markdown
   markdown: {
     shikiConfig: SITE.shikiConfig,
   },
-
-  // Integracje z optymalizacjami
   integrations: [
     mdx({
-      optimize: true, // Optymalizacja MDX dla szybszego renderowania
-      ignoreElementNames: ["custom-component"], // Ignoruj custom komponenty
+      optimize: true,
+      ignoreElementNames: ["custom-component"],
     }),
     tailwind(),
     sitemap({
       filter: (page) => !page.includes("/api/"),
       serialize: (item) => {
-        // Ensure pumo-guide pages have high priority for AI crawlers
         if (item.url.includes("/pumo-guide/")) {
           item.changefreq = "weekly";
           item.priority = 0.9;
         }
         return item;
       },
-    }) /* robotsTxt(robotsConfig) - DISABLED: using static public/robots.txt */,
-    ,
+    }),
     icon(),
     vue(),
   ],
-
-  // Vite optymalizacje
   vite: {
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+        "src": path.resolve(__dirname, "./src"),
+        "@components": path.resolve(__dirname, "./src/components"),
+        "@layouts": path.resolve(__dirname, "./src/layouts"),
+        "@styles": path.resolve(__dirname, "./src/styles"),
+        "@assets": path.resolve(__dirname, "./src/assets"),
+        "@data": path.resolve(__dirname, "./src/data"),
+        "@lib": path.resolve(__dirname, "./src/lib"),
+        "@config": path.resolve(__dirname, "./src/config"),
+        "@utils": path.resolve(__dirname, "./src/utils"),
+      },
+    },
     css: {
       preprocessorOptions: {
         scss: {

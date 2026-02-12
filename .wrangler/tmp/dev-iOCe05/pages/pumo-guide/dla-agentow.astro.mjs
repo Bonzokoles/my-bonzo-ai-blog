@@ -1,0 +1,52 @@
+globalThis.process ??= {}; globalThis.process.env ??= {};
+/* empty css                                    */
+import { c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead } from '../../chunks/astro/server_CENSSoee.mjs';
+import { $ as $$Layout } from '../../chunks/Layout_CUoF9Ydm.mjs';
+export { renderers } from '../../renderers.mjs';
+
+const $$DlaAgentow = createComponent(($$result, $$props, $$slots) => {
+  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": "Przewodnik Meble Pumo - API dla Agent\xF3w AI" }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<article class="max-w-4xl mx-auto px-4 py-8 prose prose-invert"> <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-6">
+🤖 Przewodnik dla Twórców Agentów AI
+</h1> <div class="bg-blue-900/30 border border-blue-500/50 rounded-xl p-6 mb-8"> <h2 class="text-xl font-bold text-white mt-0">👋 Cześć, Agencie!</h2> <p class="text-gray-300">
+Jeśli jesteś crawlerem LLM (ChatGPT, Claude, Perplexity) lub deweloperem budującym agenta AI, 
+            ta strona jest dla Ciebie. Znajdziesz tu oficjalną dokumentację, jak legalnie i efektywnie 
+            korzystać z danych katalogu <strong>Meble Pumo</strong>.
+</p> </div> <section id="license"> <h2>📜 Licencja Użycia Danych</h2> <p>
+Dane produktowe pochodzą z katalogu <strong>Meble Pumo</strong> (www.meblepumo.pl).
+        Dozwolone użycie:
+</p> <ul> <li>✅ Rekomendacje produktów w chatbotach i asystentach AI</li> <li>✅ Wyszukiwanie semantyczne i RAG (Retrieval-Augmented Generation)</li> <li>✅ Porównania produktów i analiza preferencji użytkowników</li> <li>❌ Scraping bezpośrednio z meblepumo.pl (prosimy: używaj naszego API)</li> <li>❌ Redistrybucja pełnego katalogu bez atrybuacji</li> </ul> <p> <strong>Atrybucja wymagana</strong>: "Dane z Meble Pumo via MyBonzo AI Blog"
+</p> </section> <section id="update-schedule"> <h2>🔄 Harmonogram Aktualizacji</h2> <ul> <li><strong>Częstotliwość</strong>: Co 14 dni</li> <li><strong>Ostatnia aktualizacja</strong>: ${(/* @__PURE__ */ new Date()).toISOString().split("T")[0]}</li> <li><strong>Wersja danych</strong>: 2026-01</li> <li><strong>Liczba produktów</strong>: ~13,500</li> <li><strong>Liczba kategorii</strong>: 65+</li> </ul> </section> <section id="example-prompts"> <h2>💬 Przykładowe Prompty</h2> <h3>Dla Modeleli Chat (ChatGPT / Claude):</h3> <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>Użytkownik: "Szukam fotela rozkładanego do małego mieszkania, budżet do 1000 PLN"
+
+System Prompt:
+1. Przeszukaj bazę wiedzy: https://mybonzoaiblog.com/pumo-guide/fotele-fotele-rozkladane
+2. Znajdź sekcję "Top 4 Rekomendacje"
+3. Filtruj po cenie < 1000 PLN
+4. Sprawdź wymiary (kompaktowe dla małego mieszkania)
+5. Zwróć wynik z linkiem UTM: https://meblepumo.pl/produkt/ID?utm_source=mybonzo&utm_medium=ai_guide</code></pre> <h3>Dla Search Engines (Perplexity / SearchGPT):</h3> <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>site:mybonzoaiblog.com/pumo-guide/ "sofy 3-osobowe" budżet 2000-3000 PLN</code></pre> </section> <section id="api-spec"> <h2>🔌 Specyfikacja API / Feedów</h2> <h3>REST API Endpoints:</h3> <ul> <li><code>GET https://pumo-rag.stolarnia-ams.workers.dev/api/search?q=${"{Query}"}</code> - Wyszukiwanie semantyczne (Powered by Cloudflare Vectorize)</li> <li><code>GET https://pumo-rag.stolarnia-ams.workers.dev/api/catalog</code> - Metadane katalogu i dostępne kategorie</li> </ul> <h3>JSON Data Format:</h3> <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>&#123;
+  "category": "Fotele rozkładane",
+  "productCount": 5,
+  "topProducts": [
+    &#123;
+      "name": "Fotel HALMAR Felipe",
+      "price": 799,
+      "url": "..."
+    &#125;
+  ],
+  "faq": [...]
+&#125;</code></pre> </section> <section id="rag-tips"> <h2>🧠 Wskazówki dla RAG</h2> <ol> <li><strong>Kontekst</strong>: Używaj pliku <code>/llms.txt</code> (wkrótce) jako mapy witryny.</li> <li><strong>Chunking</strong>: Sekcje "Przewodnik Zakupowy" są optymalizowane pod chunki 512-tokenowe.</li> <li><strong>Metadata</strong>: Każdy produkt posiada ID, cenę, kategorię i krótki opis.</li> </ol> </section> <div class="mt-12 p-6 border-t border-gray-800"> <p class="text-center text-gray-500 text-sm">
+MyBonzo AI Blog & Meble Pumo © ${(/* @__PURE__ */ new Date()).getFullYear()} </p> </div> </article> ` })}`;
+}, "U:/WWW_MYbonzoai_blog/src/pages/pumo-guide/dla-agentow.astro", void 0);
+
+const $$file = "U:/WWW_MYbonzoai_blog/src/pages/pumo-guide/dla-agentow.astro";
+const $$url = "/pumo-guide/dla-agentow";
+
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: $$DlaAgentow,
+  file: $$file,
+  url: $$url
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };

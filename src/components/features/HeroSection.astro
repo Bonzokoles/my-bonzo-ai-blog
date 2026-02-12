@@ -15,7 +15,7 @@ interface Props {
 const { videoUrl, videoPoster, title, sections } = Astro.props;
 ---
 
-<section class="w-full py-12 bg-theme-primary/5 backdrop-blur-sm">
+<section class="w-full py-12 bg-theme-bg/5 backdrop-blur-sm">
   <div class="container mx-auto px-4">
     <div class="flex flex-col lg:flex-row items-center justify-start lg:justify-between gap-8">
       <!-- Video Section - Left Side -->
@@ -31,14 +31,14 @@ const { videoUrl, videoPoster, title, sections } = Astro.props;
             Twoja przeglądarka nie obsługuje video HTML5.
           </video>
         </div>
-        <p class="mt-6 text-lg text-theme-primary opacity-80 text-center lg:text-left">
+        <p class="mt-6 text-lg text-theme-text opacity-80 text-center lg:text-left">
           {title}
         </p>
       </div>
 
       <!-- Navigation Buttons - Right Side -->
       <div class="w-full lg:w-3/5 flex flex-col gap-6">
-        <h3 class="text-2xl font-semibold text-theme-primary mb-4 text-center lg:text-left">
+        <h3 class="text-2xl font-semibold text-theme-text mb-4 text-center lg:text-left">
           Odkryj Nasze Sekcje
         </h3>
 
@@ -46,7 +46,7 @@ const { videoUrl, videoPoster, title, sections } = Astro.props;
           {sections.map((section) => (
             <a
               href={section.href}
-              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-primary transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
+              class="w-full px-7 py-5 text-base font-medium border border-theme-accent bg-transparent text-theme-text transition-colors hover:border-theme-accent hover:bg-theme-accent hover:text-theme-text-secondary focus:outline-none active:border-theme-accent rounded-none tracking-wide text-center"
               title={section.description}
             >
               {section.label}

@@ -13,7 +13,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
   // Determine Worker URL (Production vs Dev fallback)
   // In production, this should point to the deployed worker
-  const WORKER_URL = import.meta.env.PUMO_RAG_WORKER_URL || "https://pumo-api.jimbo77.com/api/search";
+  const WORKER_URL = import.meta.env.PUMO_RAG_WORKER_URL || "https://pumo-rag.stolarnia-ams.workers.dev/api/search";
   const API_KEY = import.meta.env.INTERNAL_API_KEY; // Optional: for secure internal access if configured
 
   try {
@@ -27,7 +27,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
     });
 
     if (!response.ok) {
-        throw new Error(`Worker responded with ${response.status}`);
+      throw new Error(`Worker responded with ${response.status}`);
     }
 
     const data = await response.json();
@@ -41,9 +41,9 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
   } catch (error) {
     console.error("PUMO Search API Error:", error);
-    return new Response(JSON.stringify({ 
-        error: "Search unavailable",
-        message: error instanceof Error ? error.message : String(error)
+    return new Response(JSON.stringify({
+      error: "Search unavailable",
+      message: error instanceof Error ? error.message : String(error)
     }), {
       status: 502,
       headers: { 'Content-Type': 'application/json' }

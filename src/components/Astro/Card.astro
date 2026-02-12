@@ -35,6 +35,8 @@ interface Props {
   title: string;
   // Card description content //
   description: string;
+  // Optional link destination //
+  href?: string;
   // Use alternate color scheme //
   alt?: boolean;
   // Optional icon source name i.e. "ri:star" //
@@ -50,6 +52,7 @@ interface Props {
 const {
   title,
   description,
+  href,
   alt = false,
   iconName: iconName = null,
   alignIcon = "left",
@@ -57,20 +60,24 @@ const {
   class: className,
 } = Astro.props;
 
+const Tag = href ? "a" : "div";
+
 const options = {
-  "rounded-none": true,
-  "bg-theme-primary border-theme-primary": !alt,
-  "bg-theme-secondary border-theme-secondary": alt,
+  "rounded-xl": true,
+  "glass border border-theme-text/30 hover:border-theme-text transition-all duration-300 hover-glow": !alt,
+  "glass border border-theme-text-secondary/30 hover:border-theme-text-secondary transition-all duration-300 hover-glow": alt,
   "shadow-sm": shadowSize === "sm",
   "shadow-md": shadowSize === "md",
   "shadow-lg": shadowSize === "lg",
   "shadow-none": shadowSize === "none",
+  "cursor-pointer group": href,
 };
 ---
 
-<div
+<Tag
+  href={href}
   class:list={[
-    "border-2 shadow-theme-primary p-4 w-full h-auto md:max-w-[450px]",
+    "border-2 shadow-theme-accent p-4 w-full h-auto md:max-w-[450px] block",
     options,
     className,
   ]}
@@ -81,21 +88,21 @@ const options = {
       "uppercase",
       "font-bold",
       "mb-2",
-      { "text-theme-primary": !alt, "text-theme-secondary": alt },
+      { "text-white group-hover:text-theme-accent transition-colors": !alt, "text-theme-text-secondary": alt },
     ]}
   >
     <span class="flex items-center gap-4">
       {
         iconName && alignIcon === 'left' && (
-          <Icon name={iconName} width={42} height={42} />
-          <span class="md:flex-1 sm:border-b sm:border-theme-primary" />
+          <Icon name={iconName} width={42} height={42} class="text-theme-accent" />
+          <span class="md:flex-1 sm:border-b sm:border-theme-text/30" />
         )
       }
       {title}
       {
         iconName && alignIcon === 'right' && (
-          <span class="md:flex-1 sm:border-b sm:border-theme-primary" />
-          <Icon name={iconName} width={42} height={42} />
+          <span class="md:flex-1 sm:border-b sm:border-theme-text/30" />
+          <Icon name={iconName} width={42} height={42} class="text-theme-accent" />
         )
       }
     </span>
@@ -103,11 +110,13 @@ const options = {
   <hr
     class:list={[
       "border-1 mb-2",
-      { "border-theme-primary": !alt },
-      { "border-theme-secondary": alt },
+      { "border-theme-text/30": !alt },
+      { "border-theme-text-secondary/30": alt },
     ]}
   />
-  <p class:list={["text-lg", { "text-theme-primary": !alt, "text-theme-secondary": alt }]}>
+  <p class:list={["text-lg text-white/80 mb-4", { "text-white/80": !alt, "text-theme-text-secondary/80": alt }]}>
     {description}
   </p>
-</div>
+  
+  <slot />
+</Tag>

@@ -42,7 +42,7 @@ import PageHeader from "@components/Astro/PageHeader.astro";
           });
 
           if (filteredPosts.length === 0) {
-            searchResults.innerHTML = `<p class="text-center col-span-full text-theme-primary">No results found for "${query}".</p>`;
+            searchResults.innerHTML = `<p class="text-center col-span-full text-theme-text">No results found for "${query}".</p>`;
             return;
           }
 
@@ -52,13 +52,13 @@ import PageHeader from "@components/Astro/PageHeader.astro";
               const tags = post.tags ? post.tags.split(/[\s,]+/).slice(0, 2) : [];
 
               return `
-                <article class="border border-gray-500 bg-transparent rounded-none overflow-hidden hover:border-blue-400 hover:bg-gray-900 hover:shadow transition-colors">
+                <article class="glass border border-theme-text/30 rounded-xl overflow-hidden hover:border-theme-text transition-all duration-300 hover-glow">
                   <div class="p-6">
                     <div class="flex flex-wrap gap-2 mb-3">
                       ${tags
                         .map(
                           (tag) => `
-                        <span class="px-2 py-1 bg-blue-600 text-white text-xs rounded-none font-semibold tracking-wide uppercase">
+                        <span class="px-2 py-1 bg-theme-accent/20 text-theme-accent text-xs rounded font-semibold tracking-wide uppercase">
                           ${tag}
                         </span>
                       `
@@ -66,23 +66,23 @@ import PageHeader from "@components/Astro/PageHeader.astro";
                         .join("")}
                     </div>
                     
-                    <div class="flex mt-12 mb-10 md:mt-24 md:mb-12 text-xl font-semibold mb-2 line-clamp-2 text-theme-primary">
-                      <h3 class="tracking-widest text-xl font-medium capitalize leading-relaxed mx-auto bg-theme-accent text-theme-secondary p-4 inline-block rounded-theme">
+                    <div class="flex mt-4 mb-4 text-xl font-semibold mb-2 line-clamp-2 text-theme-text">
+                      <h3 class="font-bold uppercase text-lg leading-relaxed">
                         ${post.title}
                       </h3>
                     </div>
                     
-                    <p class="text-theme-primary opacity-80 text-sm mb-3 line-clamp-3">
+                    <p class="text-theme-text opacity-80 text-sm mb-3 line-clamp-3">
                       ${post.excerpt}
                     </p>
                     
-                    <div class="flex justify-between items-center text-sm text-theme-primary opacity-70 mb-4">
+                    <div class="flex justify-between items-center text-sm text-theme-text opacity-70 mb-4">
                       <time datetime="${post.date}">
                         ${date}
                       </time>
                     </div>
                     
-                    <a href="/blog/${post.id}" class="inline-block text-theme-accent font-semibold hover:text-theme-accent-alt transition-colors">
+                    <a href="/blog/${post.id}" class="inline-block text-theme-accent font-bold hover:text-white transition-colors">
                       Czytaj więcej →
                     </a>
                   </div>
@@ -102,7 +102,7 @@ import PageHeader from "@components/Astro/PageHeader.astro";
       } catch (error) {
         console.error("Error loading blog posts:", error);
         searchResults.innerHTML =
-          '<p class="text-center col-span-full text-theme-primary">Could not load articles. Please try again later.</p>';
+          '<p class="text-center col-span-full text-theme-text">Could not load articles. Please try again later.</p>';
       }
     }
 

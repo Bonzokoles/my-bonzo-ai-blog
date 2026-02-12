@@ -11,52 +11,117 @@ The 'prose' section is used to style markdown content.
 
 /* === AI/SCI-FI COLOR PALETTE === */
 :root {
-  /* Primary AI Colors */
-  --ai-cyan: #00f0ff;
-  --ai-magenta: #ff00ff;
-  --ai-electric-blue: #0066ff;
-  --ai-neon-green: #00ff88;
-  --ai-purple: #9d00ff;
-  
-  /* Background Layers */
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #12121a;
-  --bg-tertiary: #1a1a2e;
-  
-  /* Accent Gradients */
-  --gradient-ai-primary: linear-gradient(135deg, var(--ai-cyan) 0%, var(--ai-magenta) 100%);
-  --gradient-ai-secondary: linear-gradient(135deg, var(--ai-electric-blue) 0%, var(--ai-purple) 100%);
-  --gradient-holographic: linear-gradient(135deg, var(--ai-cyan) 0%, var(--ai-electric-blue) 25%, var(--ai-purple) 50%, var(--ai-magenta) 75%, var(--ai-cyan) 100%);
-  
-  /* Glow Effects */
-  --glow-cyan: 0 0 20px var(--ai-cyan);
-  --glow-magenta: 0 0 20px var(--ai-magenta);
-  --glow-purple: 0 0 30px var(--ai-purple);
-  
-  /* Glassmorphism */
-  --glass-bg: rgba(18, 18, 26, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-blur: blur(10px);
-  
-  /* Text */
-  --text-primary: #ffffff;
-  --text-secondary: #b8b8d1;
-  --text-accent: var(--ai-cyan);
+	/* Primary Cyberpunk Colors (Style #23) - REFINED FOR DEEP AI */
+	--ai-cyan: #00f0ff;
+	--ai-electric-blue: #2d6cdf;
+	/* Deepened Corporate Blue */
+	--ai-deep-blue: #0033cc;
+	/* Replaces Magenta/Purple */
+	--ai-neon-green: #00ff9d;
+	/* Slightly cooler neon */
+
+	/* Background Layers - Neural Void */
+	--bg-primary: #020202;
+	/* Absolute Black */
+	--bg-secondary: #050510;
+	/* Deepest Navy */
+	--bg-tertiary: #0a0f1f;
+
+	/* Accent Gradients (NO PURPLE) */
+	--gradient-ai-primary: linear-gradient(135deg, var(--ai-cyan) 0%, var(--ai-electric-blue) 100%);
+	--gradient-ai-secondary: linear-gradient(135deg, var(--ai-electric-blue) 0%, var(--ai-deep-blue) 100%);
+	--gradient-holographic: linear-gradient(135deg, var(--ai-cyan) 0%, var(--ai-electric-blue) 50%, var(--ai-cyan) 100%);
+	--gradient-cyber: linear-gradient(90deg, var(--ai-neon-green), var(--ai-cyan));
+
+	/* Nebula Background Colors (NO PURPLE) */
+	--nebula-core: #050a14;
+	/* Darker Void */
+	--nebula-wisp-1: #0a2472;
+	/* Deep Blue, replacing purple */
+	--nebula-wisp-2: #004e92;
+	/* Royal Blue */
+
+	/* Glow Effects (NO PURPLE) */
+	--glow-cyan: 0 0 25px rgba(0, 240, 255, 0.6);
+	/* Stronger Cyan */
+	--glow-blue: 0 0 30px rgba(45, 108, 223, 0.5);
+	/* Replaces Purple/Magenta */
+	--glow-neon: 0 0 20px rgba(0, 255, 157, 0.5);
+
+	/* Glassmorphism Refined (Higher Contrast) */
+	--glass-bg: rgba(5, 8, 15, 0.85);
+	/* Much Darker/Opaque */
+	--glass-border: rgba(255, 255, 255, 0.12);
+	/* Slightly stronger border */
+	--glass-blur: blur(20px);
+	--glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+
+	/* Text (Higher Contrast) */
+	--text-primary: #ffffff;
+	/* Pure White */
+	--text-secondary: #e2e8f0;
+	/* Very Light Gray (Slate 200) */
+	--text-accent: var(--ai-cyan);
 }
 
 /* Base Utility Classes */
 .glass {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+	background: var(--glass-bg);
+	border: 1px solid var(--glass-border);
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
 }
 
 .cyber-grid {
-  background-image: 
-    linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
-  background-size: 50px 50px;
+	background-image:
+		linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+	background-size: 50px 50px;
+}
+
+.neural-nebula-bg {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background:
+		radial-gradient(circle at 50% 50%, rgba(76, 29, 149, 0) 0%, rgba(0, 0, 0, 0.4) 100%),
+		var(--nebula-cloud-1),
+		var(--nebula-cloud-2),
+		var(--nebula-cloud-3);
+	background-size: 200% 200%;
+	animation: nebula-flow 25s ease infinite;
+	z-index: 0;
+	/* Behind content */
+	pointer-events: none;
+}
+
+.circuit-board-bg {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	/* Color Source: Gradient from Theme */
+	background: var(--gradient-ai-primary);
+	/* Mask: Pattern + Radial Fade */
+	mask-image: url('/circuit-board.svg'), radial-gradient(circle at center, transparent 40%, black 100%);
+	-webkit-mask-image: url('/circuit-board.svg'), radial-gradient(circle at center, transparent 40%, black 100%);
+	mask-repeat: repeat, no-repeat;
+	-webkit-mask-repeat: repeat, no-repeat;
+	mask-size: 500px 500px, 100% 100%;
+	-webkit-mask-size: 500px 500px, 100% 100%;
+	/* Composite: Intersect (Keep only where BOTH are true) */
+	mask-composite: intersect;
+	-webkit-mask-composite: source-in;
+
+	opacity: 0.15;
+	/* Subtle but visible */
+	z-index: 1;
+	pointer-events: none;
+	mix-blend-mode: color-dodge;
+	/* "Lightest brightness" effect requested */
 }
 
 /* Graffiti Font - Throlacon Trial */
@@ -76,7 +141,9 @@ The 'prose' section is used to style markdown content.
 
 	html {
 		@apply antialiased;
-		@apply min-h-[100svh] w-full flex flex-col items-center bg-theme-primary text-theme-primary font-sans my-0 mx-auto;
+		@apply min-h-[100svh] w-full flex flex-col items-center font-sans my-0 mx-auto;
+		background-color: var(--bg-primary);
+		color: var(--text-primary);
 		@apply scroll-smooth;
 	}
 
@@ -115,22 +182,33 @@ The 'prose' section is used to style markdown content.
 	/** Typography **/
 
 	/* Global Graffiti Headers Font */
+	/* Global Graffiti Headers Font - ONLY H1 */
 	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	.h1,
-	.h2,
-	.h3,
-	.h4,
-	.h5 {
+	.h1 {
 		font-family: 'ThrolaconTrial', Impact, 'Arial Black', sans-serif !important;
 		font-variant-ligatures: none;
 		text-transform: uppercase;
 		letter-spacing: 0.01em;
 		font-weight: normal !important;
-		text-shadow: 0 1px 6px #12121232, 2px 2px 0 #3331;
+		text-shadow: 0 1px 12px rgba(0, 240, 255, 0.25), 2px 2px 0 rgba(0, 0, 0, 0.5);
+	}
+
+	/* Modern Sans Pref headers for readability */
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	.h2,
+	.h3,
+	.h4,
+	.h5,
+	.h6 {
+		font-family: 'SUSE', 'Inter', system-ui, sans-serif !important;
+		letter-spacing: -0.02em;
+		font-weight: 700 !important;
+		text-transform: none !important;
+		/* Remove uppercase forced on all headers */
 	}
 
 	h1,
@@ -145,7 +223,7 @@ The 'prose' section is used to style markdown content.
 	.h4,
 	.h5,
 	.h6 {
-		@apply tracking-widest leading-normal font-bold font-serif;
+		@apply leading-tight;
 	}
 
 	h5,
@@ -157,12 +235,12 @@ The 'prose' section is used to style markdown content.
 
 	h1,
 	.h1 {
-		@apply text-[3.5rem] text-theme-accent md:text-[4rem] lg:tracking-widest lg:leading-normal;
+		@apply text-[3.5rem] text-[var(--text-accent)] md:text-[4rem] lg:tracking-widest lg:leading-normal;
 	}
 
 	h2,
 	.h2 {
-		@apply text-5xl text-theme-accent mb-1;
+		@apply text-5xl text-[var(--text-accent)] mb-1;
 	}
 
 	h3,
@@ -188,7 +266,7 @@ The 'prose' section is used to style markdown content.
 	p,
 	li,
 	a {
-		@apply text-theme-primary font-normal py-1;
+		@apply text-[var(--text-primary)] font-normal py-1;
 	}
 
 	p {
@@ -196,11 +274,11 @@ The 'prose' section is used to style markdown content.
 	}
 
 	a {
-		@apply underline underline-offset-2 decoration-2 decoration-theme-primary hover:decoration-theme-secondary hover:text-theme-accent hover:bg-opacity-20 cursor-pointer focus:ring-2 focus:ring-theme-primary focus:ring-offset-2 focus:outline-none;
+		@apply underline underline-offset-2 decoration-2 decoration-[var(--text-primary)] hover:decoration-[var(--text-secondary)] hover:text-[var(--text-accent)] hover:bg-opacity-20 cursor-pointer focus:ring-2 focus:ring-[var(--text-primary)] focus:ring-offset-2 focus:outline-none;
 	}
 
 	a.active {
-		@apply text-theme-accent no-underline;
+		@apply text-[var(--text-accent)] no-underline;
 	}
 
 	/* tweak line height */
@@ -216,7 +294,7 @@ The 'prose' section is used to style markdown content.
 	}
 
 	pre:has(code) {
-		@apply font-mono text-sm border border-theme-secondary mt-3 p-4 overflow-x-auto transition-colors duration-500 ease-linear inline-block w-full;
+		@apply font-mono text-sm border border-[var(--text-secondary)] mt-3 p-4 overflow-x-auto transition-colors duration-500 ease-linear inline-block w-full;
 	}
 
 	code,
@@ -230,11 +308,11 @@ The 'prose' section is used to style markdown content.
 	}
 
 	blockquote {
-		@apply border-l-4 border-theme-primary pl-4 italic text-theme-primary;
+		@apply border-l-4 border-[var(--text-primary)] pl-4 italic text-[var(--text-primary)];
 	}
 
 	::selection {
-		@apply bg-theme-secondary text-theme-secondary;
+		@apply bg-[var(--bg-secondary)] text-[var(--text-secondary)];
 	}
 
 	/** scrollbar **/
@@ -250,7 +328,7 @@ The 'prose' section is used to style markdown content.
 
 	/* Track */
 	::-webkit-scrollbar-track {
-		@apply shadow-theme-primary;
+		@apply shadow-[var(--text-accent)];
 	}
 
 	/* Handle */
@@ -260,7 +338,7 @@ The 'prose' section is used to style markdown content.
 
 	/* Handle on hover */
 	::-webkit-scrollbar-thumb:hover {
-		@apply bg-theme-secondary bg-opacity-50 cursor-pointer;
+		@apply bg-[var(--bg-secondary)] bg-opacity-50 cursor-pointer;
 	}
 
 	/* code block scroll */
@@ -273,7 +351,7 @@ The 'prose' section is used to style markdown content.
 
 @layer components {
 	.prose {
-		@apply text-theme-primary text-lg leading-relaxed md:m-auto;
+		@apply text-[var(--text-primary)] text-lg leading-relaxed md:m-auto;
 	}
 
 	.prose h1,
@@ -293,48 +371,48 @@ The 'prose' section is used to style markdown content.
 
 	.prose h1,
 	.prose .h1 {
-		@apply text-3xl text-theme-secondary leading-tight md:text-4xl tracking-wide font-semibold mb-6;
+		@apply text-3xl text-[var(--text-secondary)] leading-tight md:text-4xl tracking-wide font-semibold mb-6;
 	}
 
 	.prose h2,
 	.prose .h2 {
-		@apply text-2xl text-theme-accent leading-tight tracking-wide font-medium mt-8 mb-4;
+		@apply text-2xl text-[var(--text-accent)] leading-tight tracking-wide font-medium mt-8 mb-4;
 	}
 
 	.prose h3,
 	.prose .h3 {
-		@apply text-xl text-theme-primary tracking-normal font-medium mt-6 mb-3;
+		@apply text-xl text-[var(--text-primary)] tracking-normal font-medium mt-6 mb-3;
 	}
 
 	.prose h4,
 	.prose .h4 {
-		@apply text-lg text-theme-primary tracking-normal font-medium mt-4 mb-2;
+		@apply text-lg text-[var(--text-primary)] tracking-normal font-medium mt-4 mb-2;
 	}
 
 	.prose h5,
 	.prose .h5 {
-		@apply text-lg text-theme-primary mb-1 font-mono uppercase;
+		@apply text-lg text-[var(--text-primary)] mb-1 font-mono uppercase;
 	}
 
 	.prose h6,
 	.prose .h6 {
-		@apply text-sm text-theme-primary mb-1 font-mono uppercase;
+		@apply text-sm text-[var(--text-primary)] mb-1 font-mono uppercase;
 	}
 
 	.prose p {
-		@apply text-theme-primary text-lg p-2 lg:p-2.5;
+		@apply text-[var(--text-primary)] text-lg p-2 lg:p-2.5;
 	}
 
 	.prose a {
-		@apply text-theme-primary underline-offset-2 decoration-2 decoration-theme-primary hover:decoration-theme-secondary hover:text-theme-accent hover:bg-opacity-20 cursor-pointer;
+		@apply text-[var(--text-primary)] underline-offset-2 decoration-2 decoration-[var(--text-primary)] hover:decoration-[var(--text-secondary)] hover:text-[var(--text-accent)] hover:bg-opacity-20 cursor-pointer;
 	}
 
 	.prose blockquote {
-		@apply border-l-4 border-theme-secondary pl-4 italic text-theme-primary;
+		@apply border-l-4 border-[var(--text-secondary)] pl-4 italic text-[var(--text-primary)];
 	}
 
 	.prose ul {
-		@apply list-inside marker:text-theme-primary;
+		@apply list-inside marker:text-[var(--text-primary)];
 	}
 
 	.prose ol {
@@ -342,11 +420,11 @@ The 'prose' section is used to style markdown content.
 	}
 
 	.prose li {
-		@apply text-theme-primary text-lg leading-relaxed py-1;
+		@apply text-[var(--text-primary)] text-lg leading-relaxed py-1;
 	}
 
 	.prose pre {
-		@apply font-mono text-sm border border-theme-secondary mt-3 p-4 overflow-x-auto transition-colors duration-[1500ms] ease-linear;
+		@apply font-mono text-sm border border-[var(--text-secondary)] mt-3 p-4 overflow-x-auto transition-colors duration-[1500ms] ease-linear;
 		display: inline-block;
 		width: 100%;
 	}
@@ -357,16 +435,16 @@ The 'prose' section is used to style markdown content.
 	}
 
 	.prose code:not(pre code) {
-		@apply bg-theme-secondary text-theme-secondary px-1 inline-block;
+		@apply bg-[var(--bg-secondary)] text-[var(--text-secondary)] px-1 inline-block;
 	}
 
 	.prose strong:not(h1 strong, h2 strong, h3 strong, h4 strong, h5 strong, h6 strong) {
-		@apply text-theme-primary font-semibold relative tracking-wider;
+		@apply text-[var(--text-primary)] font-semibold relative tracking-wider;
 		/* Changed to font-semibold and font-sans for readability */
 	}
 
 	.prose ::selection {
-		@apply bg-theme-secondary text-theme-secondary;
+		@apply bg-[var(--bg-secondary)] text-[var(--text-secondary)];
 	}
 }
 
@@ -378,7 +456,7 @@ The 'prose' section is used to style markdown content.
 	}
 
 	.is-title-alt {
-		@apply text-5xl font-bold font-serif bg-theme-secondary text-theme-secondary md:text-6xl lg:tracking-widest lg:leading-normal;
+		@apply text-5xl font-bold font-serif bg-[var(--bg-secondary)] text-[var(--text-secondary)] md:text-6xl lg:tracking-widest lg:leading-normal;
 	}
 
 	.focused {
@@ -388,6 +466,36 @@ The 'prose' section is used to style markdown content.
 	.disabled {
 		@apply pointer-events-none opacity-50 no-underline;
 	}
+
+	/* Enhanced hover effect for project cards */
+	.project-card-hover {
+		@apply transition-all duration-300 ease-out;
+	}
+
+	.project-card-hover:hover {
+		@apply shadow-xl shadow-[var(--text-accent)]/20 transform translate-y-[-4px] scale-[1.02];
+	}
+
+	.project-card-hover:hover h3 {
+		@apply text-[var(--text-accent)];
+	}
+
+	.project-card-hover:hover .project-tags {
+		@apply bg-theme-accent text-white;
+	}
+
+	.project-card-hover:hover .project-date {
+		@apply bg-green-500/20 text-green-300;
+	}
+
+	.project-card-hover:hover .project-stats {
+		@apply bg-theme-accent/10 border-theme-accent/30;
+	}
+}
+
+/** helper classes **/
+
+@layer components {
 
 	/* Graffiti Style for "AI DLA WSZYSTKICH" */
 	.graffiti-footer {
@@ -409,6 +517,7 @@ The 'prose' section is used to style markdown content.
 		transform: skewY(-2deg) rotate(-3deg);
 	}
 }
+
 
 /* =========================
    ULTRA THEME ADDITIONS

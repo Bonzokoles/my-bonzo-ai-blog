@@ -1,0 +1,132 @@
+{
+  "$ref": "#/definitions/blog",
+  "definitions": {
+    "blog": {
+      "type": "object",
+      "properties": {
+        "authorId": {
+          "type": "number",
+          "default": 1
+        },
+        "authorContact": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "default": "Blog o sztucznej inteligencji, narzędziach AI i technologiach przyszłości"
+        },
+        "pubDatetime": {
+          "anyOf": [
+            {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "integer",
+                  "format": "unix-time"
+                }
+              ]
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "modDatetime": {
+          "anyOf": [
+            {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "integer",
+                  "format": "unix-time"
+                }
+              ]
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "isFeatured": {
+          "type": "boolean"
+        },
+        "isDraft": {
+          "type": "boolean"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "src": {
+              "type": "string"
+            },
+            "alt": {
+              "type": "string"
+            },
+            "width": {
+              "type": "number"
+            },
+            "height": {
+              "type": "number"
+            },
+            "format": {
+              "type": "string",
+              "enum": [
+                "webp",
+                "jpg",
+                "png",
+                "svg"
+              ]
+            },
+            "quality": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "src"
+          ],
+          "additionalProperties": false
+        },
+        "canonicalURL": {
+          "type": "string",
+          "format": "uri"
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
