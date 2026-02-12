@@ -1,0 +1,124 @@
+name: Deploy AI SEO
+
+# Trigger workflow on:
+# 1. Push to main branch (when relevant files change)
+# 2. Daily at midnight UTC (cron schedule)
+# 3. Manual trigger from GitHub UI
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'astro.config.mjs'
+      - 'wrangler.toml'
+      - '.github/workflows/deploy.yml'
+
+  # Daily deployment at midnight UTC
+  schedule:
+    - cron: '0 0 * * *'
+
+  # Allow manual workflow dispatch
+  workflow_dispatch:
+
+# Permissions for deployment
+permissions:
+  contents: read
+  deployments: write
+
+# Environment variables
+env:
+  NODE_VERSION: '20'
+  # IndexNow key file for search engine instant indexing
+  # This file is generated and stored in public/ directory
+  INDEXNOW_KEY_FILE: '8f9a2d4e6b1c3a5d7e9f0a2b4c6d8e0f.txt'
+
+jobs:
+  deploy:
+    name: Build and Deploy to Cloudflare Pages
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2. Setup Node.js
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Build Astro project
+      - name: Build Astro project
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      # 5. Verify required files exist in dist/
+      - name: Verify build output
+        run: |
+          echo "Verifying required files in dist/..."
+
+          # Check robots.txt
+          if [ ! -f "dist/robots.txt" ]; then
+            echo "❌ ERROR: dist/robots.txt not found"
+            exit 1
+          fi
+          echo "✅ dist/robots.txt exists"
+
+          # Check sitemap-pumo.xml
+          if [ ! -f "dist/sitemap-pumo.xml" ]; then
+            echo "❌ ERROR: dist/sitemap-pumo.xml not found"
+            exit 1
+          fi
+          echo "✅ dist/sitemap-pumo.xml exists"
+
+          # Check llms.txt
+          if [ ! -f "dist/llms.txt" ]; then
+            echo "❌ ERROR: dist/llms.txt not found"
+            exit 1
+          fi
+          echo "✅ dist/llms.txt exists"
+
+          # Check IndexNow key file (for instant search engine indexing)
+          if [ ! -f "dist/${{ env.INDEXNOW_KEY_FILE }}" ]; then
+            echo "❌ ERROR: dist/${{ env.INDEXNOW_KEY_FILE }} not found"
+            exit 1
+          fi
+          echo "✅ dist/${{ env.INDEXNOW_KEY_FILE }} exists"
+
+          # Check .well-known directory
+          if [ ! -d "dist/.well-known" ]; then
+            echo "❌ ERROR: dist/.well-known/ directory not found"
+            exit 1
+          fi
+          echo "✅ dist/.well-known/ directory exists"
+
+          echo "✅ All required files verified successfully"
+
+      # 6. Deploy to Cloudflare Pages
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=mybonzoaiblog --branch=main
+
+      # 7. Output deployment summary
+      - name: Deployment summary
+        if: success()
+        run: |
+          echo "✅ mybonzoaiblog successfully deployed to Cloudflare Pages!"
+          echo "🔗 Production URL: https://mybonzoaiblog.pages.dev"
+          echo "📦 Branch: ${{ github.ref_name }}"
+          echo "📝 Commit: ${{ github.sha }}"
+          echo "🚀 Workflow: ${{ github.workflow }}"
