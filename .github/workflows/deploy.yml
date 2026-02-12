@@ -30,6 +30,9 @@ permissions:
 # Environment variables
 env:
   NODE_VERSION: '20'
+  # IndexNow key file for search engine instant indexing
+  # This file is generated and stored in public/ directory
+  INDEXNOW_KEY_FILE: '8f9a2d4e6b1c3a5d7e9f0a2b4c6d8e0f.txt'
 
 jobs:
   deploy:
@@ -86,12 +89,12 @@ jobs:
           fi
           echo "✅ dist/llms.txt exists"
 
-          # Check IndexNow key file
-          if [ ! -f "dist/8f9a2d4e6b1c3a5d7e9f0a2b4c6d8e0f.txt" ]; then
-            echo "❌ ERROR: dist/8f9a2d4e6b1c3a5d7e9f0a2b4c6d8e0f.txt not found"
+          # Check IndexNow key file (for instant search engine indexing)
+          if [ ! -f "dist/${{ env.INDEXNOW_KEY_FILE }}" ]; then
+            echo "❌ ERROR: dist/${{ env.INDEXNOW_KEY_FILE }} not found"
             exit 1
           fi
-          echo "✅ dist/8f9a2d4e6b1c3a5d7e9f0a2b4c6d8e0f.txt exists"
+          echo "✅ dist/${{ env.INDEXNOW_KEY_FILE }} exists"
 
           # Check .well-known directory
           if [ ! -d "dist/.well-known" ]; then
