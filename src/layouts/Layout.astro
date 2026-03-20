@@ -7,8 +7,6 @@ import { ClientRouter } from "astro:transitions";
 
 import "@styles/global.css";
 
-
-
 import DynamicMetaTags from "@components/Astro/head/DynamicMetaTags.astro";
 import GoogleFonts from "@components/Astro/head/GoogleFonts.astro";
 import SocialMeta from "@components/Astro/head/SocialMeta.astro";
@@ -35,9 +33,9 @@ interface Props {
   class?: string | undefined;
   lang?: string;
   // AI SEO Props
-  robots?: string;      // Override default robots meta
-  googlebot?: string;   // Specific rules for Googlebot (AI Overviews)
-  maxSnippet?: number;  // Limit snippet length (default -1 = unlimited)
+  robots?: string; // Override default robots meta
+  googlebot?: string; // Specific rules for Googlebot (AI Overviews)
+  maxSnippet?: number; // Limit snippet length (default -1 = unlimited)
 }
 
 const {
@@ -61,13 +59,13 @@ const {
 // Construct robots meta content
 let robotsContent = robots;
 if (!robotsContent) {
-    robotsContent = `index, ${SITE.disableIndexing ? "noindex, nofollow" : "index, follow"}`;
+  robotsContent = `index, ${SITE.disableIndexing ? "noindex, nofollow" : "index, follow"}`;
 }
 if (maxSnippet) {
-    // Append max-snippet if not already present
-    if (!robotsContent.includes('max-snippet')) {
-        robotsContent += `, max-snippet:${maxSnippet}`;
-    }
+  // Append max-snippet if not already present
+  if (!robotsContent.includes("max-snippet")) {
+    robotsContent += `, max-snippet:${maxSnippet}`;
+  }
 }
 
 const metaTags = [
@@ -85,7 +83,7 @@ const metaTags = [
 ];
 
 if (googlebot) {
-    metaTags.push({ name: "googlebot", content: googlebot });
+  metaTags.push({ name: "googlebot", content: googlebot });
 }
 const fonts = SITE.fonts || [];
 
@@ -94,7 +92,9 @@ const headerLogo = typeof logo === "undefined" ? null : logo; // guard against n
 
 // Prepare logo URL for Schema.org (use full URL with domain)
 const siteUrl = SITE.url || "https://mybonzoaiblog.com";
-const logoUrl = logo?.src ? new URL(logo.src, siteUrl).href : `${siteUrl}/bonzo_logo_new.png`;
+const logoUrl = logo?.src
+  ? new URL(logo.src, siteUrl).href
+  : `${siteUrl}/bonzo_logo_new.png`;
 ---
 
 <html lang={lang}>
@@ -112,106 +112,111 @@ const logoUrl = logo?.src ? new URL(logo.src, siteUrl).href : `${siteUrl}/bonzo_
 
     <DynamicMetaTags metaTags={metaTags} />
     <GoogleFonts fonts={fonts} />
-    
+
     <!-- Global Schema.org for AI Crawlers -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Organization",
-          "@id": `${siteUrl}/#organization`,
-          "name": "MyBonzo AI Blog",
-          "url": siteUrl,
-          "logo": {
-            "@type": "ImageObject",
-            "url": logoUrl,
-            "width": 512,
-            "height": 512
-          },
-          "sameAs": [
-            "https://github.com/Bonzokoles",
-            "https://mybonzoaiblog.pages.dev",
-            "https://twitter.com/Bonzokoles"
-          ],
-          "description": "Blog o sztucznej inteligencji, machine learning i nowoczesnych technologiach AI. Przewodniki, case studies i praktyczne zastosowania AI dla polskich użytkowników.",
-          "founder": {
-            "@type": "Person",
-            "name": "Bonzo",
-            "jobTitle": "AI Developer & Content Creator"
-          },
-          "contactPoint": {
-            "@type": "ContactPoint",
-            "contactType": "Customer Service",
-            "areaServed": "PL",
-            "availableLanguage": ["Polish", "English"]
-          },
-          "foundingDate": "2025"
-        },
-        {
-          "@type": "WebSite",
-          "@id": `${siteUrl}/#website`,
-          "url": siteUrl,
-          "name": "MyBonzo AI Blog",
-          "description": "Kompleksowy przewodnik po sztucznej inteligencji: tutoriale, case studies, narzędzia AI i aktualne trendy w ML/AI",
-          "publisher": {
-            "@id": `${siteUrl}/#organization`
-          },
-          "inLanguage": "pl-PL",
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": {
-              "@type": "EntryPoint",
-              "urlTemplate": `${siteUrl}/search?q={search_term_string}`
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": `${siteUrl}/#organization`,
+            name: "MyBonzo AI Blog",
+            url: siteUrl,
+            logo: {
+              "@type": "ImageObject",
+              url: logoUrl,
+              width: 512,
+              height: 512,
             },
-            "query-input": "required name=search_term_string"
-          }
-        },
-        {
-          "@type": "ItemList",
-          "@id": `${siteUrl}/#mainnavigation`,
-          "name": "Main Navigation",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Blog",
-              "url": `${siteUrl}/blog`
+            sameAs: [
+              "https://github.com/Bonzokoles",
+              "https://mybonzoaiblog.pages.dev",
+              "https://twitter.com/Bonzokoles",
+            ],
+            description:
+              "Blog o sztucznej inteligencji, machine learning i nowoczesnych technologiach AI. Przewodniki, case studies i praktyczne zastosowania AI dla polskich użytkowników.",
+            founder: {
+              "@type": "Person",
+              name: "Bonzo",
+              jobTitle: "AI Developer & Content Creator",
             },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Meble Pumo Guide",
-              "url": `${siteUrl}/pumo-guide`
+            contactPoint: {
+              "@type": "ContactPoint",
+              contactType: "Customer Service",
+              areaServed: "PL",
+              availableLanguage: ["Polish", "English"],
             },
-            {
-              "@type": "ListItem",
-              "position": 3,
-              "name": "RAG Assistant",
-              "url": `${siteUrl}/rag`
+            foundingDate: "2025",
+          },
+          {
+            "@type": "WebSite",
+            "@id": `${siteUrl}/#website`,
+            url: siteUrl,
+            name: "MyBonzo AI Blog",
+            description:
+              "Kompleksowy przewodnik po sztucznej inteligencji: tutoriale, case studies, narzędzia AI i aktualne trendy w ML/AI",
+            publisher: {
+              "@id": `${siteUrl}/#organization`,
             },
-            {
-              "@type": "ListItem",
-              "position": 4,
-              "name": "AI Tools",
-              "url": `${siteUrl}/eksperymenty`
-            }
-          ]
-        },
-        {
-            "@type": "BreadcrumbList",
-            "@id": `${siteUrl}/#breadcrumb`,
-            "itemListElement": [
+            inLanguage: "pl-PL",
+            potentialAction: {
+              "@type": "SearchAction",
+              target: {
+                "@type": "EntryPoint",
+                urlTemplate: `${siteUrl}/search?q={search_term_string}`,
+              },
+              "query-input": "required name=search_term_string",
+            },
+          },
+          {
+            "@type": "ItemList",
+            "@id": `${siteUrl}/#mainnavigation`,
+            name: "Main Navigation",
+            itemListElement: [
               {
                 "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": siteUrl
-              }
-            ]
-        }
-      ]
-    })} />
-    
+                position: 1,
+                name: "Blog",
+                url: `${siteUrl}/blog`,
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Meble Pumo Guide",
+                url: `${siteUrl}/pumo-guide`,
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: "RAG Assistant",
+                url: `${siteUrl}/rag`,
+              },
+              {
+                "@type": "ListItem",
+                position: 4,
+                name: "AI Tools",
+                url: `${siteUrl}/eksperymenty`,
+              },
+            ],
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": `${siteUrl}/#breadcrumb`,
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: siteUrl,
+              },
+            ],
+          },
+        ],
+      })}
+    />
+
     <SocialMeta
       title={title}
       author={author}
@@ -223,20 +228,29 @@ const logoUrl = logo?.src ? new URL(logo.src, siteUrl).href : `${siteUrl}/bonzo_
       publishedTime={publishedTime}
       modifiedTime={modifiedTime}
     />
-    
+
     <ClientRouter />
     {/*<ResourceLinks />*/}
-    
 
+    <!-- Umami Analytics -->
+    <script
+      defer
+      src="https://analytics.mybonzo.com/script.js"
+      data-website-id="79467ba2-ff07-4ce5-9126-87d51dedebf3"></script>
   </head>
-  	<body class={`bg-theme-bg text-theme-text min-h-screen relative overflow-x-hidden selection:bg-theme-accent selection:text-theme-bg ${className}`}>
-		<!-- Background Layers -->
-        <div class="fixed inset-0 z-0 bg-[var(--bg-primary)]"></div> <!-- Base Solid -->
-        <div class="neural-nebula-bg fixed inset-0 z-[1]"></div> <!-- Nebula Gradient -->
-		<div class="circuit-board-bg fixed inset-0 z-[1]"></div> <!-- Pattern Overlay (Masked) -->
-        
-        <!-- Main Content -->
-		<div class="flex flex-col min-h-screen mt-0 pt-0 relative z-[10]">
+  <body
+    class={`bg-theme-bg text-theme-text min-h-screen relative overflow-x-hidden selection:bg-theme-accent selection:text-theme-bg ${className}`}
+  >
+    <!-- Background Layers -->
+    <div class="fixed inset-0 z-0 bg-[var(--bg-primary)]"></div>
+    <!-- Base Solid -->
+    <div class="neural-nebula-bg fixed inset-0 z-[1]"></div>
+    <!-- Nebula Gradient -->
+    <div class="circuit-board-bg fixed inset-0 z-[1]"></div>
+    <!-- Pattern Overlay (Masked) -->
+
+    <!-- Main Content -->
+    <div class="flex flex-col min-h-screen mt-0 pt-0 relative z-[10]">
       {
         headerLogo ? (
           <Title
@@ -262,24 +276,25 @@ const logoUrl = logo?.src ? new URL(logo.src, siteUrl).href : `${siteUrl}/bonzo_
     <BackToTop />
     <QuickAccessWidget />
     <QuickAccessWidget />
-    
+
     <!-- Global Pumo Analytics Tracker -->
     <script>
       import { pumoTracker } from "../lib/pumo-tracker";
 
-      document.addEventListener('click', (e) => {
-        const target = (e.target as Element).closest('a');
+      document.addEventListener("click", (e) => {
+        const target = (e.target as Element).closest("a");
         if (target && target.href) {
           // Track shop clicks
-          if (target.href.includes('meblepumo.pl')) {
+          if (target.href.includes("meblepumo.pl")) {
             pumoTracker.trackClick({
-              id: 'shop_link',
-              name: target.innerText || target.getAttribute('title') || 'Shop Link',
-              url: target.href
+              id: "shop_link",
+              name:
+                target.innerText || target.getAttribute("title") || "Shop Link",
+              url: target.href,
             });
           }
           // Track guide clicks (internal)
-          else if (target.href.includes('/pumo-guide/')) {
+          else if (target.href.includes("/pumo-guide/")) {
             pumoTracker.trackGuideView(target.pathname, target.innerText);
           }
         }
