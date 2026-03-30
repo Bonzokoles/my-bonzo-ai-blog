@@ -1,0 +1,24 @@
+# Mergify Configuration
+
+# Default configuration for Mergify
+integration:
+  # Mergify will only work with the following users
+  authorized_users:
+    - Bonzokoles
+
+pull_request_rules:
+  - name: auto-merge approved PRs
+    conditions:
+      - status-success=continuous-integration/travis-ci
+      - approved-review-count>=1
+    actions:
+      merge:
+        method: merge
+
+  - name: auto-merge dependabot PRs
+    conditions:
+      - author=dependabot[bot]
+      - status-success=continuous-integration/travis-ci
+    actions:
+      merge:
+        method: merge
