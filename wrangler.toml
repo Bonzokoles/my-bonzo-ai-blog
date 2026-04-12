@@ -11,12 +11,12 @@ pages_build_output_dir = "./dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "jimbo-rag-db"
-database_id = "08ec6390-7b9f-4177-8e37-d1daed7c67bc"
+database_id = "90fe9b43-f8a4-4e78-94c5-c44aff4012e9"
 
 [[d1_databases]]
 binding = "ANALYTICS_DB"
 database_name = "analytics-db"
-database_id = "d881af54-3b21-4193-834b-7ac54d5ac44d"
+database_id = "159b6e8e-46d3-4ed6-b683-e94408f55844"
 
 # KV Namespaces
 # Session storage for user sessions (referenced in astro.config.mjs)

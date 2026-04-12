@@ -19,6 +19,18 @@ import vue from "@astrojs/vue";
 export default defineConfig({
   site: SITE.url,
   output: 'server', // Changed to server for dynamic D1 access
+  markdown: {
+    shikiConfig: {
+      // Only bundle languages actually used in the blog — prevents ~4MB of Shiki grammars in Worker
+      langs: [
+        'javascript', 'typescript', 'jsx', 'tsx',
+        'python', 'bash', 'shellscript', 'shell',
+        'json', 'yaml', 'toml',
+        'html', 'css', 'scss',
+        'astro', 'sql', 'markdown', 'mdx',
+      ],
+    },
+  },
   adapter: cloudflare({
     imageService: 'compile', // Use explicit compile mode for images
     platformProxy: {
