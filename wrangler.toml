@@ -22,17 +22,17 @@ database_id = "d881af54-3b21-4193-834b-7ac54d5ac44d"
 # Session storage for user sessions (referenced in astro.config.mjs)
 [[kv_namespaces]]
 binding = "SESSION"
-id = "5f8f0cabba9843e3a63eb4fb94746257"
+id = "77d84c01758a4064be011acc35b2c344"
 
 # Cache namespace for general caching
 [[kv_namespaces]]
 binding = "CACHE"
-id = "d84ee8f6ae7444f38b896f8a1de1575f"
+id = "cce469bb54d142ebbbce4287e450daec"
 
 # Analytics backup storage
 [[kv_namespaces]]
 binding = "ANALYTICS_KV"
-id = "d4f8375307144f0cb2c9adb49d06cd3f"
+id = "3dac9b61279e4d4ca2a8dc3978626805"
 
 # Vectorize Index
 # For AI embeddings and semantic search
@@ -47,9 +47,9 @@ binding = "AI"
 
 # R2 Bucket
 # Storage for raw data and backups
-# [[r2_buckets]]
-# binding = "PUMO_RAW_BUCKET"
-# bucket_name = "pumo-raw-data"
+[[r2_buckets]]
+binding = "PUMO_RAW_BUCKET"
+bucket_name = "pumo-raw-data"
 
 # Note: To get your resource IDs, run:
 # - wrangler d1 list                    (for D1 database IDs)
