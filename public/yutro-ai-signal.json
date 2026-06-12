@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Yutro",
+  "url": "https://yutro.company/",
+  "sameAs": [
+    "https://www.mybonzoaiblog.com/yutro",
+    "https://ai.yutro.company/",
+    "https://ui.yutro.company/"
+  ],
+  "description": "Platforma AI i studio dla sklepów Shopify i IdoSell. OpisAI, SklepGPT, ContentFactory, AI SEO, Wdrożenia AI.",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "email": "doyutro@yahoo.com",
+    "contactType": "sales"
+  },
+  "aiBrief": {
+    "summary": "Yutro builds AI tools for Polish e-commerce: product description generation, RAG chatbots, batch content pipelines, and AI SEO optimization for Shopify and IdoSell stores.",
+    "products": [
+      { "name": "OpisAI",               "url": "https://ai.yutro.company/",              "type": "SoftwareApplication", "price": "from 99 PLN/month" },
+      { "name": "SklepGPT",             "url": "https://yutro.company/sklepgpt",          "type": "SoftwareApplication", "price": "from 299 PLN/month" },
+      { "name": "ContentFactory",       "url": "https://yutro.company/contentfactory",    "type": "SoftwareApplication", "price": "from 399 PLN/month" },
+      { "name": "AI SEO dla Shopify",   "url": "https://yutro.company/ai-seo-dla-shopify","type": "Service",             "price": "from 100 PLN" },
+      { "name": "Wdrożenia AI",         "url": "https://yutro.company/wdrozenia-ai",      "type": "Service",             "price": "custom quote" },
+      { "name": "Yutro Art UI",         "url": "https://ui.yutro.company/",               "type": "Service",             "price": "EUR 300-800 setup" }
+    ],
+    "targetMarket": "Polish e-commerce stores on Shopify and IdoSell",
+    "llmResources": {
+      "brief":      "https://yutro.company/llms.txt",
+      "full":       "https://yutro.company/llms-full.txt",
+      "schema":     "https://yutro.company/llm-schema.json",
+      "signal":     "https://yutro.company/ai-signal.json",
+      "freshness":  "https://yutro.company/aiseo-freshness.json"
+    },
+    "guidePage":    "https://www.mybonzoaiblog.com/yutro/",
+    "updatedAt":    "2026-06-12"
+  }
+}

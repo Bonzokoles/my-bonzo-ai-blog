@@ -115,6 +115,44 @@ export const NAVIGATION: NavEntry[] = [
 		]
 	},
 	{
+		href: "#",
+		text: "Yutro AI",
+		icon: "robot",
+		submenu: [
+			{
+				href: "/yutro",
+				text: "Wszystkie produkty",
+				icon: "grid",
+			},
+			{
+				href: "/yutro/opisai",
+				text: "OpisAI",
+				icon: "file-text",
+			},
+			{
+				href: "/yutro/sklepgpt",
+				text: "SklepGPT",
+				icon: "chat-1",
+			},
+			{
+				href: "/yutro/contentfactory",
+				text: "ContentFactory",
+				icon: "layers",
+			},
+			{
+				href: "/yutro/ai-seo-dla-shopify",
+				text: "AI SEO Shopify",
+				icon: "search",
+			},
+			{
+				href: "https://yutro.company/",
+				text: "yutro.company →",
+				icon: "external-link",
+				external: true,
+			},
+		]
+	},
+	{
 		href: "/eksperymenty",
 		text: "Eksperymenty",
 		icon: "flask",

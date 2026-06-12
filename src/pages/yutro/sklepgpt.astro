@@ -1,0 +1,73 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import YutroEnhancedSEO from "../../components/YutroEnhancedSEO.astro";
+
+const title = "SklepGPT — Chatbot RAG dla sklepów Shopify i IdoSell | Yutro";
+const description =
+  "SklepGPT to chatbot obsługi klienta z bazą wiedzy RAG. Odpowiada na pytania o produkty, stany magazynowe i zamówienia. Integracja z Chatwoot i Shopify.";
+---
+
+<YutroEnhancedSEO pageType="product" product="SklepGPT" {title} {description}
+  canonical="https://www.mybonzoaiblog.com/yutro/sklepgpt" />
+
+<Layout {title} {description}>
+  <div class="max-w-4xl mx-auto px-4 py-10">
+
+    <nav class="flex items-center gap-2 text-xs text-gray-500 font-mono mb-8">
+      <a href="/" class="hover:text-gray-300">Home</a><span>/</span>
+      <a href="/yutro" class="hover:text-gray-300">Yutro</a><span>/</span>
+      <span class="text-blue-400">SklepGPT</span>
+    </nav>
+
+    <div class="mb-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/5 text-blue-400 text-xs font-mono uppercase tracking-widest mb-5">
+        SaaS · RAG Chatbot
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+        SklepGPT — chatbot który<br/>
+        <span class="text-blue-400">zna Twój sklep na wylot</span>
+      </h1>
+      <p class="text-gray-300 text-lg leading-relaxed max-w-2xl mb-6">
+        Retrieval-Augmented Generation na bazie Twoich produktów, FAQ i zamówień.
+        Klient pyta — bot odpowiada z konkretnymi danymi ze sklepu, nie hallucynuje.
+      </p>
+      <a href="mailto:doyutro@yahoo.com?subject=SklepGPT+demo"
+        class="inline-block px-6 py-2 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-lg transition-colors">
+        Umów demo →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+      {[
+        { icon: "🧠", title: "RAG na produktach",    desc: "Vector store z Twoim katalogiem. Aktualizacja po każdym syncu z Shopify API." },
+        { icon: "💬", title: "Chatwoot integration", desc: "SklepGPT działa jako agent Chatwoot — eskalacja do człowieka jednym kliknięciem." },
+        { icon: "📦", title: "Stan magazynowy live",  desc: "Pobiera dostępność produktów w czasie rzeczywistym przez Shopify Storefront API." },
+        { icon: "🔄", title: "Historia zamówień",    desc: "Klient podaje email → bot sprawdza status ostatnich zamówień bez logowania." },
+        { icon: "🌍", title: "PL / EN",              desc: "Automatyczne wykrywanie języka i odpowiedź w tym samym języku co pytanie." },
+        { icon: "📊", title: "Analytics",            desc: "Dashboard z najczęstszymi pytaniami, nieznanymi frazami i satysfakcją klientów." },
+      ].map(f => (
+        <div class="p-5 border border-gray-800 rounded-xl bg-gray-900/50">
+          <div class="text-2xl mb-3">{f.icon}</div>
+          <div class="font-bold text-white mb-2">{f.title}</div>
+          <div class="text-sm text-gray-400">{f.desc}</div>
+        </div>
+      ))}
+    </div>
+
+    <div class="p-6 border border-blue-500/20 rounded-xl bg-blue-500/5 mb-8">
+      <h3 class="font-bold text-white mb-2">Wymagania techniczne</h3>
+      <ul class="text-sm text-gray-400 space-y-1">
+        <li>✓ Shopify lub IdoSell z aktywnym API</li>
+        <li>✓ Chatwoot (cloud lub self-hosted) — lub widget standalone</li>
+        <li>✓ Setup: 48h od dostarczenia dostępów</li>
+        <li>✓ Cena: od 299 PLN / mies. + jednorazowy onboarding 500 PLN</li>
+      </ul>
+    </div>
+
+    <div class="border-t border-gray-800 pt-8">
+      <a href="/yutro" class="text-sm text-gray-500 hover:text-blue-400 transition-colors font-mono">
+        ← Wróć do wszystkich produktów Yutro
+      </a>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,90 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import YutroEnhancedSEO from "../../components/YutroEnhancedSEO.astro";
+
+const title = "Wdrożenia AI dla biznesu — chatboty, RAG, automatyzacje | Yutro Studio";
+const description =
+  "Yutro Studio projektuje i wdraża AI w firmach: chatboty RAG, automatyzacje procesów, dashboardy AI, integracje API. Wycena w 24h, wdrożenie w 48h.";
+---
+
+<YutroEnhancedSEO pageType="service" product="Wdrożenia AI" {title} {description}
+  canonical="https://www.mybonzoaiblog.com/yutro/wdrozenia-ai" />
+
+<Layout {title} {description}>
+  <div class="max-w-4xl mx-auto px-4 py-10">
+
+    <nav class="flex items-center gap-2 text-xs text-gray-500 font-mono mb-8">
+      <a href="/" class="hover:text-gray-300">Home</a><span>/</span>
+      <a href="/yutro" class="hover:text-gray-300">Yutro</a><span>/</span>
+      <span class="text-purple-400">Wdrożenia AI</span>
+    </nav>
+
+    <div class="mb-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-purple-500/30 bg-purple-500/5 text-purple-400 text-xs font-mono uppercase tracking-widest mb-5">
+        Studio · Consulting
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+        AI w Twoim biznesie<br/>
+        <span class="text-purple-400">za 48 godzin</span>
+      </h1>
+      <p class="text-gray-300 text-lg leading-relaxed max-w-2xl mb-6">
+        Yutro Studio to zespół inżynierów AI i UX designerów. Projektujemy, kodujemy i wdrażamy
+        rozwiązania AI — od chatbotów RAG po pełne automatyzacje procesów biznesowych.
+        Nie sprzedajemy konsultacji. Dostarczamy działające systemy.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href="mailto:doyutro@yahoo.com?subject=Wdrozenie+AI+brief"
+          class="px-6 py-2 bg-purple-500 hover:bg-purple-400 text-white font-bold rounded-lg transition-colors">
+          Wyślij brief →
+        </a>
+        <a href="https://yutro.company/wdrozenia-ai" target="_blank" rel="noopener"
+          class="px-6 py-2 border border-purple-500/40 hover:border-purple-400 text-purple-400 font-semibold rounded-lg transition-colors">
+          Więcej na yutro.company
+        </a>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+      {[
+        { icon: "🤖", title: "Chatboty RAG",           desc: "Boty oparte o własną bazę wiedzy. Dokumenty, FAQ, produkty — bez hallucynacji." },
+        { icon: "⚙️", title: "Automatyzacje procesów", desc: "n8n / Zapier / custom scripts. Łączymy systemy które nie chcą ze sobą rozmawiać." },
+        { icon: "📊", title: "Dashboardy AI",          desc: "Wizualizacje danych z AI-driven insights. Recharts + Supabase + GPT-4o analysis." },
+        { icon: "🔗", title: "Integracje API",         desc: "ERP, CRM, Shopify, IdoSell, BaseLinker, Allegro — jedno API do rządzenia nimi wszystkimi." },
+        { icon: "🔍", title: "AI SEO audyt",           desc: "Pełny audyt widoczności w Google i AI Overviews. Plan działania + implementacja." },
+        { icon: "🛒", title: "Sklepy na Vercel",       desc: "Headless commerce: Next.js + Shopify/IdoSell API + Three.js UI. Od briefu do live w 2 tyg." },
+      ].map(f => (
+        <div class="p-5 border border-gray-800 rounded-xl bg-gray-900/50">
+          <div class="text-2xl mb-3">{f.icon}</div>
+          <div class="font-bold text-white mb-2">{f.title}</div>
+          <div class="text-sm text-gray-400">{f.desc}</div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Process -->
+    <div class="mb-12">
+      <h2 class="text-xl font-bold text-white mb-5">Jak wygląda współpraca?</h2>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-px bg-gray-800 border border-gray-800 rounded-xl overflow-hidden">
+        {[
+          { n: "01", t: "Brief (15 min)",   d: "Email lub WhatsApp. Opisujesz problem — my pytamy o szczegóły." },
+          { n: "02", t: "Wycena (24h)",     d: "Scope, termin, cena. Bez niespodzianek po podpisaniu." },
+          { n: "03", t: "Wdrożenie (48h+)", d: "Piszemy kod, testujemy, wdrażamy na Twoją infrastrukturę." },
+          { n: "04", t: "Utrzymanie",       d: "SLA 99.9%, monitoring, aktualizacje modeli AI." },
+        ].map(s => (
+          <div class="p-5 bg-gray-900">
+            <div class="text-xs font-mono text-purple-400 mb-2">{s.n}</div>
+            <div class="font-bold text-white text-sm mb-1">{s.t}</div>
+            <div class="text-xs text-gray-400">{s.d}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="border-t border-gray-800 pt-8">
+      <a href="/yutro" class="text-sm text-gray-500 hover:text-purple-400 transition-colors font-mono">
+        ← Wróć do wszystkich produktów Yutro
+      </a>
+    </div>
+  </div>
+</Layout>

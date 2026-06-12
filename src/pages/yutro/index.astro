@@ -1,0 +1,194 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import YutroEnhancedSEO from "../../components/YutroEnhancedSEO.astro";
+
+const title = "Yutro — AI i UI dla e-commerce | Przewodnik MyBonzo 2026";
+const description =
+  "Kompletny przewodnik po platformie Yutro: OpisAI, SklepGPT, ContentFactory, AI SEO dla Shopify i IdoSell. Narzędzia AI które sprzedają za Ciebie.";
+
+const products = [
+  {
+    href: "/yutro/opisai",
+    name: "OpisAI",
+    badge: "SaaS",
+    badgeColor: "emerald",
+    desc: "AI generuje opisy produktów, SEO title i meta description. Zapisuje bezpośrednio do Shopify przez GraphQL.",
+    tags: ["AI", "Shopify", "IdoSell"],
+  },
+  {
+    href: "/yutro/sklepgpt",
+    name: "SklepGPT",
+    badge: "SaaS",
+    badgeColor: "blue",
+    desc: "Chatbot obsługi klienta z bazą wiedzy RAG. Odpowiada na pytania o produkty, stany, zamówienia. Integracja z Chatwoot.",
+    tags: ["RAG", "Chatbot", "AI"],
+  },
+  {
+    href: "/yutro/contentfactory",
+    name: "ContentFactory",
+    badge: "SaaS",
+    badgeColor: "amber",
+    desc: "Pipeline masowego generowania treści. Jeden produkt → posty, maile, artykuły, reklamy, skrypty short-form.",
+    tags: ["Batch", "AI", "Content"],
+  },
+  {
+    href: "/yutro/wdrozenia-ai",
+    name: "Wdrożenia AI",
+    badge: "Studio",
+    badgeColor: "purple",
+    desc: "Projektujemy i wdrażamy AI w biznesie: chatboty, automatyzacje, dashboardy, RAG, integracje API, AI SEO.",
+    tags: ["Consulting", "RAG", "Automation"],
+  },
+  {
+    href: "/yutro/ai-seo-dla-shopify",
+    name: "AI SEO dla Shopify",
+    badge: "Usługa",
+    badgeColor: "green",
+    desc: "Automatyczne meta description, opisy produktów, FAQ i structured data. Widoczność w Google i AI Overviews.",
+    tags: ["SEO", "Shopify", "Schema.org"],
+  },
+  {
+    href: "https://ui.yutro.company/",
+    name: "Yutro Art UI",
+    badge: "Setup",
+    badgeColor: "violet",
+    desc: "Premium komponenty Three.js, WebGL i GSAP. Galerie z momentum, cząsteczki, gooey filtry. €300–800 setup, 48h.",
+    tags: ["Three.js", "GSAP", "WebGL"],
+  },
+];
+---
+
+<YutroEnhancedSEO pageType="hub" {title} {description} />
+
+<Layout {title} {description}>
+  <div class="max-w-5xl mx-auto px-4 py-10">
+
+    <!-- Header -->
+    <div class="mb-10 text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/5 text-emerald-400 text-xs font-mono uppercase tracking-widest mb-6">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse inline-block"></span>
+        AI + Studio dla e-commerce
+      </div>
+      <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">
+        Yutro <span class="text-emerald-400">AI Guide</span>
+      </h1>
+      <p class="text-gray-300 text-lg max-w-2xl mx-auto leading-relaxed">
+        Platforma AI i studio dla sklepów Shopify i IdoSell. Od automatycznych opisów produktów
+        po pełne sklepy na Vercel. Sprawdź wszystkie narzędzia i wybierz swój pakiet.
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a href="https://yutro.company/" target="_blank" rel="noopener"
+          class="px-6 py-2 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-lg transition-colors text-sm">
+          Otwórz yutro.company →
+        </a>
+        <a href="https://ai.yutro.company/" target="_blank" rel="noopener"
+          class="px-6 py-2 border border-emerald-500/40 hover:border-emerald-400 text-emerald-400 font-semibold rounded-lg transition-colors text-sm">
+          Panel OpisAI
+        </a>
+      </div>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 border-y border-gray-800 py-6">
+      {[
+        { val: "10k+", label: "Wygenerowanych opisów" },
+        { val: "48h",  label: "Setup do live" },
+        { val: "7",    label: "Narzędzi AI" },
+        { val: "0",    label: "Lock-in" },
+      ].map(s => (
+        <div class="text-center">
+          <div class="text-2xl font-bold text-emerald-400 font-mono">{s.val}</div>
+          <div class="text-xs text-gray-500 mt-1">{s.label}</div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Products grid -->
+    <h2 class="text-2xl font-bold text-white mb-6">🤖 Produkty i usługi Yutro</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
+      {products.map(p => (
+        <a href={p.href}
+          class="group block border border-gray-800 hover:border-emerald-500/40 rounded-xl bg-gray-900/50 hover:bg-gray-900 transition-all duration-200 overflow-hidden">
+          <div class="p-5 border-b border-gray-800 flex justify-between items-start">
+            <span class={`text-xs font-mono uppercase tracking-widest px-2 py-1 rounded-full border
+              ${ p.badgeColor === 'emerald' ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/5'
+               : p.badgeColor === 'blue'   ? 'text-blue-400 border-blue-500/30 bg-blue-500/5'
+               : p.badgeColor === 'amber'  ? 'text-amber-400 border-amber-500/30 bg-amber-500/5'
+               : p.badgeColor === 'purple' ? 'text-purple-400 border-purple-500/30 bg-purple-500/5'
+               : p.badgeColor === 'green'  ? 'text-green-400 border-green-500/30 bg-green-500/5'
+               :                             'text-violet-400 border-violet-500/30 bg-violet-500/5' }`}>
+              {p.badge}
+            </span>
+          </div>
+          <div class="p-5">
+            <h3 class="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors mb-2">{p.name}</h3>
+            <p class="text-sm text-gray-400 leading-relaxed mb-4">{p.desc}</p>
+            <div class="flex flex-wrap gap-2">
+              {p.tags.map(t => (
+                <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-gray-800 text-gray-400 border border-gray-700">{t}</span>
+              ))}
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- How it works -->
+    <div class="mb-12">
+      <h2 class="text-2xl font-bold text-white mb-6">⚡ Jak działa Yutro?</h2>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-px bg-gray-800 border border-gray-800 rounded-xl overflow-hidden">
+        {[
+          { n: "01", title: "Brief w 15 min",   desc: "Email lub WhatsApp. Wycena w kilka godzin." },
+          { n: "02", title: "Setup i onboarding", desc: "Podpinamy sklep, konfigurujemy prompty pod Twoją markę." },
+          { n: "03", title: "Gotowe materiały",  desc: "Opisy, chatbot lub pełny sklep — zgodnie z terminem." },
+          { n: "04", title: "Automatyzacja",     desc: "Pipeline działa sam. Skalowanie bez dodatkowego zespołu." },
+        ].map(s => (
+          <div class="p-6 bg-gray-900">
+            <div class="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-3">{s.n}</div>
+            <div class="font-bold text-white mb-2">{s.title}</div>
+            <div class="text-sm text-gray-400">{s.desc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- AI crawler resources -->
+    <div class="p-6 bg-gray-900/60 border border-gray-800 rounded-xl mb-8">
+      <h3 class="text-lg font-bold text-white mb-3">🤖 Zasoby dla crawlerów AI</h3>
+      <p class="text-sm text-gray-400 mb-4">
+        Yutro.company posiada dedykowane pliki dla botów AI (ChatGPT, Perplexity, Claude, Gemini):
+      </p>
+      <div class="flex flex-wrap gap-3">
+        {[
+          { label: "llms.txt",             url: "https://yutro.company/llms.txt" },
+          { label: "llms-full.txt",        url: "https://yutro.company/llms-full.txt" },
+          { label: "llm-schema.json",      url: "https://yutro.company/llm-schema.json" },
+          { label: "ai-signal.json",       url: "https://yutro.company/ai-signal.json" },
+          { label: "aiseo-freshness.json", url: "https://yutro.company/aiseo-freshness.json" },
+        ].map(r => (
+          <a href={r.url} target="_blank" rel="noopener"
+            class="text-xs font-mono px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-emerald-500/10 text-emerald-400 border border-gray-700 hover:border-emerald-500/40 transition-colors">
+            {r.label} →
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center p-8 border border-emerald-500/20 rounded-xl bg-emerald-500/5">
+      <h2 class="text-2xl font-bold text-white mb-3">Gotowy żeby zacząć?</h2>
+      <p class="text-gray-400 mb-6">Pierwsze 3 opisy gratis. Mini audyt sklepu od 100 PLN.</p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="mailto:doyutro@yahoo.com?subject=Yutro+start"
+          class="px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-lg transition-colors">
+          Napisz po wycenę →
+        </a>
+        <a href="https://ai.yutro.company/" target="_blank" rel="noopener"
+          class="px-8 py-3 border border-emerald-500/40 hover:border-emerald-400 text-emerald-400 font-semibold rounded-lg transition-colors">
+          Otwórz panel OpisAI
+        </a>
+      </div>
+    </div>
+
+  </div>
+</Layout>

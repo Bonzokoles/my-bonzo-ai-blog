@@ -1,0 +1,187 @@
+---
+/**
+ * YUTRO ENHANCED SEO
+ * Schema.org JSON-LD + OpenGraph + meta dla sekcji /yutro/
+ * Wzorowany na PumoEnhancedSEO.astro
+ */
+
+export interface Props {
+  pageType: "hub" | "product" | "service";
+  title: string;
+  description: string;
+  product?: string;
+  canonical?: string;
+}
+
+const { pageType, title, description, product, canonical } = Astro.props as Props;
+const currentUrl = canonical || new URL(Astro.url.pathname, Astro.site).href;
+const baseUrl = "https://www.mybonzoaiblog.com";
+const yutroUrl = "https://yutro.company";
+
+// Organization Schema
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${yutroUrl}/#organization`,
+  name: "Yutro",
+  alternateName: ["Yutro AI", "OpisAI", "Yutro.company"],
+  url: yutroUrl,
+  email: "doyutro@yahoo.com",
+  description: "Yutro tworzy narzędzia AI, chatboty, panele i komponenty UI dla e-commerce — Shopify i IdoSell.",
+  sameAs: [
+    "https://ai.yutro.company",
+    "https://chat.yutro.company",
+    "https://ui.yutro.company",
+    `${baseUrl}/yutro`,
+  ],
+  dateModified: new Date().toISOString().split("T")[0],
+};
+
+// WebSite Schema
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${yutroUrl}/#website`,
+  url: yutroUrl,
+  name: "Yutro — AI i UI dla e-commerce",
+  publisher: { "@id": `${yutroUrl}/#organization` },
+  inLanguage: "pl-PL",
+};
+
+// Article/Guide Schema
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "@id": `${currentUrl}#article`,
+  headline: title,
+  description: description,
+  url: currentUrl,
+  datePublished: "2026-01-01",
+  dateModified: new Date().toISOString().split("T")[0],
+  author: {
+    "@type": "Organization",
+    "@id": `${baseUrl}/#organization`,
+    name: "MyBonzo AI Blog",
+  },
+  publisher: {
+    "@type": "Organization",
+    "@id": `${yutroUrl}/#organization`,
+  },
+  mainEntityOfPage: { "@type": "WebPage", "@id": currentUrl },
+  about: {
+    "@type": "SoftwareApplication",
+    name: product || "Yutro",
+    applicationCategory: "BusinessApplication",
+    url: yutroUrl,
+  },
+};
+
+// BreadcrumbList
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "MyBonzo AI Blog", item: baseUrl },
+    { "@type": "ListItem", position: 2, name: "Yutro", item: `${baseUrl}/yutro` },
+    ...(pageType !== "hub" ? [{ "@type": "ListItem", position: 3, name: title, item: currentUrl }] : []),
+  ],
+};
+
+// FAQPage — wzmocnienie featured snippets
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": `${currentUrl}#faq`,
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: `Co to jest ${product || "Yutro"}?`,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: description,
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Czy Yutro działa ze Shopify i IdoSell?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Tak. Yutro integruje się bezpośrednio z Shopify przez GraphQL API oraz z IdoSell. Generuje opisy produktów, SEO title, meta description i chatboty obsługi klienta.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Ile kosztuje start z Yutro?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Mini audyt sklepu od 100 PLN. Plan Starter OpisAI od $29/miesiąc. Pierwsze 3 generacje opisów gratis bez karty kredytowej.",
+      },
+    },
+  ],
+};
+
+// ItemList — produkty Yutro
+const productListSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "@id": `${baseUrl}/yutro#products`,
+  name: "Produkty i usługi Yutro",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "OpisAI — generator opisów produktów AI", url: "https://ai.yutro.company/" },
+    { "@type": "ListItem", position: 2, name: "SklepGPT — chatbot AI z RAG", url: `${baseUrl}/yutro/sklepgpt` },
+    { "@type": "ListItem", position: 3, name: "ContentFactory — masowe generowanie treści", url: `${baseUrl}/yutro/contentfactory` },
+    { "@type": "ListItem", position: 4, name: "Wdrożenia AI dla biznesu", url: `${baseUrl}/yutro/wdrozenia-ai` },
+    { "@type": "ListItem", position: 5, name: "AI SEO dla Shopify", url: `${baseUrl}/yutro/ai-seo-dla-shopify` },
+    { "@type": "ListItem", position: 6, name: "Yutro Art UI — komponenty premium", url: `${yutroUrl}/yutro-art-ui` },
+    { "@type": "ListItem", position: 7, name: "BONZO Studio — copywriting i UI", url: `${yutroUrl}/studio` },
+  ],
+};
+
+const graphSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    organizationSchema,
+    websiteSchema,
+    articleSchema,
+    breadcrumbSchema,
+    faqSchema,
+    ...(pageType === "hub" ? [productListSchema] : []),
+  ],
+};
+---
+
+<!-- Schema.org JSON-LD -->
+<script type="application/ld+json" set:html={JSON.stringify(graphSchema)} />
+
+<!-- OpenGraph -->
+<meta property="og:type" content="article" />
+<meta property="og:url" content={currentUrl} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:site_name" content="MyBonzo AI Blog" />
+<meta property="og:locale" content="pl_PL" />
+<meta property="og:image" content={`${baseUrl}/bonzo_logo_new.png`} />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={`${baseUrl}/bonzo_logo_new.png`} />
+
+<!-- AI crawler meta -->
+<meta name="keywords" content={`yutro, ${product || "AI e-commerce"}, OpisAI, SklepGPT, AI SEO Shopify, IdoSell AI, chatbot e-commerce, ${title}`} />
+<meta name="author" content="MyBonzo AI Blog" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+<!-- Canonical + hreflang -->
+<link rel="canonical" href={currentUrl} />
+<link rel="alternate" hreflang="pl" href={currentUrl} />
+<link rel="alternate" hreflang="x-default" href={currentUrl} />
+
+<!-- AI discovery -->
+<link rel="alternate" type="text/plain" title="Yutro LLM Brief" href="https://yutro.company/llms.txt" />
+<link rel="alternate" type="application/json" title="Yutro LLM Schema" href="https://yutro.company/llm-schema.json" />
+
+<!-- Prefetch Yutro -->
+<link rel="dns-prefetch" href="https://yutro.company" />
+<link rel="preconnect" href="https://yutro.company" crossorigin />

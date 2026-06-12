@@ -1,0 +1,92 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import YutroEnhancedSEO from "../../components/YutroEnhancedSEO.astro";
+
+const title = "ContentFactory — Masowe generowanie treści AI dla e-commerce | Yutro";
+const description =
+  "ContentFactory to pipeline batch content: jeden produkt → posty social media, maile, artykuły, reklamy, skrypty video. Zautomatyzuj content marketing sklepu.";
+---
+
+<YutroEnhancedSEO pageType="product" product="ContentFactory" {title} {description}
+  canonical="https://www.mybonzoaiblog.com/yutro/contentfactory" />
+
+<Layout {title} {description}>
+  <div class="max-w-4xl mx-auto px-4 py-10">
+
+    <nav class="flex items-center gap-2 text-xs text-gray-500 font-mono mb-8">
+      <a href="/" class="hover:text-gray-300">Home</a><span>/</span>
+      <a href="/yutro" class="hover:text-gray-300">Yutro</a><span>/</span>
+      <span class="text-amber-400">ContentFactory</span>
+    </nav>
+
+    <div class="mb-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/5 text-amber-400 text-xs font-mono uppercase tracking-widest mb-5">
+        SaaS · Batch Content
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+        ContentFactory — jeden produkt,<br/>
+        <span class="text-amber-400">20 formatów treści</span>
+      </h1>
+      <p class="text-gray-300 text-lg leading-relaxed max-w-2xl mb-6">
+        Wczytaj katalog produktów → wybierz formaty → uruchom pipeline.
+        ContentFactory generuje jednocześnie: posty IG/FB, maile, opisy SEO,
+        artykuły blogowe, skrypty TikTok i reklamy Google/Meta.
+      </p>
+      <a href="mailto:doyutro@yahoo.com?subject=ContentFactory+info"
+        class="inline-block px-6 py-2 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-lg transition-colors">
+        Zapytaj o dostęp →
+      </a>
+    </div>
+
+    <!-- Output formats -->
+    <div class="mb-12">
+      <h2 class="text-xl font-bold text-white mb-5">Generowane formaty</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {[
+          "Post Instagram", "Post Facebook", "Opis produktu SEO", "Meta description",
+          "Artykuł blogowy", "Newsletter HTML", "Reklama Google Ads", "Reklama Meta",
+          "Skrypt TikTok/Reels", "Opis YouTube", "Email transakcyjny", "Karta produktu PDF",
+        ].map(f => (
+          <div class="p-3 border border-gray-800 rounded-lg bg-gray-900/50 text-sm text-gray-300 text-center">
+            {f}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Pipeline steps -->
+    <div class="mb-12">
+      <h2 class="text-xl font-bold text-white mb-5">⚙️ Pipeline krok po kroku</h2>
+      <div class="space-y-3">
+        {[
+          { step: "01", title: "Import katalogu", desc: "CSV / Shopify API / IdoSell — ContentFactory pobiera dane produktów automatycznie." },
+          { step: "02", title: "Konfiguracja brand voice", desc: "Ustawiasz ton komunikacji, słowa zakazane, USP marki i docelową grupę odbiorców." },
+          { step: "03", title: "Wybór formatów", desc: "Checkboxy — wybierasz które z 20 formatów mają zostać wygenerowane dla każdego produktu." },
+          { step: "04", title: "Batch generation", desc: "Pipeline uruchamia równoległe zapytania do GPT-4o. Status w czasie rzeczywistym." },
+          { step: "05", title: "Export i dystrybucja", desc: "ZIP z plikami, eksport do Google Drive, bezpośredni post przez Meta API." },
+        ].map(s => (
+          <div class="flex gap-4 p-4 border border-gray-800 rounded-xl bg-gray-900/50">
+            <span class="text-xs font-mono text-amber-400 pt-1 shrink-0">{s.step}</span>
+            <div>
+              <div class="font-bold text-white mb-1">{s.title}</div>
+              <div class="text-sm text-gray-400">{s.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="p-6 border border-amber-500/20 rounded-xl bg-amber-500/5 mb-8">
+      <p class="text-sm text-gray-300">
+        <span class="text-amber-400 font-bold">Cennik:</span> od 399 PLN / mies. (do 500 produktów × 10 formatów = 5000 wygenerowanych treści).
+        Większe wolumeny na zapytanie. Onboarding + konfiguracja brand voice: 800 PLN jednorazowo.
+      </p>
+    </div>
+
+    <div class="border-t border-gray-800 pt-8">
+      <a href="/yutro" class="text-sm text-gray-500 hover:text-amber-400 transition-colors font-mono">
+        ← Wróć do wszystkich produktów Yutro
+      </a>
+    </div>
+  </div>
+</Layout>

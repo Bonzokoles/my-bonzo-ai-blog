@@ -1,0 +1,130 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import YutroEnhancedSEO from "../../components/YutroEnhancedSEO.astro";
+
+const title = "AI SEO dla Shopify — Google, AI Overviews i ChatGPT widoczność | Yutro";
+const description =
+  "Automatyczne meta description, Schema.org JSON-LD, FAQ i structured data dla Shopify i IdoSell. Widoczność w Google, AI Overviews i Perplexity. Od 100 PLN.";
+---
+
+<YutroEnhancedSEO pageType="service" product="AI SEO dla Shopify" {title} {description}
+  canonical="https://www.mybonzoaiblog.com/yutro/ai-seo-dla-shopify" />
+
+<Layout {title} {description}>
+  <div class="max-w-4xl mx-auto px-4 py-10">
+
+    <nav class="flex items-center gap-2 text-xs text-gray-500 font-mono mb-8">
+      <a href="/" class="hover:text-gray-300">Home</a><span>/</span>
+      <a href="/yutro" class="hover:text-gray-300">Yutro</a><span>/</span>
+      <span class="text-green-400">AI SEO dla Shopify</span>
+    </nav>
+
+    <div class="mb-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-green-500/30 bg-green-500/5 text-green-400 text-xs font-mono uppercase tracking-widest mb-5">
+        Usługa · AI SEO
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+        AI SEO dla Shopify —<br/>
+        <span class="text-green-400">widoczność w Google i AI</span>
+      </h1>
+      <p class="text-gray-300 text-lg leading-relaxed max-w-2xl mb-6">
+        W 2026 roku AI Overviews Google, ChatGPT Search i Perplexity odpowiadają na pytania
+        zakupowe bez klikania w wyniki. Yutro optymalizuje Twój sklep pod obie logiki jednocześnie —
+        tradycyjne SEO i AI crawlers.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href="mailto:doyutro@yahoo.com?subject=AI+SEO+audyt"
+          class="px-6 py-2 bg-green-500 hover:bg-green-400 text-black font-bold rounded-lg transition-colors">
+          Zamów audyt (100 PLN) →
+        </a>
+      </div>
+    </div>
+
+    <!-- What we do -->
+    <div class="mb-12">
+      <h2 class="text-xl font-bold text-white mb-5">Co robimy w ramach AI SEO?</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {[
+          { icon: "📝", title: "Meta description AI",       desc: "GPT-4o generuje unikalne meta dla każdego produktu. ≤160 znaków, keyword-first, CTA." },
+          { icon: "🗂️", title: "Schema.org JSON-LD",        desc: "Product, Organization, FAQPage, BreadcrumbList — inline w HTML, nie jako zewnętrzny plik." },
+          { icon: "❓", title: "FAQ structured data",        desc: "Automatyczne Q&A dla każdej kategorii i produktu. Featured snippets + AI Overviews." },
+          { icon: "🤖", title: "llms.txt + ai-signal.json", desc: "Dedykowane pliki dla botów AI (ChatGPT, Claude, Perplexity). Twoja marka w LLM answers." },
+          { icon: "🔗", title: "Canonical + hreflang",      desc: "Eliminacja duplikatów, prawidłowe sygnały dla PL/EN wersji sklepu." },
+          { icon: "📊", title: "Raport widoczności",        desc: "Przed / po. Google Search Console + Perplexity mentions + AI Overview tracking." },
+        ].map(f => (
+          <div class="p-5 border border-gray-800 rounded-xl bg-gray-900/50">
+            <div class="text-2xl mb-3">{f.icon}</div>
+            <div class="font-bold text-white mb-2">{f.title}</div>
+            <div class="text-sm text-gray-400">{f.desc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Packages -->
+    <div class="mb-12">
+      <h2 class="text-xl font-bold text-white mb-5">Pakiety AI SEO</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {[
+          {
+            name: "Mini audyt",
+            price: "100 PLN",
+            desc: "Analiza widoczności, top 10 błędów, plan działania. Bez implementacji.",
+            features: ["Raport PDF", "Schema.org check", "llms.txt status", "AI Overview test"],
+            color: "gray",
+          },
+          {
+            name: "AI SEO Starter",
+            price: "499 PLN",
+            desc: "Pełna optymalizacja strony głównej + top 20 produktów.",
+            features: ["Meta descriptions AI", "Schema.org inline", "llms.txt + ai-signal", "FAQ structured data", "Raport GSC"],
+            color: "green",
+            highlight: true,
+          },
+          {
+            name: "AI SEO Pro",
+            price: "od 1200 PLN",
+            desc: "Cały katalog produktów + miesięczne utrzymanie i monitoring.",
+            features: ["Wszystko z Starter", "Cały katalog (batch)", "Miesięczny raport", "AI mention tracking", "SLA support"],
+            color: "emerald",
+          },
+        ].map(p => (
+          <div class={`p-6 rounded-xl border ${p.highlight ? 'border-green-500/60 bg-green-500/5' : 'border-gray-800 bg-gray-900/50'}`}>
+            <div class="font-bold text-white mb-1">{p.name}</div>
+            <div class={`text-2xl font-bold mb-2 ${p.highlight ? 'text-green-400' : 'text-white'}`}>{p.price}</div>
+            <p class="text-xs text-gray-500 mb-4">{p.desc}</p>
+            <ul class="space-y-1.5 mb-5">
+              {p.features.map(f => (
+                <li class="flex items-center gap-2 text-xs text-gray-300">
+                  <span class="text-green-400">✓</span> {f}
+                </li>
+              ))}
+            </ul>
+            <a href="mailto:doyutro@yahoo.com?subject=AI+SEO+{p.name}"
+              class={`block text-center py-2 rounded-lg font-semibold text-xs transition-colors
+                ${p.highlight ? 'bg-green-500 hover:bg-green-400 text-black' : 'border border-gray-700 hover:border-green-500/40 text-gray-300'}`}>
+              Zamów
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Why AI SEO matters -->
+    <div class="p-6 border border-green-500/20 rounded-xl bg-green-500/5 mb-8">
+      <h3 class="font-bold text-white mb-3">Dlaczego AI SEO w 2026?</h3>
+      <p class="text-sm text-gray-300 leading-relaxed">
+        Google AI Overviews pojawiają się dla 46% zapytań zakupowych w Polsce.
+        ChatGPT Search indeksuje strony z <code class="text-green-400 bg-gray-900 px-1 rounded">llms.txt</code> priorytetowo.
+        Perplexity cytuje strony z poprawnym Schema.org. Sklepy bez AI SEO tracą ruch
+        na rzecz konkurentów — nawet jeśli mają lepszą pozycję w klasycznym Google.
+      </p>
+    </div>
+
+    <div class="border-t border-gray-800 pt-8">
+      <a href="/yutro" class="text-sm text-gray-500 hover:text-green-400 transition-colors font-mono">
+        ← Wróć do wszystkich produktów Yutro
+      </a>
+    </div>
+  </div>
+</Layout>

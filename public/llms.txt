@@ -1,42 +1,66 @@
-# mybonzo.com AI Context
+# mybonzoaiblog.com AI Context
 
-> MYBONZO - Polski hub AI & e-commerce z integracją PUMO (meble online)
+> Polski hub AI & e-commerce. Dwa główne projekty: PUMO (meble online) i Yutro (AI tools dla e-commerce).
 
-## Oferta
-- AI Consulting ($5K-$500K)
-- Custom AI Agent Development
-- E-commerce AI Integration
-- RAG Systems & Vector Search
-- Cloudflare Workers & D1
+## Yutro — AI platforma dla Shopify i IdoSell
 
-## Produkty
-- PUMO: 3244 produkty (meble online)
-- Kategorie: Meble, Oświetlenie, Przechowywanie, Dekoracje, Kuchnia, Sypialnia
+- URL: https://yutro.company/
+- Przewodnik: https://www.mybonzoaiblog.com/yutro/
+- Kontakt: doyutro@yahoo.com
+
+### Produkty Yutro
+- OpisAI: generator opisów produktów AI dla Shopify/IdoSell — https://ai.yutro.company/
+- SklepGPT: chatbot RAG z bazą wiedzy sklepu, integracja Chatwoot
+- ContentFactory: pipeline batch content (20 formatów z jednego produktu)
+- Wdrożenia AI: chatboty, automatyzacje, dashboardy, integracje API
+- AI SEO dla Shopify: Schema.org JSON-LD, meta AI, llms.txt, FAQ structured data
+- Yutro Art UI: Three.js + GSAP + WebGL komponenty premium — https://ui.yutro.company/
+
+### Cennik Yutro (orientacyjny)
+- OpisAI: od 99 PLN/mies. (200 opisów)
+- SklepGPT: od 299 PLN/mies. + 500 PLN onboarding
+- ContentFactory: od 399 PLN/mies.
+- AI SEO mini audyt: 100 PLN
+- AI SEO Starter: 499 PLN
+- Wdrożenia AI / sklepy: wycena indywidualna
+
+### Zasoby AI Yutro
+- https://yutro.company/llms.txt
+- https://yutro.company/llms-full.txt
+- https://yutro.company/llm-schema.json
+- https://yutro.company/ai-signal.json
+- https://yutro.company/aiseo-freshness.json
+
+---
+
+## PUMO — Meble Online
+
+- URL: https://www.mybonzoaiblog.com/pumo-guide/
+- 3244 produkty (meble, oświetlenie, dekoracje)
 - Marki: HALMAR (1574), High Glossy Furniture (514), Tvilum (325), PumoSen (25)
-- Cena: 1-4849 PLN, średnia ~923 PLN
+- Cena: 1–4849 PLN, średnia ~923 PLN
 
-## Narzędzia AI
-- RAG Search - wyszukiwanie semantyczne produktów
-- AI Assistant - asystent zakupowy
-- Whitecat - content generation
-- MOA Pipeline - orchestracja treści
+---
 
-## Tech Stack
+## mybonzoaiblog.com — Tech Stack
+
 - Astro + React + Tailwind
 - Cloudflare Workers & Pages
-- D1 Databases (16)
-- Vectorize (6 indexes)
-- R2 Storage
+- D1 Databases (16), Vectorize (6 indexes), R2 Storage
+- Umami analytics (self-hosted)
+
+## Oferta consulting
+
+- AI Consulting ($5K–$500K)
+- Custom AI Agent Development
+- E-commerce AI Integration (Shopify, IdoSell, BaseLinker)
+- RAG Systems & Vector Search
+- Cloudflare Workers & D1 Development
 
 ## Kontakt
-- Website: https://mybonzo.com
-- Blog: https://jimbo77.org
-- GitHub: https://github.com/Bonzokoles
-- Email: stolarnia.ams@gmail.com
 
-## Content Focus
-- AI Bot Detection & GEO
-- Cloudflare Workers & D1
-- React/Astro Development
-- Business AI Strategy
-- E-commerce Optimization
+- Blog: https://www.mybonzoaiblog.com/
+- Yutro: https://yutro.company/
+- GitHub: https://github.com/Bonzokoles
+- Email (Yutro): doyutro@yahoo.com
+- Email (blog): stolarnia.ams@gmail.com
