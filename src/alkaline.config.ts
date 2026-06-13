@@ -137,7 +137,7 @@ export const NAVIGATION: NavEntry[] = [
 			{
 				href: "/yutro/contentfactory",
 				text: "ContentFactory",
-				icon: "layers",
+				icon: "file-text",
 			},
 			{
 				href: "/yutro/ai-seo-dla-shopify",
@@ -147,7 +147,7 @@ export const NAVIGATION: NavEntry[] = [
 			{
 				href: "https://yutro.company/",
 				text: "yutro.company →",
-				icon: "external-link",
+				icon: "share",
 				external: true,
 			},
 		]
